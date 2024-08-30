@@ -1,0 +1,37 @@
+{
+  "name": "dumverse",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@permaweb/aoconnect": "^0.0.59",
+    "@radix-ui/react-slot": "^1.1.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.436.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@redux-devtools/extension": "^3.3.0",
+    "@types/node": "^22.5.1",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "arconnect": "^1.0.3",
+    "autoprefixer": "^10.4.20",
+    "i": "^0.3.7",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^4.9.3",
+    "vite": "^4.1.0"
+  }
+}
