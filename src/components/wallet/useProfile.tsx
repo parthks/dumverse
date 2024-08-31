@@ -1,51 +1,72 @@
-import { useEffect, useState } from "react";
-import { message, createDataItemSigner, result, dryrun } from "@permaweb/aoconnect";
 import { useAppStore } from "@/store/useAppStore";
+import { dryrun } from "@permaweb/aoconnect/browser";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 export default function useProfile() {
-  const walletAddressID = useAppStore((state) => state.walletAddressID);
-  const { setProfile, setAssets, setProfileId, profileId } = useAppStore();
+  const { walletAddressID, setProfile, setAssets, setProfileId, profileId, setProfileLoading, resetProfileData } = useAppStore();
 
-  const getProfileInfo = async (profileId: string) => {
-    const result = await dryrun({
-      process: profileId,
-      data: JSON.stringify({ ProfileId: profileId }),
-      tags: [{ name: "Action", value: "Info" }],
-      anchor: "1234",
-    });
+  const getProfileInfo = useCallback(
+    async (profileId: string) => {
+      try {
+        const result = await dryrun({
+          process: profileId,
+          data: JSON.stringify({ ProfileId: profileId }),
+          tags: [{ name: "Action", value: "Info" }],
+          anchor: "1234",
+        });
 
-    const data = JSON.parse(result.Messages[0].Data);
-    console.log(result, data);
-    const profile = {
-      ...data.Profile,
-      DateUpdated: new Date(data.Profile.DateUpdated),
-      DateCreated: new Date(data.Profile.DateCreated),
-      CoverImage: data.Profile.CoverImage === "None" ? null : `https://arweave.net/$${data.Profile.CoverImage}`,
-      ProfileImage: data.Profile.ProfileImage === "None" ? null : `https://arweave.net/${data.Profile.ProfileImage}`,
-    };
-    setProfile(profile);
-    setAssets(data.Assets);
-  };
+        const data = JSON.parse(result.Messages[0].Data);
+        const profile = {
+          ...data.Profile,
+          DateUpdated: new Date(data.Profile.DateUpdated),
+          DateCreated: new Date(data.Profile.DateCreated),
+          CoverImage: data.Profile.CoverImage === "None" ? null : `https://arweave.net/$${data.Profile.CoverImage}`,
+          ProfileImage: data.Profile.ProfileImage === "None" ? null : `https://arweave.net/${data.Profile.ProfileImage}`,
+        };
+        setProfile(profile);
+        setAssets(data.Assets);
+      } catch (error) {
+        console.error("Error fetching profile info:", error);
+        resetProfileData();
+      } finally {
+        setProfileLoading(false);
+      }
+    },
+    [setProfile, setAssets, setProfileLoading, resetProfileData]
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchDataRef = useRef(async (walletAddress: string) => {
+    console.log("Fetching data for wallet:", walletAddress);
+    setProfileLoading(true);
+    try {
       const result = await dryrun({
         process: "SNy4m-DrqxWl01YqGM4sxI8qCni-58re8uuJLvZPypY",
-        data: JSON.stringify({ Address: walletAddressID }),
+        data: JSON.stringify({ Address: walletAddress }),
         tags: [{ name: "Action", value: "Get-Profiles-By-Delegate" }],
         anchor: "1234",
       });
 
-      console.log(result);
-      const data = JSON.parse(result.Messages[0].Data);
-      if (data.length != 0) {
-        setProfileId(data[0].ProfileId);
-        getProfileInfo(data[0].ProfileId);
+      if (!result.Messages[0].Data) {
+        resetProfileData();
+        return;
       }
-    };
-    console.log("WALLET ADDRESS", walletAddressID);
+      const data = JSON.parse(result.Messages[0].Data);
+      if (data.length !== 0) {
+        setProfileId(data[0].ProfileId);
+        await getProfileInfo(data[0].ProfileId);
+      } else {
+        resetProfileData();
+      }
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+      resetProfileData();
+    }
+  });
+
+  useEffect(() => {
     if (walletAddressID) {
-      fetchData();
+      fetchDataRef.current(walletAddressID);
+      console.log("FETCHING DATA FROM walletAddressID", walletAddressID);
     }
   }, [walletAddressID]);
 

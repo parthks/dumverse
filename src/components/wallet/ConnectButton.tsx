@@ -3,7 +3,6 @@ import { useAppStore } from "@/store/useAppStore";
 
 export default function ConnectButton() {
   const { setWalletAddressID, walletAddressID, setProfile, setAssets } = useAppStore();
-
   return (
     <Button
       onClick={async () => {

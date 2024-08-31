@@ -1,35 +1,39 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import type {} from "@redux-devtools/extension"; // required for devtools typing
+import type {} from "@redux-devtools/extension";
 import { BazzarProfile } from "@/types/wallet";
 
 interface AppState {
   walletAddressID: string | null;
-  setWalletAddressID: (address: string | null) => void;
+  profileLoading: boolean;
   profileId: string | null;
-  setProfileId: (profileId: string | null) => void;
   profile: BazzarProfile | null;
-  setProfile: (profile: BazzarProfile | null) => void;
   assets: { Quantity: number; Id: string }[];
+  setWalletAddressID: (address: string | null) => void;
+  setProfileLoading: (loading: boolean) => void;
+  setProfileId: (profileId: string | null) => void;
+  setProfile: (profile: BazzarProfile | null) => void;
   setAssets: (assets: { Quantity: number; Id: string }[]) => void;
+  resetProfileData: () => void;
 }
-
 export const useAppStore = create<AppState>()(
-  devtools(
-    persist(
-      (set) => ({
-        walletAddressID: null,
-        setWalletAddressID: (address) => set({ walletAddressID: address }),
+  devtools((set) => ({
+    walletAddressID: null,
+    profileLoading: false,
+    profileId: null,
+    profile: null,
+    assets: [],
+    setWalletAddressID: (address) => set({ walletAddressID: address }),
+    setProfileLoading: (loading) => set({ profileLoading: loading }),
+    setProfileId: (profileId) => set({ profileId }),
+    setProfile: (profile) => set({ profile }),
+    setAssets: (assets) => set({ assets }),
+    resetProfileData: () =>
+      set({
         profileId: null,
-        setProfileId: (profileId) => set({ profileId }),
         profile: null,
-        setProfile: (profile) => set({ profile }),
         assets: [],
-        setAssets: (assets) => set({ assets }),
+        profileLoading: false,
       }),
-      {
-        name: "dumverse-storage",
-      }
-    )
-  )
+  }))
 );
