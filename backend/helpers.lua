@@ -4,6 +4,7 @@
 
 -- check if user exists
 function CheckUserExists(userId, address)
+  assert(userId, "UserId is required")
   local user = dbAdmin:exec(string.format([[
     SELECT * FROM Users WHERE ID = %f;
 ]], userId))
@@ -18,3 +19,7 @@ end
      randomize based on difficulty
    ]]
 --
+
+return {
+  CheckUserExists = CheckUserExists
+}

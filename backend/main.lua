@@ -1,5 +1,7 @@
 -- testSQL process - cNxJjUzpB8_5iUCbeO-xsCIDxbdIQF85pMorHeYW_bE
 -- testSQL2.1 process - EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc
+-- cron10sec - tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE
+
 
 -- Island movement happens on the frontend. Users can move to any area and that screen gets rendered. No blockchain interaction needed.
 
@@ -51,15 +53,86 @@ Handlers.add("User.Info",
     end
 )
 
+Handlers.add("Inventory.Info",
+    Handlers.utils.hasMatchingTag('Action', 'Inventory.Info'),
+    function(msg)
+        local user_id = msg.UserId
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+
+        local inventory = dbAdmin:exec(string.format([[
+            SELECT * FROM Inventory WHERE USER_ID = %f;
+        ]], user_id))
+
+        ao.send({ Target = msg.From, Data = json.encode(inventory) })
+    end
+)
+
+Handlers.add("Shop.BuyItem",
+    Handlers.utils.hasMatchingTag('Action', 'Shop.BuyItem'),
+    function(msg)
+        local user_id = msg.UserId
+        local item_id = msg.Item_ID
+        assert(item_id, "Item_ID is required")
+        local amount = msg.Amount or 1
+        local token_type = msg.Token_Type -- "GOLD" or "DUMZ"
+        assert(token_type == "GOLD" or token_type == "DUMZ", "Invalid token type")
+
+        -- check if item exists
+        local item = ITEMS[item_id]
+        assert(item, "Item does not exist")
+
+        -- check if user has enough balance
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+        if token_type == "GOLD" then
+            assert(userData.GOLD_BALANCE >= item.gold_price * amount, "You does not have enough GOLD balance")
+        else
+            assert(userData.DUMZ_BALANCE >= item.dumz_price * amount, "You does not have enough DUMZ balance")
+        end
+
+        -- select inventory items and set equipped to true for new item
+        local inventory = dbAdmin:exec(string.format([[
+            SELECT * FROM Inventory WHERE USER_ID = %f AND EQUIPPED = TRUE AND ITEM_TYPE = "%s";
+        ]], user_id, item.type))
+
+        -- only one item can be equipped at a time
+        if #inventory > 0 then
+            dbAdmin:exec(string.format([[
+                UPDATE Inventory SET EQUIPPED = FALSE WHERE ID = %f;
+            ]], inventory[1].ID))
+        end
+
+        -- update inventory
+        dbAdmin:exec(string.format([[
+            INSERT INTO Inventory (USER_ID, ITEM_ID, AMOUNT, EQUIPPED) VALUES (%f, "%s", %f, TRUE);
+        ]], user_id, item_id, amount))
+
+        -- update user balance
+        if token_type == "GOLD" then
+            dbAdmin:exec(string.format([[
+                UPDATE Users SET GOLD_BALANCE = %f WHERE ID = %f;
+            ]], userData.GOLD_BALANCE - item.gold_price * amount, user_id))
+        else
+            dbAdmin:exec(string.format([[
+                UPDATE Users SET DUMZ_BALANCE = %f WHERE ID = %f;
+            ]], userData.DUMZ_BALANCE - item.dumz_price * amount, user_id))
+        end
+
+        return ao.send({ Target = msg.From, Status = "Success" })
+    end
+)
+
 -- TODO: Do this on Credit Notice for wAR
 Handlers.add("Users.SetCurrentIsland",
     Handlers.utils.hasMatchingTag('Action', 'SetCurrentIsland'),
     function(msg)
         local user_address = msg.From
+        local user_id = msg.UserId
         local island_id = msg.Island_ID
 
         -- check if user exists
+        local userData = helpers.CheckUserExists(user_id, msg.From)
         -- check if corrent amount of wAR was sent
+        assert(msg.wAR == IslandTransferFee, "Incorrect amount of wAR sent")
 
 
         dbAdmin:exec(string.format([[
@@ -201,3 +274,30 @@ Handlers.add("Bank.Withdraw",
      Bank Pull In should listen to credit notice from user address and make a bank transaction for that User ID. Bank transaction type should be PULL_IN
    ]]
 --
+
+Handlers.add("Combat.Start",
+    Handlers.utils.hasMatchingTag('Action', 'Combat.Start'),
+    function(msg)
+        local user_id = msg.UserId
+        local combat_location = msg.Combat_Location
+        assert(combat_location, "Combat_location is required")
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+
+        -- get equipped inventory items
+        local equippedItems = dbAdmin:exec(string.format([[
+            SELECT * FROM Inventory WHERE USER_ID = %f AND EQUIPPED = TRUE;
+        ]], user_id))
+
+        -- based on combat location, send Combat.Register to that combat process ID
+    end
+)
+
+
+-- death notice
+Handlers.add("Combat.DeathNotice",
+    Handlers.utils.hasMatchingTag('Action', 'Combat.DeathNotice'),
+    function(msg)
+        local user_id = msg.UserId
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+    end
+)
