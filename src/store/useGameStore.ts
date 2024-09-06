@@ -1,14 +1,14 @@
+import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
+import { Bank, GameUser, Inventory, Item, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { useAppStore } from "./useAppStore";
-import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
-import { GAME_PROCESS_ID } from "@/lib/utils";
-import { GameUser, Inventory } from "@/types/game";
-import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 
 export enum GameStatePages {
   HOME = "HOME",
   PROFILE = "PROFILE",
+  BANK = "BANK",
+  SHOP = "SHOP",
 }
 interface GameState {
   GameStatePage: GameStatePages | null;
@@ -16,9 +16,19 @@ interface GameState {
   registerNewUser: () => void;
   user: GameUser | null;
   setUser: (user: GameUser | null) => void;
-  refreshUserData: (userId?: number) => void;
+  refreshUserData: (userId?: number) => Promise<void>;
   inventory: Inventory[];
   setInventory: (inventory: Inventory[]) => void;
+  bank: Bank | null;
+  getBank: () => Promise<void>;
+  bankTransactionLoading: boolean;
+  deposit: (amount: number, tokenType: TokenType) => Promise<void>;
+  withdraw: (amount: number, tokenType: TokenType) => Promise<void>;
+  claimAirdrop: (tokenType: TokenType) => Promise<void>;
+  shop: Shop | null;
+  getShop: () => Promise<void>;
+  buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
+  buyItemLoading: boolean;
 }
 
 export const useGameStore = create<GameState>()(
@@ -67,6 +77,68 @@ export const useGameStore = create<GameState>()(
       },
       inventory: [],
       setInventory: (inventory) => set({ inventory }),
+      bank: null,
+      getBank: async () => {
+        set({ bankTransactionLoading: false });
+        const resultData = await sendDryRunGameMessage([
+          { name: "Action", value: "Bank.Info" },
+          { name: "UserId", value: get().user?.id.toString()! },
+        ]);
+        if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
+          const bank = JSON.parse(resultData.Messages[0].Data);
+          set({ bank: bank });
+        }
+      },
+      bankTransactionLoading: false,
+      deposit: async (amount, tokenType) => {
+        set({ bankTransactionLoading: true });
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "Bank.Deposit" },
+          { name: "UserId", value: get().user?.id.toString()! },
+          { name: "Amount", value: amount.toString() },
+          { name: "TokenType", value: tokenType },
+        ]);
+        await Promise.all([get().refreshUserData(), get().getBank()]);
+        set({ bankTransactionLoading: false });
+      },
+      withdraw: async (amount, tokenType) => {
+        set({ bankTransactionLoading: true });
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "Bank.Withdraw" },
+          { name: "UserId", value: get().user?.id.toString()! },
+          { name: "Amount", value: amount.toString() },
+          { name: "TokenType", value: tokenType },
+        ]);
+        await Promise.all([get().refreshUserData(), get().getBank()]);
+        set({ bankTransactionLoading: false });
+      },
+      claimAirdrop: async (tokenType) => {
+        set({ bankTransactionLoading: true });
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "Bank.ClaimAirdrop" },
+          { name: "UserId", value: get().user?.id.toString()! },
+          { name: "TokenType", value: tokenType },
+        ]);
+        await Promise.all([get().refreshUserData(), get().getBank()]);
+        set({ bankTransactionLoading: false });
+      },
+      shop: null,
+      getShop: async () => {
+        const resultData = await sendDryRunGameMessage([{ name: "Action", value: "Shop.Info" }]);
+        set({ shop: { items: Object.values(resultData.data.items) } });
+      },
+      buyItemLoading: false,
+      buyItem: async (item, tokenType) => {
+        set({ buyItemLoading: true });
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "Shop.BuyItem" },
+          { name: "UserId", value: get().user?.id.toString()! },
+          { name: "ItemId", value: item.id },
+          { name: "TokenType", value: tokenType },
+        ]);
+        await Promise.all([get().refreshUserData()]);
+        set({ buyItemLoading: false });
+      },
     }),
     {
       name: "Game Store",

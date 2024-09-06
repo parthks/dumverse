@@ -14,6 +14,22 @@ function CheckUserExists(userId, address)
   return userData
 end
 
+function CalculateUserBaseStats(userData)
+  local baseStats = {
+    damage = 1,
+    defense = 0,
+    health = 1,
+    stamina = 4,
+  }
+  if userData["nft_address"] then
+    baseStats.damage = 2
+    baseStats.health = 2
+    baseStats.stamina = 6
+  end
+
+  return baseStats
+end
+
 --[[
      calcuate dumz reward for killing enemy
      randomize based on difficulty
@@ -21,5 +37,6 @@ end
 --
 
 return {
-  CheckUserExists = CheckUserExists
+  CheckUserExists = CheckUserExists,
+  CalculateUserBaseStats = CalculateUserBaseStats
 }

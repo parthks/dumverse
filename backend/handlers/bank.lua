@@ -1,17 +1,18 @@
 local helpers = require("helpers")
 local json = require("json")
 
+
 Handlers.add("Bank.Info",
     Handlers.utils.hasMatchingTag('Action', 'Bank.Info'),
     function(msg)
-        assert(msg.Token == "GOLD" or msg.Token == "DUMZ", "Invalid bank type")
-        assert(not msg.UserId, "Pass in user id")
+        assert(msg.UserId, "Pass in user id")
 
         local bank = dbAdmin:exec(string.format([[
-            SELECT * FROM Bank WHERE USER_ID = %f;
+            SELECT * FROM Bank WHERE user_id = %f;
         ]], msg.UserId))
+        assert(#bank > 0, "User does not have a bank account")
 
-        ao.send({ Target = msg.From, Data = json.encode(bank) })
+        Send({ Target = msg.From, Data = json.encode(bank[1]) })
     end
 )
 
@@ -19,45 +20,46 @@ Handlers.add("Bank.Info",
 Handlers.add("Bank.Deposit",
     Handlers.utils.hasMatchingTag('Action', 'Bank.Deposit'),
     function(msg)
-        assert(msg.Token == "GOLD" or msg.Token == "DUMZ", "Invalid bank type")
+        assert(msg.TokenType == "GOLD" or msg.TokenType == "DUMZ", "Invalid bank type")
         assert(msg.UserId, "Pass in user id")
         assert(msg.Amount, "Pass in amount")
+        local amount = tonumber(msg.Amount)
 
         -- get user data
         local userData = helpers.CheckUserExists(msg.UserId, msg.From)
 
         -- check if user has enough balance
-        if msg.Token == "GOLD" then
-            assert(userData.GOLD_BALANCE >= msg.Amount, "User does not have enough GOLD balance")
+        if msg.TokenType == "GOLD" then
+            assert(userData.gold_balance >= amount, "User does not have enough GOLD balance")
         else
-            assert(userData.DUMZ_BALANCE >= msg.Amount, "User does not have enough DUMZ balance")
+            assert(userData.dumz_balance >= amount, "User does not have enough DUMZ balance")
         end
 
         -- add a bank transaction
         dbAdmin:exec(string.format([[
-            INSERT INTO BankTransactions (USER_ID, AMOUNT, TOKEN_TYPE, TRANSACTION_TYPE) VALUES (%f, %f, "%s", "DEPOSIT");
-        ]], msg.UserId, msg.Amount, msg.Token))
+            INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type) VALUES (%f, %f, "%s", "DEPOSIT");
+        ]], msg.UserId, amount, msg.TokenType))
 
         -- update bank balance
-        if msg.Token == "GOLD" then
+        if msg.TokenType == "GOLD" then
             dbAdmin:exec(string.format([[
-                UPDATE Bank SET GOLD_AMOUNT = GOLD_AMOUNT + %f WHERE USER_ID = %f;
-            ]], msg.Amount, msg.UserId))
+                UPDATE Bank SET gold_amount = gold_amount + %f WHERE user_id = %f;
+            ]], amount, msg.UserId))
         else
             dbAdmin:exec(string.format([[
-                UPDATE Bank SET DUMZ_AMOUNT = DUMZ_AMOUNT + %f WHERE USER_ID = %f;
-            ]], msg.Amount, msg.UserId))
+                UPDATE Bank SET dumz_amount = dumz_amount + %f WHERE user_id = %f;
+            ]], amount, msg.UserId))
         end
 
         -- update user balance
-        if msg.Token == "GOLD" then
+        if msg.TokenType == "GOLD" then
             dbAdmin:exec(string.format([[
-                UPDATE Users SET GOLD_BALANCE = %f WHERE ID = %f;
-            ]], userData.GOLD_BALANCE - msg.Amount, msg.UserId))
+                UPDATE Users SET gold_balance = %f WHERE id = %f;
+            ]], userData.gold_balance - amount, msg.UserId))
         else
             dbAdmin:exec(string.format([[
-                UPDATE Users SET DUMZ_BALANCE = %f WHERE ID = %f;
-            ]], userData.DUMZ_BALANCE - msg.Amount, msg.UserId))
+                UPDATE Users SET dumz_balance = %f WHERE id = %f;
+            ]], userData.dumz_balance - amount, msg.UserId))
         end
 
         return ao.send({ Target = msg.From, Status = "Success" })
@@ -68,55 +70,119 @@ Handlers.add("Bank.Deposit",
 Handlers.add("Bank.Withdraw",
     Handlers.utils.hasMatchingTag('Action', 'Bank.Withdraw'),
     function(msg)
-        assert(msg.Token == "GOLD" or msg.Token == "DUMZ", "Invalid bank type")
+        assert(msg.TokenType == "GOLD" or msg.TokenType == "DUMZ", "Invalid bank type")
         assert(msg.UserId, "Pass in user id")
         assert(msg.Amount, "Pass in amount")
+        local amount = tonumber(msg.Amount)
 
         -- get user data
-        local userData = helpers.checkUserExists(msg.UserId, msg.From)
+        local userData = helpers.CheckUserExists(msg.UserId, msg.From)
 
         -- fetch bank data
         local bank = dbAdmin:exec(string.format([[
-            SELECT * FROM Bank WHERE USER_ID = %f;
+            SELECT * FROM Bank WHERE user_id = %f;
         ]], msg.UserId))
         assert(#bank > 0, "You do not have any tokens in your bank")
         local bankData = bank[1]
 
         -- check if bank has enough balance
-        if msg.Token == "GOLD" then
-            assert(bankData.GOLD_AMOUNT >= msg.Amount,
-                "Your bank does not have enough GOLD balance. You can only withdraw %f GOLD", bankData.GOLD_AMOUNT)
+        if msg.TokenType == "GOLD" then
+            assert(bankData.gold_amount >= amount,
+                "Your bank does not have enough GOLD balance. You can only withdraw %f GOLD", bankData.gold_amount)
         else
-            assert(bankData.DUMZ_AMOUNT >= msg.Amount,
-                "You bank does not have enough DUMZ balance. You can only withdraw %f DUMZ", bankData.DUMZ_AMOUNT)
+            assert(bankData.dumz_amount >= amount,
+                "You bank does not have enough DUMZ balance. You can only withdraw %f DUMZ", bankData.dumz_amount)
+        end
+
+
+
+        -- update bank balance
+        if msg.TokenType == "GOLD" then
+            dbAdmin:exec(string.format([[
+                UPDATE Bank SET gold_amount = gold_amount - %f WHERE user_id = %f;
+            ]], amount, msg.UserId))
+        else
+            dbAdmin:exec(string.format([[
+                UPDATE Bank SET dumz_amount = dumz_amount - %f WHERE user_id = %f;
+            ]], amount, msg.UserId))
+        end
+
+        -- update user balance
+        if msg.TokenType == "GOLD" then
+            dbAdmin:exec(string.format([[
+                UPDATE Users SET gold_balance = %f WHERE id = %f;
+            ]], userData.gold_balance + amount, msg.UserId))
+        else
+            dbAdmin:exec(string.format([[
+                UPDATE Users SET dumz_balance = %f WHERE id = %f;
+            ]], userData.dumz_balance + amount, msg.UserId))
         end
 
         -- add a bank transaction
         dbAdmin:exec(string.format([[
-            INSERT INTO BankTransactions (USER_ID, AMOUNT, TOKEN_TYPE, TRANSACTION_TYPE) VALUES (%f, %f, "%s", "WITHDRAW");
-        ]], msg.UserId, msg.Amount, msg.Token))
+                    INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type) VALUES (%f, %f, "%s", "WITHDRAW");
+        ]], msg.UserId, amount, msg.TokenType))
+
+        return ao.send({ Target = msg.From, Status = "Success" })
+    end
+)
+
+-- Claim Airdrop
+Handlers.add("Bank.ClaimAirdrop",
+    Handlers.utils.hasMatchingTag('Action', 'Bank.ClaimAirdrop'),
+    function(msg)
+        assert(msg.TokenType == "GOLD" or msg.TokenType == "DUMZ", "Invalid bank type")
+        assert(msg.UserId, "Pass in user id")
+
+        -- get user data
+        local userData = helpers.CheckUserExists(msg.UserId, msg.From)
+
+        -- fetch bank data
+        local bank = dbAdmin:exec(string.format([[
+            SELECT * FROM Bank WHERE user_id = %f;
+        ]], msg.UserId))
+        assert(#bank > 0, "You do not have any tokens in your bank")
+        local bankData = bank[1]
+
+        -- check if bank has enough balance
+        if msg.TokenType == "GOLD" then
+            assert(bankData.nft_gold_amount ~= 0, "You do not have any GOLD airdrop available")
+        else
+            assert(bankData.nft_dumz_amount ~= 0, "You do not have any DUMZ airdrop available")
+        end
+
+        -- get airdrop amount
+        local amount = bankData.nft_gold_amount
+        if msg.TokenType == "DUMZ" then
+            amount = bankData.nft_dumz_amount
+        end
 
         -- update bank balance
-        if msg.Token == "GOLD" then
+        if msg.TokenType == "GOLD" then
             dbAdmin:exec(string.format([[
-                UPDATE Bank SET GOLD_AMOUNT = GOLD_AMOUNT - %f WHERE USER_ID = %f;
-            ]], msg.Amount, msg.UserId))
+                UPDATE Bank SET nft_gold_amount = 0 WHERE user_id = %f;
+            ]], msg.UserId))
         else
             dbAdmin:exec(string.format([[
-                UPDATE Bank SET DUMZ_AMOUNT = DUMZ_AMOUNT - %f WHERE USER_ID = %f;
-            ]], msg.Amount, msg.UserId))
+                UPDATE Bank SET nft_dumz_amount = 0 WHERE user_id = %f;
+            ]], msg.UserId))
         end
 
         -- update user balance
-        if msg.Token == "GOLD" then
+        if msg.TokenType == "GOLD" then
             dbAdmin:exec(string.format([[
-                UPDATE Users SET GOLD_BALANCE = %f WHERE ID = %f;
-            ]], userData.GOLD_BALANCE + msg.Amount, msg.UserId))
+                UPDATE Users SET gold_balance = gold_balance + %f WHERE id = %f;
+            ]], amount, msg.UserId))
         else
             dbAdmin:exec(string.format([[
-                UPDATE Users SET DUMZ_BALANCE = %f WHERE ID = %f;
-            ]], userData.DUMZ_BALANCE + msg.Amount, msg.UserId))
+                UPDATE Users SET dumz_balance = dumz_balance + %f WHERE id = %f;
+            ]], amount, msg.UserId))
         end
+
+        -- add a bank transaction
+        dbAdmin:exec(string.format([[
+            INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type) VALUES (%f, %f, "%s", "CLAIM_AIRDROP");
+            ]], msg.UserId, amount, msg.TokenType))
 
         return ao.send({ Target = msg.From, Status = "Success" })
     end

@@ -20,9 +20,9 @@ USERS_TABLE = [[
         current_island INTEGER,
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
-        health FLOAT DEFAULT 1,
-        stamina_balance FLOAT DEFAULT 4,
-        damage FLOAT DEFAULT 1,
+        health FLOAT DEFAULT 0,
+        stamina_balance FLOAT DEFAULT 0,
+        damage FLOAT DEFAULT 0,
         defense FLOAT DEFAULT 0
     );
 ]]
@@ -32,7 +32,7 @@ INVENTORY_TABLE = [[
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         item_id TEXT NOT NULL,
-        item_type TEXT NOT NULL, -- ARMOR, WEAPON, POTION, etc.
+        item_type TEXT NOT NULL, -- ARMOR, WEAPON, POTION.
         amount INTEGER NOT NULL,
         equipped BOOLEAN DEFAULT FALSE, -- only one item type can be equipped
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -62,7 +62,7 @@ BANK_TRANSACTIONS_TABLE = [[
         user_id INTEGER NOT NULL,
         amount FLOAT DEFAULT 0,
         token_type TEXT NOT NULL CHECK(token_type IN ('GOLD', 'DUMZ')),
-        transaction_type TEXT NOT NULL CHECK(transaction_type IN ('DEPOSIT', 'WITHDRAW', 'AIRDROP', 'PULL_OUT', 'PULL_IN')),
+        transaction_type TEXT NOT NULL CHECK(transaction_type IN ('DEPOSIT', 'WITHDRAW', 'CLAIM_AIRDROP', 'AIRDROP', 'PULL_OUT', 'PULL_IN')),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
     );

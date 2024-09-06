@@ -1,4 +1,5 @@
 import { useGameStore } from "@/store/useGameStore";
+import NumberTicker from "../magicui/number-ticker";
 
 export default function GameProfile() {
   const { user } = useGameStore();
@@ -13,9 +14,23 @@ export default function GameProfile() {
       <p>Defense: {user.defense}</p>
       <p>Health: {user.health}</p>
       <p>Stamina: {user.stamina_balance}</p>
-      <p>Gold: {user.gold_balance}</p>
-      <p>Dumz: {user.dumz_balance}</p>
-      <p>Inventory: {user.inventory.map((item) => item.item_id).join(", ")}</p>
+
+      <p>
+        Gold: <NumberTicker value={user.gold_balance} />
+      </p>
+      <p>
+        Dumz: <NumberTicker value={user.dumz_balance} />
+      </p>
+      <p>Inventory:</p>
+      <div className="flex flex-col gap-2">
+        {user.inventory.map((item) => {
+          return (
+            <div key={item.id}>
+              {item.item_id} {item.equipped ? "equipped" : ""}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

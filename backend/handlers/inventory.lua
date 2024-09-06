@@ -1,6 +1,7 @@
 local json = require("json")
 local helpers = require("helpers")
 
+-- Not needed, inventory is fetched in User.Info
 Handlers.add("Inventory.Info",
     Handlers.utils.hasMatchingTag('Action', 'Inventory.Info'),
     function(msg)
