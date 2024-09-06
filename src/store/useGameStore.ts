@@ -9,6 +9,7 @@ export enum GameStatePages {
   PROFILE = "PROFILE",
   BANK = "BANK",
   SHOP = "SHOP",
+  GAME_MAP = "GAME_MAP",
 }
 interface GameState {
   GameStatePage: GameStatePages | null;

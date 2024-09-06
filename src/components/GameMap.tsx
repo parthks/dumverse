@@ -1,23 +1,109 @@
+import React, { useState, useEffect } from "react";
 import InteractiveMap from "@/components/InteractiveMap";
+import LammaWalkingLeft from "@/assets/lamma_inf_walking_left.gif";
+import LammaWalkingRight from "@/assets/lamma_inf_walking_right.gif";
+import LammaStandRight from "@/assets/lamma_stand_right.png";
+import LammaStandLeft from "@/assets/lamma_stand_left.png";
 
 const GameMap = () => {
-  const mapWidth = 1082; // original map width
-  const mapHeight = 1053; // original map height
+  const mapWidth = 1089; // original map width
+  const mapHeight = 611; // original map height
 
+  // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
   const interactivePoints = [
-    { x: 35.3, y: 32.8, level: "1" },
-    { x: 100, y: 30, level: "2" },
-    // Add more points as needed
+    { x: 79, y: 78, level: "1" },
+    { x: 74.2, y: 79.6, level: "2" },
+    { x: 69.4, y: 79.6, level: "3" },
+    { x: 64.6, y: 77.9, level: "4" },
+    { x: 60.6, y: 72.8, level: "5" },
   ];
+
+  const [lammaPosition, setLammaPosition] = useState({
+    x: 80,
+    y: 70,
+    src: LammaStandRight,
+  });
+
+  const [path, setPath] = useState<{ x: number; y: number }[]>([]);
+  const [currentPathIndex, setCurrentPathIndex] = useState(0);
+  const [currentLevel, setCurrentLevel] = useState("1");
+
+  const lammaWidth = 6;
+  const lammaHeight = 10;
+
+  useEffect(() => {
+    if (path.length > 0 && currentPathIndex < path.length) {
+      const interval = setInterval(() => {
+        setLammaPosition((prev) => {
+          const targetPoint = path[currentPathIndex];
+          const lammaBottomCenterX = prev.x + lammaWidth / 2;
+          const lammaBottomCenterY = prev.y + lammaHeight;
+
+          const dx = targetPoint.x - lammaBottomCenterX;
+          const dy = targetPoint.y - lammaBottomCenterY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 0.5) {
+            if (currentPathIndex === path.length - 1) {
+              clearInterval(interval);
+            } else {
+              setCurrentPathIndex(currentPathIndex + 1);
+            }
+            return {
+              x: targetPoint.x - lammaWidth / 2,
+              y: targetPoint.y - lammaHeight,
+              src: dx >= 0 ? LammaStandRight : LammaStandLeft,
+            };
+          }
+
+          const step = 0.5;
+          const ratio = Math.min(step / distance, 1);
+          const newX = prev.x + dx * ratio;
+          const newY = prev.y + dy * ratio;
+
+          return {
+            x: newX,
+            y: newY,
+            src: dx >= 0 ? LammaWalkingRight : LammaWalkingLeft,
+          };
+        });
+      }, 50);
+
+      return () => clearInterval(interval);
+    }
+  }, [path, currentPathIndex]);
 
   const handleLevelSelect = (level: string) => {
     console.log(`Level ${level} selected`);
-    // Add your level selection logic here
+    const currentIndex = interactivePoints.findIndex((point) => point.level === currentLevel);
+    const targetIndex = interactivePoints.findIndex((point) => point.level === level);
+
+    if (currentIndex !== -1 && targetIndex !== -1) {
+      let newPath;
+      if (currentIndex < targetIndex) {
+        // Moving forward
+        newPath = interactivePoints.slice(currentIndex, targetIndex + 1);
+      } else {
+        // Moving backward
+        newPath = interactivePoints.slice(targetIndex, currentIndex + 1).reverse();
+      }
+
+      setPath(newPath.map((point) => ({ x: point.x, y: point.y })));
+      setCurrentPathIndex(0);
+      setCurrentLevel(level);
+    }
   };
 
   return (
     <div className="h-screen">
-      <InteractiveMap mapWidth={mapWidth} mapHeight={mapHeight} interactivePoints={interactivePoints} onLevelSelect={handleLevelSelect} />
+      <InteractiveMap
+        currentLevel={currentLevel}
+        lammaPosition={lammaPosition}
+        mapWidth={mapWidth}
+        mapHeight={mapHeight}
+        interactivePoints={interactivePoints}
+        onLevelSelect={handleLevelSelect}
+      />
     </div>
   );
 };
