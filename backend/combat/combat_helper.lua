@@ -31,10 +31,15 @@ end
 
 -- attackingEntityType = "player" or "npc"
 -- defendingEntityType = "player" or "npc"
-function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, defendingEntityType, timestamp)
+function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, defendingEntityType, timestamp,
+                        critical_hit)
+    print("attackingEntity " .. attackingEntity.name .. " defendingEntity " .. defendingEntity.name)
+
     local attacker = _getEntityStats(attackingEntity, attackingEntityType)
     local defender = _getEntityStats(defendingEntity, defendingEntityType)
     local log = {}
+
+    print("SimulateCombat - attacker " .. attacker.name .. " defender " .. defender.name)
 
     local success, attacker_roll = _verifyAttackSuccessful()
 
@@ -46,6 +51,14 @@ function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, d
 
     if success then
         local damage = attacker.damage
+        if critical_hit then
+            damage = damage * 2
+            table.insert(log,
+                {
+                    message = string.format("%s deals a critical hit to %s", attacker.name, defender.name),
+                    timestamp = timestamp
+                })
+        end
         local remaining_defense = defender.defense
         local health_damage = 0
 

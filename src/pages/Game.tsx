@@ -3,7 +3,8 @@ import GameProfile from "@/components/game/GameProfile";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import Bank from "./Bank";
 import Shop from "./Shop";
-import GameMap from "@/components/GameMap";
+import GameMap from "./GameMap";
+import Combat from "./Combat";
 
 export default function Game() {
   const { GameStatePage, setGameStatePage, user } = useGameStore();
@@ -11,6 +12,7 @@ export default function Game() {
   if (GameStatePage === GameStatePages.BANK) page = <Bank />;
   if (GameStatePage === GameStatePages.SHOP) page = <Shop />;
   if (GameStatePage === GameStatePages.GAME_MAP) page = <GameMap />;
+  if (GameStatePage === GameStatePages.COMBAT) page = <Combat />;
 
   if (!user) return <div>Loading...</div>;
   return (
@@ -21,6 +23,7 @@ export default function Game() {
         <Button onClick={() => setGameStatePage(GameStatePages.BANK)}>Go to Bank</Button>
         <Button onClick={() => setGameStatePage(GameStatePages.SHOP)}>Go to Shop</Button>
         <Button onClick={() => setGameStatePage(GameStatePages.GAME_MAP)}>Go to Game Map</Button>
+        <Button onClick={() => setGameStatePage(GameStatePages.COMBAT)}>Go to Combat</Button>
       </div>
       {page}
     </div>

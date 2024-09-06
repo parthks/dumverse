@@ -9,6 +9,7 @@ export default function GameProfile() {
       <h1 className="text-2xl font-bold">GameProfile</h1>
       <p>User ID: {user.id}</p>
       <p>Name: {user.name}</p>
+      <p>Address: {user.address}</p>
       <p>NFT: {user.nft_address}</p>
       <p>Damage: {user.damage}</p>
       <p>Defense: {user.defense}</p>

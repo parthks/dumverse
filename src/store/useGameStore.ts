@@ -1,5 +1,5 @@
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, GameUser, Inventory, Item, Shop, TokenType } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { useAppStore } from "./useAppStore";
@@ -10,17 +10,18 @@ export enum GameStatePages {
   BANK = "BANK",
   SHOP = "SHOP",
   GAME_MAP = "GAME_MAP",
+  COMBAT = "COMBAT",
 }
 interface GameState {
   GameStatePage: GameStatePages | null;
   setGameStatePage: (state: GameStatePages | null) => void;
-  registerNewUser: () => void;
+  registerNewUser: () => Promise<void>;
   user: GameUser | null;
   setUser: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<void>;
   inventory: Inventory[];
   setInventory: (inventory: Inventory[]) => void;
-  bank: Bank | null;
+  bank: (Bank & { transactions: BankTransaction[] }) | null;
   getBank: () => Promise<void>;
   bankTransactionLoading: boolean;
   deposit: (amount: number, tokenType: TokenType) => Promise<void>;
@@ -86,7 +87,9 @@ export const useGameStore = create<GameState>()(
           { name: "UserId", value: get().user?.id.toString()! },
         ]);
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
-          const bank = JSON.parse(resultData.Messages[0].Data);
+          const bankData = JSON.parse(resultData.Messages[0].Data);
+          const bank = bankData.bank;
+          bank.transactions = bankData.transactions;
           set({ bank: bank });
         }
       },

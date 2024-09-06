@@ -21,7 +21,7 @@ USERS_TABLE = [[
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         health FLOAT DEFAULT 0,
-        stamina_balance FLOAT DEFAULT 0,
+        stamina FLOAT DEFAULT 0,
         damage FLOAT DEFAULT 0,
         defense FLOAT DEFAULT 0
     );
@@ -63,20 +63,20 @@ BANK_TRANSACTIONS_TABLE = [[
         amount FLOAT DEFAULT 0,
         token_type TEXT NOT NULL CHECK(token_type IN ('GOLD', 'DUMZ')),
         transaction_type TEXT NOT NULL CHECK(transaction_type IN ('DEPOSIT', 'WITHDRAW', 'CLAIM_AIRDROP', 'AIRDROP', 'PULL_OUT', 'PULL_IN')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
     );
 ]]
 
 
--- db:exec("DROP TABLE IF EXISTS Users;")
--- db:exec(USERS_TABLE)
--- db:exec("DROP TABLE IF EXISTS Inventory;")
--- db:exec(INVENTORY_TABLE)
--- db:exec("DROP TABLE IF EXISTS Bank;")
--- db:exec(BANK_TABLE)
--- db:exec("DROP TABLE IF EXISTS BankTransactions;")
--- db:exec(BANK_TRANSACTIONS_TABLE)
+db:exec("DROP TABLE IF EXISTS Users;")
+db:exec(USERS_TABLE)
+db:exec("DROP TABLE IF EXISTS Inventory;")
+db:exec(INVENTORY_TABLE)
+db:exec("DROP TABLE IF EXISTS Bank;")
+db:exec(BANK_TABLE)
+db:exec("DROP TABLE IF EXISTS BankTransactions;")
+db:exec(BANK_TRANSACTIONS_TABLE)
 
 
 return dbAdmin

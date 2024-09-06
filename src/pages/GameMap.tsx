@@ -4,6 +4,7 @@ import LammaWalkingLeft from "@/assets/lamma_inf_walking_left.gif";
 import LammaWalkingRight from "@/assets/lamma_inf_walking_right.gif";
 import LammaStandRight from "@/assets/lamma_stand_right.png";
 import LammaStandLeft from "@/assets/lamma_stand_left.png";
+import { Input } from "../components/ui/input";
 
 const GameMap = () => {
   const mapWidth = 1089; // original map width
@@ -27,9 +28,11 @@ const GameMap = () => {
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
   const [currentLevel, setCurrentLevel] = useState("1");
+  const [stepDistance, setStepDistance] = useState("0.5");
+  const [stepTime, setStepTime] = useState("50");
 
   const lammaWidth = 6;
-  const lammaHeight = 10;
+  const lammaHeight = 8.5;
 
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
@@ -56,7 +59,7 @@ const GameMap = () => {
             };
           }
 
-          const step = 0.5;
+          const step = parseFloat(stepDistance);
           const ratio = Math.min(step / distance, 1);
           const newX = prev.x + dx * ratio;
           const newY = prev.y + dy * ratio;
@@ -67,7 +70,7 @@ const GameMap = () => {
             src: dx >= 0 ? LammaWalkingRight : LammaWalkingLeft,
           };
         });
-      }, 50);
+      }, parseInt(stepTime));
 
       return () => clearInterval(interval);
     }
@@ -96,6 +99,11 @@ const GameMap = () => {
 
   return (
     <div className="h-screen">
+      <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
+      <label>Step Distance (% of map width between 0-1)</label>
+      <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
+      <label>Step Time (in ms)</label>
+      <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} />
       <InteractiveMap
         currentLevel={currentLevel}
         lammaPosition={lammaPosition}

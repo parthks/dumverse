@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import ConnectButton from "@/components/wallet/ConnectButton";
 // import useProfile from "./components/wallet/useProfile";
@@ -52,9 +52,12 @@ export default function App() {
 
 function RegistrationForm() {
   const { assets, profile, profileId, name, setName, selectedNFT, setSelectedNFT } = useAppStore();
+  const [loading, setLoading] = useState(false);
 
-  function handleRegister() {
-    useGameStore.getState().registerNewUser();
+  async function handleRegister() {
+    setLoading(true);
+    await useGameStore.getState().registerNewUser();
+    setLoading(false);
   }
   const dumdumAssets = useMemo(
     () =>
@@ -108,7 +111,7 @@ function RegistrationForm() {
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
           }}
         >
-          Enter Dumverse
+          {loading ? "Registering..." : "Register New User"}
         </button>
       </div>
     </div>

@@ -9,10 +9,14 @@ Handlers.add("Bank.Info",
 
         local bank = dbAdmin:exec(string.format([[
             SELECT * FROM Bank WHERE user_id = %f;
-        ]], msg.UserId))
+        ]], msg.UserId, msg.UserId))
         assert(#bank > 0, "User does not have a bank account")
 
-        Send({ Target = msg.From, Data = json.encode(bank[1]) })
+        local bankTransactions = dbAdmin:exec(string.format([[
+            SELECT * FROM BankTransactions WHERE user_id = %f;
+        ]], msg.UserId))
+
+        Send({ Target = msg.From, Data = json.encode({ bank = bank[1], transactions = bankTransactions }) })
     end
 )
 
@@ -37,8 +41,8 @@ Handlers.add("Bank.Deposit",
 
         -- add a bank transaction
         dbAdmin:exec(string.format([[
-            INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type) VALUES (%f, %f, "%s", "DEPOSIT");
-        ]], msg.UserId, amount, msg.TokenType))
+            INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%f, %f, "%s", "DEPOSIT", %f);
+        ]], msg.UserId, amount, msg.TokenType, msg.Timestamp))
 
         -- update bank balance
         if msg.TokenType == "GOLD" then
@@ -120,8 +124,8 @@ Handlers.add("Bank.Withdraw",
 
         -- add a bank transaction
         dbAdmin:exec(string.format([[
-                    INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type) VALUES (%f, %f, "%s", "WITHDRAW");
-        ]], msg.UserId, amount, msg.TokenType))
+                    INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%f, %f, "%s", "WITHDRAW", %f);
+        ]], msg.UserId, amount, msg.TokenType, msg.Timestamp))
 
         return ao.send({ Target = msg.From, Status = "Success" })
     end
@@ -181,8 +185,8 @@ Handlers.add("Bank.ClaimAirdrop",
 
         -- add a bank transaction
         dbAdmin:exec(string.format([[
-            INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type) VALUES (%f, %f, "%s", "CLAIM_AIRDROP");
-            ]], msg.UserId, amount, msg.TokenType))
+            INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%f, %f, "%s", "CLAIM_AIRDROP", %f);
+        ]], msg.UserId, amount, msg.TokenType, msg.Timestamp))
 
         return ao.send({ Target = msg.From, Status = "Success" })
     end

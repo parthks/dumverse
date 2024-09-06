@@ -1,3 +1,6 @@
+COMBAT_PROCESS_ID = "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE"
+GAME_PROCESS_ID = "EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc"
+
 ITEMS = {
     ["ARMOR_1"] = {
         id = "ARMOR_1",
@@ -67,7 +70,7 @@ ITEMS = {
     },
 }
 
-ENIMIES = {
+ENEMIES = {
     {
         id = "NPC_1",
         name = "Cute Doe Eyed Doe",

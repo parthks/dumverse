@@ -46,6 +46,18 @@ export default function Bank() {
           <Button onClick={() => claimAirdrop("DUMZ")}>Claim Dumz Airdrop</Button>
         </div>
       </div>
+      <h1>Bank Transactions</h1>
+      <div>
+        {bank.transactions.map((transaction) => (
+          <div key={transaction.id} className="flex flex-col gap-1 mb-3">
+            <p>ID: {transaction.id}</p>
+            <p>Amount: {transaction.amount}</p>
+            <p>Token Type: {transaction.token_type}</p>
+            <p>Transaction Type: {transaction.transaction_type}</p>
+            <p>Transaction Time: {new Date(transaction.created_at).toLocaleString()}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
