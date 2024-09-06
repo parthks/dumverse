@@ -1,6 +1,3 @@
--- 1mCv9ODdJsHWhxVVhc_6s1BFkX7uewWpgWakSaTot6Y
--- TodIkfiRyzdzBFvRQEuwWNXlXYSRiY6vTuA4Xq-9oTk -parth
-
 local bint = require('.bint')(256)
 local ao = require('ao')
 

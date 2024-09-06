@@ -10,7 +10,7 @@ function CheckUserExists(userId, address)
 ]], userId))
   assert(#user > 0, "User does not exist")
   local userData = user[1]
-  assert(userData.ADDRESS == address, "User Address does not match")
+  assert(userData.address == address, "User Address does not match")
   return userData
 end
 

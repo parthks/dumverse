@@ -2,7 +2,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { dryrun } from "@permaweb/aoconnect/browser";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
-export default function useProfile() {
+export const useProfile = () => {
   const { walletAddressID, setProfile, setAssets, setProfileId, profileId, setProfileLoading, resetProfileData } = useAppStore();
 
   const getProfileInfo = useCallback(
@@ -71,4 +71,4 @@ export default function useProfile() {
   }, [walletAddressID]);
 
   return profileId;
-}
+};
