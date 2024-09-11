@@ -1,9 +1,41 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCombatStore } from "@/store/useCombatStore";
+import { useEffect, useState } from "react";
 
 export default function Combat() {
   const { loading, currentBattle, getOpenBattles, setCurrentBattle, enterNewBattle, userAttack, userRun } = useCombatStore();
+
+  const [newBattleInitialized, setNewBattleInitialized] = useState(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    let timeout: NodeJS.Timeout | null = null;
+
+    if (newBattleInitialized && !currentBattle?.id) {
+      interval = setInterval(() => {
+        console.log("checking for open battles");
+        getOpenBattles();
+      }, 1000);
+
+      // Stop checking after 30 seconds
+      timeout = setTimeout(() => {
+        if (interval) {
+          console.log("Stopped checking for open battles after 30 seconds");
+          clearInterval(interval);
+        }
+      }, 30000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [newBattleInitialized, currentBattle, getOpenBattles]);
 
   const BattleScreen = () => {
     if (!currentBattle) return <div>No battle found</div>;
@@ -65,7 +97,14 @@ export default function Combat() {
       <p>{loading ? "Loading..." : ""}</p>
       <div className="flex gap-2 mb-2">
         <Button onClick={() => getOpenBattles()}>Get Open Battles</Button>
-        <Button onClick={() => enterNewBattle(1)}>Enter new battle (level 1)</Button>
+        <Button
+          onClick={async () => {
+            await enterNewBattle(1);
+            setNewBattleInitialized(true);
+          }}
+        >
+          Enter new battle (level 1)
+        </Button>
       </div>
       <div className="flex gap-2">
         <label>Enter battle ID</label>

@@ -69,14 +69,14 @@ BANK_TRANSACTIONS_TABLE = [[
 ]]
 
 
-db:exec("DROP TABLE IF EXISTS Users;")
-db:exec(USERS_TABLE)
-db:exec("DROP TABLE IF EXISTS Inventory;")
-db:exec(INVENTORY_TABLE)
-db:exec("DROP TABLE IF EXISTS Bank;")
-db:exec(BANK_TABLE)
-db:exec("DROP TABLE IF EXISTS BankTransactions;")
-db:exec(BANK_TRANSACTIONS_TABLE)
+-- db:exec("DROP TABLE IF EXISTS Users;")
+-- db:exec(USERS_TABLE)
+-- db:exec("DROP TABLE IF EXISTS Inventory;")
+-- db:exec(INVENTORY_TABLE)
+-- db:exec("DROP TABLE IF EXISTS Bank;")
+-- db:exec(BANK_TABLE)
+-- db:exec("DROP TABLE IF EXISTS BankTransactions;")
+-- db:exec(BANK_TRANSACTIONS_TABLE)
 
 
 return dbAdmin

@@ -20,10 +20,6 @@ interface AppState {
   setProfile: (profile: BazzarProfile | null) => void;
   setAssets: (assets: { Quantity: number; Id: string }[]) => void;
   resetProfileData: () => void;
-  selectedNFT: string | null;
-  setSelectedNFT: (nft: string | null) => void;
-  name: string;
-  setName: (name: string) => void;
   gameProfiles: GameUser[];
   getGameProfiles: () => void;
   setGameProfiles: (profiles: GameUser[]) => void;
@@ -47,15 +43,9 @@ export const useAppStore = create<AppState>()(
           profile: null,
           assets: [],
           profileLoading: false,
-          selectedNFT: null,
-          name: "",
         });
         useGameStore.getState().setGameStatePage(null);
       },
-      selectedNFT: null,
-      setSelectedNFT: (nft) => set({ selectedNFT: nft }),
-      name: "",
-      setName: (name) => set({ name }),
       gameProfiles: [],
       setGameProfiles: (gameProfiles) => set({ gameProfiles }),
       getGameProfiles: async () => {

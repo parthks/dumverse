@@ -11,11 +11,12 @@ export enum GameStatePages {
   SHOP = "SHOP",
   GAME_MAP = "GAME_MAP",
   COMBAT = "COMBAT",
+  TOWN = "TOWN",
 }
 interface GameState {
   GameStatePage: GameStatePages | null;
   setGameStatePage: (state: GameStatePages | null) => void;
-  registerNewUser: () => Promise<void>;
+  registerNewUser: (name: string, nft?: string) => Promise<void>;
   user: GameUser | null;
   setUser: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<void>;
@@ -38,8 +39,8 @@ export const useGameStore = create<GameState>()(
     (set, get) => ({
       GameStatePage: null,
       setGameStatePage: (state) => set({ GameStatePage: state }),
-      registerNewUser: async () => {
-        const { name, selectedNFT } = useAppStore.getState();
+      registerNewUser: async (name, selectedNFT) => {
+        // const { name, selectedNFT } = useAppStore.getState();
         const tags = [
           { name: "Action", value: "Users.AddNewUser" },
           { name: "Name", value: name },
@@ -58,7 +59,7 @@ export const useGameStore = create<GameState>()(
       user: null,
       setUser: (user) => {
         if (user) {
-          set({ GameStatePage: GameStatePages.HOME });
+          set({ GameStatePage: GameStatePages.GAME_MAP });
           get().refreshUserData(user.id);
         }
       },

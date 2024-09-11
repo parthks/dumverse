@@ -5,8 +5,11 @@ import LammaWalkingRight from "@/assets/lamma_inf_walking_right.gif";
 import LammaStandRight from "@/assets/lamma_stand_right.png";
 import LammaStandLeft from "@/assets/lamma_stand_left.png";
 import { Input } from "../components/ui/input";
+import ImgButton from "@/components/ui/imgButton";
+import { GameStatePages, useGameStore } from "@/store/useGameStore";
 
 const GameMap = () => {
+  const { setGameStatePage } = useGameStore();
   const mapWidth = 1089; // original map width
   const mapHeight = 611; // original map height
 
@@ -21,8 +24,8 @@ const GameMap = () => {
 
   const [lammaPosition, setLammaPosition] = useState({
     x: 80,
-    y: 70,
-    src: LammaStandRight,
+    y: 63,
+    src: LammaStandLeft,
   });
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
@@ -99,11 +102,17 @@ const GameMap = () => {
 
   return (
     <div className="h-screen">
-      <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
+      <audio autoPlay loop>
+        <source src="https://arweave.net/yW2M75jkljOj3I-Wv2Cs0A3Dqkn4MVdyCRfqkQL8pMs" type="audio/mpeg" />
+      </audio>
+      <div className="z-10 absolute top-4 right-4">
+        <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.TOWN)} alt={"Return to Town"} />
+      </div>
+      {/* <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
       <label>Step Distance (% of map width between 0-1)</label>
       <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
       <label>Step Time (in ms)</label>
-      <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} />
+      <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
       <InteractiveMap
         currentLevel={currentLevel}
         lammaPosition={lammaPosition}

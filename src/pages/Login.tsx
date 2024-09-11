@@ -1,20 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ConnectButton from "@/components/wallet/ConnectButton";
-// import useProfile from "./components/wallet/useProfile";
-import { useAppStore } from "@/store/useAppStore";
+import React, { useEffect, useMemo, useState } from "react";
 import DUMDUM_ASSET_IDS from "@/lib/DumDumAssetIds";
-import { shallow } from "zustand/shallow";
+import { useAppStore } from "@/store/useAppStore";
 
 import DumDumPlainImage from "@/assets/dumdumz_plain.png";
+import ImgButton from "@/components/ui/imgButton";
+import { Input } from "@/components/ui/input";
 import { useProfile } from "@/components/wallet/hooks";
 import { useGameStore } from "@/store/useGameStore";
-import { Button } from "@/components/ui/button";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
-  const { setUser } = useGameStore();
-  const profileId = useProfile();
+  useProfile();
 
   useEffect(() => {
     console.log("Hello world!");
@@ -27,13 +25,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (walletAddressID) getGameProfiles();
+    if (walletAddressID) {
+      getGameProfiles();
+    }
   }, [walletAddressID]);
 
   return (
-    <>
-      <ConnectButton />
-      {walletAddressID ? profileLoading ? <p>Fetching your profile...</p> : <RegistrationForm /> : <p>Connect to see your profile</p>}
+    <div className="relative h-screen w-screen overflow-hidden">
+      <video muted autoPlay loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
+        <source src={"https://arweave.net/VZ1nRp2_RZz99f70rR8irRfIxmP9FLp0pqz8Zml8chw"} type="video/mp4" />
+      </video>
+      <div className="relative z-10 h-full w-full">
+        {!walletAddressID && (
+          <div className="absolute top-4 right-4">
+            <ConnectButton />
+          </div>
+        )}
+        {walletAddressID && <LoginForm />}
+      </div>
+    </div>
+  );
+  {
+    /* {walletAddressID ? profileLoading ? <p>Fetching your profile...</p> : <RegistrationForm /> : <p>Connect to see your profile</p>}
       {gameProfiles.length > 0 && (
         <div>
           <p>Found existing game profiles:</p>
@@ -45,18 +58,41 @@ export default function App() {
             </div>
           ))}
         </div>
-      )}
-    </>
-  );
+      )} */
+  }
 }
 
-function RegistrationForm() {
-  const { assets, profile, profileId, name, setName, selectedNFT, setSelectedNFT } = useAppStore();
+function LoginForm() {
+  const [selectedOption, setSelectedOption] = useState<{ edition: number; Id: string; existingProfile: boolean } | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+
+  const assets = useAppStore((state) => state.assets);
+  const profile = useAppStore((state) => state.profile);
+  const profileLoading = useAppStore((state) => state.profileLoading);
+  const gameProfiles = useAppStore((state) => state.gameProfiles);
+  const setUser = useGameStore((state) => state.setUser);
+
   const [loading, setLoading] = useState(false);
+
+  const handleOptionSelect = (option: any) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
 
   async function handleRegister() {
     setLoading(true);
-    await useGameStore.getState().registerNewUser();
+    if (selectedOption?.existingProfile) {
+      const gameProfile = gameProfiles.find((profile) => profile.nft_address === selectedOption.Id);
+      if (!gameProfile) {
+        console.error("Game profile not found");
+        alert("Game profile not found");
+        return;
+      }
+      await setUser(gameProfile);
+    } else {
+      await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
+    }
     setLoading(false);
   }
   const dumdumAssets = useMemo(
@@ -66,112 +102,119 @@ function RegistrationForm() {
         .map((asset) => ({
           ...asset,
           edition: DUMDUM_ASSET_IDS.find((id) => id.id === asset.Id)?.edition,
+          existingProfile: gameProfiles.find((profile) => profile.nft_address === asset.Id),
         })),
     [assets]
   );
 
   useEffect(() => {
-    setName(profile?.UserName || "");
+    if (profile) setName(profile?.UserName || "");
   }, [profile]);
 
   useEffect(() => {
-    if (dumdumAssets.length > 0) setSelectedNFT(dumdumAssets[0].Id);
-  }, [dumdumAssets]);
+    if (profileLoading) return;
+    if (dumdumAssets.length > 0) {
+      // find the first asset that has an existing profile
+      const existingAsset = dumdumAssets.find((asset) => asset.existingProfile);
+      setSelectedOption(existingAsset ?? (dumdumAssets[0] as any));
+    }
+  }, [profileLoading, dumdumAssets]);
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
-  return (
-    <div className="w-full max-w-md mx-auto p-6 space-y-6 bg-white">
-      {!profileId && <p>No bazzar profile ID found</p>}
+  console.log("profileLoading", profileLoading);
 
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <label htmlFor="name" className="text-lg font-semibold text-purple-700 w-16 text-right">
-            Name:
-          </label>
-          <div className="grow">
-            <div className="relative">
-              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 300 40" preserveAspectRatio="none">
-                <path d="M5,2 Q2,2 2,5 L2,35 Q2,38 5,38 L295,38 Q298,38 298,35 L298,5 Q298,2 295,2 Z" fill="none" stroke="black" strokeWidth="2" />
-              </svg>
-              <input value={name} onChange={handleNameChange} id="name" className="w-full p-2 bg-transparent relative z-10 text-center" style={{ outline: "none" }} />
-            </div>
+  const FormData = () => {
+    return (
+      <form className="space-y-4 w-full m-16 flex flex-col gap-4 items-center">
+        <div>
+          <div className="relative flex gap-2 items-center">
+            <label htmlFor="username" className="text-black font-semibold w-16 text-right">
+              Name:{" "}
+            </label>
+            <Input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={handleNameChange}
+              className="h-[37px] w-[153px] bg-no-repeat bg-left border-none focus-visible:ring-0"
+              style={{
+                width: "calc(153px * 1.3)",
+                height: "calc(37px * 1.3)",
+                backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
+                backgroundSize: "100% 100%",
+              }}
+            />
           </div>
-        </div>
-
-        <NFTSelector selectedNFT={selectedNFT} setSelectedNFT={setSelectedNFT} dumdumAssets={dumdumAssets} />
-
-        <button
-          onClick={handleRegister}
-          className="w-full py-2 px-4 rounded-full text-white font-semibold text-lg"
-          style={{
-            background: "linear-gradient(to right, #e0e0ff, #c8a2ff, #e0e0ff)",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)",
-          }}
-        >
-          {loading ? "Registering..." : "Register New User"}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function NFTSelector({ selectedNFT, setSelectedNFT, dumdumAssets }: { selectedNFT: string | null; setSelectedNFT: (nft: string | null) => void; dumdumAssets: any[] }) {
-  const [open, setOpen] = React.useState(false);
-
-  return (
-    <>
-      <div className="space-x-2 flex items-center">
-        <label htmlFor="nft" className="text-lg font-semibold text-purple-700 w-16 text-right">
-          NFT:
-        </label>
-        <div className="grow">
-          {selectedNFT ? (
-            <Popover open={open} onOpenChange={setOpen}>
+          <br className="m-8" />
+          <div className="relative flex gap-2 items-center">
+            <label htmlFor="select-option" className="text-black font-semibold w-16 text-right">
+              NFT:
+            </label>
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger asChild>
-                <div className="relative cursor-pointer">
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 300 40" preserveAspectRatio="none">
-                    <path d="M5,2 Q2,2 2,5 L2,35 Q2,38 5,38 L295,38 Q298,38 298,35 L298,5 Q298,2 295,2 Z" fill="none" stroke="black" strokeWidth="2" />
-                  </svg>
-                  <div className="relative p-2 z-10 w-full">
-                    <p className="text-purple-700 font-semibold text-center w-full">#{dumdumAssets.find((asset) => asset.Id === selectedNFT)?.edition}</p>
-                    <svg className="top-2 w-8 text-black absolute -right-10" viewBox="0 0 16 10" fill="currentColor">
-                      <path d="M0 0l6 10 6-10H0z" />
-                    </svg>
-                  </div>
+                <div className="relative flex justify-start gap-3">
+                  <Input
+                    type="text"
+                    value={selectedOption?.edition ? "#" + selectedOption.edition : ""}
+                    placeholder="Select an option"
+                    readOnly
+                    className="h-[37px] w-[153px] bg-no-repeat bg-left border-none focus-visible:ring-0 cursor-pointer"
+                    style={{
+                      width: "calc(153px * 1.3)",
+                      height: "calc(37px * 1.3)",
+                      backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
+                      backgroundSize: "100% 100%",
+                    }}
+                  />
+                  <button type="button" className="">
+                    <img src="https://arweave.net/tzswubwQVSKwp6L5BZwhjdEnMk_ECBqiWCFOFvKxSuY" alt="Arrow" className="w-4 h-4" />
+                  </button>
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-full p-0">
-                <div className="grid">
+                <div className="py-1">
                   {dumdumAssets.map((option) => (
-                    <button
-                      key={option.Id}
-                      className="text-left p-2 hover:bg-gray-100"
-                      onClick={() => {
-                        setSelectedNFT(option.Id);
-                        setOpen(false);
-                      }}
-                    >
+                    <div key={option.Id} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleOptionSelect(option)}>
+                      <img src={`https://arweave.net/${option.Id}`} alt="NFT Preview" className="w-10 h-10 object-contain" />
                       {option.edition}
-                    </button>
+                    </div>
                   ))}
                 </div>
               </PopoverContent>
             </Popover>
-          ) : (
-            <p>No NFTs found</p>
-          )}
+          </div>
         </div>
-      </div>
+        <img src={selectedOption?.Id ? `https://arweave.net/${selectedOption.Id}` : DumDumPlainImage} alt="NFT Preview" className="w-32 h-32 object-contain" />
 
-      <div className="space-x-2 flex items-center justify-center">
-        {/* <div className="min-w-16"></div> */}
-        <div className="w-full h-48 bg-blue-200 rounded-lg overflow-hidden">
-          <img src={selectedNFT ? `https://arweave.net/${selectedNFT}` : DumDumPlainImage} alt="NFT Preview" className="w-full h-full object-contain" />
+        <div className="flex flex-col gap-2 justify-center items-center">
+          {selectedOption?.existingProfile ? <p>Using existing profile</p> : <p>Registering new profile...</p>}
+          <ImgButton
+            disabled={loading}
+            src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
+            alt="Enter Dumverse"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Enter Dumverse");
+              handleRegister();
+            }}
+          />
         </div>
+      </form>
+    );
+  };
+
+  return (
+    <div className="h-screen flex justify-center items-center">
+      <div
+        className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"
+        style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
+      >
+        {profileLoading ? <p>Loading...</p> : <FormData />}
       </div>
-    </>
+    </div>
   );
 }

@@ -114,13 +114,13 @@ Handlers.add("Battle.UserAttack",
     function(msg)
         local battle_id = tonumber(msg.BattleId)
         VerifyUserInBattle(msg.UserId, battle_id)
-        VerifyBattleIsOnGoing(battle_id)
+        local battle = VerifyBattleIsOnGoing(battle_id)
 
         local attackEntityId = msg.AttackEntityId
         assert(attackEntityId, "AttackEntityId is required")
 
-        local playerUserIds = BattleHelpers.getAlivePlayerUserIds(battle_id)
-        local npcIds = BattleHelpers.getAliveNPCIds(battle_id)
+        local playerUserIds = battle.players_alive
+        local npcIds = battle.npcs_alive
         print("User Attack - playerUserIds " .. tostring(playerUserIds))
         print("User Attack - npcIds " .. tostring(npcIds))
 
@@ -173,7 +173,7 @@ Handlers.add("Battle.UserAttack",
             print("All players have attacked. NPC should attack")
             local battle = BattleHelpers.get(battle_id)
             -- loop through all npcs and attack
-            for npc_id, _ in pairs(battle.npcs_alive) do
+            for _, npc_id in ipairs(battle.npcs_alive) do
                 NPCAttack(npc_id, battle.id, msg.Timestamp)
             end
         end
@@ -248,7 +248,7 @@ function NPCAttack(npc_id, battle_id, timestamp, player_id_tried_running)
     local battle = BattleHelpers.get(battle_id)
 
     -- pick random player and attack
-    local alive_players = BattleHelpers.getAlivePlayerUserIds(battle.id)
+    local alive_players = battle.players_alive
     local player_id = player_id_tried_running or alive_players[math.random(#alive_players)]
 
     local log, defender_health = SimulateCombat(battle.npcs[npc_id], "npc", battle.players
@@ -283,8 +283,16 @@ BattleHelpers.endBattle = function(battle_id, winner_id, timestamp)
 
     battle.winner = winner_id
     battle.ended = true
+    local winning_message = ''
     if winner_id then
-        BattleHelpers.log(battle_id, timestamp, "Player " .. winner_id .. " won the battle")
+        assert(battle.players[winner_id] or battle.npcs[winner_id],
+            "Winner id " .. winner_id .. " not found in players or npcs")
+        if battle.players[winner_id] then
+            winning_message = "Player " .. battle.players[winner_id].name .. " won the battle"
+        elseif battle.npcs[winner_id] then
+            winning_message = "NPC " .. battle.npcs[winner_id].name .. " won the battle"
+        end
+        BattleHelpers.log(battle_id, timestamp, winning_message)
     else
         BattleHelpers.log(battle_id, timestamp, "No winner, battle ended. Players successfully ran away")
     end
@@ -300,15 +308,15 @@ BattleHelpers.getLatestOpenBattle = function()
     return nil
 end
 
-BattleHelpers.getAlivePlayerUserIds = function(battle_id)
-    local battle = BattleHelpers.get(battle_id)
-    return battle.players_alive
-end
+-- BattleHelpers.getAlivePlayerUserIds = function(battle_id)
+--     local battle = BattleHelpers.get(battle_id)
+--     return battle.players_alive
+-- end
 
-BattleHelpers.getAliveNPCIds = function(battle_id)
-    local battle = BattleHelpers.get(battle_id)
-    return battle.npcs_alive
-end
+-- BattleHelpers.getAliveNPCIds = function(battle_id)
+--     local battle = BattleHelpers.get(battle_id)
+--     return battle.npcs_alive
+-- end
 
 BattleHelpers.addPlayer = function(battle_id, player)
     local battle = BattleHelpers.get(battle_id)

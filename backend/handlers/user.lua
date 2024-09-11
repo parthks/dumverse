@@ -61,7 +61,10 @@ Handlers.add(
         --     nft_dumz_amount))
 
         -- Insert new user
-        local baseStats = helpers.CalculateUserBaseStats({ nft_address })
+        local tempUserData = {
+            nft_address = nft_address,
+        }
+        local baseStats = helpers.CalculateUserBaseStats(tempUserData)
 
         dbAdmin:exec(string.format([[
             INSERT INTO Users (address, name, nft_address, gold_balance, dumz_balance, damage, defense, health, stamina)
