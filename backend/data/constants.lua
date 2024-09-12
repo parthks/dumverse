@@ -2,72 +2,42 @@ COMBAT_PROCESS_ID = "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE"
 GAME_PROCESS_ID = "EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc"
 
 ITEMS = {
-    ["ARMOR_1"] = {
-        id = "ARMOR_1",
-        name = "Wood Armor",
-        gold_price = 1,
-        dumz_price = 1,
-        defense = 1,
-        type = "ARMOR",
-    },
-    ["ARMOR_2"] = {
-        id = "ARMOR_2",
-        name = "Iron Armor",
-        gold_price = 2,
-        dumz_price = 2,
-        defense = 2,
-        type = "ARMOR",
-    },
-    ["ARMOR_3"] = {
-        id = "ARMOR_3",
-        name = "Gold Armor",
-        gold_price = 3,
-        dumz_price = 3,
-        defense = 3,
-        type = "ARMOR",
-    },
-    ["ARMOR_4"] = {
-        id = "ARMOR_4",
-        name = "Diamond Armor",
-        gold_price = 5,
-        dumz_price = 4,
-        defense = 5,
-        type = "ARMOR",
-        exlusive_to = "NFT_HOLDER",
-    },
     ["WEAPON_1"] = {
         id = "WEAPON_1",
         name = "Wood Slingshot",
-        gold_price = 1,
-        dumz_price = 1,
+        gold_price = 5000,
         damage = 2,
         type = "WEAPON",
     },
-    ["WEAPON_2"] = {
-        id = "WEAPON_2",
-        name = "Iron Slingshot",
-        gold_price = 2,
-        dumz_price = 2,
-        damage = 3,
-        type = "WEAPON",
+    ["ARMOR_1"] = {
+        id = "ARMOR_1",
+        name = "Wood Armor",
+        gold_price = 6000,
+        defense = 1,
+        type = "ARMOR",
     },
-    ["WEAPON_3"] = {
-        id = "WEAPON_3",
-        name = "Gold Slingshot",
-        gold_price = 3,
-        dumz_price = 3,
-        damage = 4,
-        type = "WEAPON",
+    ["POTION_1"] = {
+        id = "POTION_1",
+        name = "Health Potion",
+        gold_price = 1000,
+        health = 1,
+        type = "POTION",
     },
-    ["WEAPON_4"] = {
-        id = "WEAPON_4",
-        name = "Diamond Slingshot",
-        gold_price = 5,
-        dumz_price = 4,
-        damage = 5,
-        type = "WEAPON",
-        exlusive_to = "NFT_HOLDER",
+    ["POTION_2"] = {
+        id = "POTION_2",
+        name = "Joose",
+        dumz_price = 40,
+        health = 2,
+        type = "POTION",
     },
+    ["FOOD_1"] = {
+        id = "FOOD_1",
+        name = "Cake",
+        gold_price = 10,
+        health = 2,
+        type = "FOOD",
+    },
+
 }
 
 ENEMIES = {

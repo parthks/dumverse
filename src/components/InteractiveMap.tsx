@@ -6,6 +6,8 @@ interface InteractivePoint {
   y: number;
   level: string;
 }
+const imageWidth = 1089; // original map width
+const imageHeight = 611; // original map height
 
 interface InteractiveMapProps {
   mapWidth: number;
@@ -36,7 +38,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ currentLevel, mapWidth,
     <div className="relative w-full h-full">
       <div className="absolute inset-0">
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
-        <img src={"https://arweave.net/od4qHpViFwicbuphNHsCihAU2UjI-PygfZcBLP-hAJo"} alt="Game Map" className="w-full h-full object-contain" />
+        <img src={"https://arweave.net/nI5UoE2K_wRFpSsaYy3n286QSxBAdrglZ6va4D66pNA"} alt="Game Map" className="w-full h-full object-contain" />
         <svg width="100%" height="100%" viewBox={`0 0 ${mapWidth} ${mapHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
           {interactivePoints.map((point, index) => {
             // if current level is the same as the point level, then add the image to the point
@@ -78,6 +80,14 @@ function LoadUserDetails() {
 
   return (
     <>
+      <image
+        href="https://arweave.net/4R0tGBCQTI48nTu1z7n_EZBuXEqvKxvmcoQHHX6Z9hs"
+        x={0}
+        y={"73.8%"}
+        preserveAspectRatio="xMidYMid meet"
+        width={(1881 / imageWidth) * 100 * 0.285 + "%"}
+        height={(570 / imageHeight) * 100 * 0.285 + "%"}
+      />
       <text x={`18%`} y={`80%`} height={"10%"} textAnchor="middle" fill="white" fontSize="15" fontWeight="bold" className="pointer-events-none">
         {user.name}
       </text>

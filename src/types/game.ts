@@ -27,9 +27,9 @@ export type Inventory = {
 export type Item = {
   id: string;
   name: string;
-  gold_price: number;
-  dumz_price: number;
-  type: "ARMOR" | "WEAPON" | "POTION";
+  gold_price?: number; // either one of these
+  dumz_price?: number; // either one of these
+  type: "ARMOR" | "WEAPON" | "POTION" | "FOOD";
   defense: number;
   damage: number;
 };
