@@ -67,3 +67,73 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* TODO: Cursor still defaults to default cursor (pointer) at the bottom of the screen when hovering over the game */
+body {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
+}
+
+/* Apply custom cursor to all elements */
+*, *::before, *::after {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
+}
+
+/* Ensure custom cursor on hover for all elements */
+*:hover, *:hover::before, *:hover::after {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), pointer !important;
+}
+
+/* Override any potential cursor changes */
+a, button, input[type="submit"], input[type="button"], input[type="reset"], [role="button"] {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), pointer !important;
+}
+
+/* Ensure the custom cursor appears over all content */
+#root, #__next, main, div, svg {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
+}
+.game-cursor,
+.game-cursor * {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
+}
+
+.game-cursor *:hover {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), pointer !important;
+}
+
+
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('https://arweave.net/pjBVMVz4a6GGUc8Z6jh4sR8Xav68WMmTsV5pFnXkCSg') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+body, input, button, textarea, select {
+  font-family: 'CustomFont', sans-serif;
+}
+
+.grow-image {
+  transition: transform 0.3s ease-in-out;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.grow-image:hover {
+  transform: scale(1.1);
+}
+
+.disabled-image {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+.disabled-image:hover {
+  transform: none;
+}

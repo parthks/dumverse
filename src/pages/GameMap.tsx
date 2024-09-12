@@ -101,7 +101,7 @@ const GameMap = () => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>
       <audio autoPlay loop>
         <source src="https://arweave.net/yW2M75jkljOj3I-Wv2Cs0A3Dqkn4MVdyCRfqkQL8pMs" type="audio/mpeg" />
       </audio>

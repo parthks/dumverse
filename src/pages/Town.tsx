@@ -27,6 +27,7 @@ interface InteractiveTownMapProps {
 }
 const InteractiveTownMap: React.FC<InteractiveTownMapProps> = ({ onBuildingSelect }) => {
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+    console.log(event.target);
     if (event.target instanceof SVGElement && event.target.classList.contains("building")) {
       const buildingType = event.target.getAttribute("building-type");
       if (buildingType) {
@@ -47,7 +48,7 @@ const InteractiveTownMap: React.FC<InteractiveTownMapProps> = ({ onBuildingSelec
           <image
             href={"https://arweave.net/ApxR5t3vqSIq0jS6T0zGGYC3-QPdAqFQDhgRl1aDMSY"}
             x={`${48.5}%`}
-            y={`${0}%`}
+            y={`${-1.8}%`}
             width={(294 / imageWidth) * 100 * 3 + "%"}
             height={(273 / imageHeight) * 100 * 3 + "%"}
             preserveAspectRatio="xMidYMid meet"
@@ -56,7 +57,7 @@ const InteractiveTownMap: React.FC<InteractiveTownMapProps> = ({ onBuildingSelec
           {/* right side */}
           <image
             href={"https://arweave.net/nA2Cf5yFMcW8CKPce6bBNGyvjFV1I2jKbpy3oqiW-XU"}
-            x={`${60}%`}
+            x={`${61.5}%`}
             y={`${5}%`}
             width={(309 / imageWidth) * 100 * 3 + "%"}
             height={(348 / imageHeight) * 100 * 3 + "%"}
@@ -70,6 +71,8 @@ const InteractiveTownMap: React.FC<InteractiveTownMapProps> = ({ onBuildingSelec
             width={(414 / imageWidth) * 100 * 3 + "%"}
             height={(474 / imageHeight) * 100 * 3 + "%"}
             preserveAspectRatio="xMidYMid meet"
+            className="building cursor-pointer"
+            building-type="BANK"
             // 08 Bank building
           />
           <image
@@ -81,15 +84,16 @@ const InteractiveTownMap: React.FC<InteractiveTownMapProps> = ({ onBuildingSelec
             preserveAspectRatio="xMidYMid meet"
             // 09 Shady building
           />
-          <image
+          {/* <image
             href={"https://arweave.net/xlNew92daEX6n4uGiQVz5eaUfC9Sun2zVmTSB3uPntM"}
             x={`${65}%`}
             y={`${0}%`}
             width={(455 / imageWidth) * 100 * 3 + "%"}
             height={(692 / imageHeight) * 100 * 3 + "%"}
             preserveAspectRatio="xMidYMid meet"
+            style={{ zIndex: 10 }}
             // 10 Tree branch
-          />
+          /> */}
           {/* left side */}
           <image
             href={"https://arweave.net/ndMhZxrD0z34IntzRnCJ97XwpbxTaZyqipO6DQvBojc"}

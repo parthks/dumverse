@@ -2,7 +2,7 @@ export type GameUser = {
   id: number;
   name: string;
   address: string;
-  nft_address: string;
+  nft_address?: string;
   nft_special_trait: string;
   current_island: number;
   gold_balance: number;

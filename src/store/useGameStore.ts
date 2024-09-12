@@ -24,6 +24,7 @@ interface GameState {
   setInventory: (inventory: Inventory[]) => void;
   bank: (Bank & { transactions: BankTransaction[] }) | null;
   getBank: () => Promise<void>;
+  bankDataLoading: boolean;
   bankTransactionLoading: boolean;
   deposit: (amount: number, tokenType: TokenType) => Promise<void>;
   withdraw: (amount: number, tokenType: TokenType) => Promise<void>;
@@ -81,8 +82,9 @@ export const useGameStore = create<GameState>()(
       inventory: [],
       setInventory: (inventory) => set({ inventory }),
       bank: null,
+      bankDataLoading: false,
       getBank: async () => {
-        set({ bankTransactionLoading: false });
+        set({ bankTransactionLoading: false, bankDataLoading: true });
         const resultData = await sendDryRunGameMessage([
           { name: "Action", value: "Bank.Info" },
           { name: "UserId", value: get().user?.id.toString()! },
@@ -93,6 +95,7 @@ export const useGameStore = create<GameState>()(
           bank.transactions = bankData.transactions;
           set({ bank: bank });
         }
+        set({ bankDataLoading: false });
       },
       bankTransactionLoading: false,
       deposit: async (amount, tokenType) => {

@@ -1,10 +1,9 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ConnectButton from "@/components/wallet/ConnectButton";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import DUMDUM_ASSET_IDS from "@/lib/DumDumAssetIds";
 import { useAppStore } from "@/store/useAppStore";
 
-import DumDumPlainImage from "@/assets/dumdumz_plain.png";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
 import { useProfile } from "@/components/wallet/hooks";
@@ -13,6 +12,19 @@ import { useGameStore } from "@/store/useGameStore";
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
   useProfile();
+  // const audioRef = useRef<HTMLAudioElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  // const [audioLoaded, setAudioLoaded] = useState(false);
+
+  // useEffect(() => {
+  //   if (audioLoaded && audioRef.current) {
+  //     audioRef.current.play().catch((error) => {
+  //       console.error("Audio playback failed:", error);
+  //     });
+  //   }
+  // }, [audioLoaded]);
 
   useEffect(() => {
     console.log("Hello world!");
@@ -32,9 +44,24 @@ export default function App() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
-      <video muted autoPlay loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
-        <source src={"https://arweave.net/VZ1nRp2_RZz99f70rR8irRfIxmP9FLp0pqz8Zml8chw"} type="video/mp4" />
-      </video>
+      <div className="absolute top-0 left-0 min-w-full min-h-full z-0">
+        <img
+          src="https://izntki2g2xnsnkbyoi4c452sjd6juxb25bzaq4kpsw3hzboiicfq.arweave.net/Rls1I0bV2yaoOHI4LndSSPyaXDrocghxT5W2fIXIQIs"
+          alt="Background Placeholder"
+          className={`absolute top-0 left-0 min-w-full min-h-full object-cover`}
+        />
+        {/* old video with sound */}
+        {/* <video ref={videoRef} onLoadedData={() => setVideoLoaded(true)} muted loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
+          <source src={"https://arweave.net/VZ1nRp2_RZz99f70rR8irRfIxmP9FLp0pqz8Zml8chw"} type="video/mp4" />
+        </video> */}
+
+        <video muted autoPlay loop className={`absolute top-0 left-0 min-w-full min-h-full object-cover`} onLoadedData={() => setVideoLoaded(true)}>
+          <source src={"https://arweave.net/8mbMNKyztN4wJTk-Me5_TeaJhHvKa8Xx8aMxc4M7sZo"} type="video/mp4" />
+        </video>
+      </div>
+      {/* <audio onLoadedData={() => setAudioLoaded(true)} ref={audioRef} loop>
+        <source src={"https://arweave.net/otFqOkTc9okUBD1ZZBO1kc45fYY0m_KjrkzXzKnVVTA"} type="audio/mpeg" />
+      </audio> */}
       <div className="relative z-10 h-full w-full">
         {!walletAddressID && (
           <div className="absolute top-4 right-4">
@@ -187,7 +214,11 @@ function LoginForm() {
             </Popover>
           </div>
         </div>
-        <img src={selectedOption?.Id ? `https://arweave.net/${selectedOption.Id}` : DumDumPlainImage} alt="NFT Preview" className="w-32 h-32 object-contain" />
+        <img
+          src={selectedOption?.Id ? `https://arweave.net/${selectedOption.Id}` : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"}
+          alt="NFT Preview"
+          className="w-32 h-32 object-contain"
+        />
 
         <div className="flex flex-col gap-2 justify-center items-center">
           {selectedOption?.existingProfile ? <p>Using existing profile</p> : <p>Registering new profile...</p>}
