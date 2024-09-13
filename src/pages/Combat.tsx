@@ -43,25 +43,25 @@ export default function Combat() {
   }, [enteringNewBattle, currentBattle, getOpenBattles]);
 
   //  Check for battle updates
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+  //   useEffect(() => {
+  //     let interval: NodeJS.Timeout | null = null;
 
-    if (currentBattle?.id && !currentBattle.ended) {
-      if (interval) {
-        clearInterval(interval);
-      }
-      interval = setInterval(() => {
-        console.log("Checking for battle updates");
-        setCurrentBattle(currentBattle.id);
-      }, 5000);
-    }
+  //     if (currentBattle?.id && !currentBattle.ended) {
+  //       if (interval) {
+  //         clearInterval(interval);
+  //       }
+  //       interval = setInterval(() => {
+  //         console.log("Checking for battle updates");
+  //         setCurrentBattle(currentBattle.id);
+  //       }, 5000);
+  //     }
 
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
+  //     return () => {
+  //       if (interval) {
+  //         clearInterval(interval);
+  //       }
+  //     };
+  //   }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
 
   if (enteringNewBattle && !currentBattle?.id) {
     return <div>Entering a new battle...</div>;

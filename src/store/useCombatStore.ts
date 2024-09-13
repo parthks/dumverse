@@ -37,7 +37,7 @@ export const useCombatStore = create<CombatState>()(
         );
         const battles = resultData.data as Battle[];
         if (battles && battles.length > 0) {
-          set({ currentBattle: battles?.[0] });
+          set({ currentBattle: battles?.[0], enteringNewBattle: false });
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
             useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);
           }
@@ -88,9 +88,9 @@ export const useCombatStore = create<CombatState>()(
             value: user_id.toString(),
           },
         ]);
-        const battle = resultData.data as Battle;
-        set({ currentBattle: battle });
-        set({ enteringNewBattle: false });
+        // const battle = resultData.data as Battle;
+        // set({ currentBattle: battle });
+        // set({ enteringNewBattle: false });
       },
       userAttack: async (npc_id: string) => {
         const user_id = useGameStore.getState().user?.id;
