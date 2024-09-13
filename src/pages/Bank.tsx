@@ -43,7 +43,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/_bcFdMyWRe8R95lz9gbIcYutT6x_vGoUCH7EoYYJ7To"} alt="General Bank Vault" className="w-full h-full object-contain" />
+          <img src={"https://arweave.net/MGpWofSa4O90mDCsdowZXM0KF5ZrJmxe_itNxS-iP_I"} alt="General Bank Vault" className="w-full h-full object-contain" />
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
@@ -131,7 +131,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/mz1QPdT6fZxtT5PLQEtvP6Q_XSOmTXqs9Q1GhDKVfLg"} alt="NFT Bank Vault" className="w-full h-full object-contain" />
+          <img src={"https://arweave.net/ZYGuGEiNCOwDKHDdKRw20g5IpK_nopwVlO0tQcuNHPI"} alt="NFT Bank Vault" className="w-full h-full object-contain" />
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}

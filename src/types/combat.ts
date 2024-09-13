@@ -42,6 +42,7 @@ export type Battle = {
 };
 
 export type BattleLog = {
+  from: string;
   timestamp: number;
   message: string;
 };

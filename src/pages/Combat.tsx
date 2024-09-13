@@ -1,94 +1,10 @@
 import ImgButton from "@/components/ui/imgButton";
-import { ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants";
-import { getPlayerTotalHealth, getPlayerTotalStamina } from "@/lib/utils";
+import { BATTLE_ICONS, ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants";
+import { getEquippedItem, getPlayerTotalHealth, getPlayerTotalStamina } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle } from "@/types/combat";
 import { useEffect, useRef } from "react";
-
-const currentBattleNow: Battle = {
-  log: [
-    {
-      timestamp: 1726234643854,
-      message: "Cute Doe Eyed Doe attacks 1human with a roll of 1",
-    },
-    {
-      timestamp: 1726234643854,
-      message: "Cute Doe Eyed Doe deals 1 damage to 1human's health",
-    },
-    {
-      timestamp: 1726234683854,
-      message: "Cute Doe Eyed Doe attacks 1human with a roll of 5",
-    },
-    {
-      timestamp: 1726234683854,
-      message: "Cute Doe Eyed Doe's attack misses",
-    },
-    {
-      timestamp: 1726234723854,
-      message: "Cute Doe Eyed Doe attacks 1human with a roll of 5",
-    },
-    {
-      timestamp: 1726234723854,
-      message: "Cute Doe Eyed Doe's attack misses",
-    },
-    {
-      timestamp: 1726234763854,
-      message: "Cute Doe Eyed Doe attacks 1human with a roll of 5",
-    },
-    {
-      timestamp: 1726234763854,
-      message: "Cute Doe Eyed Doe's attack misses",
-    },
-    {
-      timestamp: 1726234803854,
-      message: "Cute Doe Eyed Doe attacks 1human with a roll of 3",
-    },
-    {
-      timestamp: 1726234803854,
-      message: "Cute Doe Eyed Doe deals 1 damage to 1human's health",
-    },
-    {
-      message: "NPC Cute Doe Eyed Doe won the battle",
-      timestamp: 1726234803854,
-    },
-  ],
-  winner: "NPC_1",
-  npcs: {
-    NPC_1: {
-      gold_reward: 1,
-      name: "Cute Doe Eyed Doe",
-      damage: 1,
-      difficulty: "EASY",
-      id: "NPC_1",
-      total_health: 1,
-      health: 1,
-    },
-  },
-  npcs_alive: ["NPC_1"],
-  last_npc_attack_timestamp: {
-    NPC_1: 1726234803854,
-  },
-  id: 31,
-  players_attacked: [],
-  ended: true,
-  created_at: 1726234606495,
-  players: {
-    "5": {
-      address: "6fpt98wMlpt1Q1C6-xdNI0qqOGbbjhLt5zl0NFNsSHE",
-      gold_balance: 100,
-      dumz_balance: 40,
-      stamina: 6,
-      defense: 0,
-      id: "5",
-      health: 0,
-      name: "1human",
-      damage: 2,
-      nft_address: "UwLiygqiBMaMyzto_A2Xq6fz6S8Zcr0QSKOZJ6dFU-A",
-    },
-  },
-  players_alive: [],
-};
 
 export default function Combat() {
   const { loading, enteringNewBattle, currentBattle, getOpenBattles, setCurrentBattle, enterNewBattle, userAttack, userRun } = useCombatStore();
@@ -222,10 +138,14 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 }
 
 function PlayerCard({ player }: { player: Battle["players"][string] }) {
+  const user = useGameStore((state) => state.user);
   const totalHealth = getPlayerTotalHealth(player as any);
   const totalStamina = getPlayerTotalStamina(player as any);
   const filledHealth = player.health;
   const filledStamina = player.stamina;
+
+  const { weapon, armor } = getEquippedItem(user!);
+
   return (
     <div
       className="w-[302px] flex flex-col bg-[url('https://arweave.net/YHfNqgt4OHoiMxr3Jm9P4FB1QUCg7fND5IBkvuQm96c')] bg-no-repeat bg-contain bg-center px-4 py-1"
@@ -237,15 +157,29 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
         alt={player.name}
         className="w-full object-contain mb-2"
       />
-      <div className="flex gap-1">
-        {Array.from({ length: totalHealth }).map((_, index) => (
-          <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
-        ))}
-      </div>
-      <div className="flex gap-1">
-        {Array.from({ length: totalStamina }).map((_, index) => (
-          <img key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
-        ))}
+      <div className="flex gap-2 justify-between items-start">
+        <div>
+          <div className="flex gap-1">
+            {Array.from({ length: totalHealth }).map((_, index) => (
+              <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
+            ))}
+          </div>
+          <div className="flex gap-1">
+            {Array.from({ length: totalStamina }).map((_, index) => (
+              <img key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+            ))}
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <div className="flex flex-col items-center justify-between">
+            <img src={weapon ? BATTLE_ICONS.WEAPON_1 : BATTLE_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-8 h-8" />
+            <p className="text-black text-2xl font-bold text-center">{player.damage}</p>
+          </div>
+          <div className="flex flex-col gap-1 items-center justify-between">
+            <img src={armor ? BATTLE_ICONS.ARMOR_1 : BATTLE_ICONS.NO_ARMOR} alt="armor in inventory" className="w-8 h-8" />
+            <p className="text-black text-2xl font-bold text-center">{player.defense}</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -280,6 +214,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
 function BattleLog({ currentBattle }: { currentBattle: Battle }) {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const combatLoading = useCombatStore((state) => state.loading);
+  const goToTownFromBattle = useCombatStore((state) => state.goToTownFromBattle);
 
   // as the log is updated, scroll to the bottom
   useEffect(() => {
@@ -296,26 +231,41 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
     >
       <div className="flex items-center justify-between">
         <div className="w-6">{combatLoading && <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>}</div>
-        <h1 className="text-white text-3xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
+        <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
         <div className="w-6"></div>
       </div>
-      <div className="log-container flex flex-col gap-2 overflow-y-auto">
-        {currentBattle.log.map((log, index) => (
-          <div key={index} className="text-white p-2 rounded">
-            {log.message}
-          </div>
-        ))}
-        {currentBattle.ended && (
-          <div className="flex justify-center">
-            <ImgButton
-              className="w-32"
-              src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"}
-              onClick={() => setGameStatePage(GameStatePages.GAME_MAP)}
-              alt={"Return to Town"}
-            />
-          </div>
-        )}
+      <div className="log-container flex flex-col gap-8 overflow-y-auto">
+        {currentBattle.log.map((log, index) => {
+          const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || "";
+          return (
+            <div key={index} className="flex text-3xl gap-4 justify-between px-4">
+              <p className="text-white font-bold text-center">{name}:</p>
+              <p className="text-white text-center">
+                {log.message.split(" ").map((word, index) =>
+                  word === "Perished" ? (
+                    <span key={index} className="text-red-800">
+                      {word}
+                    </span>
+                  ) : word === "run" && log.message.split(" ")[index + 1] === "away" ? (
+                    <span key={index} className="text-blue-800">
+                      {word} {log.message.split(" ")[index + 1]}
+                    </span>
+                  ) : word === "away" && log.message.split(" ")[index - 1] === "run" ? (
+                    <></>
+                  ) : (
+                    <span key={index}>{word} </span>
+                  )
+                )}
+              </p>
+            </div>
+          );
+        })}
       </div>
+      {currentBattle.ended && (
+        <div className="my-4 flex justify-center">
+          <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTownFromBattle()} alt={"Return to Town"} />
+        </div>
+      )}
     </div>
   );
 }

@@ -71,7 +71,7 @@ export default function App() {
       </audio> */}
       <div className="relative z-10 h-full w-full">
         {!playing && (
-          <div className="absolute top-[380px] left-1/2 transform -translate-x-1/2">
+          <div className="absolute top-[450px] left-1/2 transform -translate-x-1/2">
             <ImgButton
               src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
               onClick={() => {
@@ -121,7 +121,7 @@ function LoginForm() {
   return (
     <div className="h-screen flex justify-center items-center">
       {profileLoading ? (
-        <p className="text-white absolute top-[380px] text-2xl font-bold">Loading...</p>
+        <p className="text-white absolute top-[450px] text-2xl font-bold">Loading...</p>
       ) : (
         <div
           className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"

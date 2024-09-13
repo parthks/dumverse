@@ -43,7 +43,7 @@ ITEMS = {
 ENEMIES = {
     {
         id = "NPC_1",
-        name = "Cute Doe Eyed Doe",
+        name = "Doe Eyed Deer",
         total_health = 1,
         health = 1,
         damage = 1,

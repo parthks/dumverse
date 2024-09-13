@@ -15,14 +15,16 @@ local function _getEntityStats(entity, entityType)
             health = entity.health,
             damage = entity.damage,
             defense = entity.defense,
-            name = entity.name
+            name = entity.name,
+            id = entity.id
         }
     elseif entityType == "npc" then
         return {
             health = entity.health,
             damage = entity.damage,
             defense = entity.defense or 0,
-            name = entity.name
+            name = entity.name,
+            id = entity.id
         }
     end
 end
@@ -43,22 +45,32 @@ function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, d
 
     local success, attacker_roll = _verifyAttackSuccessful()
 
-    table.insert(log, {
-        message = string.format("%s attacks %s with a roll of %d", attacker.name, defender.name, attacker_roll),
-        timestamp = timestamp
-    })
+    -- table.insert(log, {
+    --     message = string.format("%s attacks %s with a roll of %d", attacker.name, defender.name, attacker_roll),
+    --     timestamp = timestamp
+    -- })
 
 
-    if success then
+    if success or critical_hit then
         local damage = attacker.damage
         if critical_hit then
             damage = damage * 2
             table.insert(log,
                 {
-                    message = string.format("%s deals a critical hit to %s", attacker.name, defender.name),
+                    from = defender.id,
+                    message = string.format("Run away failed. %s hits you for a critical hit of %d", attacker.name,
+                        damage),
+                    timestamp = timestamp
+                })
+        else
+            table.insert(log,
+                {
+                    from = attacker.id,
+                    message = string.format("hits %s for %d", defender.name, damage),
                     timestamp = timestamp
                 })
         end
+
         local remaining_defense = defender.defense
         local health_damage = 0
 
@@ -67,24 +79,24 @@ function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, d
             local defense_damage = math.min(damage, remaining_defense)
             remaining_defense = remaining_defense - defense_damage
             damage = damage - defense_damage
-            table.insert(log,
-                {
-                    message = string.format("%s deals %d damage to %s's defense", attacker.name, defense_damage,
-                        defender.name),
-                    timestamp = timestamp
-                })
+            -- table.insert(log,
+            --     {
+            --         message = string.format("%s deals %d damage to %s's defense", attacker.name, defense_damage,
+            --             defender.name),
+            --         timestamp = timestamp
+            --     })
         end
 
         -- If there's remaining damage, it depletes health
         if damage > 0 then
             health_damage = damage
             defender.health = math.max(defender.health - health_damage, 0)
-            table.insert(log,
-                {
-                    message = string.format("%s deals %d damage to %s's health", attacker.name, health_damage,
-                        defender.name),
-                    timestamp = timestamp
-                })
+            -- table.insert(log,
+            --     {
+            --         message = string.format("%s deals %d damage to %s's health", attacker.name, health_damage,
+            --             defender.name),
+            --         timestamp = timestamp
+            --     })
         end
 
         -- Update entity stats
@@ -93,7 +105,8 @@ function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, d
     else
         table.insert(log,
             {
-                message = string.format("%s's attack misses", attacker.name),
+                from = attacker.id,
+                message = string.format("attack misses"),
                 timestamp = timestamp
             })
     end

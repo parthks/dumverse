@@ -15,6 +15,7 @@ interface CombatState {
   enterNewBattle: (level: number) => void;
   userAttack: (npc_id: string) => void;
   userRun: () => void;
+  goToTownFromBattle: () => void;
 }
 
 export const useCombatStore = create<CombatState>()(
@@ -143,6 +144,10 @@ export const useCombatStore = create<CombatState>()(
         );
         const battle = resultData.data as Battle;
         set({ currentBattle: battle, loading: false });
+      },
+      goToTownFromBattle: async () => {
+        set({ currentBattle: null, loading: false });
+        useGameStore.getState().setGameStatePage(GameStatePages.GAME_MAP);
       },
     }),
     {
