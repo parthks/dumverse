@@ -17,6 +17,7 @@ export const BATTLE_ICONS = {
 
 export const ENEMY_CARD_IMAGE = {
   NPC_1: "https://arweave.net/-MMk101bDNJx0rd9vlVwTC5wbctTub-TY_4sqKT-AMA",
+  NPC_2: "https://arweave.net/-MMk101bDNJx0rd9vlVwTC5wbctTub-TY_4sqKT-AMA",
 };
 
 export const SOUNDS = {

@@ -72,6 +72,10 @@
 /* TODO: Cursor still defaults to default cursor (pointer) at the bottom of the screen when hovering over the game */
 body {
   cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 /* Apply custom cursor to all elements */

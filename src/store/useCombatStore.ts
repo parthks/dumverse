@@ -68,7 +68,10 @@ export const useCombatStore = create<CombatState>()(
           "combat"
         );
         const battle = resultData.data?.id ? (resultData.data as Battle) : null;
-        set({ currentBattle: battle, loading: false });
+        if (battle) {
+          set({ currentBattle: battle });
+        }
+        set({ loading: false });
       },
       enterNewBattle: async (level: number) => {
         const user_id = useGameStore.getState().user?.id;
@@ -147,6 +150,7 @@ export const useCombatStore = create<CombatState>()(
         set({ currentBattle: battle, loading: false });
       },
       goToMapFromBattle: async () => {
+        // if you won, move one step forward of current_spot. Need to update the db for this
         set({ currentBattle: null, loading: false });
         useGameStore.getState().setGameStatePage(GameStatePages.GAME_MAP);
       },

@@ -15,7 +15,7 @@ export enum GameStatePages {
   TOWN = "TOWN",
 }
 
-const initialLammaPosition = {
+export const initialLammaPosition = {
   x: 80,
   y: 63,
   src: LammaStandLeft,
@@ -73,7 +73,11 @@ export const useGameStore = create<GameState>()(
       user: null,
       setUser: (user) => {
         if (user) {
-          set({ GameStatePage: GameStatePages.TOWN });
+          if (user.current_spot) {
+            set({ GameStatePage: GameStatePages.GAME_MAP, currentIslandLevel: user.current_spot });
+          } else {
+            set({ GameStatePage: GameStatePages.TOWN, currentIslandLevel: 0 });
+          }
           get().refreshUserData(user.id);
         }
       },
@@ -89,7 +93,7 @@ export const useGameStore = create<GameState>()(
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const user = JSON.parse(resultData.Messages[0].Data);
           const inventory = user.inventory;
-          set({ user: user, inventory: inventory });
+          set({ user: user, inventory: inventory, currentIslandLevel: user.current_spot });
         }
       },
       inventory: [],
@@ -164,8 +168,13 @@ export const useGameStore = create<GameState>()(
       setCurrentIslandLevel: (level) => set({ currentIslandLevel: level }),
       lammaPosition: initialLammaPosition,
       setLammaPosition: (position) => set({ lammaPosition: position }),
-      goToTown: () => {
-        set({ GameStatePage: GameStatePages.TOWN, lammaPosition: initialLammaPosition, currentIslandLevel: 0 });
+      goToTown: async () => {
+        sendAndReceiveGameMessage([
+          { name: "Action", value: "User.GoToTown" },
+          { name: "UserId", value: get().user?.id.toString()! },
+        ]);
+        get().refreshUserData();
+        set({ GameStatePage: GameStatePages.TOWN, lammaPosition: initialLammaPosition });
       },
     }),
     {

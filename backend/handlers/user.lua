@@ -140,4 +140,22 @@ Handlers.add("User.Info",
     end
 )
 
+Handlers.add("User.GoToTown",
+    Handlers.utils.hasMatchingTag('Action', 'User.GoToTown'),
+    function(msg)
+        local user_id = msg.UserId
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+
+        -- update current_spot to 0
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_spot = 0 WHERE id = %f;
+        ]], user_id))
+
+        return ao.send({
+            Target = msg.From,
+            Status = "Success"
+        })
+    end
+)
+
 return {}

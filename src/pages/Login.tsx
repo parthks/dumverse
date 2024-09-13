@@ -47,8 +47,6 @@ export default function App() {
     }
   }, [walletAddressID]);
 
-  console.log("videoLoaded", videoLoaded);
-
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       <div className="absolute top-0 left-0 min-w-full min-h-full z-0">

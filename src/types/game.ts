@@ -13,6 +13,7 @@ export type GameUser = {
   total_stamina: number;
   damage: number;
   defense: number;
+  current_spot: number;
   inventory: Inventory[];
 };
 

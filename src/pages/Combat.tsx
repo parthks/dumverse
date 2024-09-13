@@ -3,7 +3,7 @@ import { BATTLE_ICONS, ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants"
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { Battle } from "@/types/combat";
+import { Battle, NPC } from "@/types/combat";
 import { useEffect, useRef } from "react";
 
 export default function Combat() {
@@ -79,7 +79,7 @@ export default function Combat() {
   }
 
   return (
-    <div className="flex gap-4 justify-between p-8 h-screen bg-gray-900">
+    <div className="flex gap-4 justify-between p-8 min-h-screen bg-gray-900">
       <audio src={SOUNDS.BATTLE_AUDIO} autoPlay loop />
       <BattleGround currentBattle={currentBattle} />
       <BattleLog currentBattle={currentBattle} />
@@ -104,33 +104,60 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     userAttack(enemyId);
   };
 
+  const otherPlayers = Object.values(currentBattle.players).filter((player) => player.id !== userId.toString());
+  const enemies = Object.values(currentBattle.npcs);
+
+  const allPlayers = [...enemies, ...otherPlayers];
+
   return (
     <div>
       <div className="flex gap-4 items-center">
-        <div className="flex flex-col gap-2 max-w-[380px] items-center">
-          <PlayerCard player={currentBattle.players[userId.toString()]} />
-          <ImgButton
-            disabled={loading || battleEnded}
-            className={"w-40"}
-            src={"https://arweave.net/T2vJXtx4ivM9tySkAq8u2uSCLSDWRaPcIqqBYdAWBfE"}
-            onClick={() => userRun()}
-            alt={"Run"}
-          />
-        </div>
-        <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
-        <div className="flex flex-col gap-2 max-w-[380px] items-center">
-          <EnemyCard enemy={Object.values(currentBattle.npcs)[0]} />
-          <div className="flex gap-2 items-center">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center">
+          <audio ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
+          <div className="flex flex-col gap-2 max-w-[380px] items-center">
+            <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
               disabled={loading || battleEnded}
-              className="w-40 shrink-0"
-              src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
-              onClick={() => handleAttack(Object.values(currentBattle.npcs)[0].id)}
-              alt={"Attack" + Object.values(currentBattle.npcs)[0].name}
+              className={"w-40"}
+              src={"https://arweave.net/T2vJXtx4ivM9tySkAq8u2uSCLSDWRaPcIqqBYdAWBfE"}
+              onClick={() => userRun()}
+              alt={"Run"}
             />
-            <audio ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
-            <p className="text-white text-lg font-bold text-center">30 seconds till {Object.values(currentBattle.npcs)[0].name} attacks...</p>
           </div>
+
+          <div className="flex justify-center items-center">
+            <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
+          </div>
+
+          {allPlayers.map((entity, index) => {
+            const isEnemy = entity.id.startsWith("NPC");
+            return (
+              <>
+                <div key={entity.id} className="flex flex-col gap-2 max-w-[380px] items-center">
+                  {isEnemy && <EnemyCard enemy={entity as NPC} />}
+                  {!isEnemy && <PlayerCard player={entity as Battle["players"][string]} />}
+                  <div className="flex gap-2 items-center">
+                    <ImgButton
+                      disabled={loading || battleEnded}
+                      className="w-40 shrink-0"
+                      src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
+                      onClick={() => handleAttack(entity.id)}
+                      alt={"Attack" + entity.name}
+                    />
+
+                    {isEnemy && <p className="text-white text-lg font-bold text-center">30 seconds till {entity.name} attacks...</p>}
+                    {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 30 seconds...</p>} */}
+                  </div>
+                </div>
+
+                {index % 2 !== 0 && index !== allPlayers.length - 1 && (
+                  <div className="flex justify-center items-center">
+                    <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
+                  </div>
+                )}
+              </>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -151,7 +178,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
       className="w-[302px] flex flex-col bg-[url('https://arweave.net/YHfNqgt4OHoiMxr3Jm9P4FB1QUCg7fND5IBkvuQm96c')] bg-no-repeat bg-contain bg-center px-4 py-1"
       style={{ aspectRatio: "302/421" }}
     >
-      <h2 className="text-black text-2xl font-bold text-center">{player.name}</h2>
+      <h2 className="text-black text-2xl font-bold text-center">{player.name} (P)</h2>
       <img
         src={`https://arweave.net/${player.nft_address ? player.nft_address : "dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"}`}
         alt={player.name}
@@ -238,7 +265,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
         {currentBattle.log.map((log, index) => {
           const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || "";
           return (
-            <div key={index} className="flex text-3xl gap-4 justify-between px-4">
+            <div key={index} className="flex text-2xl gap-4 justify-between px-4">
               <p className="text-white font-bold text-center">{name}:</p>
               <p className="text-white text-center">
                 {log.message.split(" ").map((word, index) =>

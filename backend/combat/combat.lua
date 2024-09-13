@@ -136,9 +136,9 @@ Handlers.add("Battle.UserAttack",
         print("User Attack - playerUserIds " .. tostring(playerUserIds))
         print("User Attack - npcIds " .. tostring(npcIds))
 
-        -- assert that attackEntityId is in playerUserIds or npcIds
-        assert(utils.includes(attackEntityId, playerUserIds) or utils.includes(attackEntityId, npcIds),
-            "AttackEntityId is not in playerUserIds or npcIds")
+        -- assert that attackEntityId is in playerUserIds or npcIds - already checking in the if conditions
+        -- assert(utils.includes(attackEntityId, playerUserIds) or utils.includes(attackEntityId, npcIds),
+        --     "AttackEntityId is not in playerUserIds or npcIds")
 
         -- check if the UserId is in the players_attacked list
         local battle = BattleHelpers.get(battle_id)
@@ -174,7 +174,10 @@ Handlers.add("Battle.UserAttack",
                 end, battle.players_alive)
             end
         else
-            assert(false, "AttackEntityId is not in playerUserIds or npcIds")
+            -- assert(false, "AttackEntityId is not in playerUserIds or npcIds")
+            -- race condition from the UI, do nothing
+            ao.send({ Target = msg.From, Data = battle })
+            return
         end
 
         table.insert(battle.players_attacked, msg.UserId)
@@ -302,10 +305,10 @@ BattleHelpers.endBattle = function(battle_id, winner_id, timestamp)
     if winner_id then
         assert(battle.players[winner_id] or battle.npcs[winner_id],
             "Winner id " .. winner_id .. " not found in players or npcs")
-        if battle.players[winner_id] then
+        if battle.players[winner_id] and #battle.npcs_alive == 0 then
             -- winning_message = "Player " .. battle.players[winner_id].name .. " won the battle"
             winning_message = "has won the battle"
-        elseif battle.npcs[winner_id] then
+        elseif battle.npcs[winner_id] and #battle.players_alive == 0 then
             -- winning_message = "NPC " .. battle.npcs[winner_id].name .. " won the battle"
             winning_message = "has won the battle"
         end
