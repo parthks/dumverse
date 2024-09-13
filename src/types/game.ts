@@ -3,12 +3,12 @@ export type GameUser = {
   name: string;
   address: string;
   nft_address?: string;
-  nft_special_trait: string;
-  current_island: number;
+  nft_special_trait?: string;
+  current_island?: number;
   gold_balance: number;
   dumz_balance: number;
   health: number;
-  stamina_balance: number;
+  stamina: number;
   damage: number;
   defense: number;
   inventory: Inventory[];

@@ -1,3 +1,4 @@
+import LammaStandLeft from "@/assets/lamma_stand_left.png";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { Bank, BankTransaction, GameUser, Inventory, Item, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
@@ -13,6 +14,13 @@ export enum GameStatePages {
   COMBAT = "COMBAT",
   TOWN = "TOWN",
 }
+
+const initialLammaPosition = {
+  x: 80,
+  y: 63,
+  src: LammaStandLeft,
+};
+
 interface GameState {
   GameStatePage: GameStatePages | null;
   setGameStatePage: (state: GameStatePages | null) => void;
@@ -33,6 +41,11 @@ interface GameState {
   getShop: () => Promise<void>;
   buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
   buyItemLoading: boolean;
+  currentIslandLevel: number;
+  setCurrentIslandLevel: (level: number) => void;
+  lammaPosition: { x: number; y: number; src: string };
+  setLammaPosition: (position: { x: number; y: number; src: string }) => void;
+  goToTown: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -146,6 +159,13 @@ export const useGameStore = create<GameState>()(
         ]);
         await Promise.all([get().refreshUserData()]);
         set({ buyItemLoading: false });
+      },
+      currentIslandLevel: 0,
+      setCurrentIslandLevel: (level) => set({ currentIslandLevel: level }),
+      lammaPosition: initialLammaPosition,
+      setLammaPosition: (position) => set({ lammaPosition: position }),
+      goToTown: () => {
+        set({ GameStatePage: GameStatePages.TOWN, lammaPosition: initialLammaPosition, currentIslandLevel: 0 });
       },
     }),
     {

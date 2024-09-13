@@ -15,8 +15,8 @@ export default function ImgButton({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={`p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-95 ${
-        disabled ? "opacity-50 cursor-not-allowed hover:scale-100 active:scale-100" : ""
+      className={`p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
+        disabled ? "opacity-50 cursor-not-allowed" : "hover:scale-110 active:scale-95"
       } ${className}`}
     >
       <img src={src} alt={alt} className="w-full h-full" />

@@ -163,7 +163,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 }
 
 export default function BankPage() {
-  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, setGameStatePage } = useGameStore();
+  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goToTown } = useGameStore();
   const [amount, setAmount] = useState(0);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
@@ -192,7 +192,7 @@ export default function BankPage() {
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"} onClick={() => setGameStatePage(GameStatePages.TOWN)} alt={"Exit Bank"} />
+        <ImgButton src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"} onClick={() => goToTown()} alt={"Exit Bank"} />
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">

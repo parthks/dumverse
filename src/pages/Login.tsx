@@ -8,6 +8,7 @@ import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
 import { useProfile } from "@/components/wallet/hooks";
 import { useGameStore } from "@/store/useGameStore";
+import { LOGIN_VIDEO } from "@/lib/constants";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -58,7 +59,7 @@ export default function App() {
         />
         {/* old video with sound */}
         <video ref={videoRef} onLoadedData={() => setVideoLoaded(true)} loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
-          <source src={"https://arweave.net/VZ1nRp2_RZz99f70rR8irRfIxmP9FLp0pqz8Zml8chw"} type="video/mp4" />
+          <source src={LOGIN_VIDEO} type="video/mp4" />
         </video>
 
         {/* <video muted autoPlay loop className={`absolute top-0 left-0 min-w-full min-h-full object-cover`}>
@@ -70,7 +71,7 @@ export default function App() {
       </audio> */}
       <div className="relative z-10 h-full w-full">
         {!playing && (
-          <div className="absolute top-[45%] left-1/2 transform -translate-x-1/2">
+          <div className="absolute top-[380px] left-1/2 transform -translate-x-1/2">
             <ImgButton
               src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
               onClick={() => {
@@ -115,14 +116,20 @@ export default function App() {
 }
 
 function LoginForm() {
+  const profileLoading = useAppStore((state) => state.profileLoading);
+
   return (
     <div className="h-screen flex justify-center items-center">
-      <div
-        className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"
-        style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
-      >
-        <FormData />
-      </div>
+      {profileLoading ? (
+        <p className="text-white absolute top-[380px] text-2xl font-bold">Loading...</p>
+      ) : (
+        <div
+          className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"
+          style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
+        >
+          <FormData />
+        </div>
+      )}
     </div>
   );
 }
@@ -184,8 +191,6 @@ const FormData = () => {
       setSelectedOption(existingAsset ?? (dumdumAssets[0] as any));
     }
   }, [profileLoading, dumdumAssets]);
-
-  if (profileLoading) return <p>Loading...</p>;
 
   return (
     <form className="space-y-4 w-full m-16 flex flex-col gap-4 items-center">

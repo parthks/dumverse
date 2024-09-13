@@ -2,12 +2,13 @@ import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { Battle } from "@/types/combat";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { useGameStore } from "./useGameStore";
+import { GameStatePages, useGameStore } from "./useGameStore";
 import { result } from "@permaweb/aoconnect/browser";
 import { GAME_PROCESS_ID } from "@/lib/utils";
 
 interface CombatState {
   loading: boolean;
+  enteringNewBattle: boolean;
   currentBattle: Battle | null;
   setCurrentBattle: (battle_id?: number) => void;
   getOpenBattles: () => void;
@@ -19,6 +20,7 @@ interface CombatState {
 export const useCombatStore = create<CombatState>()(
   devtools(
     (set, get) => ({
+      enteringNewBattle: false,
       loading: false,
       currentBattle: null,
       getOpenBattles: async () => {
@@ -33,7 +35,12 @@ export const useCombatStore = create<CombatState>()(
           "combat"
         );
         const battles = resultData.data as Battle[];
-        if (battles) set({ currentBattle: battles?.[0] });
+        if (battles && battles.length > 0) {
+          set({ currentBattle: battles?.[0] });
+          if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
+            useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);
+          }
+        }
         set({ loading: false });
         return;
       },
@@ -65,7 +72,7 @@ export const useCombatStore = create<CombatState>()(
       enterNewBattle: async (level: number) => {
         const user_id = useGameStore.getState().user?.id;
         if (!user_id) return;
-        set({ loading: true });
+        set({ enteringNewBattle: true });
         const resultData = await sendAndReceiveGameMessage([
           {
             name: "Action",
@@ -81,7 +88,7 @@ export const useCombatStore = create<CombatState>()(
           },
         ]);
         const battle = resultData.data as Battle;
-        set({ currentBattle: battle, loading: false });
+        set({ currentBattle: battle, enteringNewBattle: false });
       },
       userAttack: async (npc_id: string) => {
         const user_id = useGameStore.getState().user?.id;

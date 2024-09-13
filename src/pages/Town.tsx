@@ -1,6 +1,7 @@
 import ImgButton from "@/components/ui/imgButton";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
+import { SOUNDS } from "@/lib/constants";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -11,6 +12,7 @@ export default function Town() {
   };
   return (
     <div className="h-screen">
+      <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop />
       <InteractiveTownMap onBuildingSelect={handleBuildingSelect} />
       <div className="z-10 absolute bottom-4 right-4">
         <ImgButton src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"} onClick={() => setChatOpen(!chatOpen)} alt={"Toggle Chat"} />

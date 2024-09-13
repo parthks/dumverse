@@ -6,9 +6,19 @@ import Shop from "./Shop";
 import GameMap from "./GameMap";
 import Combat from "./Combat";
 import Town from "./Town";
+import { useEffect } from "react";
+import { useCombatStore } from "@/store/useCombatStore";
 
 export default function Game() {
   const { GameStatePage, setGameStatePage, user } = useGameStore();
+  const { getOpenBattles } = useCombatStore();
+
+  useEffect(() => {
+    //   Check for open battles once
+    console.log("Checking for open battles once");
+    getOpenBattles();
+  }, []);
+
   let page = <div>Game</div>;
   if (GameStatePage === GameStatePages.BANK) page = <BankPage />;
   if (GameStatePage === GameStatePages.SHOP) page = <Shop />;
@@ -17,6 +27,7 @@ export default function Game() {
   if (GameStatePage === GameStatePages.TOWN) page = <Town />;
 
   if (!user) return <div>Loading...</div>;
+  // return <Combat />;
   return (
     <div className="game-cursor">
       {/* <GameProfile /> */}

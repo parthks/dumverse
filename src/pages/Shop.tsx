@@ -186,7 +186,7 @@ function ShopTableItem({ item }: { item: Item }) {
 }
 
 export default function Shop() {
-  const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const goToTown = useGameStore((state) => state.goToTown);
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
 
   useEffect(() => {
@@ -213,7 +213,7 @@ export default function Shop() {
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"} onClick={() => setGameStatePage(GameStatePages.TOWN)} alt={"Return to Town"} />
+        <ImgButton src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">

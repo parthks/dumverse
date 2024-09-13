@@ -14,7 +14,7 @@ export default function GameProfile() {
       <p>Damage: {user.damage}</p>
       <p>Defense: {user.defense}</p>
       <p>Health: {user.health}</p>
-      <p>Stamina: {user.stamina_balance}</p>
+      <p>Stamina: {user.stamina}</p>
 
       <p>
         Gold: <NumberTicker value={user.gold_balance} />

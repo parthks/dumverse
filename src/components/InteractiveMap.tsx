@@ -1,21 +1,22 @@
-import React from "react";
-import { useGameStore } from "@/store/useGameStore";
+import React, { useState } from "react";
+import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import { useCombatStore } from "@/store/useCombatStore";
+import { IMAGES } from "@/lib/constants";
+import { getPlayerTotalHealth, getPlayerTotalStamina } from "@/lib/utils";
 
 interface InteractivePoint {
   x: number;
   y: number;
-  level: string;
+  level: number;
 }
+
 const imageWidth = 1089; // original map width
 const imageHeight = 611; // original map height
 
 interface InteractiveMapProps {
-  mapWidth: number;
-  mapHeight: number;
   interactivePoints: InteractivePoint[];
-  onLevelSelect: (level: string) => void;
   lammaPosition: LammaPosition;
-  currentLevel: string;
+  onLevelSelect: (level: number) => void;
 }
 
 interface LammaPosition {
@@ -24,12 +25,21 @@ interface LammaPosition {
   src: string;
 }
 
-const InteractiveMap: React.FC<InteractiveMapProps> = ({ currentLevel, mapWidth, mapHeight, interactivePoints, onLevelSelect, lammaPosition }) => {
+const InteractiveMap: React.FC<InteractiveMapProps> = ({ interactivePoints, lammaPosition, onLevelSelect }) => {
+  const { currentIslandLevel, setGameStatePage } = useGameStore();
+  const { enterNewBattle } = useCombatStore();
+
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("interactive-point")) {
       const level = event.target.getAttribute("data-level");
+      const buttonType = event.target.getAttribute("button-type");
       if (level) {
-        onLevelSelect(level);
+        onLevelSelect(parseInt(level));
+      } else if (buttonType) {
+        if (buttonType === "combat") {
+          enterNewBattle(currentIslandLevel);
+          setGameStatePage(GameStatePages.COMBAT);
+        }
       }
     }
   };
@@ -39,11 +49,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ currentLevel, mapWidth,
       <div className="absolute inset-0">
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
         <img src={"https://arweave.net/nI5UoE2K_wRFpSsaYy3n286QSxBAdrglZ6va4D66pNA"} alt="Game Map" className="w-full h-full object-contain" />
-        <svg width="100%" height="100%" viewBox={`0 0 ${mapWidth} ${mapHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+        <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
           {interactivePoints.map((point, index) => {
             // if current level is the same as the point level, then add the image to the point
             let lammaImage = "" as any;
-            if (currentLevel === point.level) {
+            if (currentIslandLevel === point.level) {
               lammaImage = (
                 <image href={lammaPosition.src} x={`${lammaPosition.x}%`} y={`${lammaPosition.y}%`} width="10%" height="10%" preserveAspectRatio="xMidYMid meet">
                   <title>Lamma</title>
@@ -67,6 +77,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ currentLevel, mapWidth,
             <title>Lamma</title>
           </image>
           <LoadUserDetails />
+          {currentIslandLevel != 0 && (
+            <image
+              href={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
+              x={"50%"}
+              y={"90%"}
+              button-type="combat"
+              className={`interactive-point  ${currentIslandLevel != 0 ? "grow-image" : ""}`}
+              preserveAspectRatio="xMidYMid meet"
+              width={(277 / imageWidth) * 100 * 0.8 + "%"}
+              height={(65 / imageHeight) * 100 * 0.8 + "%"}
+            />
+          )}
         </svg>
       </div>
     </div>
@@ -92,7 +114,7 @@ function LoadUserDetails() {
         {user.name}
       </text>
       <image
-        href={`https://arweave.net/${user.nft_address ? user.nft_address : "dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"}`}
+        href={`https://arweave.net/${user.nft_address ? user.nft_address : IMAGES.DEFAULT_DUMDUM}`}
         x={`-1.9%`}
         y={`77.8%`}
         width="20.3%"
@@ -109,11 +131,9 @@ function LoadUserDetails() {
 
 function HealthBar() {
   const { user } = useGameStore();
-  const FilledHealthSource = "https://arweave.net/htFD_LolJawKKO5P9BOO8B2XajxBuuxSvmTpCpNsUvA";
-  const EmptyHealthSource = "https://arweave.net/jSCG0qQySh3soDYdLwKiU6WKCUAQaoGEKIk47qDS6Aw";
   if (!user) return null;
 
-  const totalHealth = 2; // TODO: Set dynamically
+  const totalHealth = getPlayerTotalHealth(user);
   const filledHealth = user.health;
   const emptyHealth = totalHealth - filledHealth;
   const startX = 15;
@@ -128,7 +148,7 @@ function HealthBar() {
       {Array.from({ length: totalHealth }).map((_, index) => (
         <image
           key={index}
-          href={index < filledHealth ? FilledHealthSource : EmptyHealthSource}
+          href={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH}
           x={`${startX + index * gap}%`}
           y={`${startY}%`}
           width={`${width}%`}
@@ -144,12 +164,10 @@ function HealthBar() {
 
 function StaminaBar() {
   const { user } = useGameStore();
-  const FilledStaminaSource = "https://arweave.net/dhH6e0gRWjNDWd3UK7dXvZbUlnZHBWtFFYUKQ16FAvg";
-  const EmptyStaminaSource = "https://arweave.net/jvZ3mUBMgiST4-dt9FmH1o4U2_97oBVHjp9zBim2hWY";
   if (!user) return null;
 
-  const totalStamina = 4; // TODO: Set dynamically
-  const filledStamina = user.stamina_balance;
+  const totalStamina = getPlayerTotalStamina(user);
+  const filledStamina = user.stamina;
   const emptyStamina = totalStamina - filledStamina;
   const startX = 14;
   const startY = 87.5;
@@ -163,7 +181,7 @@ function StaminaBar() {
       {Array.from({ length: totalStamina }).map((_, index) => (
         <image
           key={index}
-          href={index < filledStamina ? FilledStaminaSource : EmptyStaminaSource}
+          href={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA}
           x={`${startX + index * gap}%`}
           y={`${startY}%`}
           width={`${width}%`}

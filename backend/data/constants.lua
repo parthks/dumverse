@@ -44,6 +44,7 @@ ENEMIES = {
     {
         id = "NPC_1",
         name = "Cute Doe Eyed Doe",
+        total_health = 1,
         health = 1,
         damage = 1,
         difficulty = "EASY",
@@ -52,6 +53,7 @@ ENEMIES = {
     {
         id = "NPC_2",
         name = "Sad Hedgehog",
+        total_health = 1,
         health = 1,
         damage = 1,
         difficulty = "EASY",
@@ -60,6 +62,7 @@ ENEMIES = {
     {
         id = "NPC_3",
         name = "Uninterested Owl",
+        total_health = 2,
         health = 2,
         damage = 1,
         difficulty = "EASY",
@@ -68,6 +71,7 @@ ENEMIES = {
     {
         id = "NPC_4",
         name = "Pill taking rabbit",
+        total_health = 1,
         health = 1,
         damage = 2,
         difficulty = "EASY",

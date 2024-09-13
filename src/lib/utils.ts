@@ -1,3 +1,4 @@
+import { GameUser } from "@/types/game";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -6,4 +7,12 @@ export const COMBAT_PROCESS_ID = "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function getPlayerTotalHealth(player: GameUser) {
+  return 2;
+}
+
+export function getPlayerTotalStamina(player: GameUser) {
+  return 4;
 }
