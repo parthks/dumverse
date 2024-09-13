@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/store/useAppStore";
 import ImgButton from "../ui/imgButton";
 
-export default function ConnectButton({ className }: { className?: string }) {
+export default function ConnectButton({ className, onClickAction }: { className?: string; onClickAction?: () => void }) {
   const { setWalletAddressID, walletAddressID, setProfile, setAssets } = useAppStore();
   if (walletAddressID) return <div>Connected</div>;
   return (
@@ -11,6 +11,7 @@ export default function ConnectButton({ className }: { className?: string }) {
       alt="Connect with AOConnect Wallet"
       className={className}
       onClick={async () => {
+        onClickAction?.();
         if (walletAddressID) {
           // disconnect from the extension
           await window.arweaveWallet.disconnect();
