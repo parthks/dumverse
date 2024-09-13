@@ -8,7 +8,9 @@ export type GameUser = {
   gold_balance: number;
   dumz_balance: number;
   health: number;
+  total_health: number;
   stamina: number;
+  total_stamina: number;
   damage: number;
   defense: number;
   inventory: Inventory[];

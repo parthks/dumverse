@@ -1,13 +1,13 @@
 import { BATTLE_ICONS, IMAGES } from "@/lib/constants";
-import { getEquippedItem, getPlayerTotalHealth, getPlayerTotalStamina } from "@/lib/utils";
+import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
 export function PlayerFrame() {
   const { user } = useGameStore();
   if (!user) return null;
 
-  const totalHealth = getPlayerTotalHealth(user);
-  const totalStamina = getPlayerTotalStamina(user);
+  const totalHealth = user.total_health;
+  const totalStamina = user.total_stamina;
   const filledHealth = user.health;
   const filledStamina = user.stamina;
   const { weapon, armor } = getEquippedItem(user);

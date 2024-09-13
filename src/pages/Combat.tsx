@@ -1,6 +1,6 @@
 import ImgButton from "@/components/ui/imgButton";
 import { BATTLE_ICONS, ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants";
-import { getEquippedItem, getPlayerTotalHealth, getPlayerTotalStamina } from "@/lib/utils";
+import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle } from "@/types/combat";
@@ -43,25 +43,25 @@ export default function Combat() {
   }, [enteringNewBattle, currentBattle, getOpenBattles]);
 
   //  Check for battle updates
-  //   useEffect(() => {
-  //     let interval: NodeJS.Timeout | null = null;
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
 
-  //     if (currentBattle?.id && !currentBattle.ended) {
-  //       if (interval) {
-  //         clearInterval(interval);
-  //       }
-  //       interval = setInterval(() => {
-  //         console.log("Checking for battle updates");
-  //         setCurrentBattle(currentBattle.id);
-  //       }, 5000);
-  //     }
+    if (currentBattle?.id && !currentBattle.ended) {
+      if (interval) {
+        clearInterval(interval);
+      }
+      interval = setInterval(() => {
+        console.log("Checking for battle updates");
+        setCurrentBattle(currentBattle.id);
+      }, 5000);
+    }
 
-  //     return () => {
-  //       if (interval) {
-  //         clearInterval(interval);
-  //       }
-  //     };
-  //   }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
 
   if (enteringNewBattle && !currentBattle?.id) {
     return <div>Entering a new battle...</div>;
@@ -139,8 +139,8 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 
 function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const user = useGameStore((state) => state.user);
-  const totalHealth = getPlayerTotalHealth(player as any);
-  const totalStamina = getPlayerTotalStamina(player as any);
+  const totalHealth = player.total_health;
+  const totalStamina = player.total_stamina;
   const filledHealth = player.health;
   const filledStamina = player.stamina;
 
@@ -166,7 +166,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
           </div>
           <div className="flex gap-1">
             {Array.from({ length: totalStamina }).map((_, index) => (
-              <img key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+              <img className="w-5" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
             ))}
           </div>
         </div>
@@ -214,7 +214,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
 function BattleLog({ currentBattle }: { currentBattle: Battle }) {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const combatLoading = useCombatStore((state) => state.loading);
-  const goToTownFromBattle = useCombatStore((state) => state.goToTownFromBattle);
+  const goToMapFromBattle = useCombatStore((state) => state.goToMapFromBattle);
 
   // as the log is updated, scroll to the bottom
   useEffect(() => {
@@ -263,7 +263,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
       </div>
       {currentBattle.ended && (
         <div className="my-4 flex justify-center">
-          <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTownFromBattle()} alt={"Return to Town"} />
+          <ImgButton src={"https://arweave.net/-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"} onClick={() => goToMapFromBattle()} alt={"Return to Town"} />
         </div>
       )}
     </div>

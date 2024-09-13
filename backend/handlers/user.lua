@@ -67,10 +67,11 @@ Handlers.add(
         local baseStats = helpers.CalculateUserBaseStats(tempUserData)
 
         dbAdmin:exec(string.format([[
-            INSERT INTO Users (address, name, nft_address, gold_balance, dumz_balance, damage, defense, health, stamina)
-            VALUES ('%s', '%s', %s, %f, %f, %f, %f, %f, %f);
+            INSERT INTO Users (address, name, nft_address, gold_balance, dumz_balance, damage, defense, health, stamina, total_health, total_stamina)
+            VALUES ('%s', '%s', %s, %f, %f, %f, %f, %f, %f, %f, %f);
         ]], user_address, name, nft_address and string.format("'%s'", nft_address) or "NULL", starting_gold,
-            starting_dumz, baseStats.damage, baseStats.defense, baseStats.health, baseStats.stamina))
+            starting_dumz, baseStats.damage, baseStats.defense, baseStats.health, baseStats.stamina,
+            baseStats.total_health, baseStats.total_stamina))
 
         -- Get the last inserted ID
         local insert_user_result = dbAdmin:exec(getUserQuery)

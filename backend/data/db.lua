@@ -21,7 +21,9 @@ USERS_TABLE = [[
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         health FLOAT DEFAULT 0,
+        total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
+        total_stamina FLOAT DEFAULT 0,
         damage FLOAT DEFAULT 0,
         defense FLOAT DEFAULT 0
     );
