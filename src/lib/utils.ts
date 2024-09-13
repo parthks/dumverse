@@ -16,3 +16,10 @@ export function getPlayerTotalHealth(player: GameUser) {
 export function getPlayerTotalStamina(player: GameUser) {
   return 4;
 }
+
+export function getEquippedItem(player: GameUser) {
+  const inventory = player.inventory;
+  const weapon = inventory.find((item) => item.item_type === "WEAPON" && item.equipped);
+  const armor = inventory.find((item) => item.item_type === "ARMOR" && item.equipped);
+  return { weapon, armor };
+}

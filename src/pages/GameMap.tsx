@@ -2,9 +2,12 @@ import LammaWalkingLeft from "@/assets/lamma_inf_walking_left.gif";
 import LammaWalkingRight from "@/assets/lamma_inf_walking_right.gif";
 import LammaStandLeft from "@/assets/lamma_stand_left.png";
 import LammaStandRight from "@/assets/lamma_stand_right.png";
+import { PlayerFrame } from "@/components/game/PlayerFrame";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
-import { useGameStore } from "@/store/useGameStore";
+import { SOUNDS } from "@/lib/constants";
+import { useCombatStore } from "@/store/useCombatStore";
+import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
 
 const GameMap = () => {
@@ -26,6 +29,8 @@ const GameMap = () => {
   const [stepTime, setStepTime] = useState("50");
 
   const [tempLammaPosition, setTempLammaPosition] = useState(lammaPosition);
+  const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
+  const setGameStatePage = useGameStore((state) => state.setGameStatePage);
 
   const lammaWidth = 6;
   const lammaHeight = 8.5;
@@ -106,10 +111,24 @@ const GameMap = () => {
   return (
     <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>
       <audio autoPlay loop>
-        <source src="https://arweave.net/yW2M75jkljOj3I-Wv2Cs0A3Dqkn4MVdyCRfqkQL8pMs" type="audio/mpeg" />
+        <source src={SOUNDS.ISLAND_AUDIO} type="audio/mpeg" />
       </audio>
       <div className="z-10 absolute top-4 right-4">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
+      </div>
+      <div className="z-10 absolute bottom-4 left-4 flex items-end gap-2">
+        <PlayerFrame />
+        {currentIslandLevel != 0 && (
+          <ImgButton
+            src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
+            onClick={() => {
+              enterNewBattle(currentIslandLevel);
+              setGameStatePage(GameStatePages.COMBAT);
+            }}
+            className="shrink-0 mb-8"
+            alt={"Enter Combat"}
+          />
+        )}
       </div>
       {/* <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
       <label>Step Distance (% of map width between 0-1)</label>

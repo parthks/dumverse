@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
+import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
-import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import { IMAGES } from "@/lib/constants";
+import { useGameStore } from "@/store/useGameStore";
 import { Item } from "@/types/game";
 import { useEffect } from "react";
 
@@ -83,7 +84,7 @@ function ShopItem({ item, position }: { item: Item; position: number }) {
           </text>
           {/* dumz or gold icon image */}
           <image
-            href={`https://arweave.net/${item.gold_price ? "8_z7MIgJ2v8fbdYMAKSgpwDc7exFxUJVQnd-egomLXA" : "_53RnMurt-qradH-caMUJMgvvpoUVmzpM5Yjk8KQVtI"}`}
+            href={`${item.gold_price ? IMAGES.GOLD_ICON : IMAGES.DUMZ_ICON}`}
             x={estimatedTextWidth + iconGap}
             y={-iconSize / 2}
             width={(iconSize / imageWidth) * 100 + "%"}
@@ -157,7 +158,7 @@ function ShopTableItem({ item }: { item: Item }) {
             </text>
             {/* dumz or gold icon image */}
             <image
-              href={`https://arweave.net/${item.gold_price ? "8_z7MIgJ2v8fbdYMAKSgpwDc7exFxUJVQnd-egomLXA" : "_53RnMurt-qradH-caMUJMgvvpoUVmzpM5Yjk8KQVtI"}`}
+              href={`${item.gold_price ? IMAGES.GOLD_ICON : IMAGES.DUMZ_ICON}`}
               x={estimatedTextWidth + iconGap}
               y={-iconSize / 2}
               width={(iconSize / imageWidth) * 100 + "%"}
@@ -214,6 +215,9 @@ export default function Shop() {
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"} onClick={() => goToTown()} alt={"Return to Town"} />
+      </div>
+      <div className="z-10 absolute bottom-4 right-4">
+        <InventoryBag />
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">

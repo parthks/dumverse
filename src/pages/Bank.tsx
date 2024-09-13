@@ -1,3 +1,4 @@
+import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
@@ -37,6 +38,9 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
+      <div className="z-10 absolute bottom-4 right-4">
+        <InventoryBag />
+      </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
           <img src={"https://arweave.net/_bcFdMyWRe8R95lz9gbIcYutT6x_vGoUCH7EoYYJ7To"} alt="General Bank Vault" className="w-full h-full object-contain" />
@@ -44,7 +48,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
             <text x="50%" y="44.5%" fontSize="100" textAnchor="middle" fill="white">
-              {bankDataLoading ? "--" : `${bank.dumz_amount} $Dumz`}
+              {bankDataLoading ? "--" : `${bank.dumz_amount} $tDumz`}
             </text>
             <image
               href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
@@ -122,6 +126,9 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
+      <div className="z-10 absolute bottom-4 right-4">
+        <InventoryBag />
+      </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
           <img src={"https://arweave.net/mz1QPdT6fZxtT5PLQEtvP6Q_XSOmTXqs9Q1GhDKVfLg"} alt="NFT Bank Vault" className="w-full h-full object-contain" />
@@ -129,7 +136,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
             <text x="45%" y="50%" fontSize="150" textAnchor="middle" fill="white">
-              {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $Dumz`}
+              {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $tDumz`}
             </text>
             <image
               href="https://arweave.net/-nNkBcJ5iAWv0tbYBOqZkTDabHvGGLR0jNnAC5OoVX4"
@@ -194,9 +201,12 @@ export default function BankPage() {
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"} onClick={() => goToTown()} alt={"Exit Bank"} />
       </div>
+      <div className="z-10 absolute bottom-4 right-4">
+        <InventoryBag />
+      </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/HslySMLjJUM5tsd8OHEO21xeDLLbIQ7vS6Xh612fT9A"} alt="Bank Map" className="w-full h-full object-contain" />
+          <img src={"https://arweave.net/Rnbi6jrab33iirlfGRS6up_iPe0TW1Pn-ali8sCG2ME"} alt="Bank Map" className="w-full h-full object-contain" />
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             <image

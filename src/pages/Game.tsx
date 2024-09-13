@@ -26,7 +26,12 @@ export default function Game() {
   if (GameStatePage === GameStatePages.COMBAT) page = <Combat />;
   if (GameStatePage === GameStatePages.TOWN) page = <Town />;
 
-  if (!user) return <div>Loading...</div>;
+  if (!user)
+    return (
+      <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>
+        {/* Loading... */}
+      </div>
+    );
   // return <Combat />;
   return (
     <div className="game-cursor">
