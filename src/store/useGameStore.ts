@@ -73,7 +73,7 @@ export const useGameStore = create<GameState>()(
       user: null,
       setUser: (user) => {
         if (user) {
-          set({ GameStatePage: GameStatePages.GAME_MAP });
+          set({ GameStatePage: GameStatePages.TOWN });
           get().refreshUserData(user.id);
         }
       },

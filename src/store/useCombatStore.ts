@@ -89,7 +89,8 @@ export const useCombatStore = create<CombatState>()(
           },
         ]);
         const battle = resultData.data as Battle;
-        set({ currentBattle: battle, enteringNewBattle: false });
+        set({ currentBattle: battle });
+        set({ enteringNewBattle: false });
       },
       userAttack: async (npc_id: string) => {
         const user_id = useGameStore.getState().user?.id;

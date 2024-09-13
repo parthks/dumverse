@@ -51,6 +51,14 @@ Handlers.add("Battle.NewUserJoin",
         assert(msg.Player, "Player is required")
         assert(msg.NPCs, "NPCs is required")
 
+        local battles = GetOpenBattlesOfUser(msg.From)
+        if #battles > 0 then
+            -- user is already in a battle
+            print("user is already in a battle")
+            ao.send({ Target = msg.From, Data = { battle = battles[1] } })
+            return
+        end
+
         local player = json.decode(msg.Player)
         local npcs = json.decode(msg.NPCs)
 
@@ -76,25 +84,29 @@ Handlers.add("Battle.NewUserJoin",
     end
 )
 
+function GetOpenBattlesOfUser(user_address)
+    local battles = {}
+    for _, battle in pairs(Battles) do
+        if not battle.ended then
+            local user_addresses = {}
+            for _, player in pairs(battle.players) do
+                print("player " .. player.id .. " address " .. player.address)
+                table.insert(user_addresses, player.address)
+            end
+            print("user_address " .. user_address)
+            if not battle.ended and utils.includes(user_address, user_addresses) then
+                print("battle " .. battle.id .. " is open")
+                table.insert(battles, battle)
+            end
+        end
+    end
+    return battles
+end
+
 Handlers.add("Battle.GetOpenBattles",
     Handlers.utils.hasMatchingTag("Action", "Battle.GetOpenBattles"),
     function(msg)
-        local battles = {}
-        for _, battle in pairs(Battles) do
-            if not battle.ended then
-                local user_addresses = {}
-                for _, player in pairs(battle.players) do
-                    print("player " .. player.id .. " address " .. player.address)
-                    table.insert(user_addresses, player.address)
-                end
-                print("msg.From " .. msg.From)
-                print(user_addresses)
-                if not battle.ended and utils.includes(msg.From, user_addresses) then
-                    print("battle " .. battle.id .. " is open")
-                    table.insert(battles, battle)
-                end
-            end
-        end
+        local battles = GetOpenBattlesOfUser(msg.From)
         Send({ Target = msg.From, Data = battles })
     end
 )
