@@ -4,6 +4,7 @@ import BankPage from "./Bank";
 import Combat from "./Combat";
 import GameMap from "./GameMap";
 import Shop from "./Shop";
+import RestArea from "./RestArea";
 import Town from "./Town";
 
 export default function Game() {
@@ -25,7 +26,7 @@ export default function Game() {
   if (GameStatePage === GameStatePages.GAME_MAP) page = <GameMap />;
   if (GameStatePage === GameStatePages.COMBAT) page = <Combat />;
   if (GameStatePage === GameStatePages.TOWN) page = <Town />;
-
+  if (GameStatePage === GameStatePages.REST_AREA) page = <RestArea />;
   if (!user)
     return (
       <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>
@@ -33,6 +34,7 @@ export default function Game() {
       </div>
     );
   // return <Combat />;
+  // return <RestArea />;
   return (
     <div className="game-cursor">
       {/* <GameProfile /> */}

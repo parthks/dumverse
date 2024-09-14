@@ -187,7 +187,9 @@ export const useCombatStore = create<CombatState>()(
         // if you won, move one step forward of current_spot. Need to update the db for this
         set({ loading: true });
         const user_id = useGameStore.getState().user!.id;
-        const isAlive = get().currentBattle?.players_alive.find((playerId) => playerId === user_id?.toString());
+        // even when running away, player is removed from players_alive
+        // const isAlive = get().currentBattle?.players_alive.find((playerId) => playerId === user_id?.toString());
+        const isAlive = get().currentBattle?.players?.[user_id]?.health ?? 0 > 0;
         await useGameStore.getState().refreshUserData();
         set({ currentBattle: null, loading: false });
         if (isAlive) {

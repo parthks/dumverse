@@ -37,6 +37,13 @@ Handlers.add("Shop.BuyItem",
         local item = ITEMS[item_id]
         assert(item, "Item does not exist")
 
+        -- if token type is gold, check if item has gold price
+        if token_type == "GOLD" then
+            assert(item.gold_price, "Item does not have a gold price")
+        else
+            assert(item.dumz_price, "Item does not have a dumz price")
+        end
+
         -- check if user has enough balance
         local userData = helpers.CheckUserExists(user_id, msg.From)
         if token_type == "GOLD" then
@@ -45,10 +52,12 @@ Handlers.add("Shop.BuyItem",
             assert(userData.dumz_balance >= item.dumz_price, "You does not have enough DUMZ balance")
         end
 
+
         -- select inventory items and set equipped to true for new item
         local inventory = dbAdmin:exec(string.format([[
             SELECT * FROM Inventory WHERE user_id = %f AND equipped = TRUE AND item_type = "%s";
         ]], user_id, item.type))
+
 
         -- only one item can be equipped at a time
         if #inventory > 0 then
@@ -59,8 +68,9 @@ Handlers.add("Shop.BuyItem",
 
         -- update inventory
         dbAdmin:exec(string.format([[
-            INSERT INTO Inventory (user_id, item_id, equipped, item_type) VALUES (%f, "%s", %f, TRUE, "%s");
+            INSERT INTO Inventory (user_id, item_id, item_type, equipped) VALUES (%f, "%s", "%s", TRUE);
         ]], user_id, item_id, item.type))
+
 
         -- update user balance
         if token_type == "GOLD" then
@@ -92,7 +102,7 @@ Handlers.add("Shop.BuyItem",
         end
         if (item.stamina) then
             dbAdmin:exec(string.format([[
-                UPDATE Users SET stamina_balance = %f WHERE ID = %f;
+                UPDATE Users SET stamina = %f WHERE ID = %f;
             ]], baseStats.stamina + item.stamina, user_id))
         end
 

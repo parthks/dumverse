@@ -74,7 +74,7 @@ Handlers.add("Combat.EnteredNewCombat",
 
         -- update Users table with battle_id
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = %d WHERE id = %f;
+            UPDATE Users SET current_battle_id = %d, stamina = stamina - 1 WHERE id = %f;
         ]], battle_id, user_id))
     end
 )
@@ -86,12 +86,11 @@ Handlers.add("Combat.PlayerWon",
         local user_id = msg.UserId
         local level = tonumber(msg.Level)
         local playerData = json.decode(msg.Data)
-        local stamina = playerData.stamina - 1 -- subtract 1 from stamina from battling
 
         -- update Users table with health, stamina, gold_balance, dumz_balance
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, stamina = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
-        ]], level, playerData.health, stamina, playerData.gold_balance, playerData.dumz_balance,
+            UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
+        ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance,
             user_id))
 
         local potion = playerData.potion
@@ -110,12 +109,11 @@ Handlers.add("Combat.PlayerRanAway",
         assert(msg.From == COMBAT_PROCESS_ID, "Only Combat process can send this message")
         local user_id = msg.UserId
         local playerData = json.decode(msg.Data)
-        local stamina = playerData.stamina - 1 -- subtract 1 from stamina from battling
 
         -- update Users table with health, stamina, gold_balance, dumz_balance
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = NULL, health = %f, stamina = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
-        ]], playerData.health, stamina, playerData.gold_balance, playerData.dumz_balance, user_id))
+            UPDATE Users SET current_battle_id = NULL, health = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
+        ]], playerData.health, playerData.gold_balance, playerData.dumz_balance, user_id))
 
         local potion = playerData.potion
         if potion and potion.id and playerData.potion_used then
@@ -136,7 +134,7 @@ Handlers.add("Combat.PlayerPerished",
 
         -- update Users table
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, gold_balance = 0, dumz_balance = 0, stamina = 0 WHERE id = %f;
+            UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, gold_balance = 0, dumz_balance = 0 WHERE id = %f;
         ]], user_id))
         local potion = playerData.potion
         if potion and potion.id and playerData.potion_used then

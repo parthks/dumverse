@@ -6,6 +6,101 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
 import { useEffect, useRef } from "react";
 
+// const currentBattle = {
+//   log: [
+//     {
+//       timestamp: 1726346958193,
+//       message: "hits Doe Eyed Deer for 2",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346958193,
+//       message: "has slain Doe Eyed Deer",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346958193,
+//       message: "hits CryptoCherie for 1",
+//       from: "NPC_2",
+//     },
+//     {
+//       timestamp: 1726346961590,
+//       message: "hits Sad Hedgehog for 2",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346961590,
+//       message: "has slain Sad Hedgehog",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346961590,
+//       message: "has won the battle",
+//       from: "3",
+//     },
+//   ],
+//   winner: "2",
+//   npcs: {
+//     NPC_1: {
+//       health: 0,
+//       dumz_reward: 1,
+//       damage: 1,
+//       difficulty: "EASY",
+//       total_health: 1,
+//       gold_reward: 10,
+//       extra_gold: 10000,
+//       id: "NPC_1",
+//       defense: 0,
+//       name: "Doe Eyed Deer",
+//     },
+//     NPC_2: {
+//       health: 0,
+//       dumz_reward: 1,
+//       damage: 1,
+//       difficulty: "EASY",
+//       total_health: 1,
+//       gold_reward: 10,
+//       extra_gold: 0,
+//       id: "NPC_2",
+//       defense: 0,
+//       name: "Sad Hedgehog",
+//     },
+//   },
+//   npcs_alive: [],
+//   last_npc_attack_timestamp: {
+//     NPC_1: 1726346952043,
+//     NPC_2: 1726346958193,
+//   },
+//   level: 1,
+//   id: 39,
+//   players_attacked: ["2"],
+//   ended: true,
+//   created_at: 1726346952043,
+//   players: {
+//     "2": {
+//       potion: {
+//         health: 1,
+//         id: 12,
+//         item_id: "POTION_1",
+//       },
+//       name: "CryptoCherie",
+//       damage: 2,
+//       health: 2,
+//       potion_used: true,
+//       total_health: 2,
+//       stamina: 1,
+//       defense: 0,
+//       nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
+//       id: "2",
+//       total_stamina: 6,
+//       gold_balance: 24070,
+//       current_spot: 0,
+//       address: "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go",
+//       dumz_balance: 60,
+//     },
+//   },
+//   players_alive: ["3"],
+// } as any;
 export default function Combat() {
   const { loading, enteringNewBattle, currentBattle, getOpenBattles, setCurrentBattle, enterNewBattle, userAttack, userRun } = useCombatStore();
   const { user, setGameStatePage, refreshUserData } = useGameStore();
@@ -172,9 +267,17 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
             return (
               <>
                 <div key={entity.id} className="flex flex-col gap-2 max-w-[380px] items-center">
-                  {isEnemy && <EnemyCard enemy={entity as NPC} />}
+                  {isEnemy && (
+                    <div className={`${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
+                      <EnemyCard enemy={entity as NPC} />
+                    </div>
+                  )}
 
-                  {!isEnemy && <PlayerCard player={entity as Battle["players"][string]} />}
+                  {!isEnemy && (
+                    <div className={`${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
+                      <PlayerCard player={entity as Battle["players"][string]} />
+                    </div>
+                  )}
 
                   {enemyIsAlive && (
                     <div className="flex gap-2 items-center">
@@ -219,7 +322,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
 
   return (
     <div
-      className="w-[302px] flex flex-col bg-[url('https://arweave.net/YHfNqgt4OHoiMxr3Jm9P4FB1QUCg7fND5IBkvuQm96c')] bg-no-repeat bg-contain bg-center px-4 py-1"
+      className="w-[250px] flex flex-col bg-[url('https://arweave.net/YHfNqgt4OHoiMxr3Jm9P4FB1QUCg7fND5IBkvuQm96c')] bg-no-repeat bg-contain bg-center px-4 py-1"
       style={{ aspectRatio: "302/421" }}
     >
       <h2 className="text-black text-2xl font-bold text-center">{player.name} (P)</h2>
@@ -228,7 +331,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
         <div className="flex flex-col gap-1">
           <div className="flex gap-1">
             {Array.from({ length: totalHealth }).map((_, index) => (
-              <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
+              <img className="w-5" key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
             ))}
           </div>
           {/* <div className="flex gap-1">
@@ -239,14 +342,14 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
           {player.potion && (
             <>
               <div className="flex gap-1">
-                <img className="h-8" src={ITEM_ICONS[player.potion.item_id as keyof typeof ITEM_ICONS]} alt="Potion" />
+                <img className="h-7" src={ITEM_ICONS[player.potion.item_id as keyof typeof ITEM_ICONS]} alt="Potion" />
                 <p className="text-black text-2xl font-bold text-center">{player.potion_used ? 0 : player.potion.health}</p>
               </div>
               <div className="flex gap-1">
                 {user?.id.toString() == player.id && (
                   <ImgButton
                     disabled={combatLoading || player.potion_used}
-                    className="w-24 shrink-0"
+                    className="w-20 shrink-0"
                     src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
                     onClick={() => drinkPotion()}
                     alt={"Use Potion"}
@@ -277,7 +380,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   const filledHealth = enemy.health;
   return (
     <div
-      className="w-[302px] flex flex-col bg-no-repeat bg-contain bg-center relative"
+      className="w-[250px] flex flex-col bg-no-repeat bg-contain bg-center relative"
       style={{
         aspectRatio: "302/421",
         backgroundImage: `url('${backgroundImage}')`,
@@ -286,7 +389,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
       <div className="absolute bottom-[19%] left-0 right-0 w-full">
         <div className="flex gap-1 px-4 justify-start">
           {Array.from({ length: totalHealth }).map((_, index) => (
-            <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" className="w-[12%] " />
+            <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" className="w-[9%] " />
           ))}
         </div>
       </div>
@@ -312,8 +415,8 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
 
   return (
     <div
-      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/V4B3MJpEEAStbIOJbygQ6-lcVBR8w_8baD5TKK7u6p8')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full max-h-[calc(100vw*1040/649/2)]"
-      style={{ aspectRatio: "649/1040" }}
+      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/V4B3MJpEEAStbIOJbygQ6-lcVBR8w_8baD5TKK7u6p8')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full"
+      style={{ aspectRatio: "649/1040", maxHeight: "calc(100vh - 60px)" }}
     >
       <div className="flex items-center justify-between">
         <div className="w-6">{combatLoading && <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>}</div>

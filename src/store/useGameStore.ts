@@ -15,6 +15,7 @@ export enum GameStatePages {
   GAME_MAP = "GAME_MAP",
   COMBAT = "COMBAT",
   TOWN = "TOWN",
+  REST_AREA = "REST_AREA",
 }
 
 export const initialLamaPosition: LamaPosition = {
