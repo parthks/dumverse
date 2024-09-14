@@ -1,20 +1,12 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
-import { IMAGES } from "@/lib/constants";
+import { IMAGES, ITEM_IMAGES } from "@/lib/constants";
 import { useGameStore } from "@/store/useGameStore";
 import { Item } from "@/types/game";
 import { useEffect } from "react";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
-
-const ITEM_IMAGES = {
-  WEAPON_1: "https://arweave.net/7a23JeEQssnf01L47H1FccCU7W402DrKv5nDah9fLkU",
-  ARMOR_1: "https://arweave.net/aRZkLSJj01b-dhuA_fVFuYXbaF34k08f6m5vmAjWJWY",
-  POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",
-  POTION_2: "https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y",
-  FOOD_1: "https://arweave.net/-tUyiDZQCbIytBSEKfsSdLh13utGP4SKUD72eS-QrH4",
-};
 
 const ITEM_POSITIONS = {
   0: {

@@ -26,12 +26,23 @@ Handlers.add("Combat.EnterNewCombat",
         end
 
         -- get equipped inventory items - for potions
-        -- local equippedItems = dbAdmin:exec(string.format([[
-        --     SELECT * FROM Inventory WHERE USER_ID = %f AND EQUIPPED = TRUE;
-        -- ]], user_id))
+        local equippedPotion = dbAdmin:exec(string.format([[
+            SELECT id,item_id FROM Inventory WHERE USER_ID = %f AND item_type = 'POTION' LIMIT 1;
+        ]], user_id))
+
+        local potion = equippedPotion[1]
+        -- add equippedPotion to userData.potion, will remove the item from inventory after battle (if used)
+        local health = ITEMS[potion.item_id].health
+        userData.potion = {
+            id = potion.id,
+            item_id = potion.item_id,
+            health = health
+        }
+        userData.potion_used = false
 
         -- TODO: based on combat_level, get the enemies from the ENEMIES table
         local enemies = {}
+
 
         ao.send({
             Target = COMBAT_PROCESS_ID,
@@ -76,6 +87,14 @@ Handlers.add("Combat.PlayerWon",
         dbAdmin:exec(string.format([[
             UPDATE Users SET current_battle_id = NULL, health = %f, stamina = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
         ]], playerData.health, stamina, playerData.gold_balance, playerData.dumz_balance, user_id))
+
+        local potion = playerData.potion
+        if potion and potion.id and playerData.potion_used then
+            -- remove the potion from the inventory
+            dbAdmin:exec(string.format([[
+                DELETE FROM Inventory WHERE id = %d;
+            ]], potion.id))
+        end
     end
 )
 
@@ -91,6 +110,14 @@ Handlers.add("Combat.PlayerRanAway",
         dbAdmin:exec(string.format([[
             UPDATE Users SET current_battle_id = NULL, health = %f, stamina = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
         ]], playerData.health, stamina, playerData.gold_balance, playerData.dumz_balance, user_id))
+
+        local potion = playerData.potion
+        if potion and potion.id and playerData.potion_used then
+            -- remove the potion from the inventory
+            dbAdmin:exec(string.format([[
+                DELETE FROM Inventory WHERE id = %d;
+            ]], potion.id))
+        end
     end
 )
 
@@ -99,11 +126,19 @@ Handlers.add("Combat.PlayerPerished",
     function(msg)
         assert(msg.From == COMBAT_PROCESS_ID, "Only Combat process can send this message")
         local user_id = msg.UserId
+        local playerData = json.decode(msg.Data)
 
         -- update Users table
         dbAdmin:exec(string.format([[
             UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, gold_balance = 0, dumz_balance = 0, stamina = 0 WHERE id = %f;
         ]], user_id))
+        local potion = playerData.potion
+        if potion and potion.id and playerData.potion_used then
+            -- remove the potion from the inventory
+            dbAdmin:exec(string.format([[
+                DELETE FROM Inventory WHERE id = %d;
+            ]], potion.id))
+        end
     end
 )
 

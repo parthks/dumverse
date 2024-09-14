@@ -40,8 +40,9 @@ Handlers.add("CronTick",
 MAX_PLAYERS_IN_BATTLE = 1
 
 BattleHelpers = {}
-Battles = Battles or {} -- table of battles with id as key and battle as value
-NPCS_EXTRA_GOLD = {}    -- table of npcs with id as key and extra gold as value, taken from perished players
+Battles = Battles or {}                 -- table of battles with id as key and battle as value
+NPCS_EXTRA_GOLD = NPCS_EXTRA_GOLD or
+{}                                      -- table of npcs with id as key and extra gold as value, taken from perished players
 
 Handlers.add("Battle.NewUserJoin",
     Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), -- handler pattern to identify cron message
@@ -134,7 +135,28 @@ Handlers.add("Battle.Info",
         local user_id = msg.UserId
         local battle_id = tonumber(msg.BattleId)
         -- VerifyUserInBattle(user_id, battle_id)
-        Send({ Target = msg.From, Data = BattleHelpers.get(battle_id) })
+        Send({ Target = msg.From, Action = "Battle.Data", Data = BattleHelpers.get(battle_id) })
+    end
+)
+
+Handlers.add("Battle.DrinkPotion",
+    Handlers.utils.hasMatchingTag("Action", "Battle.DrinkPotion"),
+    function(msg)
+        local battle_id = tonumber(msg.BattleId)
+        VerifyUserInBattle(msg.UserId, battle_id)
+        local battle = VerifyBattleIsOnGoing(battle_id)
+
+        local potion_used = battle.players[msg.UserId].potion_used
+        assert(not potion_used, "Potion already used")
+
+        local potion = battle.players[msg.UserId].potion
+        assert(potion, "Potion not found")
+
+        battle.players[msg.UserId].health = battle.players[msg.UserId].health + potion.health
+        battle.players[msg.UserId].potion_used = true
+
+        BattleHelpers.update(battle_id, battle)
+        ao.send({ Target = msg.From, Action = "Battle.Data", Data = battle })
     end
 )
 
@@ -183,7 +205,7 @@ Handlers.add("Battle.UserAttack",
         else
             -- assert(false, "AttackEntityId is not in playerUserIds or npcIds")
             -- race condition from the UI, do nothing
-            ao.send({ Target = msg.From, Data = battle })
+            ao.send({ Target = msg.From, Action = "Battle.Data", Data = battle })
             return
         end
 
@@ -204,7 +226,7 @@ Handlers.add("Battle.UserAttack",
             BattleHelpers.endBattle(battle.id, msg.UserId, msg.Timestamp)
         end
 
-        ao.send({ Target = msg.From, Data = battle })
+        ao.send({ Target = msg.From, Action = "Battle.Data", Data = battle })
     end
 )
 
@@ -226,7 +248,7 @@ Handlers.add("Battle.UserRun",
                 BattleHelpers.endBattle(battle.id, nil, msg.Timestamp)
             end
             BattleHelpers.update(battle_id, battle)
-            ao.send({ Target = msg.From, Data = battle })
+            ao.send({ Target = msg.From, Action = "Battle.Data", Data = battle })
             return
         end
         -- BattleHelpers.log(battle_id, msg.Timestamp, msg.UserId,
@@ -240,7 +262,7 @@ Handlers.add("Battle.UserRun",
         NPCAttack(npc.id, battle_id, msg.Timestamp, msg.UserId)
 
         -- player runs unsuccessfully
-        ao.send({ Target = msg.From, Data = battle })
+        ao.send({ Target = msg.From, Action = "Battle.Data", Data = battle })
     end
 )
 function VerifyUserInBattle(user_id, battle_id)
@@ -297,6 +319,10 @@ end
 
 BattleHelpers.endBattle = function(battle_id, winner_id, timestamp)
     local battle = BattleHelpers.get(battle_id)
+    -- when user attacks, after NPC attacks if NPC ends the battle then this function is called twice
+    if (battle.ended) then
+        return
+    end
     -- TODO: Archive battle to SQL table and delete from memory
 
     battle.winner = winner_id
@@ -395,7 +421,12 @@ BattleHelpers.killPlayer = function(battle_id, player_id, attacker_id, timestamp
 
     BattleHelpers.update(battle_id, battle)
     local player = battle.players[player_id]
-    ao.send({ Target = GAME_PROCESS_ID, UserId = player.id, Action = "Combat.PlayerPerished" })
+    ao.send({
+        Target = GAME_PROCESS_ID,
+        UserId = player.id,
+        Action = "Combat.PlayerPerished",
+        Data = json.encode(player)
+    })
 end
 
 BattleHelpers.playerRanAway = function(battle_id, player_id, timestamp)

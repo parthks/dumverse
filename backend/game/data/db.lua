@@ -36,7 +36,7 @@ INVENTORY_TABLE = [[
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         item_id TEXT NOT NULL,
-        item_type TEXT NOT NULL, -- ARMOR, WEAPON, POTION.
+        item_type TEXT NOT NULL, -- ARMOR, WEAPON, POTION, FOOD, ENERGY.
         amount INTEGER NOT NULL,
         equipped BOOLEAN DEFAULT FALSE, -- only one item type can be equipped
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

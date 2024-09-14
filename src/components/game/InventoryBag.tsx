@@ -1,4 +1,4 @@
-import { BATTLE_ICONS, IMAGES } from "@/lib/constants";
+import { ITEM_ICONS, IMAGES } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
@@ -20,10 +20,10 @@ export function InventoryBag() {
       style={{ aspectRatio: "392/425" }}
     >
       <div className="flex items-center justify-between" style={{ position: "absolute", top: "32.5%", left: "38%", transform: "translate(-50%, -50%)" }}>
-        <img src={weapon ? BATTLE_ICONS.WEAPON_1 : BATTLE_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-6 h-6" />
+        <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-6 h-6" />
       </div>
       <div className="flex items-center justify-between" style={{ position: "absolute", top: "32.5%", left: "62%", transform: "translate(-50%, -50%)" }}>
-        <img src={armor ? BATTLE_ICONS.ARMOR_1 : BATTLE_ICONS.NO_ARMOR} alt="armor in inventory" className="w-6 h-6" />
+        <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-6 h-6" />
       </div>
       <div className="flex items-center justify-between" style={{ position: "absolute", top: "55%", right: "10%", transform: "translate(-50%, -50%)" }}>
         <div className="flex justify-center items-center">

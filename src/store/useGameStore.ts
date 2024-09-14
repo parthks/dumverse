@@ -29,7 +29,7 @@ interface GameState {
   registerNewUser: (name: string, nft?: string) => Promise<void>;
   user: GameUser | null;
   setUser: (user: GameUser | null) => void;
-  refreshUserData: (userId?: number) => Promise<void>;
+  refreshUserData: (userId?: number) => Promise<GameUser | null>;
   inventory: Inventory[];
   setInventory: (inventory: Inventory[]) => void;
   bank: (Bank & { transactions: BankTransaction[] }) | null;
@@ -84,9 +84,9 @@ export const useGameStore = create<GameState>()(
           get().refreshUserData(user.id);
         }
       },
-      refreshUserData: async (userId?: number) => {
+      refreshUserData: async (userId?: number): Promise<GameUser | null> => {
         const user_id = userId ? userId : get().user?.id;
-        if (!user_id) return;
+        if (!user_id) return null;
 
         const resultData = await sendDryRunGameMessage([
           { name: "Action", value: "User.Info" },
@@ -97,7 +97,9 @@ export const useGameStore = create<GameState>()(
           const user = JSON.parse(resultData.Messages[0].Data);
           const inventory = user.inventory;
           set({ user: user, inventory: inventory, currentIslandLevel: user.current_spot });
+          return user;
         }
+        return null;
       },
       inventory: [],
       setInventory: (inventory) => set({ inventory }),

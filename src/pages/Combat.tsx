@@ -1,5 +1,5 @@
 import ImgButton from "@/components/ui/imgButton";
-import { BATTLE_ICONS, ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants";
+import { ITEM_ICONS, ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -21,7 +21,7 @@ export default function Combat() {
       console.log("SET UP INTERVAL FOR CHECKING OPEN BATTLES");
       interval = setInterval(async () => {
         await Promise.all([getOpenBattles()]);
-      }, 10000);
+      }, 1000);
 
       // Stop checking after 60 seconds
       timeout = setTimeout(() => {
@@ -29,7 +29,7 @@ export default function Combat() {
           console.log("Stopped checking for open battles after 60 seconds");
           clearInterval(interval);
         }
-      }, 60000);
+      }, 30000);
     }
 
     return () => {
@@ -51,7 +51,7 @@ export default function Combat() {
       console.log("SET UP INTERVAL FOR CHECKING USER IS IN BATTLE");
       interval = setInterval(async () => {
         await Promise.all([refreshUserData()]);
-      }, 10000);
+      }, 1000);
     }
 
     // Stop checking after 30 seconds
@@ -60,7 +60,7 @@ export default function Combat() {
         console.log("Stopped checking for user is in battle after 60 seconds");
         clearInterval(interval);
       }
-    }, 60000);
+    }, 30000);
 
     return () => {
       if (interval) {
@@ -168,23 +168,28 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 
           {allPlayers.map((entity, index) => {
             const isEnemy = entity.id.startsWith("NPC");
+            const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
             return (
               <>
                 <div key={entity.id} className="flex flex-col gap-2 max-w-[380px] items-center">
                   {isEnemy && <EnemyCard enemy={entity as NPC} />}
-                  {!isEnemy && <PlayerCard player={entity as Battle["players"][string]} />}
-                  <div className="flex gap-2 items-center">
-                    <ImgButton
-                      disabled={loading || disableAttackButtons}
-                      className="w-40 shrink-0"
-                      src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
-                      onClick={() => handleAttack(entity.id)}
-                      alt={"Attack" + entity.name}
-                    />
 
-                    {isEnemy && <p className="text-white text-lg font-bold text-center">30 seconds till {entity.name} attacks...</p>}
-                    {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 30 seconds...</p>} */}
-                  </div>
+                  {!isEnemy && <PlayerCard player={entity as Battle["players"][string]} />}
+
+                  {enemyIsAlive && (
+                    <div className="flex gap-2 items-center">
+                      <ImgButton
+                        disabled={loading || disableAttackButtons}
+                        className="w-40 shrink-0"
+                        src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
+                        onClick={() => handleAttack(entity.id)}
+                        alt={"Attack" + entity.name}
+                      />
+
+                      {isEnemy && <p className="text-white text-lg font-bold text-center">30 seconds till {entity.name} attacks...</p>}
+                      {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 30 seconds...</p>} */}
+                    </div>
+                  )}
                 </div>
 
                 {index % 2 !== 0 && index !== allPlayers.length - 1 && (
@@ -207,6 +212,8 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const totalStamina = player.total_stamina;
   const filledHealth = player.health;
   const filledStamina = player.stamina;
+  const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
+  const combatLoading = useCombatStore((state) => state.loading);
 
   const { weapon, armor } = getEquippedItem(user!);
 
@@ -222,25 +229,44 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
         className="w-full object-contain mb-2"
       />
       <div className="flex gap-2 justify-between items-start">
-        <div>
+        <div className="flex flex-col gap-1">
           <div className="flex gap-1">
             {Array.from({ length: totalHealth }).map((_, index) => (
               <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
             ))}
           </div>
-          <div className="flex gap-1">
+          {/* <div className="flex gap-1">
             {Array.from({ length: totalStamina }).map((_, index) => (
               <img className="w-5" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
             ))}
-          </div>
+          </div> */}
+          {player.potion && (
+            <>
+              <div className="flex gap-1">
+                <img className="h-8" src={ITEM_ICONS[player.potion.item_id as keyof typeof ITEM_ICONS]} alt="Potion" />
+                <p className="text-black text-2xl font-bold text-center">{player.potion_used ? 0 : player.potion.health}</p>
+              </div>
+              <div className="flex gap-1">
+                {user?.id.toString() == player.id && (
+                  <ImgButton
+                    disabled={combatLoading || player.potion_used}
+                    className="w-24 shrink-0"
+                    src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
+                    onClick={() => drinkPotion()}
+                    alt={"Use Potion"}
+                  />
+                )}
+              </div>
+            </>
+          )}
         </div>
         <div className="flex gap-4">
           <div className="flex flex-col items-center justify-between">
-            <img src={weapon ? BATTLE_ICONS.WEAPON_1 : BATTLE_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-8 h-8" />
+            <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-8 h-8" />
             <p className="text-black text-2xl font-bold text-center">{player.damage}</p>
           </div>
           <div className="flex flex-col gap-1 items-center justify-between">
-            <img src={armor ? BATTLE_ICONS.ARMOR_1 : BATTLE_ICONS.NO_ARMOR} alt="armor in inventory" className="w-8 h-8" />
+            <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-8 h-8" />
             <p className="text-black text-2xl font-bold text-center">{player.defense}</p>
           </div>
         </div>
@@ -269,7 +295,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
         </div>
       </div>
       <div className="absolute bottom-[3%] left-[2%] w-[26%]">
-        <p className="text-black text-xl font-bold text-right">{enemy.gold_reward}g</p>
+        <p className="text-black text-xl font-bold text-right">{(enemy.extra_gold ?? 0) + enemy.gold_reward}g</p>
       </div>
     </div>
   );
@@ -290,7 +316,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
 
   return (
     <div
-      className="flex flex-col gap-2 bg-[url('https://arweave.net/V4B3MJpEEAStbIOJbygQ6-lcVBR8w_8baD5TKK7u6p8')] bg-no-repeat bg-contain bg-center p-4 max-w-[50vw] h-full max-h-[calc(100vw*1040/649/2)]"
+      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/V4B3MJpEEAStbIOJbygQ6-lcVBR8w_8baD5TKK7u6p8')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full max-h-[calc(100vw*1040/649/2)]"
       style={{ aspectRatio: "649/1040" }}
     >
       <div className="flex items-center justify-between">
@@ -327,7 +353,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
       </div>
       {currentBattle.ended && (
         <div className="my-4 flex justify-center">
-          <ImgButton src={"https://arweave.net/-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"} onClick={() => goToMapFromBattle()} alt={"Return to Town"} />
+          <ImgButton disabled={combatLoading} src={"https://arweave.net/-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"} onClick={() => goToMapFromBattle()} alt={"Return to Town"} />
         </div>
       )}
     </div>

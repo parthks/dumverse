@@ -23,7 +23,7 @@
 //     gold_reward = 1,
 // }
 
-import { GameUser } from "./game";
+import { GameUser, Inventory, ItemType } from "./game";
 
 // UserId is a string of the user_id number to match npc_id and avoid tonumber()
 export type Battle = {
@@ -33,7 +33,14 @@ export type Battle = {
   players_attacked: string[];
   players_alive: string[];
   npcs_alive: string[];
-  players: Record<string, Omit<GameUser, "inventory" | "id"> & { id: string }>;
+  players: Record<
+    string,
+    Omit<GameUser, "inventory" | "id"> & {
+      id: string;
+      potion_used: boolean;
+      potion: { id: string; item_id: ItemType; health: number };
+    }
+  >;
   npcs: Record<string, NPC>;
   log: BattleLog[];
   ended: boolean;

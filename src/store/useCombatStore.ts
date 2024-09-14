@@ -15,6 +15,7 @@ interface CombatState {
   enterNewBattle: (level: number) => Promise<MyMessageResult>;
   userAttack: (npc_id: string) => void;
   userRun: () => void;
+  userDrinkPotion: () => void;
   goToMapFromBattle: () => void;
 }
 
@@ -119,8 +120,11 @@ export const useCombatStore = create<CombatState>()(
           ],
           "combat"
         );
-        const battle = resultData.data as Battle;
-        set({ currentBattle: battle, loading: false });
+        const battle = findBattleDataMessage(resultData);
+        if (battle) {
+          set({ currentBattle: battle as Battle });
+        }
+        set({ loading: false });
       },
       userRun: async () => {
         const user_id = useGameStore.getState().user?.id;
@@ -144,13 +148,53 @@ export const useCombatStore = create<CombatState>()(
           ],
           "combat"
         );
-        const battle = resultData.data as Battle;
-        set({ currentBattle: battle, loading: false });
+        const battle = findBattleDataMessage(resultData);
+        if (battle) {
+          set({ currentBattle: battle as Battle });
+        }
+        set({ loading: false });
       },
+      userDrinkPotion: async () => {
+        const user_id = useGameStore.getState().user?.id;
+        const battle_id = get().currentBattle?.id;
+        if (!user_id || !battle_id) return;
+        set({ loading: true });
+        const resultData = await sendAndReceiveGameMessage(
+          [
+            {
+              name: "Action",
+              value: "Battle.DrinkPotion",
+            },
+            {
+              name: "UserId",
+              value: user_id.toString(),
+            },
+            {
+              name: "BattleId",
+              value: battle_id.toString(),
+            },
+          ],
+          "combat"
+        );
+        const battle = findBattleDataMessage(resultData);
+        if (battle) {
+          set({ currentBattle: battle as Battle });
+        }
+        set({ loading: false });
+      },
+
       goToMapFromBattle: async () => {
         // if you won, move one step forward of current_spot. Need to update the db for this
+        set({ loading: true });
+        const user_id = useGameStore.getState().user!.id;
+        const isAlive = get().currentBattle?.players_alive.find((playerId) => playerId === user_id?.toString());
+        await useGameStore.getState().refreshUserData();
         set({ currentBattle: null, loading: false });
-        useGameStore.getState().setGameStatePage(GameStatePages.GAME_MAP);
+        if (isAlive) {
+          useGameStore.getState().setGameStatePage(GameStatePages.GAME_MAP);
+        } else {
+          useGameStore.getState().goToTown();
+        }
       },
     }),
     {
@@ -159,3 +203,11 @@ export const useCombatStore = create<CombatState>()(
     }
   )
 );
+
+function findBattleDataMessage(messages: MyMessageResult): Battle | null {
+  const battleData = messages.Messages.find((message) => {
+    const tags = message.Tags as { name: string; value: string }[];
+    return tags.find((tag) => tag.name === "Action" && tag.value === "Battle.Data");
+  });
+  return battleData ? (JSON.parse(battleData.Data as string) as Battle) : null;
+}

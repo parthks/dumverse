@@ -1,4 +1,4 @@
-import { BATTLE_ICONS, IMAGES } from "@/lib/constants";
+import { ITEM_ICONS, IMAGES } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
@@ -48,13 +48,13 @@ export function PlayerFrame() {
 
             <div className="flex gap-1 items-center mr-2">
               <div className="bg-white p-1 w-12 h-12 rounded-md flex items-center justify-center">
-                <img src={weapon ? BATTLE_ICONS.WEAPON_1 : BATTLE_ICONS.NO_WEAPON} alt="weapon in inventory" className="" />
+                <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="" />
               </div>
               <label className="text-white text-xl font-bold">{user.damage}</label>
             </div>
             <div className="flex gap-1 items-center">
               <div className="bg-white p-1 w-12 h-12 rounded-md flex items-center justify-center">
-                <img src={armor ? BATTLE_ICONS.ARMOR_1 : BATTLE_ICONS.NO_ARMOR} alt="armor in inventory" className="" />
+                <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="" />
               </div>
               <label className="text-white text-xl font-bold">{user.defense}</label>
             </div>

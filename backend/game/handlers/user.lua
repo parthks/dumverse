@@ -46,10 +46,13 @@ Handlers.add(
         local profiles = dbAdmin:exec(getUserQuery)
         assert(#profiles == 0, "User already exists")
 
-        local nft_gold_amount = nft_address and 100 or 20
-        local nft_dumz_amount = nft_address and 30 or 10
-        local starting_gold = 10
-        local starting_dumz = 5
+        local nft_gold_amount = nft_address and 12000 or 10000
+        local nft_dumz_amount = nft_address and 80 or 40
+        local starting_gold = 10000
+        local starting_dumz = 50
+        local bank_gold_amount = 10000
+        local bank_dumz_amount = 50
+
         -- local result = dbAdmin:exec(string.format([[
         --     INSERT INTO Users (address, name, nft_address, gold_balance, dumz_balance)
         --     VALUES ('%s', '%s', CASE WHEN '%s' = '' THEN NULL ELSE '%s' END, %f, %f);
@@ -83,7 +86,7 @@ Handlers.add(
         local insert_bank_result = dbAdmin:exec(string.format([[
         INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
         VALUES (%d, %f, %f, %f, %f);
-    ]], newUserId, starting_gold, starting_dumz, nft_gold_amount, nft_dumz_amount))
+    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
         assert(insert_bank_result, "Failed to insert into Bank")
 
@@ -168,7 +171,7 @@ Handlers.add("User.Regenerate",
 
         -- update current_spot to 0
         dbAdmin:exec(string.format([[
-            UPDATE Users SET health = total_health, gold_balance = 10, dumz_balance = 1, stamina = total_stamina WHERE id = %f;
+            UPDATE Users SET health = total_health, gold_balance = 10000, dumz_balance = 10, stamina = total_stamina WHERE id = %f;
         ]], user_id))
 
         return ao.send({

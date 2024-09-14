@@ -23,12 +23,12 @@ ITEMS = {
         health = 1,
         type = "POTION",
     },
-    ["POTION_2"] = {
-        id = "POTION_2",
+    ["ENERGY_1"] = {
+        id = "ENERGY_1",
         name = "Joose",
         dumz_price = 40,
         health = 2,
-        type = "POTION",
+        type = "ENERGY",
     },
     ["FOOD_1"] = {
         id = "FOOD_1",

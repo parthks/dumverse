@@ -28,18 +28,20 @@ export type Inventory = {
   id: number;
   user_id: number;
   item_id: string;
-  item_type: "ARMOR" | "WEAPON" | "POTION";
+  item_type: ItemType;
   amount: number;
   equipped: boolean;
   created_at: string;
 };
+
+export type ItemType = "ARMOR" | "WEAPON" | "POTION" | "FOOD" | "ENERGY";
 
 export type Item = {
   id: string;
   name: string;
   gold_price?: number; // either one of these
   dumz_price?: number; // either one of these
-  type: "ARMOR" | "WEAPON" | "POTION" | "FOOD";
+  type: ItemType;
   defense: number;
   damage: number;
 };

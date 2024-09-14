@@ -8,11 +8,22 @@ export const IMAGES = {
   DUMZ_ICON: "https://arweave.net/_53RnMurt-qradH-caMUJMgvvpoUVmzpM5Yjk8KQVtI",
 };
 
-export const BATTLE_ICONS = {
+export const ITEM_ICONS = {
   NO_WEAPON: "https://arweave.net/mjLzt15rIbcOE12JAN_iEmPJKvSgT3aardb_UF3mMTo",
   NO_ARMOR: "https://arweave.net/lHFVFpjVvrrGj5FFPYShCRxDfIPOiHncGfmkxoO-Wks",
   WEAPON_1: "https://arweave.net/HeVvlqtkbqR_7uYrAwLG7MiSEwQw5pC4C5ZK8nJ502c",
   ARMOR_1: "https://arweave.net/rrqGSfzfbcG_k0gLqr0VbBc2nO2-KG_gCTKvCI3leFY",
+  POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",
+  ENERGY_1: "https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y",
+  FOOD_1: "https://arweave.net/-tUyiDZQCbIytBSEKfsSdLh13utGP4SKUD72eS-QrH4",
+};
+
+export const ITEM_IMAGES = {
+  WEAPON_1: "https://arweave.net/7a23JeEQssnf01L47H1FccCU7W402DrKv5nDah9fLkU",
+  ARMOR_1: "https://arweave.net/aRZkLSJj01b-dhuA_fVFuYXbaF34k08f6m5vmAjWJWY",
+  POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",
+  ENERGY_1: "https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y",
+  FOOD_1: "https://arweave.net/-tUyiDZQCbIytBSEKfsSdLh13utGP4SKUD72eS-QrH4",
 };
 
 export const ENEMY_CARD_IMAGE = {
