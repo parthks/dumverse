@@ -50,6 +50,7 @@ interface GameState {
   setLamaPosition: (position: LamaPosition) => void;
   goToTown: () => void;
   exitTown: () => void;
+  regenerateEnergy: () => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -187,6 +188,13 @@ export const useGameStore = create<GameState>()(
       },
       exitTown: async () => {
         set({ GameStatePage: GameStatePages.GAME_MAP, lamaPosition: initialLamaPosition, currentIslandLevel: 0 });
+      },
+      regenerateEnergy: async () => {
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "User.RegenerateEnergy" },
+          { name: "UserId", value: get().user?.id.toString()! },
+        ]);
+        await Promise.all([get().refreshUserData()]);
       },
     }),
     {

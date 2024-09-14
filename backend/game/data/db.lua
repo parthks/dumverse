@@ -24,6 +24,7 @@ USERS_TABLE = [[
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
         total_stamina FLOAT DEFAULT 0,
+        last_regenerate_time INTEGER DEFAULT 0,
         damage FLOAT DEFAULT 0,
         defense FLOAT DEFAULT 0,
         current_spot INTEGER DEFAULT 0,
@@ -85,7 +86,6 @@ Handlers.add("Admin.ClearDB",
         db:exec(BANK_TRANSACTIONS_TABLE)
     end
 )
-
 
 
 return dbAdmin

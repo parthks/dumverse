@@ -161,6 +161,28 @@ Handlers.add("User.GoToTown",
     end
 )
 
+Handlers.add("User.RegenerateEnergy",
+    Handlers.utils.hasMatchingTag('Action', 'User.RegenerateEnergy'),
+    function(msg)
+        local user_id = msg.UserId
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+        local timestamp = msg.Timestamp
+        local last_regenerate_time = userData.last_regenerate_time or 0
+
+        assert(timestamp - last_regenerate_time >= 60, "Not enough time has passed since last regeneration")
+
+        local new_stamina = math.min(userData.stamina + 1, userData.total_stamina)
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET last_regenerate_time = %f, stamina = %f WHERE id = %f;
+        ]], timestamp, new_stamina, user_id))
+
+        return ao.send({
+            Target = msg.From,
+            Status = "Success",
+        })
+    end
+)
+
 -- Admin control function to regenerate user stats (health, stamina)
 Handlers.add("Admin.Regenerate",
     Handlers.utils.hasMatchingTag('Action', 'User.Regenerate'),
