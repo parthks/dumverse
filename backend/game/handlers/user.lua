@@ -185,7 +185,7 @@ Handlers.add("User.RegenerateEnergy",
 
 -- Admin control function to regenerate user stats (health, stamina)
 Handlers.add("Admin.Regenerate",
-    Handlers.utils.hasMatchingTag('Action', 'User.Regenerate'),
+    Handlers.utils.hasMatchingTag('Action', 'Admin.Regenerate'),
     function(msg)
         assert(msg.From == ao.id, "Only the game server can regenerate users")
         local user_id = msg.UserId
