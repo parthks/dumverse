@@ -1,9 +1,11 @@
 import LammaStandLeft from "@/assets/lamma_stand_left.png";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, BankTransaction, GameUser, Inventory, Item, Shop, TokenType } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, LamaPosition, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { useAppStore } from "./useAppStore";
+import { interactivePoints } from "@/pages/GameMap";
+import { getCurrentLamaPosition } from "@/lib/utils";
 
 export enum GameStatePages {
   HOME = "HOME",
@@ -15,10 +17,10 @@ export enum GameStatePages {
   TOWN = "TOWN",
 }
 
-export const initialLammaPosition = {
+export const initialLamaPosition: LamaPosition = {
   x: 80,
   y: 63,
-  src: LammaStandLeft,
+  src: "STAND_LEFT",
 };
 
 interface GameState {
@@ -43,9 +45,10 @@ interface GameState {
   buyItemLoading: boolean;
   currentIslandLevel: number;
   setCurrentIslandLevel: (level: number) => void;
-  lammaPosition: { x: number; y: number; src: string };
-  setLammaPosition: (position: { x: number; y: number; src: string }) => void;
+  lamaPosition: LamaPosition;
+  setLamaPosition: (position: LamaPosition) => void;
   goToTown: () => void;
+  exitTown: () => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -74,9 +77,9 @@ export const useGameStore = create<GameState>()(
       setUser: (user) => {
         if (user) {
           if (user.current_spot) {
-            set({ GameStatePage: GameStatePages.GAME_MAP, currentIslandLevel: user.current_spot });
+            set({ GameStatePage: GameStatePages.GAME_MAP, ...getCurrentLamaPosition(user) });
           } else {
-            set({ GameStatePage: GameStatePages.TOWN, currentIslandLevel: 0 });
+            set({ GameStatePage: GameStatePages.TOWN, ...getCurrentLamaPosition(user) });
           }
           get().refreshUserData(user.id);
         }
@@ -165,16 +168,22 @@ export const useGameStore = create<GameState>()(
         set({ buyItemLoading: false });
       },
       currentIslandLevel: 0,
-      setCurrentIslandLevel: (level) => set({ currentIslandLevel: level }),
-      lammaPosition: initialLammaPosition,
-      setLammaPosition: (position) => set({ lammaPosition: position }),
+      setCurrentIslandLevel: (level) => {
+        const point = interactivePoints.find((point) => point.level == level) || initialLamaPosition;
+        set({ currentIslandLevel: level, lamaPosition: { ...point, src: level == 0 ? "STAND_LEFT" : get().lamaPosition.src } });
+      },
+      lamaPosition: initialLamaPosition,
+      setLamaPosition: (position) => set({ lamaPosition: position }),
       goToTown: async () => {
+        set({ GameStatePage: GameStatePages.TOWN });
         sendAndReceiveGameMessage([
           { name: "Action", value: "User.GoToTown" },
           { name: "UserId", value: get().user?.id.toString()! },
         ]);
         get().refreshUserData();
-        set({ GameStatePage: GameStatePages.TOWN, lammaPosition: initialLammaPosition });
+      },
+      exitTown: async () => {
+        set({ GameStatePage: GameStatePages.GAME_MAP, lamaPosition: initialLamaPosition, currentIslandLevel: 0 });
       },
     }),
     {

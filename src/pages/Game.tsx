@@ -1,23 +1,23 @@
-import { Button } from "@/components/ui/button";
-import GameProfile from "@/components/game/GameProfile";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import BankPage from "./Bank";
-import Shop from "./Shop";
-import GameMap from "./GameMap";
-import Combat from "./Combat";
-import Town from "./Town";
 import { useEffect } from "react";
-import { useCombatStore } from "@/store/useCombatStore";
+import BankPage from "./Bank";
+import Combat from "./Combat";
+import GameMap from "./GameMap";
+import Shop from "./Shop";
+import Town from "./Town";
 
 export default function Game() {
   const { GameStatePage, setGameStatePage, user } = useGameStore();
-  const { getOpenBattles } = useCombatStore();
 
   useEffect(() => {
-    //   Check for open battles once
-    console.log("Checking for open battles once");
-    getOpenBattles();
-  }, []);
+    if (user?.id) {
+      console.log("Checking user data for open battles once", user);
+      if (user.current_battle_id) {
+        console.log("!!!User is in a battle!!!", user.current_battle_id);
+        setGameStatePage(GameStatePages.COMBAT);
+      }
+    }
+  }, [user?.id]);
 
   let page = <div>Game</div>;
   if (GameStatePage === GameStatePages.BANK) page = <BankPage />;

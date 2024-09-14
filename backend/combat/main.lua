@@ -41,6 +41,7 @@ MAX_PLAYERS_IN_BATTLE = 1
 
 BattleHelpers = {}
 Battles = Battles or {} -- table of battles with id as key and battle as value
+NPCS_EXTRA_GOLD = {}    -- table of npcs with id as key and extra gold as value, taken from perished players
 
 Handlers.add("Battle.NewUserJoin",
     Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), -- handler pattern to identify cron message
@@ -48,39 +49,55 @@ Handlers.add("Battle.NewUserJoin",
         print("Battle.NewUserJoin - " .. msg.From .. " " .. GAME_PROCESS_ID)
         assert(msg.From == GAME_PROCESS_ID, "Only Game process can send this message")
         assert(msg.UserId, "UserId is required")
-        assert(msg.Player, "Player is required")
-        assert(msg.NPCs, "NPCs is required")
+        assert(msg.Level, "Combat Level is required")
+        local data = json.decode(msg.Data)
 
         local battles = GetOpenBattlesOfUser(msg.From)
         if #battles > 0 then
             -- user is already in a battle
             print("user is already in a battle")
-            ao.send({ Target = msg.From, Data = { battle = battles[1] } })
+            -- ao.send({ Target = msg.From, Data = { battle = battles[1] } })
+            ao.send({
+                Target = GAME_PROCESS_ID,
+                UserId = msg.UserId,
+                BattleId = tostring(battles[1].id),
+                Action = "Combat.EnteredNewCombat",
+                Data = json.encode(battles[1])
+            })
             return
         end
 
-        local player = json.decode(msg.Player)
-        local npcs = json.decode(msg.NPCs)
+        local player = json.decode(data.player)
+        local npcs = json.decode(data.npcs)
 
         -- check lastest open battle and add user to it
         local battle = BattleHelpers.getLatestOpenBattle()
         if not battle then
             battle = BattleHelpers.new(msg.Timestamp)
+            battle.level = tonumber(msg.Level)
             battle.npcs = {}
             battle.last_npc_attack_timestamp = {}
             for _, npc in ipairs(npcs) do
+                npc.extra_gold = NPCS_EXTRA_GOLD[npc.id] or 0
                 battle.npcs[npc.id] = npc
                 table.insert(battle.npcs_alive, npc.id)
                 battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
+                NPCS_EXTRA_GOLD[npc.id] = nil
             end
             BattleHelpers.update(battle.id, battle)
         end
         BattleHelpers.addPlayer(battle.id, player)
 
         local user_address = player.address
-        print("sending battle to user " .. user_address)
-        ao.send({ Target = user_address, Data = { battle } })
-        -- return { Battle = battle }
+        print("adding user " .. user_address .. " to battle " .. battle.id .. "of level " .. battle.level)
+        ao.send({
+            Target = GAME_PROCESS_ID,
+            UserId = msg.UserId,
+            BattleId = tostring(battle.id),
+            Level = tostring(battle.level),
+            Action = "Combat.EnteredNewCombat",
+            Data = json.encode(battle)
+        })
     end
 )
 
@@ -147,20 +164,12 @@ Handlers.add("Battle.UserAttack",
         print("User Attack - all checks passed, attacking now")
         if (utils.includes(attackEntityId, npcIds)) then
             -- Player attacking NPC
-            print("User Attack - attacking NPC")
-            print("battle.players[msg.UserId] " .. battle.players[msg.UserId].name)
-            print("battle.npcs[attackEntityId] " .. battle.npcs[attackEntityId].name)
             local log, defender_health = SimulateCombat(battle.players[msg.UserId], "player", battle.npcs
                 [attackEntityId], "npc", msg.Timestamp)
-            print("User Attack - combat simulation done")
-            print("defender_health " .. defender_health)
             BattleHelpers.addLogs(battle_id, log)
             if defender_health <= 0 then
                 -- remove npc from battle
-                print("User Attack - NPC killed")
-                battle.npcs_alive = utils.filter(function(val)
-                    return val ~= attackEntityId
-                end, battle.npcs_alive)
+                BattleHelpers.killNPC(battle_id, attackEntityId, msg.UserId, msg.Timestamp)
             end
         elseif (utils.includes(attackEntityId, playerUserIds)) then
             -- Player attacking Player
@@ -169,9 +178,7 @@ Handlers.add("Battle.UserAttack",
             BattleHelpers.addLogs(battle_id, log)
             if defender_health <= 0 then
                 -- remove player from battle
-                battle.players_alive = utils.filter(function(val)
-                    return val ~= attackEntityId
-                end, battle.players_alive)
+                BattleHelpers.killPlayer(battle.id, attackEntityId, msg.UserId, msg.Timestamp)
             end
         else
             -- assert(false, "AttackEntityId is not in playerUserIds or npcIds")
@@ -214,12 +221,7 @@ Handlers.add("Battle.UserRun",
             "attempts to run away")
         if dice_roll < 4 then
             -- player runs successfully
-            BattleHelpers.log(battle_id, msg.Timestamp, msg.UserId,
-                "runs away successfully")
-            battle.players_alive = utils.filter(function(val)
-                return val ~= msg.UserId
-            end, battle.players_alive)
-            battle.player_id_tried_running = nil
+            BattleHelpers.playerRanAway(battle.id, msg.UserId, msg.Timestamp)
             if BattleHelpers.checkIfBattleShouldEnd(battle.id) then
                 BattleHelpers.endBattle(battle.id, nil, msg.Timestamp)
             end
@@ -229,12 +231,12 @@ Handlers.add("Battle.UserRun",
         end
         -- BattleHelpers.log(battle_id, msg.Timestamp, msg.UserId,
         --     "runs away unsuccessfully")
-        battle.player_id_tried_running = msg.UserId
         BattleHelpers.update(battle_id, battle)
 
         -- find random NPC and attack player
         local npc_id = battle.npcs_alive[math.random(#battle.npcs_alive)]
         local npc = battle.npcs[npc_id]
+        -- NPC will attack critial damage to msg.UserId
         NPCAttack(npc.id, battle_id, msg.Timestamp, msg.UserId)
 
         -- player runs unsuccessfully
@@ -277,11 +279,8 @@ function NPCAttack(npc_id, battle_id, timestamp, player_id_tried_running)
 
     if defender_health <= 0 then
         -- remove player from battle
-        battle.players_alive = utils.filter(function(val)
-            return val ~= player_id
-        end, battle.players_alive)
-        BattleHelpers.update(battle.id, battle)
-        BattleHelpers.log(battle.id, timestamp, player_id, "You have Perished")
+        BattleHelpers.killPlayer(battle.id, player_id, npc_id, timestamp)
+
         if BattleHelpers.checkIfBattleShouldEnd(battle.id) then
             BattleHelpers.endBattle(battle.id, npc_id, timestamp)
         end
@@ -298,6 +297,7 @@ end
 
 BattleHelpers.endBattle = function(battle_id, winner_id, timestamp)
     local battle = BattleHelpers.get(battle_id)
+    -- TODO: Archive battle to SQL table and delete from memory
 
     battle.winner = winner_id
     battle.ended = true
@@ -306,11 +306,27 @@ BattleHelpers.endBattle = function(battle_id, winner_id, timestamp)
         assert(battle.players[winner_id] or battle.npcs[winner_id],
             "Winner id " .. winner_id .. " not found in players or npcs")
         if battle.players[winner_id] and #battle.npcs_alive == 0 then
-            -- winning_message = "Player " .. battle.players[winner_id].name .. " won the battle"
+            -- players have won the battle
             winning_message = "has won the battle"
+
+            -- send message to all players that they have won the battle
+            for _, player_id in ipairs(battle.players_alive) do
+                ao.send({
+                    Target = GAME_PROCESS_ID,
+                    UserId = player_id,
+                    Action = "Combat.PlayerWon",
+                    Data = json.encode(battle.players[player_id])
+                })
+            end
         elseif battle.npcs[winner_id] and #battle.players_alive == 0 then
-            -- winning_message = "NPC " .. battle.npcs[winner_id].name .. " won the battle"
             winning_message = "has won the battle"
+            -- add extra gold of npcs back to NPCS_EXTRA_GOLD table for future battles
+            for _, npc_id in ipairs(battle.npcs_alive) do
+                local npc = battle.npcs[npc_id]
+                if npc.extra_gold > 0 then
+                    NPCS_EXTRA_GOLD[npc_id] = npc.extra_gold
+                end
+            end
         end
         BattleHelpers.log(battle_id, timestamp, winner_id, winning_message)
         -- else
@@ -337,6 +353,67 @@ end
 --     local battle = BattleHelpers.get(battle_id)
 --     return battle.npcs_alive
 -- end
+
+BattleHelpers.killNPC = function(battle_id, npc_id, attacker_id, timestamp)
+    local battle = BattleHelpers.get(battle_id)
+    local npc = battle.npcs[npc_id]
+
+    battle.npcs_alive = utils.filter(function(val)
+        return val ~= npc_id
+    end, battle.npcs_alive)
+
+    -- player gets npc gold + extra gold
+    battle.players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + npc.gold_reward +
+        npc.extra_gold
+    battle.players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + npc.dumz_reward
+    -- intentionally not updating the npc gold reward and extra gold, to keep the histroy. ok since npc has been removed from npcs_alive
+
+    BattleHelpers.log(battle.id, timestamp, attacker_id, "has slain " .. npc.name)
+    BattleHelpers.update(battle_id, battle)
+end
+
+BattleHelpers.killPlayer = function(battle_id, player_id, attacker_id, timestamp)
+    local battle = BattleHelpers.get(battle_id)
+    battle.players_alive = utils.filter(function(val)
+        return val ~= player_id
+    end, battle.players_alive)
+    BattleHelpers.log(battle.id, timestamp, player_id, "Player has Perished")
+
+    -- transfer player gold
+    local player = battle.players[player_id]
+    -- if attacker_id is a npc, add player gold to npc extra gold
+    if battle.npcs[attacker_id] then
+        battle.npcs[attacker_id].extra_gold = (battle.npcs[attacker_id].extra_gold or 0) + player.gold_balance
+    else
+        -- if attacker_id is a player, give the gold to the other player
+        if battle.players[attacker_id] then
+            battle.players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) +
+                player.gold_balance
+        end
+    end
+    -- intentionally not updating the player gold_balance, to keep the histroy. ok since player has been removed from players_alive
+
+    BattleHelpers.update(battle_id, battle)
+    local player = battle.players[player_id]
+    ao.send({ Target = GAME_PROCESS_ID, UserId = player.id, Action = "Combat.PlayerPerished" })
+end
+
+BattleHelpers.playerRanAway = function(battle_id, player_id, timestamp)
+    local battle = BattleHelpers.get(battle_id)
+    BattleHelpers.log(battle_id, timestamp, player_id,
+        "runs away successfully")
+    battle.players_alive = utils.filter(function(val)
+        return val ~= player_id
+    end, battle.players_alive)
+    BattleHelpers.update(battle_id, battle)
+    local player = battle.players[player_id]
+    ao.send({
+        Target = GAME_PROCESS_ID,
+        UserId = player.id,
+        Action = "Combat.PlayerRanAway",
+        Data = json.encode(player)
+    })
+end
 
 BattleHelpers.addPlayer = function(battle_id, player)
     local battle = BattleHelpers.get(battle_id)
@@ -370,7 +447,8 @@ BattleHelpers.new = function(timestamp)
     local id = lastBattle.id + 1
     local battle = {
         id = id,
-        player_id_tried_running = nil,  -- last player that tried to run. NPC will attack critical damage
+        level = nil,
+        -- player_id_tried_running = nil,  -- last player that tried to run. NPC will attack critical damage
         players_attacked = {},          -- list of userIds that have attacked (only after all players have attacked, NPC should attack or after 30 seconds cron tick)
         players_alive = {},             -- list of userIds
         npcs_alive = {},                -- list of npc ids

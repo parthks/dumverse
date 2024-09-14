@@ -5,6 +5,7 @@ import { SOUNDS } from "@/lib/constants";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const exitTown = useGameStore((state) => state.exitTown);
   const [chatOpen, setChatOpen] = useState(false);
 
   const handleBuildingSelect = (building: GameStatePages) => {
@@ -18,7 +19,7 @@ export default function Town() {
         <ImgButton src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"} onClick={() => setChatOpen(!chatOpen)} alt={"Toggle Chat"} />
       </div>
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
+        <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => exitTown()} alt={"Return to Town"} />
       </div>
     </div>
   );

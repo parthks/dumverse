@@ -1,3 +1,9 @@
+export type LamaPosition = {
+  x: number;
+  y: number;
+  src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT";
+};
+
 export type GameUser = {
   id: number;
   name: string;
@@ -14,6 +20,7 @@ export type GameUser = {
   damage: number;
   defense: number;
   current_spot: number;
+  current_battle_id?: number;
   inventory: Inventory[];
 };
 

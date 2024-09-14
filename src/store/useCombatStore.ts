@@ -1,4 +1,4 @@
-import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
+import { MyMessageResult, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { Battle } from "@/types/combat";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -12,7 +12,7 @@ interface CombatState {
   currentBattle: Battle | null;
   setCurrentBattle: (battle_id?: number) => void;
   getOpenBattles: () => void;
-  enterNewBattle: (level: number) => void;
+  enterNewBattle: (level: number) => Promise<MyMessageResult>;
   userAttack: (npc_id: string) => void;
   userRun: () => void;
   goToMapFromBattle: () => void;
@@ -75,7 +75,7 @@ export const useCombatStore = create<CombatState>()(
       },
       enterNewBattle: async (level: number) => {
         const user_id = useGameStore.getState().user?.id;
-        if (!user_id) return;
+        if (!user_id) throw new Error("User not found");
         set({ enteringNewBattle: true });
         const resultData = await sendAndReceiveGameMessage([
           {
@@ -91,9 +91,7 @@ export const useCombatStore = create<CombatState>()(
             value: user_id.toString(),
           },
         ]);
-        // const battle = resultData.data as Battle;
-        // set({ currentBattle: battle });
-        // set({ enteringNewBattle: false });
+        return resultData;
       },
       userAttack: async (npc_id: string) => {
         const user_id = useGameStore.getState().user?.id;

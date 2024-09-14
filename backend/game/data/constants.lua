@@ -48,7 +48,8 @@ ENEMIES = {
         health = 1,
         damage = 1,
         difficulty = "EASY",
-        gold_reward = 1,
+        gold_reward = 10,
+        dumz_reward = 1
     },
     {
         id = "NPC_2",
@@ -57,7 +58,8 @@ ENEMIES = {
         health = 1,
         damage = 1,
         difficulty = "EASY",
-        gold_reward = 1,
+        gold_reward = 10,
+        dumz_reward = 1
     },
     {
         id = "NPC_3",
@@ -66,7 +68,8 @@ ENEMIES = {
         health = 2,
         damage = 1,
         difficulty = "EASY",
-        gold_reward = 2,
+        gold_reward = 20,
+        dumz_reward = 2
     },
     {
         id = "NPC_4",
@@ -75,7 +78,8 @@ ENEMIES = {
         health = 1,
         damage = 2,
         difficulty = "EASY",
-        gold_reward = 2,
+        gold_reward = 20,
+        dumz_reward = 2
     },
 }
 

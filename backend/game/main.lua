@@ -3,6 +3,8 @@
 -- cron10sec - tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE
 
 
+-- TODO: How to add damm types in lua, like Typescript?
+
 -- Island movement happens on the frontend. Users can move to any area and that screen gets rendered. No blockchain interaction needed. Except for combat, that triggers a combat start.
 
 

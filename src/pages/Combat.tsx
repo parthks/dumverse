@@ -8,9 +8,9 @@ import { useEffect, useRef } from "react";
 
 export default function Combat() {
   const { loading, enteringNewBattle, currentBattle, getOpenBattles, setCurrentBattle, enterNewBattle, userAttack, userRun } = useCombatStore();
-  const { setGameStatePage } = useGameStore();
+  const { user, setGameStatePage, refreshUserData } = useGameStore();
 
-  console.log("currentBattle", currentBattle);
+  // console.log("currentBattle", currentBattle);
 
   //   Check for open battles
   useEffect(() => {
@@ -18,18 +18,18 @@ export default function Combat() {
     let timeout: NodeJS.Timeout | null = null;
 
     if (enteringNewBattle && !currentBattle?.id) {
-      interval = setInterval(() => {
-        console.log("checking for open battles");
-        getOpenBattles();
-      }, 1000);
+      console.log("SET UP INTERVAL FOR CHECKING OPEN BATTLES");
+      interval = setInterval(async () => {
+        await Promise.all([getOpenBattles()]);
+      }, 10000);
 
-      // Stop checking after 30 seconds
+      // Stop checking after 60 seconds
       timeout = setTimeout(() => {
         if (interval) {
-          console.log("Stopped checking for open battles after 30 seconds");
+          console.log("Stopped checking for open battles after 60 seconds");
           clearInterval(interval);
         }
-      }, 30000);
+      }, 60000);
     }
 
     return () => {
@@ -42,7 +42,37 @@ export default function Combat() {
     };
   }, [enteringNewBattle, currentBattle, getOpenBattles]);
 
-  //  Check for battle updates
+  //  Check for confirmation that user is in battle
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    let timeout: NodeJS.Timeout | null = null;
+
+    if (!user?.current_battle_id) {
+      console.log("SET UP INTERVAL FOR CHECKING USER IS IN BATTLE");
+      interval = setInterval(async () => {
+        await Promise.all([refreshUserData()]);
+      }, 10000);
+    }
+
+    // Stop checking after 30 seconds
+    timeout = setTimeout(() => {
+      if (interval) {
+        console.log("Stopped checking for user is in battle after 60 seconds");
+        clearInterval(interval);
+      }
+    }, 60000);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [user?.current_battle_id, setCurrentBattle]);
+
+  // check for battle updates
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
 
@@ -67,7 +97,11 @@ export default function Combat() {
     return <div>Entering a new battle...</div>;
   }
 
-  if (!currentBattle) {
+  if (currentBattle?.id && user?.current_battle_id !== currentBattle?.id) {
+    return <div>Waiting for battle confirmation...</div>;
+  }
+
+  if (!currentBattle?.id) {
     return (
       <div>
         <p>No battle found</p>
@@ -92,7 +126,10 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   const userAttack = useCombatStore((state) => state.userAttack);
   const userRun = useCombatStore((state) => state.userRun);
   const loading = useCombatStore((state) => state.loading);
-  const battleEnded = currentBattle.ended;
+  const disableAttackButtons =
+    currentBattle.ended || // battle has ended
+    !!currentBattle.players_attacked.find((player) => player === userId.toString()) || // user has attacked
+    !currentBattle.players_alive.find((player) => player === userId.toString()); // user is not alive
 
   const attackAudioRef = useRef<HTMLAudioElement>(null);
 
@@ -117,7 +154,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           <div className="flex flex-col gap-2 max-w-[380px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
-              disabled={loading || battleEnded}
+              disabled={loading || disableAttackButtons}
               className={"w-40"}
               src={"https://arweave.net/T2vJXtx4ivM9tySkAq8u2uSCLSDWRaPcIqqBYdAWBfE"}
               onClick={() => userRun()}
@@ -138,7 +175,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
                   {!isEnemy && <PlayerCard player={entity as Battle["players"][string]} />}
                   <div className="flex gap-2 items-center">
                     <ImgButton
-                      disabled={loading || battleEnded}
+                      disabled={loading || disableAttackButtons}
                       className="w-40 shrink-0"
                       src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
                       onClick={() => handleAttack(entity.id)}

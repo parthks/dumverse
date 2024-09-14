@@ -24,7 +24,14 @@ export const SOUNDS = {
   ISLAND_AUDIO: "https://arweave.net/yW2M75jkljOj3I-Wv2Cs0A3Dqkn4MVdyCRfqkQL8pMs",
   TOWN_AUDIO: "https://arweave.net/8cpm7ZN-eegh6um6mqua1ODU0ZOxA6GVyfSt3rqwjeQ",
   BATTLE_AUDIO: "https://arweave.net/gibXjVdGHmPOP7e4AtStM8U7fRiMZZ6A2u_gKRKPhcE",
-  ATTACK_AUDIO: "https://arweave.net/opO6c_jmen1NEA3VH7XNdZ0MSyv7vdLki8jSyd5WlKw",
+  ATTACK_AUDIO: "https://arweave.net/cONoIFz54QfP3jVuJh5dmCfJC7DrFiypMVb_KIX9oVY",
 };
 
 export const LOGIN_VIDEO = "https://arweave.net/1jm4BEW5n1OLg6xtE97_hrjD_wS70jmmG_jh2mSFxzQ";
+
+export const LAMA_IMAGE = {
+  STAND_RIGHT: "https://arweave.net/WnUicCMnZ11xpI8pgNg0UJWy37tfdZ-cAPZR97aWBDo",
+  STAND_LEFT: "https://arweave.net/1veX02WtE9hauvuYLStfab_iDm3iwNHs_ohzq2mqgI0",
+  WALKING_RIGHT: "https://arweave.net/MnL26j3J-OgeAlb3T-6AHw0LhemJS2xbqbHjAROJLdQ",
+  WALKING_LEFT: "https://arweave.net/V-Fia6R8Ee6dmvp9UeLrBtw8qqZqSzyenc1lZUV8BzI",
+};

@@ -1,5 +1,7 @@
+import { LAMA_IMAGE } from "@/lib/constants";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import { LamaPosition } from "@/types/game";
 import React from "react";
 
 interface InteractivePoint {
@@ -13,18 +15,12 @@ const imageHeight = 611; // original map height
 
 interface InteractiveMapProps {
   interactivePoints: InteractivePoint[];
-  lammaPosition: LammaPosition;
+  lamaPosition: LamaPosition;
   onLevelSelect: (level: number) => void;
   tempCurrentIslandLevel: number;
 }
 
-interface LammaPosition {
-  x: number;
-  y: number;
-  src: string;
-}
-
-const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel, interactivePoints, lammaPosition, onLevelSelect }) => {
+const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel, interactivePoints, lamaPosition, onLevelSelect }) => {
   const { currentIslandLevel } = useGameStore();
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -73,7 +69,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
               </>
             );
           })}
-          <image href={lammaPosition.src} x={`${lammaPosition.x}%`} y={`${lammaPosition.y}%`} width="6%" height="10%" preserveAspectRatio="xMidYMid meet">
+          <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="6%" height="10%" preserveAspectRatio="xMidYMid meet">
             <title>Lamma</title>
           </image>
           {/* <LoadUserDetails /> */}

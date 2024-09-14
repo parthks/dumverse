@@ -3,8 +3,7 @@ import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
 export function PlayerFrame() {
-  const { user } = useGameStore();
-  if (!user) return null;
+  const user = useGameStore((state) => state.user!);
 
   const totalHealth = user.total_health;
   const totalStamina = user.total_stamina;

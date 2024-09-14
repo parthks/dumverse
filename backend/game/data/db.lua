@@ -26,7 +26,8 @@ USERS_TABLE = [[
         total_stamina FLOAT DEFAULT 0,
         damage FLOAT DEFAULT 0,
         defense FLOAT DEFAULT 0,
-        current_spot INTEGER DEFAULT 0
+        current_spot INTEGER DEFAULT 0,
+        current_battle_id INTEGER
     );
 ]]
 

@@ -7,47 +7,49 @@ import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
 import { SOUNDS } from "@/lib/constants";
 import { useCombatStore } from "@/store/useCombatStore";
-import { GameStatePages, initialLammaPosition, useGameStore } from "@/store/useGameStore";
+import { GameStatePages, initialLamaPosition, useGameStore } from "@/store/useGameStore";
+import { LamaPosition } from "@/types/game";
 import { useEffect, useState } from "react";
 
+// TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
+export const interactivePoints = [
+  { x: 79, y: 78, level: 1 },
+  { x: 74.2, y: 79.6, level: 2 },
+  { x: 69.4, y: 79.6, level: 3 },
+  { x: 64.6, y: 77.9, level: 4 },
+  { x: 60.6, y: 72.8, level: 5 },
+];
+
+export const lammaWidth = 6;
+export const lammaHeight = 8.5;
+
 const GameMap = () => {
-  const { goToTown, currentIslandLevel, setCurrentIslandLevel, lammaPosition, setLammaPosition } = useGameStore();
+  const { goToTown, currentIslandLevel, lamaPosition, setLamaPosition, user } = useGameStore();
 
-  // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
-  const interactivePoints = [
-    { x: 79, y: 78, level: 1 },
-    { x: 74.2, y: 79.6, level: 2 },
-    { x: 69.4, y: 79.6, level: 3 },
-    { x: 64.6, y: 77.9, level: 4 },
-    { x: 60.6, y: 72.8, level: 5 },
-  ];
-
-  useEffect(() => {
-    console.log("GOT A currentIslandLevel", currentIslandLevel);
-    if (currentIslandLevel != 0 && lammaPosition.x == initialLammaPosition.x && lammaPosition.y == initialLammaPosition.y) {
-      handleLevelSelect(currentIslandLevel, true);
-    }
-  }, [currentIslandLevel]);
+  // useEffect(() => {
+  //   console.log("GOT A currentIslandLevel", currentIslandLevel);
+  //   if (currentIslandLevel != 0 && lammaPosition.x == initialLamaPosition.x && lammaPosition.y == initialLamaPosition.y) {
+  //     handleLevelSelect(currentIslandLevel, true);
+  //   }
+  // }, [currentIslandLevel]);
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
   const [stepDistance, setStepDistance] = useState("0.5");
   const [stepTime, setStepTime] = useState("50");
 
-  const [tempLammaPosition, setTempLammaPosition] = useState(lammaPosition);
+  const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on
   // tempCurrentIslandLevel  controls the level that the lamma is currently on
   const [tempCurrentIslandLevel, setTempCurrentIslandLevel] = useState(currentIslandLevel);
   const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
+  const [enterNewBattleLoading, setEnterNewBattleLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
-
-  const lammaWidth = 6;
-  const lammaHeight = 8.5;
 
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
       const interval = setInterval(() => {
-        setTempLammaPosition((prev) => {
+        setTempLamaPosition((prev) => {
           const targetPoint = path[currentPathIndex];
           const lammaBottomCenterX = prev.x + lammaWidth / 2;
           const lammaBottomCenterY = prev.y + lammaHeight;
@@ -62,15 +64,15 @@ const GameMap = () => {
             } else {
               setCurrentPathIndex(currentPathIndex + 1);
             }
-            setLammaPosition({
+            setLamaPosition({
               x: targetPoint.x - lammaWidth / 2,
               y: targetPoint.y - lammaHeight,
-              src: dx >= 0 ? LammaStandRight : LammaStandLeft,
+              src: dx >= 0 ? "STAND_RIGHT" : "STAND_LEFT",
             });
             return {
               x: targetPoint.x - lammaWidth / 2,
               y: targetPoint.y - lammaHeight,
-              src: dx >= 0 ? LammaStandRight : LammaStandLeft,
+              src: dx >= 0 ? "STAND_RIGHT" : "STAND_LEFT",
             };
           }
 
@@ -82,7 +84,7 @@ const GameMap = () => {
           return {
             x: newX,
             y: newY,
-            src: dx >= 0 ? LammaWalkingRight : LammaWalkingLeft,
+            src: dx >= 0 ? "WALKING_RIGHT" : "WALKING_LEFT",
           };
         });
       }, parseInt(stepTime));
@@ -124,10 +126,16 @@ const GameMap = () => {
         <PlayerFrame />
         {tempCurrentIslandLevel != 0 && (
           <ImgButton
+            disabled={enterNewBattleLoading || user?.health == 0 || user?.stamina == 0}
             src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
-            onClick={() => {
-              enterNewBattle(tempCurrentIslandLevel);
-              setGameStatePage(GameStatePages.COMBAT);
+            onClick={async () => {
+              setEnterNewBattleLoading(true);
+              const resultData = await enterNewBattle(tempCurrentIslandLevel);
+              console.log("resultData", resultData);
+              if (resultData.status == "Success") {
+                setGameStatePage(GameStatePages.COMBAT);
+              }
+              setEnterNewBattleLoading(false);
             }}
             className="shrink-0 mb-8"
             alt={"Enter Combat"}
@@ -139,7 +147,7 @@ const GameMap = () => {
       <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
       <label>Step Time (in ms)</label>
       <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
-      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lammaPosition={tempLammaPosition} interactivePoints={interactivePoints} onLevelSelect={handleLevelSelect} />
+      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} interactivePoints={interactivePoints} onLevelSelect={handleLevelSelect} />
     </div>
   );
 };

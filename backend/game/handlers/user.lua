@@ -158,4 +158,24 @@ Handlers.add("User.GoToTown",
     end
 )
 
+-- Admin control function to regenerate user stats (health, stamina)
+Handlers.add("User.Regenerate",
+    Handlers.utils.hasMatchingTag('Action', 'User.Regenerate'),
+    function(msg)
+        assert(msg.From == ao.id, "Only the game server can regenerate users")
+        local user_id = msg.UserId
+        -- local userData = helpers.CheckUserExists(user_id, msg.From)
+
+        -- update current_spot to 0
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET health = total_health, gold_balance = 10, dumz_balance = 1, stamina = total_stamina WHERE id = %f;
+        ]], user_id))
+
+        return ao.send({
+            Target = msg.From,
+            Status = "Success"
+        })
+    end
+)
+
 return {}

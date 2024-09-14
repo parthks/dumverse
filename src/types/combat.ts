@@ -28,8 +28,8 @@ import { GameUser } from "./game";
 // UserId is a string of the user_id number to match npc_id and avoid tonumber()
 export type Battle = {
   id: number;
+  level: number;
   last_npc_attack_timestamp: Record<string, number>;
-  player_id_tried_running?: string | null;
   players_attacked: string[];
   players_alive: string[];
   npcs_alive: string[];
@@ -55,4 +55,5 @@ export type NPC = {
   damage: number;
   difficulty: string;
   gold_reward: number;
+  extra_gold: number;
 };
