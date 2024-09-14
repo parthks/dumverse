@@ -8,9 +8,9 @@ export function InventoryBag() {
   if (!user) return null;
 
   const inventory = user?.inventory;
-  const potion1 = inventory?.find((item) => item.item_id === "POTION_1")?.amount ?? 0;
-  const potion2 = inventory?.find((item) => item.item_id === "POTION_2")?.amount ?? 0;
-  const food1 = inventory?.find((item) => item.item_id === "FOOD_1")?.amount ?? 0;
+  const potion1 = inventory?.filter((item) => item.item_id === "POTION_1").length ?? 0;
+  const energy1 = inventory?.filter((item) => item.item_id === "ENERGY_1").length ?? 0;
+  const food1 = inventory?.filter((item) => item.item_id === "FOOD_1").length ?? 0;
 
   const { weapon, armor } = getEquippedItem(user);
 
@@ -38,7 +38,7 @@ export function InventoryBag() {
         </div>
       </div>
       <div className="flex items-center justify-between" style={{ position: "absolute", width: "50%", bottom: "0%", right: "0%", transform: "translate(-50%, -50%)" }}>
-        <label className="text-lg ml-1 mr-1 text-white">{potion2}</label>
+        <label className="text-lg ml-1 mr-1 text-white">{energy1}</label>
         <label className="text-lg mr-1 text-white">{food1}</label>
         <label className="text-lg mr-1 text-white">{potion1}</label>
       </div>

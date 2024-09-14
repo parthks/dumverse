@@ -143,12 +143,20 @@ const FormData = () => {
   const gameProfiles = useAppStore((state) => state.gameProfiles);
   const setUser = useGameStore((state) => state.setUser);
 
+  const nonNFTGameProfiles = gameProfiles.filter((profile) => !profile.nft_address);
+
   const [loading, setLoading] = useState(false);
 
   const handleOptionSelect = (option: any) => {
     setSelectedOption(option);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    if (nonNFTGameProfiles.length > 0) {
+      setName(nonNFTGameProfiles[0].name);
+    }
+  }, [nonNFTGameProfiles]);
 
   async function handleRegister() {
     setLoading(true);
@@ -160,6 +168,8 @@ const FormData = () => {
         return;
       }
       await setUser(gameProfile);
+    } else if (nonNFTGameProfiles.length > 0) {
+      await setUser(nonNFTGameProfiles[0]);
     } else {
       await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
     }
@@ -257,7 +267,17 @@ const FormData = () => {
       />
 
       <div className="flex flex-col gap-2 justify-center items-center">
-        {selectedOption?.existingProfile ? <p>Using existing profile</p> : <p>Registering new profile...</p>}
+        {selectedOption ? (
+          selectedOption?.existingProfile ? (
+            <p>Using existing profile</p>
+          ) : (
+            <p>Registering new profile...</p>
+          )
+        ) : nonNFTGameProfiles.length > 0 ? (
+          <p>Using existing profile</p>
+        ) : (
+          <p>Registering new profile...</p>
+        )}
         <ImgButton
           disabled={loading}
           src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"

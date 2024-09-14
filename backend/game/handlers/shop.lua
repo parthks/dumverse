@@ -29,7 +29,7 @@ Handlers.add("Shop.BuyItem",
         local user_id = msg.UserId
         local item_id = msg.ItemId
         assert(item_id, "ItemId is required")
-        local amount = msg.Amount or 1
+        -- local amount = 1
         local token_type = msg.TokenType -- "GOLD" or "DUMZ"
         assert(token_type == "GOLD" or token_type == "DUMZ", "Invalid token type")
 
@@ -40,9 +40,9 @@ Handlers.add("Shop.BuyItem",
         -- check if user has enough balance
         local userData = helpers.CheckUserExists(user_id, msg.From)
         if token_type == "GOLD" then
-            assert(userData.gold_balance >= item.gold_price * amount, "You does not have enough GOLD balance")
+            assert(userData.gold_balance >= item.gold_price, "You does not have enough GOLD balance")
         else
-            assert(userData.dumz_balance >= item.dumz_price * amount, "You does not have enough DUMZ balance")
+            assert(userData.dumz_balance >= item.dumz_price, "You does not have enough DUMZ balance")
         end
 
         -- select inventory items and set equipped to true for new item
@@ -59,18 +59,18 @@ Handlers.add("Shop.BuyItem",
 
         -- update inventory
         dbAdmin:exec(string.format([[
-            INSERT INTO Inventory (user_id, item_id, amount, equipped, item_type) VALUES (%f, "%s", %f, TRUE, "%s");
-        ]], user_id, item_id, amount, item.type))
+            INSERT INTO Inventory (user_id, item_id, equipped, item_type) VALUES (%f, "%s", %f, TRUE, "%s");
+        ]], user_id, item_id, item.type))
 
         -- update user balance
         if token_type == "GOLD" then
             dbAdmin:exec(string.format([[
                 UPDATE Users SET gold_balance = %f WHERE ID = %f;
-            ]], userData.gold_balance - item.gold_price * amount, user_id))
+            ]], userData.gold_balance - item.gold_price, user_id))
         else
             dbAdmin:exec(string.format([[
                 UPDATE Users SET dumz_balance = %f WHERE ID = %f;
-            ]], userData.dumz_balance - item.dumz_price * amount, user_id))
+            ]], userData.dumz_balance - item.dumz_price, user_id))
         end
 
         -- update user stats

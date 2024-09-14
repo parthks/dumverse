@@ -162,7 +162,7 @@ Handlers.add("User.GoToTown",
 )
 
 -- Admin control function to regenerate user stats (health, stamina)
-Handlers.add("User.Regenerate",
+Handlers.add("Admin.Regenerate",
     Handlers.utils.hasMatchingTag('Action', 'User.Regenerate'),
     function(msg)
         assert(msg.From == ao.id, "Only the game server can regenerate users")

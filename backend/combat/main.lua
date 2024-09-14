@@ -40,9 +40,9 @@ Handlers.add("CronTick",
 MAX_PLAYERS_IN_BATTLE = 1
 
 BattleHelpers = {}
-Battles = Battles or {}                 -- table of battles with id as key and battle as value
+Battles = Battles or {} -- table of battles with id as key and battle as value
 NPCS_EXTRA_GOLD = NPCS_EXTRA_GOLD or
-{}                                      -- table of npcs with id as key and extra gold as value, taken from perished players
+    {}                  -- table of npcs with id as key and extra gold as value, taken from perished players
 
 Handlers.add("Battle.NewUserJoin",
     Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), -- handler pattern to identify cron message
@@ -340,6 +340,7 @@ BattleHelpers.endBattle = function(battle_id, winner_id, timestamp)
                 ao.send({
                     Target = GAME_PROCESS_ID,
                     UserId = player_id,
+                    Level = tostring(battle.level),
                     Action = "Combat.PlayerWon",
                     Data = json.encode(battle.players[player_id])
                 })

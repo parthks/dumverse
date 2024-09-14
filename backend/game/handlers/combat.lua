@@ -30,15 +30,19 @@ Handlers.add("Combat.EnterNewCombat",
             SELECT id,item_id FROM Inventory WHERE USER_ID = %f AND item_type = 'POTION' LIMIT 1;
         ]], user_id))
 
-        local potion = equippedPotion[1]
         -- add equippedPotion to userData.potion, will remove the item from inventory after battle (if used)
-        local health = ITEMS[potion.item_id].health
-        userData.potion = {
-            id = potion.id,
-            item_id = potion.item_id,
-            health = health
-        }
+        local potion = equippedPotion[1]
         userData.potion_used = false
+        userData.potion = nil
+        if potion then
+            local health = ITEMS[potion.item_id].health
+            userData.potion = {
+                id = potion.id,
+                item_id = potion.item_id,
+                health = health
+            }
+        end
+
 
         -- TODO: based on combat_level, get the enemies from the ENEMIES table
         local enemies = {}
@@ -70,8 +74,8 @@ Handlers.add("Combat.EnteredNewCombat",
 
         -- update Users table with battle_id
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = %d, current_spot = %d WHERE id = %f;
-        ]], battle_id, level, user_id))
+            UPDATE Users SET current_battle_id = %d WHERE id = %f;
+        ]], battle_id, user_id))
     end
 )
 
@@ -80,13 +84,15 @@ Handlers.add("Combat.PlayerWon",
     function(msg)
         assert(msg.From == COMBAT_PROCESS_ID, "Only Combat process can send this message")
         local user_id = msg.UserId
+        local level = tonumber(msg.Level)
         local playerData = json.decode(msg.Data)
         local stamina = playerData.stamina - 1 -- subtract 1 from stamina from battling
 
         -- update Users table with health, stamina, gold_balance, dumz_balance
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = NULL, health = %f, stamina = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
-        ]], playerData.health, stamina, playerData.gold_balance, playerData.dumz_balance, user_id))
+            UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, stamina = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
+        ]], level, playerData.health, stamina, playerData.gold_balance, playerData.dumz_balance,
+            user_id))
 
         local potion = playerData.potion
         if potion and potion.id and playerData.potion_used then

@@ -20,9 +20,9 @@ export function PlayerFrame() {
       }}
     >
       <img
-        src={`https://arweave.net/${user.nft_address ? user.nft_address : IMAGES.DEFAULT_DUMDUM}`}
+        src={user.nft_address ? `https://arweave.net/${user.nft_address}` : IMAGES.DEFAULT_DUMDUM}
         alt="User Avatar"
-        className="absolute left-[5%] top-[15%] w-[23.5%] h-[78%] object-cover"
+        className="absolute left-[5%] top-[15%] w-[23.5%] h-[78%] object-contain"
       />
       <div className="absolute left-[32%] top-[16%] flex flex-col justify-between">
         <div className="text-white text-xl font-bold">{user.name}</div>

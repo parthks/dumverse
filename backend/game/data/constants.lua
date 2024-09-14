@@ -1,6 +1,8 @@
 COMBAT_PROCESS_ID = "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE"
 GAME_PROCESS_ID = "EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc"
 
+REST_SPOTS = { 0, 8, 16 }
+
 ITEMS = {
     ["WEAPON_1"] = {
         id = "WEAPON_1",
@@ -27,7 +29,7 @@ ITEMS = {
         id = "ENERGY_1",
         name = "Joose",
         dumz_price = 40,
-        health = 2,
+        energy = 2,
         type = "ENERGY",
     },
     ["FOOD_1"] = {

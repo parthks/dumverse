@@ -37,7 +37,6 @@ INVENTORY_TABLE = [[
         user_id INTEGER NOT NULL,
         item_id TEXT NOT NULL,
         item_type TEXT NOT NULL, -- ARMOR, WEAPON, POTION, FOOD, ENERGY.
-        amount INTEGER NOT NULL,
         equipped BOOLEAN DEFAULT FALSE, -- only one item type can be equipped
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
@@ -72,15 +71,21 @@ BANK_TRANSACTIONS_TABLE = [[
     );
 ]]
 
+Handlers.add("Admin.ClearDB",
+    Handlers.utils.hasMatchingTag("Action", "DANGER.ClearDB"),
+    function(msg)
+        assert(msg.From == ao.id, "You are not authorized to perform")
+        db:exec("DROP TABLE IF EXISTS Users;")
+        db:exec(USERS_TABLE)
+        db:exec("DROP TABLE IF EXISTS Inventory;")
+        db:exec(INVENTORY_TABLE)
+        db:exec("DROP TABLE IF EXISTS Bank;")
+        db:exec(BANK_TABLE)
+        db:exec("DROP TABLE IF EXISTS BankTransactions;")
+        db:exec(BANK_TRANSACTIONS_TABLE)
+    end
+)
 
--- db:exec("DROP TABLE IF EXISTS Users;")
--- db:exec(USERS_TABLE)
--- db:exec("DROP TABLE IF EXISTS Inventory;")
--- db:exec(INVENTORY_TABLE)
--- db:exec("DROP TABLE IF EXISTS Bank;")
--- db:exec(BANK_TABLE)
--- db:exec("DROP TABLE IF EXISTS BankTransactions;")
--- db:exec(BANK_TRANSACTIONS_TABLE)
 
 
 return dbAdmin

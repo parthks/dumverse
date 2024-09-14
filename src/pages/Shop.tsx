@@ -216,39 +216,45 @@ export default function Shop() {
           {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
           <img src={"https://arweave.net/XGifLWazz33oRvlKt6EZHpZc0tDF_KqdAvmBR3O5Flk"} alt="Town Map" className="w-full h-full object-contain" />
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
-            <image
-              href={"https://arweave.net/RfmkbozkG-yWu5nTEZB1vZNFMY8nReAJE5T1esrLcZw"}
-              x={`83%`}
-              y={`20%`}
-              width={(709 / imageWidth) * 100 * 0.85 + "%"}
-              height={(858 / imageHeight) * 100 * 0.85 + "%"}
-              preserveAspectRatio="xMidYMid meet"
-              transform="translate(-50%, -50%)"
-            >
-              <title>Shop Window Frame</title>
-            </image>
-            <image
-              href={"https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4"}
-              x={`${50 - (2099 / imageWidth) * 50}%`}
-              y={`78%`}
-              width={(2099 / imageWidth) * 100 + "%"}
-              height={(488 / imageHeight) * 100 + "%"}
-              preserveAspectRatio="xMidYMid meet"
-              transform="translate(-50%, -50%)"
-            >
-              <title>Shop Table</title>
-            </image>
-            <image
-              href={"https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY"}
-              x={`29%`}
-              y={`65%`}
-              width={(597 / imageWidth) * 100 + "%"}
-              height={(479 / imageHeight) * 100 + "%"}
-              preserveAspectRatio="xMidYMid meet"
-              transform="translate(-50%, -50%)"
-            >
-              <title>Shop Sign</title>
-            </image>
+            <g transform="translate(-50%, -50%)">
+              <image
+                href={"https://arweave.net/RfmkbozkG-yWu5nTEZB1vZNFMY8nReAJE5T1esrLcZw"}
+                x={`83%`}
+                y={`20%`}
+                width={(709 / imageWidth) * 100 * 0.85 + "%"}
+                height={(858 / imageHeight) * 100 * 0.85 + "%"}
+                preserveAspectRatio="xMidYMid meet"
+                transform="translate(-50%, -50%)"
+              >
+                <title>Shop Window Frame</title>
+              </image>
+            </g>
+
+            <g transform="translate(-50%, -50%)">
+              <image
+                href={"https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4"}
+                x={`${50 - (2099 / imageWidth) * 50}%`}
+                y={`78%`}
+                width={(2099 / imageWidth) * 100 + "%"}
+                height={(488 / imageHeight) * 100 + "%"}
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <title>Shop Table</title>
+              </image>
+            </g>
+
+            <g transform="translate(-50%, -50%)">
+              <image
+                href={"https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY"}
+                x={`29%`}
+                y={`65%`}
+                width={(597 / imageWidth) * 100 + "%"}
+                height={(479 / imageHeight) * 100 + "%"}
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <title>Shop Sign</title>
+              </image>
+            </g>
             <image
               href={"https://arweave.net/ERNUnhjW23_jDy4kFNk-Wmu_WFoTRgXeaCDgIYFyVws"}
               x={`${44}%`}

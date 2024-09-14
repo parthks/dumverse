@@ -29,7 +29,7 @@ export type Inventory = {
   user_id: number;
   item_id: string;
   item_type: ItemType;
-  amount: number;
+  // amount: number;
   equipped: boolean;
   created_at: string;
 };
@@ -44,6 +44,8 @@ export type Item = {
   type: ItemType;
   defense: number;
   damage: number;
+  energy?: number; // for energy items
+  health?: number; // for food and potion items
 };
 
 export type Shop = {

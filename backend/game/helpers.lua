@@ -25,7 +25,7 @@ function CalculateUserBaseStats(userData)
   }
   if userData["nft_address"] then
     baseStats.damage = 2
-    baseStats.defense = 1
+    baseStats.defense = 0
     baseStats.health = 2
     baseStats.total_health = 2
     baseStats.stamina = 6
