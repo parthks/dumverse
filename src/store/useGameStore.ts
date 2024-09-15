@@ -44,6 +44,7 @@ interface GameState {
   getShop: () => Promise<void>;
   buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
   buyItemLoading: boolean;
+  consumeItem: (inventoryId: number) => Promise<void>;
   currentIslandLevel: number;
   setCurrentIslandLevel: (level: number) => void;
   lamaPosition: LamaPosition;
@@ -170,6 +171,14 @@ export const useGameStore = create<GameState>()(
         ]);
         await Promise.all([get().refreshUserData()]);
         set({ buyItemLoading: false });
+      },
+      consumeItem: async (inventoryId) => {
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "Inventory.UseItem" },
+          { name: "UserId", value: get().user?.id.toString()! },
+          { name: "InventoryId", value: inventoryId.toString() },
+        ]);
+        await Promise.all([get().refreshUserData()]);
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {

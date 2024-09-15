@@ -28,25 +28,25 @@ Handlers.add("Inventory.UseItem",
 
         local inventory_id = tonumber(msg.InventoryId)
         assert(inventory_id, "InventoryId is required")
-        local item = dbAdmin:exec(string.format([[
-            SELECT * FROM Inventory WHERE id = %d;
-        ]], inventory_id))
-        assert(item, "Item not found")
-        assert(item.user_id == user_id, "Item does not belong to user")
-        local item_id = item.item_id
-        local item = ITEMS[item_id]
+
+        local results = dbAdmin:exec(string.format([[
+            SELECT * FROM Inventory WHERE id = %d AND user_id = %d LIMIT 1;
+        ]], tonumber(inventory_id), tonumber(user_id)))
+        local item = results[1]
         assert(item, "Item not found")
 
-        if item.type == "POTION" then
-            -- increase health
+        local item_id = item.item_id
+        local item = ITEMS[item_id]
+        assert(item, "Item details not found")
+
+        if item.type == "POTION" or item.type == "FOOD" then
+            -- increase health, but not exceeding total_health
+            local new_health = math.min(userData.health + item.health, userData.total_health)
             dbAdmin:exec(string.format([[
-                UPDATE Users SET health = health + %d WHERE id = %d;
-            ]], item.health, user_id))
-        elseif item.type == "FOOD" then
-            -- increase health
-            dbAdmin:exec(string.format([[
-                UPDATE Users SET health = health + %d WHERE id = %d;
-            ]], item.health, user_id))
+                UPDATE Users
+                SET health = %d
+                WHERE id = %d;
+            ]], new_health, user_id))
         elseif item.type == "ENERGY" then
             -- increase energy
             dbAdmin:exec(string.format([[

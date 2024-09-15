@@ -193,7 +193,7 @@ Handlers.add("Admin.Regenerate",
 
         -- update current_spot to 0
         dbAdmin:exec(string.format([[
-            UPDATE Users SET health = total_health, gold_balance = 10000, dumz_balance = 10, stamina = total_stamina WHERE id = %f;
+            UPDATE Users SET health = total_health, gold_balance = 10000, dumz_balance = 100, stamina = total_stamina WHERE id = %f;
         ]], user_id))
 
         return ao.send({

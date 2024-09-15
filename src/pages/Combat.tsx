@@ -326,7 +326,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
       style={{ aspectRatio: "302/421" }}
     >
       <h2 className="text-black text-2xl font-bold text-center">{player.name} (P)</h2>
-      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full  max-h-[250px] object-contain mb-2" />
+      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full  max-h-[200px] object-contain mb-2" />
       <div className="flex gap-2 justify-between items-start">
         <div className="flex flex-col gap-1">
           <div className="flex gap-1">
