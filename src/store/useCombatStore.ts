@@ -9,9 +9,10 @@ import { GAME_PROCESS_ID } from "@/lib/utils";
 interface CombatState {
   loading: boolean;
   enteringNewBattle: boolean;
+  setEnteringNewBattle: (enteringNewBattle: boolean) => void;
   currentBattle: Battle | null;
-  setCurrentBattle: (battle_id?: number) => void;
-  getOpenBattles: () => void;
+  setCurrentBattle: (battle_id?: number) => Promise<Battle | null>;
+  getOpenBattles: () => Promise<Battle | null>;
   enterNewBattle: (level: number) => Promise<MyMessageResult>;
   userAttack: (npc_id: string) => void;
   userRun: () => void;
@@ -23,10 +24,16 @@ export const useCombatStore = create<CombatState>()(
   devtools(
     (set, get) => ({
       enteringNewBattle: false,
+      setEnteringNewBattle: (enteringNewBattle: boolean) => {
+        set({ enteringNewBattle }); // used after 30 second timeout if no battle is found
+      },
       loading: false,
       currentBattle: null,
       getOpenBattles: async () => {
-        set({ loading: true });
+        if (get().currentBattle?.id) {
+          return null;
+        }
+        set({ loading: true, enteringNewBattle: true });
         const resultData = await sendAndReceiveGameMessage(
           [
             {
@@ -42,14 +49,15 @@ export const useCombatStore = create<CombatState>()(
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
             useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);
           }
+          return battles?.[0];
         }
         set({ loading: false });
-        return;
+        return null;
       },
       setCurrentBattle: async (passed_in_battle_id?: number) => {
         const battle_id = passed_in_battle_id || get().currentBattle?.id;
         const user_id = useGameStore.getState().user?.id;
-        if (!battle_id || !user_id) return;
+        if (!battle_id || !user_id) return null;
         set({ loading: true });
         const resultData = await sendDryRunGameMessage(
           [
@@ -69,10 +77,12 @@ export const useCombatStore = create<CombatState>()(
           "combat"
         );
         const battle = resultData.data?.id ? (resultData.data as Battle) : null;
+        set({ loading: false });
         if (battle) {
           set({ currentBattle: battle });
+          return battle;
         }
-        set({ loading: false });
+        return null;
       },
       enterNewBattle: async (level: number) => {
         const user_id = useGameStore.getState().user?.id;

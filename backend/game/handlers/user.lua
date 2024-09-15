@@ -161,6 +161,36 @@ Handlers.add("User.GoToTown",
     end
 )
 
+Handlers.add("User.GoToRestArea",
+    Handlers.utils.hasMatchingTag('Action', 'User.GoToRestArea'),
+    function(msg)
+        local user_id = msg.UserId
+        local userData = helpers.CheckUserExists(user_id, msg.From)
+
+        local current_spot = userData.current_spot
+        -- check which rest area is + or - 1 from current_spot
+        local rest_area_level = 0
+        for _, level in ipairs(REST_SPOTS) do
+            if math.abs(current_spot - level) == 1 then
+                rest_area_level = level
+                break
+            end
+        end
+
+        assert(rest_area_level ~= 0, "Currently at " .. current_spot .. " and no rest area found nearby")
+
+        -- update current_spot to the nearest rest area
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_spot = %f WHERE id = %f;
+        ]], rest_area_level, user_id))
+
+        return ao.send({
+            Target = msg.From,
+            Status = "Success"
+        })
+    end
+)
+
 Handlers.add("User.RegenerateEnergy",
     Handlers.utils.hasMatchingTag('Action', 'User.RegenerateEnergy'),
     function(msg)
@@ -195,6 +225,24 @@ Handlers.add("Admin.Regenerate",
         dbAdmin:exec(string.format([[
             UPDATE Users SET health = total_health, gold_balance = 10000, dumz_balance = 100, stamina = total_stamina WHERE id = %f;
         ]], user_id))
+
+        return ao.send({
+            Target = msg.From,
+            Status = "Success"
+        })
+    end
+)
+
+-- Admin control to set a user's current_spot
+Handlers.add("Admin.SetCurrentSpot",
+    Handlers.utils.hasMatchingTag('Action', 'Admin.SetCurrentSpot'),
+    function(msg)
+        assert(msg.From == ao.id, "Only the game server can dynamically set the current spot")
+        local user_id = msg.UserId
+        local current_spot = msg.CurrentSpot
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_spot = %f WHERE id = %f;
+        ]], current_spot, user_id))
 
         return ao.send({
             Target = msg.From,

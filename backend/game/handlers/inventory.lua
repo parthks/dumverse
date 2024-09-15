@@ -50,8 +50,8 @@ Handlers.add("Inventory.UseItem",
         elseif item.type == "ENERGY" then
             -- increase energy
             dbAdmin:exec(string.format([[
-                UPDATE Users SET stamina = stamina + %d WHERE id = %d;
-            ]], item.energy, user_id))
+                UPDATE Users SET stamina = total_stamina WHERE id = %d;
+            ]], user_id))
         end
 
         -- delete item from inventory

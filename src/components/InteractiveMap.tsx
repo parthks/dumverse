@@ -1,4 +1,5 @@
 import { LAMA_IMAGE } from "@/lib/constants";
+import { cn, isValidSpotToMoveTo } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
@@ -28,15 +29,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
       const level = event.target.getAttribute("data-level");
       // const buttonType = event.target.getAttribute("button-type");
       if (level) {
-        console.log("level", level);
-        onLevelSelect(parseInt(level));
+        if (isValidSpotToMoveTo(currentIslandLevel, parseInt(level))) {
+          console.log("level", level);
+          onLevelSelect(parseInt(level));
+        }
       }
-      // else if (buttonType) {
-      //   if (buttonType === "combat") {
-      //     enterNewBattle(currentIslandLevel);
-      //     setGameStatePage(GameStatePages.COMBAT);
-      //   }
-      // }
     }
   };
 
@@ -62,14 +59,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
                   key={index}
                   cx={`${point.x}%`}
                   cy={`${point.y}%`}
-                  r="10.5"
-                  className={`${Math.abs(currentIslandLevel - point.level) <= 1 && "interactive-point fill-red-500 hover:fill-green-500 transition-colors duration-200"}`}
+                  r="6"
+                  className={cn(
+                    "interactive-point transition-colors duration-200",
+                    isValidSpotToMoveTo(currentIslandLevel, point.level) ? "hover:fill-green-500" : "fill-black",
+                    [9, 18, 27].includes(point.level) ? "fill-purple-700 " : isValidSpotToMoveTo(currentIslandLevel, point.level) ? "fill-red-500 " : "fill-black"
+                  )}
                   data-level={point.level}
                 />
               </>
             );
           })}
-          <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="6%" height="10%" preserveAspectRatio="xMidYMid meet">
+          <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="5%" height="10%" preserveAspectRatio="xMidYMid meet">
             <title>Lamma</title>
           </image>
           {/* <LoadUserDetails /> */}

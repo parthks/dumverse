@@ -1,10 +1,10 @@
 import ImgButton from "@/components/ui/imgButton";
-import { ITEM_ICONS, ENEMY_CARD_IMAGE, IMAGES, SOUNDS } from "@/lib/constants";
+import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // const currentBattle = {
 //   log: [
@@ -102,99 +102,106 @@ import { useEffect, useRef } from "react";
 //   players_alive: ["3"],
 // } as any;
 export default function Combat() {
-  const { loading, enteringNewBattle, currentBattle, getOpenBattles, setCurrentBattle, enterNewBattle, userAttack, userRun } = useCombatStore();
-  const { user, setGameStatePage, refreshUserData } = useGameStore();
+  const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
+  const currentBattle = useCombatStore((state) => state.currentBattle);
+  const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
+  const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
+  const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
+  const combatLoading = useCombatStore((state) => state.loading);
 
+  const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+
+  const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
 
-  //   Check for open battles
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
     let timeout: NodeJS.Timeout | null = null;
+    let stopTimeout: NodeJS.Timeout | null = null;
+
+    const checkOpenBattles = async () => {
+      if (enteringNewBattle && !currentBattle?.id) {
+        console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+        const battle = await getOpenBattles();
+        if (!battle) {
+          // Schedule the next check in 1 second
+          if (timeout) clearTimeout(timeout);
+          timeout = setTimeout(checkOpenBattles, 1000);
+        }
+      }
+    };
 
     if (enteringNewBattle && !currentBattle?.id) {
-      console.log("SET UP INTERVAL FOR CHECKING OPEN BATTLES");
-      interval = setInterval(async () => {
-        await Promise.all([getOpenBattles()]);
-      }, 1000);
+      console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+      checkOpenBattles();
 
-      // Stop checking after 60 seconds
-      timeout = setTimeout(() => {
-        if (interval) {
-          console.log("Stopped checking for open battles after 60 seconds");
-          clearInterval(interval);
+      // Stop checking after 30 seconds
+      if (stopTimeout) clearTimeout(stopTimeout);
+      stopTimeout = setTimeout(() => {
+        if (timeout) {
+          console.log("Stopped checking for open battles after 30 seconds");
+          clearTimeout(timeout);
         }
+        setFailedToEnterBattle(true);
+        // Reset the enteringNewBattle state
+        setEnteringNewBattle(false);
       }, 30000);
     }
 
     return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
       if (timeout) {
         clearTimeout(timeout);
       }
-    };
-  }, [enteringNewBattle, currentBattle, getOpenBattles]);
-
-  //  Check for confirmation that user is in battle
-  useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-    let timeout: NodeJS.Timeout | null = null;
-
-    if (!user?.current_battle_id) {
-      console.log("SET UP INTERVAL FOR CHECKING USER IS IN BATTLE");
-      interval = setInterval(async () => {
-        await Promise.all([refreshUserData()]);
-      }, 1000);
-    }
-
-    // Stop checking after 30 seconds
-    timeout = setTimeout(() => {
-      if (interval) {
-        console.log("Stopped checking for user is in battle after 60 seconds");
-        clearInterval(interval);
-      }
-    }, 30000);
-
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-      if (timeout) {
-        clearTimeout(timeout);
+      if (stopTimeout) {
+        clearTimeout(stopTimeout);
       }
     };
-  }, [user?.current_battle_id, setCurrentBattle]);
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
   // check for battle updates
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let timeout: NodeJS.Timeout | null = null;
+
+    const checkBattleUpdates = async () => {
+      if (currentBattle?.id) {
+        console.log("Checking for battle updates");
+        const updatedBattle = await setCurrentBattle(currentBattle.id);
+
+        // Use the most up-to-date battle state
+        if (updatedBattle && !updatedBattle.ended) {
+          if (timeout) clearTimeout(timeout);
+          timeout = setTimeout(checkBattleUpdates, 5000);
+        } else {
+          // Battle has ended, clean up
+          if (timeout) {
+            clearTimeout(timeout);
+          }
+        }
+      }
+    };
 
     if (currentBattle?.id && !currentBattle.ended) {
-      if (interval) {
-        clearInterval(interval);
-      }
-      interval = setInterval(() => {
-        console.log("Checking for battle updates");
-        setCurrentBattle(currentBattle.id);
-      }, 5000);
+      checkBattleUpdates(); // Start the initial call only if battle is ongoing
     }
 
     return () => {
-      if (interval) {
-        clearInterval(interval);
+      if (timeout) {
+        clearTimeout(timeout);
       }
     };
   }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
 
+  console.log("combatLoading", combatLoading, "enteringNewBattle", enteringNewBattle, "currentBattle", currentBattle);
   if (enteringNewBattle && !currentBattle?.id) {
     return <div>Entering a new battle...</div>;
   }
 
-  if (currentBattle?.id && user?.current_battle_id !== currentBattle?.id) {
-    return <div>Waiting for battle confirmation...</div>;
+  if (failedToEnterBattle) {
+    return <div>Checked for 30 seconds. Failed to find an open battle :(</div>;
   }
+
+  // if (currentBattle?.id && user?.current_battle_id !== currentBattle?.id) {
+  //   return <div>Waiting for battle confirmation...</div>;
+  // }
 
   if (!currentBattle?.id) {
     return (
@@ -289,8 +296,8 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
                         alt={"Attack" + entity.name}
                       />
 
-                      {isEnemy && <p className="text-white text-lg font-bold text-center">30 seconds till {entity.name} attacks...</p>}
-                      {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 30 seconds...</p>} */}
+                      {isEnemy && <p className="text-white text-lg font-bold text-center">20 seconds till {entity.name} attacks...</p>}
+                      {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 20 seconds...</p>} */}
                     </div>
                   )}
                 </div>
@@ -416,14 +423,14 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
   return (
     <div
       className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/V4B3MJpEEAStbIOJbygQ6-lcVBR8w_8baD5TKK7u6p8')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full"
-      style={{ aspectRatio: "649/1040", maxHeight: "calc(100vh - 60px)" }}
+      style={{ aspectRatio: "649/1040", height: "calc(100vh - 60px)" }}
     >
       <div className="flex items-center justify-between">
         <div className="w-6">{combatLoading && <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>}</div>
         <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
         <div className="w-6"></div>
       </div>
-      <div className="log-container flex flex-col gap-8 overflow-y-auto">
+      <div style={{ height: "calc(100vh - 200px)" }} className="log-container flex flex-col gap-8 overflow-y-auto">
         {currentBattle.log.map((log, index) => {
           const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || "";
           return (
@@ -449,12 +456,17 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
             </div>
           );
         })}
+        {currentBattle.ended && (
+          <div className="my-4 flex justify-center">
+            <ImgButton
+              disabled={combatLoading}
+              src={"https://arweave.net/-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"}
+              onClick={() => goToMapFromBattle()}
+              alt={"Return to Town"}
+            />
+          </div>
+        )}
       </div>
-      {currentBattle.ended && (
-        <div className="my-4 flex justify-center">
-          <ImgButton disabled={combatLoading} src={"https://arweave.net/-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"} onClick={() => goToMapFromBattle()} alt={"Return to Town"} />
-        </div>
-      )}
     </div>
   );
 }

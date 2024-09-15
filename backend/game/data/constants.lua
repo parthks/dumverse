@@ -50,7 +50,7 @@ ENEMIES = {
         health = 1,
         damage = 1,
         difficulty = "EASY",
-        gold_reward = 10,
+        gold_reward = 5,
         dumz_reward = 1
     },
     {
@@ -60,18 +60,18 @@ ENEMIES = {
         health = 1,
         damage = 1,
         difficulty = "EASY",
-        gold_reward = 10,
+        gold_reward = 5,
         dumz_reward = 1
     },
     {
         id = "NPC_3",
-        name = "Uninterested Owl",
+        name = "Intense Owl",
         total_health = 2,
         health = 2,
         damage = 1,
         difficulty = "EASY",
-        gold_reward = 20,
-        dumz_reward = 2
+        gold_reward = 5,
+        dumz_reward = 1
     },
     {
         id = "NPC_4",
@@ -80,10 +80,130 @@ ENEMIES = {
         health = 1,
         damage = 2,
         difficulty = "EASY",
+        gold_reward = 5,
+        dumz_reward = 1
+    },
+    {
+        id = "NPC_5",
+        name = "Adorable Red Panda",
+        total_health = 2,
+        health = 2,
+        damage = 2,
+        difficulty = "EASY",
+        gold_reward = 5,
+        dumz_reward = 1
+    },
+    {
+        id = "NPC_6",
+        name = "Nyanz Cat",
+        total_health = 2,
+        health = 2,
+        damage = 2,
+        difficulty = "MEDIUM",
+        gold_reward = 10,
+        dumz_reward = 3
+    },
+    {
+        id = "NPC_7",
+        name = "Teaz Kermit",
+        total_health = 3,
+        health = 3,
+        damage = 2,
+        difficulty = "MEDIUM",
+        gold_reward = 10,
+        dumz_reward = 3
+    },
+    {
+        id = "NPC_8",
+        name = "Mocking Llama",
+        total_health = 2,
+        health = 2,
+        damage = 3,
+        difficulty = "MEDIUM",
+        gold_reward = 10,
+        dumz_reward = 3
+    },
+    {
+        id = "NPC_9",
+        name = "Always Down Bear",
+        total_health = 4,
+        health = 4,
+        damage = 2,
+        difficulty = "MEDIUM",
+        gold_reward = 10,
+        dumz_reward = 3
+    },
+    {
+        id = "NPC_10",
+        name = "Joosed Up Squirrel",
+        total_health = 4,
+        health = 4,
+        damage = 3,
+        difficulty = "HARD",
         gold_reward = 20,
-        dumz_reward = 2
+        dumz_reward = 5
+    },
+    {
+        id = "NPC_11",
+        name = "Fearful Flower",
+        total_health = 4,
+        health = 4,
+        damage = 4,
+        difficulty = "HARD",
+        gold_reward = 20,
+        dumz_reward = 5
+    },
+    {
+        id = "NPC_12",
+        name = "Angry Beaver",
+        total_health = 5,
+        health = 5,
+        damage = 4,
+        difficulty = "HARD",
+        gold_reward = 20,
+        dumz_reward = 5
+    },
+    {
+        id = "NPC_13",
+        name = "Agent Trunk",
+        total_health = 5,
+        health = 5,
+        damage = 5,
+        difficulty = "HARD",
+        gold_reward = 20,
+        dumz_reward = 5
     },
 }
 
+-- 9, 18, 27 are rest spots
+ENEMY_PER_LEVEL = {
+    [1] = { ENEMIES[1] },
+    [2] = { ENEMIES[2] },
+    [3] = { ENEMIES[3] },
+    [4] = { ENEMIES[4] },
+    [5] = { ENEMIES[5] },
+    [6] = { ENEMIES[1], ENEMIES[2] },
+    [7] = { ENEMIES[3], ENEMIES[4] },
+    [8] = { ENEMIES[5], ENEMIES[5] },
+    -- [9] is a rest spot
+    [10] = { ENEMIES[6] },
+    [11] = { ENEMIES[7] },
+    [12] = { ENEMIES[8] },
+    [13] = { ENEMIES[9] },
+    [14] = { ENEMIES[6], ENEMIES[2] },
+    [15] = { ENEMIES[7], ENEMIES[3] },
+    [16] = { ENEMIES[8], ENEMIES[4] },
+    [17] = { ENEMIES[9], ENEMIES[5] },
+    -- [18] is a rest spot
+    [19] = { ENEMIES[10] },
+    [20] = { ENEMIES[11] },
+    [21] = { ENEMIES[12] },
+    [22] = { ENEMIES[13] },
+    [23] = { ENEMIES[10], ENEMIES[6] },
+    [24] = { ENEMIES[11], ENEMIES[7] },
+    [25] = { ENEMIES[12], ENEMIES[8] },
+    [26] = { ENEMIES[13], ENEMIES[9] },
+    -- [27] is a rest spot
+}
 
 return {}

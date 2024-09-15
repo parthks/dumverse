@@ -6,6 +6,7 @@ import { devtools } from "zustand/middleware";
 import { useAppStore } from "./useAppStore";
 import { interactivePoints } from "@/pages/GameMap";
 import { getCurrentLamaPosition } from "@/lib/utils";
+import { useCombatStore } from "./useCombatStore";
 
 export enum GameStatePages {
   HOME = "HOME",
@@ -19,8 +20,8 @@ export enum GameStatePages {
 }
 
 export const initialLamaPosition: LamaPosition = {
-  x: 80,
-  y: 63,
+  x: 81,
+  y: 60,
   src: "STAND_LEFT",
 };
 
@@ -29,7 +30,7 @@ interface GameState {
   setGameStatePage: (state: GameStatePages | null) => void;
   registerNewUser: (name: string, nft?: string) => Promise<void>;
   user: GameUser | null;
-  setUser: (user: GameUser | null) => void;
+  setUserOnLogin: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
   inventory: Inventory[];
   setInventory: (inventory: Inventory[]) => void;
@@ -50,6 +51,7 @@ interface GameState {
   lamaPosition: LamaPosition;
   setLamaPosition: (position: LamaPosition) => void;
   goToTown: () => void;
+  goToRestArea: () => void; // goes to the nearest rest area (+- 1 from current level)
   exitTown: () => void;
   regenerateEnergy: () => Promise<void>;
 }
@@ -72,17 +74,23 @@ export const useGameStore = create<GameState>()(
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const data = JSON.parse(resultData.Messages[0].Data);
           if (data.status === "Success") {
-            get().setUser(data.data);
+            get().setUserOnLogin(data.data);
           }
         }
       },
       user: null,
-      setUser: (user) => {
+      setUserOnLogin: (user) => {
         if (user) {
-          if (user.current_spot) {
+          if (user.current_battle_id) {
+            // user is in a battle
+            useCombatStore.getState().getOpenBattles();
+            set({ GameStatePage: GameStatePages.COMBAT });
+          } else if (user.current_spot) {
+            // user is in a spot
             set({ GameStatePage: GameStatePages.GAME_MAP, ...getCurrentLamaPosition(user) });
           } else {
-            set({ GameStatePage: GameStatePages.TOWN, ...getCurrentLamaPosition(user) });
+            // user is in town
+            set({ GameStatePage: GameStatePages.TOWN });
           }
           get().refreshUserData(user.id);
         }
@@ -194,6 +202,16 @@ export const useGameStore = create<GameState>()(
           { name: "UserId", value: get().user?.id.toString()! },
         ]);
         get().refreshUserData();
+      },
+      goToRestArea: async () => {
+        const resultData = await sendAndReceiveGameMessage([
+          { name: "Action", value: "User.GoToRestArea" },
+          { name: "UserId", value: get().user?.id.toString()! },
+        ]);
+        if (resultData.status === "Success") {
+          await get().refreshUserData();
+          set({ GameStatePage: GameStatePages.REST_AREA });
+        }
       },
       exitTown: async () => {
         set({ GameStatePage: GameStatePages.GAME_MAP, lamaPosition: initialLamaPosition, currentIslandLevel: 0 });

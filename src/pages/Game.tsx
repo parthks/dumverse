@@ -11,19 +11,13 @@ export default function Game() {
   const { GameStatePage, setGameStatePage, user, regenerateEnergy } = useGameStore();
 
   useEffect(() => {
-    if (user?.id) {
-      console.log("Checking user data for open battles once", user);
-      if (user.current_battle_id) {
-        console.log("!!!User is in a battle!!!", user.current_battle_id);
-        setGameStatePage(GameStatePages.COMBAT);
-      }
-    }
-  }, [user?.id]);
-
-  useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
+    // if (GameStatePage === GameStatePages.COMBAT) {
+    //   return;
+    // }
 
     if (user?.id && user?.stamina < user?.total_stamina) {
+      console.log("Regenerating energy interval started");
       interval = setInterval(async () => {
         console.log("Regenerating energy");
         await regenerateEnergy();

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useProfile } from "@/components/wallet/hooks";
 import { useGameStore } from "@/store/useGameStore";
 import { LOGIN_VIDEO } from "@/lib/constants";
+import GameMap from "./GameMap";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -141,7 +142,7 @@ const FormData = () => {
   const profile = useAppStore((state) => state.profile);
   const profileLoading = useAppStore((state) => state.profileLoading);
   const gameProfiles = useAppStore((state) => state.gameProfiles);
-  const setUser = useGameStore((state) => state.setUser);
+  const setUser = useGameStore((state) => state.setUserOnLogin);
 
   const nonNFTGameProfiles = gameProfiles.filter((profile) => !profile.nft_address);
 

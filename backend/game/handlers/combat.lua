@@ -1,5 +1,26 @@
 local helpers = require("helpers")
 local json = require("json")
+local utils = require(".utils")
+
+
+
+-- equivalent function in frontend/src/lib/utils.ts
+local function isValidSpotToMoveTo(currentSpot, targetSpot)
+    if currentSpot == targetSpot then
+        return true
+    end
+
+    local nextSpot = currentSpot + 1
+    local previousSpot = currentSpot - 1
+    local nextNextSpot = currentSpot + 2
+    local previousPreviousSpot = currentSpot - 2
+
+    local isNextSpotRest = utils.includes(nextSpot, REST_SPOTS)
+    local isPreviousSpotRest = utils.includes(previousSpot, REST_SPOTS)
+
+    return utils.includes(targetSpot, { nextSpot, previousSpot }) or (isNextSpotRest and targetSpot == nextNextSpot) or
+        (isPreviousSpotRest and targetSpot == previousPreviousSpot)
+end
 
 Handlers.add("Combat.EnterNewCombat",
     Handlers.utils.hasMatchingTag('Action', 'Combat.EnterNewCombat'),
@@ -13,17 +34,13 @@ Handlers.add("Combat.EnterNewCombat",
         assert(userData.health > 0, "User must have health")
         assert(userData.stamina > 0, "User must have stamina")
 
-        -- if the current spot has to be +1 or -1 from the combat_level
         assert(combat_level, "Combat Level is required")
+        -- combat level must not be a rest spot
+        assert(not utils.includes(combat_level, REST_SPOTS), "Spot is a rest spot")
+
         assert(combat_level > 0, "Combat Level must be greater than 0")
-        assert(combat_level < 10, "Combat Level must be less than 10")
-        if current_spot < combat_level then
-            assert(combat_level - current_spot == 1, "Current spot must be only 1 less than combat level")
-            current_spot = current_spot + 1
-        elseif current_spot > combat_level then
-            assert(current_spot - combat_level == 1, "Current spot must be only 1 more than combat level")
-            current_spot = current_spot - 1
-        end
+        assert(isValidSpotToMoveTo(current_spot, combat_level),
+            "Invalid spot to move to. Current spot: " .. current_spot .. " Combat Level: " .. combat_level)
 
         -- get equipped inventory items - for potions
         local equippedPotion = dbAdmin:exec(string.format([[
@@ -43,10 +60,8 @@ Handlers.add("Combat.EnterNewCombat",
             }
         end
 
-
-        -- TODO: based on combat_level, get the enemies from the ENEMIES table
-        local enemies = {}
-
+        local enemies = ENEMY_PER_LEVEL[combat_level]
+        assert(enemies, "No enemies found for combat level: " .. combat_level)
 
         ao.send({
             Target = COMBAT_PROCESS_ID,
@@ -55,7 +70,7 @@ Handlers.add("Combat.EnterNewCombat",
             Level = tostring(combat_level),
             Status = "Success",
             Data = json.encode({
-                npcs = json.encode({ ENEMIES[1], ENEMIES[2] }),
+                npcs = json.encode(enemies),
                 player = json.encode(userData),
             }),
         })

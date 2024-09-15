@@ -79,24 +79,26 @@ function SimulateCombat(attackingEntity, attackingEntityType, defendingEntity, d
             local defense_damage = math.min(damage, remaining_defense)
             remaining_defense = remaining_defense - defense_damage
             damage = damage - defense_damage
-            -- table.insert(log,
-            --     {
-            --         message = string.format("%s deals %d damage to %s's defense", attacker.name, defense_damage,
-            --             defender.name),
-            --         timestamp = timestamp
-            --     })
+            table.insert(log,
+                {
+                    from = attacker.id,
+                    message = string.format("deals %d damage to %s's defense", defense_damage,
+                        defender.name),
+                    timestamp = timestamp
+                })
         end
 
         -- If there's remaining damage, it depletes health
         if damage > 0 then
             health_damage = damage
             defender.health = math.max(defender.health - health_damage, 0)
-            -- table.insert(log,
-            --     {
-            --         message = string.format("%s deals %d damage to %s's health", attacker.name, health_damage,
-            --             defender.name),
-            --         timestamp = timestamp
-            --     })
+            table.insert(log,
+                {
+                    from = attacker.id,
+                    message = string.format("deals %d damage to %s's health", health_damage,
+                        defender.name),
+                    timestamp = timestamp
+                })
         end
 
         -- Update entity stats

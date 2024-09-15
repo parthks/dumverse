@@ -35,3 +35,18 @@ export function getCurrentLamaPosition(player: GameUser) {
     lamaPosition,
   };
 }
+
+// equivalent function is also in backend/game/handlers/combat.lua
+export function isValidSpotToMoveTo(currentSpot: number, targetSpot: number) {
+  if (currentSpot === targetSpot) return true;
+
+  const nextSpot = currentSpot + 1;
+  const previousSpot = currentSpot - 1;
+  const nextNextSpot = currentSpot + 2;
+  const previousPreviousSpot = currentSpot - 2;
+
+  const isNextSpotRest = [9, 18, 27].includes(nextSpot);
+  const isPreviousSpotRest = [9, 18, 27].includes(previousSpot);
+
+  return [nextSpot, previousSpot].includes(targetSpot) || (isNextSpotRest && targetSpot === nextNextSpot) || (isPreviousSpotRest && targetSpot === previousPreviousSpot);
+}

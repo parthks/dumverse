@@ -16,7 +16,7 @@ Handlers.add("CronTick",
     Handlers.utils.hasMatchingTag("Action", "Cron"), -- handler pattern to identify cron message
     function(msg)
         count = count + 1
-        -- need to check all ongoing battles to see if a player has not attacked in the last 30 seconds
+        -- need to check all ongoing battles to see if a player has not attacked in the last 20 seconds
         for _, battle in pairs(Battles) do
             -- print("Checking battle " .. battle.id)
             if not battle.ended and #battle.players_alive > 0 then
@@ -25,7 +25,7 @@ Handlers.add("CronTick",
                 for _, npc_id in ipairs(npcs_alive) do
                     -- print("NPC " .. npc_id .. " alive")
                     -- print("NPC " .. npc_id .. " last attack timestamp " .. battle.last_npc_attack_timestamp[npc_id])
-                    if battle.last_npc_attack_timestamp[npc_id] + (30 * 1000) < msg.Timestamp then
+                    if battle.last_npc_attack_timestamp[npc_id] + (20 * 1000) < msg.Timestamp then
                         -- if player has not attacked in the last 30 seconds, the NPC will attack
                         -- print("NPC " .. npc_id .. " attacking player")
                         NPCAttack(npc_id, battle.id, msg.Timestamp)
