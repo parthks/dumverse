@@ -4,6 +4,7 @@ import ImgButton from "@/components/ui/imgButton";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
 
+// TODO: add town rest image
 const RestAreaImages = {
   9: "https://arweave.net/F6Xd8uMyN78dh2Nrd9gSVCD0sEPY3BsAgd1PWJCyn4Q",
   18: "https://arweave.net/wSgWaCQYk3DZbdp4Qm2fI-hGptYYaYwmDfm6ParVItQ",
@@ -15,7 +16,14 @@ export default function RestArea() {
   const current_spot = useGameStore((state) => state.user!.current_spot);
   const [openBag, setOpenBag] = useState(false);
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
-    return <div>Not a valid spot to rest</div>;
+    return (
+      <div>
+        <p>Not a valid spot to rest</p>
+        <div className="z-10 absolute top-4 right-4">
+          <ImgButton src={"https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Map"} />
+        </div>
+      </div>
+    );
   }
 
   return (

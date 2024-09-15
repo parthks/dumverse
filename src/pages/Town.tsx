@@ -1,144 +1,148 @@
 import ImgButton from "@/components/ui/imgButton";
-import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { useState } from "react";
 import { SOUNDS } from "@/lib/constants";
+import { useGameStore, GameStatePages } from "@/store/useGameStore";
+import { useState } from "react";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const exitTown = useGameStore((state) => state.exitTown);
+
   const [chatOpen, setChatOpen] = useState(false);
 
   const handleBuildingSelect = (building: GameStatePages) => {
     setGameStatePage(building);
   };
   return (
-    <div className="h-screen">
+    <div className="relative h-screen w-screen overflow-hidden">
+      {/* Background image */}
+      <img src="https://arweave.net/kr9vAhgWOI_OfA7LBGNuQxW1zAg9Eq_3vZaSebHN5HQ" alt="Background Placeholder" className="absolute top-0 left-0 w-full h-full object-cover" />
       <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop />
-      <InteractiveTownMap onBuildingSelect={handleBuildingSelect} />
-      <div className="z-10 absolute bottom-4 right-4">
-        <ImgButton src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"} onClick={() => setChatOpen(!chatOpen)} alt={"Toggle Chat"} />
+
+      {/* bottom buttons bar */}
+      <div className="z-10 absolute bottom-0 w-full p-4">
+        <div className="flex justify-between items-center relative">
+          <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={exitTown} alt={"Return to Town"} />
+          <div className="absolute left-[45%] translate-x-[0%]">
+            <ImgButton
+              src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
+              onClick={() => {
+                handleBuildingSelect(GameStatePages.REST_AREA);
+              }}
+              alt={"Enter Rest Area"}
+            />
+          </div>
+          <ImgButton src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"} onClick={() => {}} alt={"Chat"} />
+        </div>
       </div>
-      <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => exitTown()} alt={"Return to Town"} />
+
+      {/* Town map container */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative w-full h-full max-w-[177.78vh] max-h-[56.25vw]">
+          {/* Town map image */}
+          <div
+            className="absolute inset-0 bg-center bg-no-repeat bg-contain"
+            style={{
+              backgroundImage: `url(https://arweave.net/ioE9uq8CztfKFYv3OggM08sUHEy9u7vAfLCrJRdAmXw)`,
+            }}
+          >
+            {/* Building 7 on the hill */}
+            <img
+              src="https://arweave.net/PYIX9T90RmDl9QHm7ccxlG5LVlcodwDOyTbVR8dEsEs"
+              alt="Building 7"
+              className="absolute top-[10%] left-[5.5%] w-[18%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         "
+              onClick={() => {
+                // Add your click handler logic here
+                console.log("Building 7 clicked!");
+              }}
+            />
+            {/* Building 6 center */}
+            <img
+              src="https://arweave.net/mYFkdK6YrZdl4x6gi8BP2ZtfK1BArRCrw9_yDG3YhqE"
+              alt="Building center"
+              className="absolute top-[10%] left-[51%] w-[18%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         "
+              onClick={() => {
+                // Add your click handler logic here
+                console.log("Building 6 clicked!");
+              }}
+            />
+            {/* Building 8 red */}
+            <img
+              src="https://arweave.net/SfNO5z6YsT6GEtyZw-y9vEpA082ziHsmROkUew73JuM"
+              alt="Building 8 red"
+              className="absolute top-[14%] left-[37%] w-[15%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         "
+              onClick={() => {
+                // Add your click handler logic here
+                console.log("Building 8 clicked!");
+              }}
+            />
+            {/* Building Bank */}
+            <img
+              src="https://arweave.net/x6Q-Gw9rs8R6aDpG9UdwxxzrJf-Rymorpg3msQQUQMw"
+              alt="Building Bank"
+              className="absolute top-[13%] left-[65%] w-[18%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105"
+              onClick={() => {
+                // Add your click handler logic here
+                handleBuildingSelect(GameStatePages.BANK);
+              }}
+            />
+            {/* Building yellow building */}
+            <img
+              src="https://arweave.net/uY3tPwvtedJbYBr6IZSobePo3DN9gVAa9FS5Hr27GU8"
+              alt="Building yellow"
+              className="absolute top-[15%] left-[83%] w-[15%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         "
+              onClick={() => {
+                // Add your click handler logic here
+                console.log("Building yellow clicked!");
+              }}
+            />
+            {/* Building Shop */}
+            <img
+              src="https://arweave.net/dxDOLjfxH798ZpMtlGvX8jYu7vvL4OvR0UeR217InVM"
+              alt="Building Shop"
+              className="absolute top-[50%] left-[0%] w-[24%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105"
+              onClick={() => {
+                handleBuildingSelect(GameStatePages.SHOP);
+              }}
+            />
+            {/* Building nft shop */}
+            <img
+              src="https://arweave.net/uuBM_S43jQAVv3ARTu4jB2RBTEYIZzw8tJxxxB42ozE"
+              alt="Building 8 red"
+              className="absolute top-[31%] left-[20%] w-[20%] h-auto
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         "
+              onClick={() => {
+                // Add your click handler logic here
+                console.log("Building right side clicked!");
+              }}
+            />
+            {/* Building right side */}
+            <img
+              src="https://arweave.net/1gclG49yFLU9R3cW-E590MPKfXmxEqR4E1zhE3-xIso"
+              alt="Building 8 red"
+              className="absolute top-[51%] left-[77%] w-[23%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         "
+              onClick={() => {
+                // Add your click handler logic here
+                console.log("Building right side clicked!");
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
-
-interface InteractiveTownMapProps {
-  onBuildingSelect: (level: GameStatePages) => void;
-}
-const InteractiveTownMap: React.FC<InteractiveTownMapProps> = ({ onBuildingSelect }) => {
-  const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-    console.log(event.target);
-    if (event.target instanceof SVGElement && event.target.classList.contains("building")) {
-      const buildingType = event.target.getAttribute("building-type");
-      if (buildingType) {
-        onBuildingSelect(buildingType as GameStatePages);
-      }
-    }
-  };
-
-  const imageWidth = 3840;
-  const imageHeight = 2160;
-
-  return (
-    <div className="relative w-full h-full">
-      <div className="absolute inset-0">
-        {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
-        <img src={"https://arweave.net/a1-ZDvfawd_Nt43arJ8gpFnWStMjg3AHU_9SRAqwf6M"} alt="Town Map" className="w-full h-full object-contain" />
-        <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
-          <image
-            href={"https://arweave.net/ApxR5t3vqSIq0jS6T0zGGYC3-QPdAqFQDhgRl1aDMSY"}
-            x={`${48.5}%`}
-            y={`${-1.8}%`}
-            width={(294 / imageWidth) * 100 * 3 + "%"}
-            height={(273 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            // 02 center building
-          />
-          {/* right side */}
-          <image
-            href={"https://arweave.net/nA2Cf5yFMcW8CKPce6bBNGyvjFV1I2jKbpy3oqiW-XU"}
-            x={`${61.5}%`}
-            y={`${5}%`}
-            width={(309 / imageWidth) * 100 * 3 + "%"}
-            height={(348 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            // 03 NFT holder building
-          />
-          <image
-            href={"https://arweave.net/p8vrXsnFt0pv8A3LhpDYoRMHB8sxzlNGTPi4aXJLhSM"}
-            x={`${62}%`}
-            y={`${2}%`}
-            width={(414 / imageWidth) * 100 * 3 + "%"}
-            height={(474 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            className="building cursor-pointer"
-            building-type="BANK"
-            // 08 Bank building
-          />
-          <image
-            href={"https://arweave.net/DusVpqx7T7l5nFo3Igl3aN4NPUO39WG1MnEe5M2WTMs"}
-            x={`${71}%`}
-            y={`${22}%`}
-            width={(414 / imageWidth) * 100 * 2.75 + "%"}
-            height={(474 / imageHeight) * 100 * 2.75 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            // 09 Shady building
-          />
-          {/* <image
-            href={"https://arweave.net/xlNew92daEX6n4uGiQVz5eaUfC9Sun2zVmTSB3uPntM"}
-            x={`${65}%`}
-            y={`${0}%`}
-            width={(455 / imageWidth) * 100 * 3 + "%"}
-            height={(692 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            style={{ zIndex: 10 }}
-            // 10 Tree branch
-          /> */}
-          {/* left side */}
-          <image
-            href={"https://arweave.net/ndMhZxrD0z34IntzRnCJ97XwpbxTaZyqipO6DQvBojc"}
-            x={`${41}%`}
-            y={`${11}%`}
-            width={(177 / imageWidth) * 100 * 3 + "%"}
-            height={(216 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            // 04 yellow house
-          />
-          <image
-            href={"https://arweave.net/85YNOU7Lyfn6brw6fgkzVgraICHLBGaimvIrnhkRrik"}
-            x={`${22}%`}
-            y={`${5}%`}
-            width={(375 / imageWidth) * 100 * 3 + "%"}
-            height={(309 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            // 05 green house
-          />
-          <image
-            href={"https://arweave.net/WBkjn63k5ooy6A0Jiy9HK0gKs55MI42_wVJ_scz1lmU"}
-            x={`${16}%`}
-            y={`${3}%`}
-            width={(297 / imageWidth) * 100 * 3 + "%"}
-            height={(402 / imageHeight) * 100 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            // 06 weaponsmith
-          />
-          <image
-            href={"https://arweave.net/ssf-g0RwkQd_sBmgygl0koe03wokEPW-H3AOmU77CIo"}
-            x={`${0}%`}
-            y={`${0}%`}
-            width={9.817708333 * 3 + "%"}
-            height={22.222222222 * 3 + "%"}
-            preserveAspectRatio="xMidYMid meet"
-            className="building cursor-pointer"
-            building-type="SHOP"
-            // 07 general store
-          />
-          ;
-        </svg>
-      </div>
-    </div>
-  );
-};
