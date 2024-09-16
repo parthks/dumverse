@@ -95,16 +95,18 @@ Handlers.add("Shop.BuyItem",
                 UPDATE Users SET defense = %f WHERE ID = %f;
             ]], baseStats.defense + item.defense, user_id))
         end
-        if (item.health) then
-            dbAdmin:exec(string.format([[
-                UPDATE Users SET health = %f WHERE ID = %f;
-            ]], baseStats.health + item.health, user_id))
-        end
-        if (item.stamina) then
-            dbAdmin:exec(string.format([[
-                UPDATE Users SET stamina = %f WHERE ID = %f;
-            ]], baseStats.stamina + item.stamina, user_id))
-        end
+        -- end
+        -- health and stamina stats only get updated when you consume items
+        -- if (item.health) then
+        --     dbAdmin:exec(string.format([[
+        --         UPDATE Users SET health = %f WHERE ID = %f;
+        --     ]], baseStats.health + item.health, user_id))
+        -- end
+        -- if (item.stamina) then
+        --     dbAdmin:exec(string.format([[
+        --         UPDATE Users SET stamina = %f WHERE ID = %f;
+        --     ]], baseStats.stamina + item.stamina, user_id))
+        -- end
 
         return Send({ Target = msg.From, Status = "Success" })
     end

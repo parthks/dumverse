@@ -13,21 +13,21 @@ export function PlayerFrame() {
 
   return (
     <div
-      className="w-[800px] bg-no-repeat bg-contain relative"
+      className="w-[750px] bg-no-repeat bg-contain relative"
       style={{
-        backgroundImage: "url('https://arweave.net/4R0tGBCQTI48nTu1z7n_EZBuXEqvKxvmcoQHHX6Z9hs')",
+        backgroundImage: "url('https://arweave.net/N8LmY4lR7IsniufNgbFfuhN0Hd8FU1zqUVG0nuiNcLE')",
         aspectRatio: "1881 / 570",
       }}
     >
       <img
         src={user.nft_address ? `https://arweave.net/${user.nft_address}` : IMAGES.DEFAULT_DUMDUM}
         alt="User Avatar"
-        className="absolute left-[5%] top-[15%] w-[23.5%] h-[78%] object-contain"
+        className="absolute left-[1.5%] top-[4%] w-[30%] h-[83%] object-contain"
       />
-      <div className="absolute left-[32%] top-[16%] flex flex-col justify-between">
+      <div className="absolute left-[32%] top-[5%] flex flex-col justify-between">
         <div className="text-white text-xl font-bold">{user.name}</div>
       </div>
-      <div className="absolute w-[480px] top-[35%] h-[100px] left-[31%] flex justify-between">
+      <div className="absolute w-[480px] top-[25%] h-[100px] left-[31%] flex justify-between">
         {/* Health and stamina */}
         <div className="absolute left-0 top-[0%] flex flex-col gap-1">
           <div className="flex gap-2">

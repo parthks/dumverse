@@ -30,7 +30,7 @@ Handlers.add(
         local user_address = msg.From
         local nft_address = msg.NFT_Address
         local name = msg.Name
-        assert(name, "Name is required")
+        assert(name and name ~= "", "Name is required")
 
         local getUserQuery
         if nft_address then

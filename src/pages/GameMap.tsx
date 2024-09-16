@@ -134,7 +134,8 @@ const GameMap = () => {
       </div>
       <div className="z-10 absolute bottom-4 left-4 flex items-end gap-2">
         <PlayerFrame />
-
+      </div>
+      <div className="z-10 absolute bottom-4 left-[775px]">
         {tempCurrentIslandLevel != 0 &&
           ([9, 18, 27].includes(tempCurrentIslandLevel) ? (
             <ImgButton

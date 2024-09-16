@@ -66,18 +66,18 @@ import { useEffect, useRef, useState } from "react";
 //       name: "Sad Hedgehog",
 //     },
 //   },
-//   npcs_alive: [],
+//   npcs_alive: ["NPC_1", "NPC_2"],
 //   last_npc_attack_timestamp: {
 //     NPC_1: 1726346952043,
 //     NPC_2: 1726346958193,
 //   },
 //   level: 1,
 //   id: 39,
-//   players_attacked: ["2"],
-//   ended: true,
+//   players_attacked: ["7"],
+//   ended: false,
 //   created_at: 1726346952043,
 //   players: {
-//     "2": {
+//     "7": {
 //       potion: {
 //         health: 1,
 //         id: 12,
@@ -99,7 +99,7 @@ import { useEffect, useRef, useState } from "react";
 //       dumz_balance: 60,
 //     },
 //   },
-//   players_alive: ["3"],
+//   players_alive: ["7"],
 // } as any;
 export default function Combat() {
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
@@ -196,7 +196,14 @@ export default function Combat() {
   }
 
   if (failedToEnterBattle) {
-    return <div>Checked for 30 seconds. Failed to find an open battle :(</div>;
+    return (
+      <div>
+        <p>Checked for 30 seconds. Failed to find an open battle :(</p>
+        <div>
+          <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
+        </div>
+      </div>
+    );
   }
 
   // if (currentBattle?.id && user?.current_battle_id !== currentBattle?.id) {
@@ -234,13 +241,17 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     !currentBattle.players_alive.find((player) => player === userId.toString()); // user is not alive
 
   const attackAudioRef = useRef<HTMLAudioElement>(null);
+  const [attackedEnemyId, setAttackedEnemyId] = useState<string | null>(null);
 
   const handleAttack = (enemyId: string) => {
     if (attackAudioRef.current) {
       attackAudioRef.current.currentTime = 0; // Reset audio to start
       attackAudioRef.current.play();
     }
+    setAttackedEnemyId(enemyId);
     userAttack(enemyId);
+    // Reset the attackedEnemyId after the animation duration
+    setTimeout(() => setAttackedEnemyId(null), 1000);
   };
 
   const otherPlayers = Object.values(currentBattle.players).filter((player) => player.id !== userId.toString());
@@ -251,9 +262,9 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   return (
     <div>
       <div className="flex gap-4 items-center">
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-center">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-start">
           <audio ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
-          <div className="flex flex-col gap-2 max-w-[380px] items-center">
+          <div className="flex flex-col gap-2 w-[380px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
               disabled={loading || disableAttackButtons}
@@ -264,7 +275,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
             />
           </div>
 
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center self-center">
             <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
           </div>
 
@@ -273,10 +284,11 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
             const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
             return (
               <>
-                <div key={entity.id} className="flex flex-col gap-2 max-w-[380px] items-center">
+                <div key={entity.id} className="flex flex-col gap-2 w-[380px] items-center">
                   {isEnemy && (
-                    <div className={`${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
+                    <div className={`relative ${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
                       <EnemyCard enemy={entity as NPC} />
+                      {attackedEnemyId === entity.id && <AttackAnimation />}
                     </div>
                   )}
 
@@ -303,7 +315,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
                 </div>
 
                 {index % 2 !== 0 && index !== allPlayers.length - 1 && (
-                  <div className="flex justify-center items-center">
+                  <div className="flex justify-center self-center">
                     <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
                   </div>
                 )}
@@ -312,6 +324,14 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           })}
         </div>
       </div>
+    </div>
+  );
+}
+
+function AttackAnimation() {
+  return (
+    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+      <img src="https://arweave.net/Byhqsjqy34GLYipi7RTBF0qaMevJTtwMdBWbFawGOD0" alt="Attack Animation" className="max-w-full max-h-full" />
     </div>
   );
 }

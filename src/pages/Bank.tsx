@@ -1,13 +1,102 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
+import { Input } from "@/components/ui/input";
+import { SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
 
+function QuantityInput({ actionType, onClose }: { actionType: "deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold"; onClose: () => void }) {
+  const { user, bank, deposit, withdraw, bankTransactionLoading } = useGameStore();
+  const [inputValue, setInputValue] = useState<number | undefined>(undefined);
+  const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
+
+  const handleSubmit = async () => {
+    if (!inputValue) {
+      return;
+    }
+    if (inputValue <= 0) {
+      setInputValue(undefined);
+      return;
+    }
+    if (inputValue > max) {
+      setInputValue(max);
+      return;
+    }
+    if (actionType === "deposit-dumz") {
+      console.log("deposit-dumz");
+      await deposit(inputValue ?? 0, "DUMZ");
+    } else if (actionType === "withdraw-dumz") {
+      console.log("withdraw-dumz");
+      await withdraw(inputValue ?? 0, "DUMZ");
+    } else if (actionType === "deposit-gold") {
+      console.log("deposit-gold");
+      await deposit(inputValue ?? 0, "GOLD");
+    } else if (actionType === "withdraw-gold") {
+      console.log("withdraw-gold");
+      await withdraw(inputValue ?? 0, "GOLD");
+    }
+    bankInteractAudio.play();
+    onClose();
+  };
+
+  let title;
+  let max = 0;
+  if (actionType === "deposit-dumz") {
+    title = "Depositing how much $tDumz?";
+    max = user?.dumz_balance ?? 0;
+  } else if (actionType === "withdraw-dumz") {
+    title = "Withdrawing how much $tDumz?";
+    max = bank?.dumz_amount ?? 0;
+  } else if (actionType === "deposit-gold") {
+    title = "Depositing how much Gold?";
+    max = user?.gold_balance ?? 0;
+  } else if (actionType === "withdraw-gold") {
+    title = "Withdrawing how much Gold?";
+    max = bank?.gold_amount ?? 0;
+  }
+  return (
+    <div
+      className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      style={{ backgroundImage: "url('https://arweave.net/PGjj1AvsLyry4Dylp3DK8HLTjatjc90t8nCqaarNlmc')", width: "500px", height: "500px" }}
+    >
+      <div className="absolute top-4 right-4">
+        <ImgButton src={"https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"} onClick={onClose} alt={"Exit Quantity Input"} />
+      </div>
+      <div className="flex flex-col items-center w-full gap-4 p-16">
+        <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
+        <Input
+          placeholder={`Max allowed: ${max}`}
+          aria-label="Amount"
+          type="number"
+          value={inputValue}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            if (!isNaN(value)) {
+              setInputValue(value);
+            } else {
+              setInputValue(undefined);
+            }
+          }}
+          className="h-[37px] w-[153px] bg-no-repeat bg-left border-none focus-visible:ring-0"
+          style={{
+            width: "calc(153px * 1.3)",
+            height: "calc(37px * 1.3)",
+            backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
+            backgroundSize: "100% 100%",
+          }}
+        />
+        <ImgButton src={"https://arweave.net/y8jNH5_eXoEWAnt-bvaf9ueaNIUVtTCY09C9XjuYDTw"} onClick={handleSubmit} alt={"Confirm Action"} />
+      </div>
+    </div>
+  );
+}
+
 function GeneralBankVault({ onExit }: { onExit: () => void }) {
   const { user, bank, bankDataLoading, deposit, withdraw, bankTransactionLoading } = useGameStore();
+  const [actionType, setActionType] = useState<"deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold" | null>(null);
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
@@ -16,16 +105,20 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
         console.log(itemType);
         if (itemType === "deposit-dumz") {
           console.log("deposit-dumz");
-          deposit(user?.dumz_balance ?? 0, "DUMZ");
+          // deposit(user?.dumz_balance ?? 0, "DUMZ");
+          setActionType("deposit-dumz");
         } else if (itemType === "withdraw-dumz") {
           console.log("withdraw-dumz");
-          withdraw(bank?.dumz_amount ?? 0, "DUMZ");
+          // withdraw(bank?.dumz_amount ?? 0, "DUMZ");
+          setActionType("withdraw-dumz");
         } else if (itemType === "deposit-gold") {
           console.log("deposit-gold");
-          deposit(user?.gold_balance ?? 0, "GOLD");
+          // deposit(user?.gold_balance ?? 0, "GOLD");
+          setActionType("deposit-gold");
         } else if (itemType === "withdraw-gold") {
           console.log("withdraw-gold");
-          withdraw(bank?.gold_amount ?? 0, "GOLD");
+          // withdraw(bank?.gold_amount ?? 0, "GOLD");
+          setActionType("withdraw-gold");
         }
       }
     }
@@ -35,6 +128,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
+      {actionType && <QuantityInput actionType={actionType} onClose={() => setActionType(null)} />}
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
@@ -103,17 +197,20 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
 function NftBankVault({ onExit }: { onExit: () => void }) {
   const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading } = useGameStore();
+  const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
-  const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+  const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
       const itemType = event.target.getAttribute("item-type");
       if (itemType) {
         if (itemType === "claim-dumz") {
           console.log("claim-dumz");
-          claimAirdrop("DUMZ");
+          await claimAirdrop("DUMZ");
+          bankInteractAudio.play();
         } else if (itemType === "claim-gold") {
           console.log("claim-gold");
-          claimAirdrop("GOLD");
+          await claimAirdrop("GOLD");
+          bankInteractAudio.play();
         }
       }
     }
@@ -174,9 +271,21 @@ export default function BankPage() {
   const [amount, setAmount] = useState(0);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
+  const backgroundAudio = new Audio(SOUNDS.TOWN_AUDIO_IN_BUILDING);
+  const bankEnterAudio = new Audio(SOUNDS.BUILDING_ENTER);
 
   useEffect(() => {
-    getBank();
+    const getBankAndPlayAudio = async () => {
+      bankEnterAudio.play();
+      await getBank();
+    };
+    getBankAndPlayAudio();
+
+    backgroundAudio.loop = true;
+    backgroundAudio.play();
+    return () => {
+      backgroundAudio.pause();
+    };
   }, []);
 
   // if (!bank) return <div>Bank Loading...</div>;

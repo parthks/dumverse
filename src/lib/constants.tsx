@@ -45,8 +45,11 @@ export const ENEMY_CARD_IMAGE = {
 export const SOUNDS = {
   ISLAND_AUDIO: "https://arweave.net/yW2M75jkljOj3I-Wv2Cs0A3Dqkn4MVdyCRfqkQL8pMs",
   TOWN_AUDIO: "https://arweave.net/8cpm7ZN-eegh6um6mqua1ODU0ZOxA6GVyfSt3rqwjeQ",
+  TOWN_AUDIO_IN_BUILDING: "https://arweave.net/Nnz_IEzTOlV7sfLaK2kYDOLhGDk_RtSEOEW-R-5YnlQ",
   BATTLE_AUDIO: "https://arweave.net/gibXjVdGHmPOP7e4AtStM8U7fRiMZZ6A2u_gKRKPhcE",
   ATTACK_AUDIO: "https://arweave.net/cONoIFz54QfP3jVuJh5dmCfJC7DrFiypMVb_KIX9oVY",
+  BUILDING_ENTER: "https://arweave.net/1y0gZbjA-jmTiC2Ocm-TQj4_bUUSfrUOuGjbb-3zBWI",
+  SHOP_BUY_ITEM: "https://arweave.net/9EtNgLrsqHuXNZWPhH3NcMcxkTQhGpxRo6wvQJmcU1Q",
 };
 
 export const LOGIN_VIDEO = "https://arweave.net/1jm4BEW5n1OLg6xtE97_hrjD_wS70jmmG_jh2mSFxzQ";

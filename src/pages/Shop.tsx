@@ -1,6 +1,6 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
-import { IMAGES, ITEM_IMAGES } from "@/lib/constants";
+import { IMAGES, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { useGameStore } from "@/store/useGameStore";
 import { Item } from "@/types/game";
 import { useEffect } from "react";
@@ -58,18 +58,18 @@ function ShopItem({ item, position }: { item: Item; position: number }) {
       <image
         href={"https://arweave.net/FZClIS-LUQyR43CFMQNPSBgR51gRcDlrirohThSDTF0"}
         x={-itemWidth}
-        y={108}
+        y={95}
         width={(958 / imageWidth) * 100 * 1 + "%"}
         height={(343 / imageHeight) * 100 * 1 + "%"}
         preserveAspectRatio="xMidYMid meet"
       >
         <title>Shelf</title>
       </image>
-      <text x={`${itemWidth / 2}`} y={itemHeight + 45} fontSize="50" fill="white" textAnchor="middle">
+      <text x={`${itemWidth / 2}`} y={itemHeight + 40} fontSize="50" fill="white" textAnchor="middle">
         {item.name}
       </text>
       {/* Centered price text and image as a unit */}
-      <g transform={`translate(${itemWidth / 2}, ${itemHeight + 100})`}>
+      <g transform={`translate(${itemWidth / 2}, ${itemHeight + 85})`}>
         <g transform={`translate(-${offset}, 0)`}>
           <text fontSize={`${fontSize}`} fill="white" textAnchor="start" dominantBaseline="central">
             {priceText}
@@ -181,32 +181,51 @@ function ShopTableItem({ item }: { item: Item }) {
 export default function Shop() {
   const goToTown = useGameStore((state) => state.goToTown);
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
+  const shopEnterAudio = new Audio(SOUNDS.BUILDING_ENTER);
+  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
+  const backgroundAudio = new Audio(SOUNDS.TOWN_AUDIO_IN_BUILDING);
 
   useEffect(() => {
-    getShop();
+    const getShopAndPlayAudio = async () => {
+      await getShop();
+      shopEnterAudio.play();
+    };
+    getShopAndPlayAudio();
+    backgroundAudio.loop = true;
+    backgroundAudio.play();
+    return () => {
+      backgroundAudio.pause();
+    };
   }, []);
 
   if (!shop) return <div>Loading...</div>;
 
-  const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+  const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
       const itemId = event.target.getAttribute("item-type");
       if (itemId) {
-        console.log(itemId);
         const item = shop.items.find((item) => item.id === itemId);
         if (!item) return;
-        buyItem(item, item.gold_price ? "GOLD" : "DUMZ");
+        await buyItem(item, item.gold_price ? "GOLD" : "DUMZ");
+        shopBuyItemAudio.play();
         // buyItem(itemType);
       }
     }
   };
 
-  console.log(shop.items);
+  console.log("shop", shop.items);
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"} onClick={() => goToTown()} alt={"Return to Town"} />
+        <ImgButton
+          src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"}
+          onClick={async () => {
+            shopEnterAudio.play();
+            await goToTown();
+          }}
+          alt={"Return to Town"}
+        />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />

@@ -172,6 +172,7 @@ const FormData = () => {
     } else if (nonNFTGameProfiles.length > 0) {
       await setUser(nonNFTGameProfiles[0]);
     } else {
+      if (!name || name === "") return;
       await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
     }
     setLoading(false);
