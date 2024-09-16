@@ -93,7 +93,7 @@ export default function App() {
             />
           </div>
         )}
-        {walletAddressID && <LoginForm />}
+        {walletAddressID && <LoginForm backgroundVideoRef={videoRef} />}
       </div>
     </div>
   );
@@ -133,9 +133,17 @@ function Tutorial({ onClose }: { onClose: () => void }) {
   );
 }
 
-function LoginForm() {
+function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject<HTMLVideoElement> }) {
   const profileLoading = useAppStore((state) => state.profileLoading);
   const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    if (showTutorial) {
+      backgroundVideoRef.current?.pause();
+    } else {
+      backgroundVideoRef.current?.play();
+    }
+  }, [showTutorial]);
 
   return (
     <div className="h-screen flex justify-center items-center">
