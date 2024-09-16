@@ -40,11 +40,11 @@ export async function sendDryRunGameMessage(tags: { name: string; value: string 
 function handleResultData(resultData: MessageResult): MyMessageResult {
   const newResultData = { ...resultData, data: {}, status: undefined } as MyMessageResult;
 
-  if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
+  if (resultData.Messages.length > 0) {
     const message = resultData.Messages[0];
     const tags = message.Tags;
     const status = tags.find((tag: { name: string; value: string }) => tag.name === "Status")?.value;
-    const data = JSON.parse(message.Data);
+    const data = message.Data ? JSON.parse(message.Data) : {};
     newResultData.data = data;
     if (status) {
       newResultData.status = status;

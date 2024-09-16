@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function ImgButton({
   disabled,
   src,
@@ -11,12 +13,18 @@ export default function ImgButton({
   alt: string;
   className?: string;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const buttonDisabled = disabled || isLoading;
   return (
     <button
-      disabled={disabled}
-      onClick={onClick}
+      disabled={buttonDisabled}
+      onClick={async (e) => {
+        setIsLoading(true);
+        await onClick(e);
+        setIsLoading(false);
+      }}
       className={`p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
-        disabled ? "opacity-50 cursor-not-allowed" : "hover:scale-110 active:scale-95"
+        buttonDisabled ? "opacity-50 cursor-not-allowed" : "hover:scale-110 active:scale-95"
       } ${className}`}
     >
       <img src={src} alt={alt} className="w-full h-full" />

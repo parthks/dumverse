@@ -139,7 +139,8 @@ export const useGameStore = create<GameState>()(
           { name: "Amount", value: amount.toString() },
           { name: "TokenType", value: tokenType },
         ]);
-        await Promise.all([get().refreshUserData(), get().getBank()]);
+        await get().getBank();
+        await get().refreshUserData();
         set({ bankTransactionLoading: false });
       },
       withdraw: async (amount, tokenType) => {
@@ -150,7 +151,8 @@ export const useGameStore = create<GameState>()(
           { name: "Amount", value: amount.toString() },
           { name: "TokenType", value: tokenType },
         ]);
-        await Promise.all([get().refreshUserData(), get().getBank()]);
+        await get().getBank();
+        await get().refreshUserData();
         set({ bankTransactionLoading: false });
       },
       claimAirdrop: async (tokenType) => {
@@ -177,7 +179,7 @@ export const useGameStore = create<GameState>()(
           { name: "ItemId", value: item.id },
           { name: "TokenType", value: tokenType },
         ]);
-        await Promise.all([get().refreshUserData()]);
+        await get().refreshUserData();
         set({ buyItemLoading: false });
       },
       consumeItem: async (inventoryId) => {
@@ -186,7 +188,7 @@ export const useGameStore = create<GameState>()(
           { name: "UserId", value: get().user?.id.toString()! },
           { name: "InventoryId", value: inventoryId.toString() },
         ]);
-        await Promise.all([get().refreshUserData()]);
+        await get().refreshUserData();
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {
@@ -196,12 +198,14 @@ export const useGameStore = create<GameState>()(
       lamaPosition: initialLamaPosition,
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goToTown: async () => {
-        set({ GameStatePage: GameStatePages.TOWN });
-        sendAndReceiveGameMessage([
+        const resultData = await sendAndReceiveGameMessage([
           { name: "Action", value: "User.GoToTown" },
           { name: "UserId", value: get().user?.id.toString()! },
         ]);
-        get().refreshUserData();
+        if (resultData.status === "Success") {
+          await get().refreshUserData();
+          set({ GameStatePage: GameStatePages.TOWN });
+        }
       },
       goToRestArea: async () => {
         const resultData = await sendAndReceiveGameMessage([
@@ -221,7 +225,7 @@ export const useGameStore = create<GameState>()(
           { name: "Action", value: "User.RegenerateEnergy" },
           { name: "UserId", value: get().user?.id.toString()! },
         ]);
-        await Promise.all([get().refreshUserData()]);
+        await get().refreshUserData();
       },
     }),
     {

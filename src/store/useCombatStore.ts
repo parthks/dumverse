@@ -200,12 +200,13 @@ export const useCombatStore = create<CombatState>()(
         // even when running away, player is removed from players_alive
         // const isAlive = get().currentBattle?.players_alive.find((playerId) => playerId === user_id?.toString());
         const isAlive = get().currentBattle?.players?.[user_id]?.health ?? 0 > 0;
-        await useGameStore.getState().refreshUserData();
-        set({ currentBattle: null, loading: false });
         if (isAlive) {
+          await useGameStore.getState().refreshUserData();
+          set({ currentBattle: null, loading: false });
           useGameStore.getState().setGameStatePage(GameStatePages.GAME_MAP);
         } else {
-          useGameStore.getState().goToTown();
+          await useGameStore.getState().goToTown();
+          set({ currentBattle: null, loading: false });
         }
       },
     }),
