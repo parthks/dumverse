@@ -81,11 +81,13 @@ export const useGameStore = create<GameState>()(
       user: null,
       setUserOnLogin: (user) => {
         if (user) {
-          if (user.current_battle_id) {
-            // user is in a battle
-            useCombatStore.getState().getOpenBattles();
-            set({ GameStatePage: GameStatePages.COMBAT });
-          } else if (user.current_spot) {
+          // if (user.current_battle_id) {
+          //   // user is in a battle
+          //   useCombatStore.getState().getOpenBattles();
+          //   set({ GameStatePage: GameStatePages.COMBAT });
+          // }
+          // else
+          if (user.current_spot) {
             // user is in a spot
             set({ GameStatePage: GameStatePages.GAME_MAP, ...getCurrentLamaPosition(user) });
           } else {
