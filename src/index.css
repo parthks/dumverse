@@ -83,6 +83,16 @@ body {
   cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
 }
 
+.img-button,
+.img-button img {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), auto !important;
+}
+
+.img-button:hover,
+.img-button:hover img {
+  cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), pointer !important;
+}
+
 /* Ensure custom cursor on hover for all elements */
 *:hover, *:hover::before, *:hover::after {
   cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), pointer !important;

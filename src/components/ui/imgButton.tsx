@@ -23,7 +23,7 @@ export default function ImgButton({
         await onClick(e);
         setIsLoading(false);
       }}
-      className={`p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
+      className={`img-button p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
         buttonDisabled ? "opacity-50 cursor-not-allowed" : "hover:scale-110 active:scale-95"
       } ${className}`}
     >

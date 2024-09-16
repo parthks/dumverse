@@ -114,11 +114,42 @@ export default function App() {
   }
 }
 
+function Tutorial({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="z-10 absolute top-0 left-0 w-full h-full bg-black">
+      {/* close button */}
+      <ImgButton
+        className="z-10 absolute top-0 right-0"
+        src="https://arweave.net/d-XLB6fqEQsopfIvBAY_eeU5fu9dLhbWh2cipzJqqFM"
+        alt="Close Tutorial Video"
+        onClick={() => {
+          onClose();
+        }}
+      />
+      <video controls className="w-full h-full">
+        <source src={"https://arweave.net/VmYiI5hNF4oT4XBFGD8sZkmcnuF6qREGVlk4Ml-Z26o"} type="video/mp4" />
+      </video>
+    </div>
+  );
+}
+
 function LoginForm() {
   const profileLoading = useAppStore((state) => state.profileLoading);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   return (
     <div className="h-screen flex justify-center items-center">
+      {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+
+      <div className="absolute bottom-4 right-4">
+        <ImgButton
+          src="https://arweave.net/F5cG9iaRzliwIizUPBJ8UXWT6y5HUkFvB87NYLOs5tU"
+          alt="Open Tutorial Video"
+          onClick={() => {
+            setShowTutorial(true);
+          }}
+        />
+      </div>
       {profileLoading ? (
         <p className="text-white absolute top-[450px] text-2xl font-bold">Loading...</p>
       ) : (
