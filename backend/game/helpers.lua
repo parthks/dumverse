@@ -29,7 +29,7 @@ function CalculateUserBaseStats(userData)
     baseStats.health = 2
     baseStats.total_health = 2
     baseStats.stamina = 8
-    baseStats.total_stamina = 6
+    baseStats.total_stamina = 8
   end
 
   return baseStats

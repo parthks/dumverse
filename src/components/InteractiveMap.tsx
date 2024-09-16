@@ -62,8 +62,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
                   r="6"
                   className={cn(
                     "interactive-point transition-colors duration-200",
-                    isValidSpotToMoveTo(currentIslandLevel, point.level) ? "hover:fill-green-500" : "fill-black",
-                    [9, 18, 27].includes(point.level) ? "fill-purple-700 " : isValidSpotToMoveTo(currentIslandLevel, point.level) ? "fill-red-500 " : "fill-black"
+                    isValidSpotToMoveTo(currentIslandLevel, point.level) ? "hover:fill-[#63af16]" : "fill-black",
+                    [9, 18, 27].includes(point.level) ? "fill-purple-700" : isValidSpotToMoveTo(currentIslandLevel, point.level) ? "fill-[#3fe406]" : "fill-black"
                   )}
                   data-level={point.level}
                 />

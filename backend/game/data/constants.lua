@@ -182,9 +182,9 @@ ENEMY_PER_LEVEL = {
     [3] = { ENEMIES[3] },
     [4] = { ENEMIES[4] },
     [5] = { ENEMIES[5] },
-    [6] = { ENEMIES[1], ENEMIES[2] },
+    [6] = { ENEMIES[2], ENEMIES[3] },
     [7] = { ENEMIES[3], ENEMIES[4] },
-    [8] = { ENEMIES[5], ENEMIES[5] },
+    [8] = { ENEMIES[4], ENEMIES[5] },
     -- [9] is a rest spot
     [10] = { ENEMIES[6] },
     [11] = { ENEMIES[7] },
