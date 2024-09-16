@@ -1,6 +1,7 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
+import { SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
 
@@ -55,6 +56,7 @@ export default function RestArea() {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
+      {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />}
       <div className="z-10 absolute top-4 right-4">
         <ReturnToTown />
       </div>

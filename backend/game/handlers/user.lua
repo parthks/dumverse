@@ -168,10 +168,14 @@ Handlers.add("User.GoToRestArea",
         local userData = helpers.CheckUserExists(user_id, msg.From)
 
         local current_spot = userData.current_spot
-        -- check which rest area is + or - 1 from current_spot
+        -- check which rest area is + or - 1 from current_spot or if user is at a rest area
         local rest_area_level = 0
         for _, level in ipairs(REST_SPOTS) do
             if math.abs(current_spot - level) == 1 then
+                rest_area_level = level
+                break
+            end
+            if current_spot == level then
                 rest_area_level = level
                 break
             end

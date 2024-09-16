@@ -42,7 +42,7 @@ export default function Town() {
           <div
             className="absolute inset-0 bg-center bg-no-repeat bg-contain"
             style={{
-              backgroundImage: `url(https://arweave.net/ioE9uq8CztfKFYv3OggM08sUHEy9u7vAfLCrJRdAmXw)`,
+              backgroundImage: `url(https://arweave.net/JuWhXSF9_XkPJplzF5sX4ppKX2pGkbvrdQR6Skbz1JE)`,
             }}
           >
             {/* Building 7 on the hill */}
