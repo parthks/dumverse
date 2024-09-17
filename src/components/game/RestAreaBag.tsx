@@ -1,16 +1,19 @@
 import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
-import { IMAGES, ITEM_ICONS, ITEM_IMAGES } from "@/lib/constants";
-import { useState } from "react";
+import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
+import { useRef, useState } from "react";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
   const { user, consumeItem } = useGameStore();
   const [consumeItemLoading, setConsumeItemLoading] = useState(false);
-  console.log(user);
+  const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
+  const drinkJooseAudioRef = useRef<HTMLAudioElement>(null);
+  const eatCakeAudioRef = useRef<HTMLAudioElement>(null);
+
   if (!user) return null;
 
-  const inventory = user?.inventory;
+  const inventory = user.inventory;
   const potion1 = inventory?.filter((item) => item.item_id === "POTION_1").length ?? 0;
   const energy1 = inventory?.filter((item) => item.item_id === "ENERGY_1").length ?? 0;
   const food1 = inventory?.filter((item) => item.item_id === "FOOD_1").length ?? 0;
@@ -22,6 +25,13 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
     if (!inventoryId) return;
     setConsumeItemLoading(true);
     await consumeItem(inventoryId);
+    if (item_type === "POTION_1") {
+      drinkPotionAudioRef.current?.play();
+    } else if (item_type === "ENERGY_1") {
+      drinkJooseAudioRef.current?.play();
+    } else if (item_type === "FOOD_1") {
+      eatCakeAudioRef.current?.play();
+    }
     setConsumeItemLoading(false);
   };
 
@@ -30,6 +40,10 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
       className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/DbU1JV6vG2wV9WP1h-UmIpsSPs0knHEGeBkxt0hEVTQ')] bg-no-repeat bg-contain bg-center p-4"
       style={{ aspectRatio: "392/425" }}
     >
+      <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
+      <audio preload="auto" ref={drinkJooseAudioRef} src={SOUNDS.DRINK_JOOSE_AUDIO} />
+      <audio preload="auto" ref={eatCakeAudioRef} src={SOUNDS.EAT_CAKE_AUDIO} />
+
       <div className="flex flex-col items-center justify-center h-full w-full">
         <div className="flex w-[500px] mt-16 flex-col items-center justify-center">
           <h2 className="text-5xl text-white font-bold">{user.name}</h2>

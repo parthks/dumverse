@@ -52,6 +52,9 @@ export const SOUNDS = {
   SHOP_BUY_ITEM: "https://arweave.net/9EtNgLrsqHuXNZWPhH3NcMcxkTQhGpxRo6wvQJmcU1Q",
   REST_AREA_AUDIO: "https://arweave.net/_d4bjMzhu7UayVt5KURYwYBGrREEB6-tYA8MLI0R2r4",
   TOWN_REST_AREA_AUDIO: "https://arweave.net/RutoWcguMTChg_gPkgRZU6llN8_mbU-s5r_UfLmyMKs",
+  DRINK_POTION_AUDIO: "https://arweave.net/wBwQoEtG5_cz6CFtw3y6qCFPmZUpjhmgwB1s-AXriLg",
+  DRINK_JOOSE_AUDIO: "https://arweave.net/0okk9yn9v-DQ0OHdYyiuMzDvpJOGiasho1eJxhtXn_s",
+  EAT_CAKE_AUDIO: "https://arweave.net/iZ4lOyJPKy6E1YYQRokL9uzbZhtQs4bj8ItJUFfRP4A",
 };
 
 export const LOGIN_VIDEO = "https://arweave.net/1jm4BEW5n1OLg6xtE97_hrjD_wS70jmmG_jh2mSFxzQ";

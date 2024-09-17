@@ -263,7 +263,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     <div>
       <div className="flex gap-4 items-center">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-start">
-          <audio ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
+          <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
           <div className="flex flex-col gap-2 w-[380px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
@@ -344,6 +344,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const filledStamina = player.stamina;
   const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
   const combatLoading = useCombatStore((state) => state.loading);
+  const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
 
   const { weapon, armor } = getEquippedItem(user!);
 
@@ -352,6 +353,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
       className="w-[250px] flex flex-col bg-[url('https://arweave.net/YHfNqgt4OHoiMxr3Jm9P4FB1QUCg7fND5IBkvuQm96c')] bg-no-repeat bg-contain bg-center px-4 py-1"
       style={{ aspectRatio: "302/421" }}
     >
+      <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
       <h2 className="text-black text-2xl font-bold text-center">{player.name} (P)</h2>
       <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full  max-h-[200px] object-contain mb-2" />
       <div className="flex gap-2 justify-between items-start">
@@ -378,7 +380,13 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
                     disabled={combatLoading || player.potion_used}
                     className="w-20 shrink-0"
                     src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
-                    onClick={() => drinkPotion()}
+                    onClick={async () => {
+                      await drinkPotion();
+                      if (drinkPotionAudioRef.current) {
+                        drinkPotionAudioRef.current.currentTime = 0; // Reset audio to start
+                        drinkPotionAudioRef.current.play();
+                      }
+                    }}
                     alt={"Use Potion"}
                   />
                 )}
@@ -428,9 +436,10 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
 }
 
 function BattleLog({ currentBattle }: { currentBattle: Battle }) {
-  const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const user_id = useGameStore((state) => state.user!.id);
   const combatLoading = useCombatStore((state) => state.loading);
   const goToMapFromBattle = useCombatStore((state) => state.goToMapFromBattle);
+  const isAlive = currentBattle?.players?.[user_id]?.health ?? 0 > 0;
 
   // as the log is updated, scroll to the bottom
   useEffect(() => {
@@ -480,9 +489,10 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
           <div className="my-4 flex justify-center">
             <ImgButton
               disabled={combatLoading}
-              src={"https://arweave.net/-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"}
+              // if alive, return to map, if dead, return to town
+              src={`https://arweave.net/${isAlive ? "-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y" : "n0rz0kGBK_uPI-XJ3aCPdJ3589IOl5BW2izZNOVFXaI"}`}
               onClick={() => goToMapFromBattle()}
-              alt={"Return to Town"}
+              alt={"Return to Game"}
             />
           </div>
         )}
