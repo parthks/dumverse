@@ -26,8 +26,8 @@ export default function ConnectButton({ className, onClickAction }: { className?
           ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
           // provide some extra info for our app
           {
-            name: "Super Cool App",
-            logo: "https://arweave.net/jAvd7Z1CBd8gVF2D6ESj7SMCCUYxDX_z3vpp5aHdaYk",
+            name: "Dumverse",
+            logo: "https://arweave.net/IvZQHCqSNVCTjqflozr_QaiuxVZrq2_GzRX3JeP88tY",
           }
         );
         const userAddress = await window.arweaveWallet.getActiveAddress();
