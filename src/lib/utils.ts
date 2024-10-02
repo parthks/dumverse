@@ -4,8 +4,8 @@ import { GameUser } from "@/types/game";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export const GAME_PROCESS_ID = "EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc";
-export const COMBAT_PROCESS_ID = "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
+export const GAME_PROCESS_ID = "rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g"; //"EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc";
+export const COMBAT_PROCESS_ID = "TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ"; //"tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

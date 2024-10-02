@@ -1,0 +1,39 @@
+## AoForm Configuration
+## This file is used to configure the AoForm package
+## For more information, visit https://github.com/Autonomous-Finance/aoform
+
+- name: game
+  file: build/game.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Game
+
+- name: combat
+  file: build/combat.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Combat
+    - name: GameProcessId
+      value: rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g
+    - name: Authority
+      value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
+    - name: Cron-Interval
+      value: 10-seconds
+    - name: Cron-Tag-Action
+      value: Cron
+
+- name: test-dumz-token
+  file: build/dumz.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0
+  tags:
+    - name: Name
+      value: Test-Dumz

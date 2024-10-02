@@ -1,48 +1,131 @@
-COMBAT_PROCESS_ID = "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE"
-GAME_PROCESS_ID = "EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc"
+local COMBAT_PROCESS_ID = "TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ"
 
-REST_SPOTS = { 0, 9, 18, 27 }
+local REST_SPOTS = { 0, 9, 18, 27 }
 
-ITEMS = {
-    ["WEAPON_1"] = {
+require "utils.globals"
+
+local WEAPONS = {
+    WEAPON_1 = {
         id = "WEAPON_1",
         name = "Wood Slingshot",
         gold_price = 5000,
         damage = 2,
         type = "WEAPON",
     },
-    ["ARMOR_1"] = {
+}
+global type WeaponItem = record
+    {BaseItem}
+    damage: number
+end
+local ARMORS = {
+    ARMOR_1 = {
         id = "ARMOR_1",
         name = "Wood Armor",
         gold_price = 6000,
         defense = 1,
         type = "ARMOR",
     },
-    ["POTION_1"] = {
+}
+global type ArmorItem = record
+    {BaseItem}
+    defense: number
+end
+local POTIONS = {
+    POTION_1 = {
         id = "POTION_1",
         name = "Health Potion",
         gold_price = 1000,
         health = 1,
         type = "POTION",
     },
-    ["ENERGY_1"] = {
+}
+global type PotionItem = record
+    {BaseItem}
+    health: number
+end
+local ENERGY = {
+    ENERGY_1 = {
         id = "ENERGY_1",
         name = "Joose",
         dumz_price = 40,
         energy = 2,
         type = "ENERGY",
     },
-    ["FOOD_1"] = {
+}
+global type EnergyItem = record
+    {BaseItem}
+    energy: number
+end
+local FOOD = {
+    FOOD_1 = {
         id = "FOOD_1",
         name = "Cake",
         gold_price = 10,
         health = 2,
         type = "FOOD",
     },
-
 }
+global type FoodItem = record
+    {BaseItem}
+    health: number
+end
 
-ENEMIES = {
+local ALL_ITEMS: {string:BaseItem} = {}
+for _, item in pairs(ARMORS as {string:BaseItem}) do
+    ALL_ITEMS[item.id] = item
+end
+for _, item in pairs(POTIONS as {string:BaseItem}) do
+    ALL_ITEMS[item.id] = item
+end
+for _, item in pairs(ENERGY as {string:BaseItem}) do
+    ALL_ITEMS[item.id] = item
+end
+for _, item in pairs(FOOD as {string:BaseItem}) do
+    ALL_ITEMS[item.id] = item
+end
+for _, item in pairs(WEAPONS as {string:BaseItem}) do
+    ALL_ITEMS[item.id] = item
+end
+
+-- local ITEMS = {
+--     WEAPON_1 = {
+--         id = "WEAPON_1",
+--         name = "Wood Slingshot",
+--         gold_price = 5000,
+--         damage = 2,
+--         type = "WEAPON",
+--     },
+--     ARMOR_1 = {
+--         id = "ARMOR_1",
+--         name = "Wood Armor",
+--         gold_price = 6000,
+--         defense = 1,
+--         type = "ARMOR",
+--     },
+--     POTION_1 = {
+--         id = "POTION_1",
+--         name = "Health Potion",
+--         gold_price = 1000,
+--         health = 1,
+--         type = "POTION",
+--     },
+--     ENERGY_1 = {
+--         id = "ENERGY_1",
+--         name = "Joose",
+--         dumz_price = 40,
+--         energy = 2,
+--         type = "ENERGY",
+--     },
+--     FOOD_1 = {
+--         id = "FOOD_1",
+--         name = "Cake",
+--         gold_price = 10,
+--         health = 2,
+--         type = "FOOD",
+--     },
+-- }
+
+local ENEMIES = {
     {
         id = "NPC_1",
         name = "Doe Eyed Deer",
@@ -176,7 +259,7 @@ ENEMIES = {
 }
 
 -- 9, 18, 27 are rest spots
-ENEMY_PER_LEVEL = {
+local ENEMY_PER_LEVEL = {
     [1] = { ENEMIES[1] },
     [2] = { ENEMIES[2] },
     [3] = { ENEMIES[3] },
@@ -206,4 +289,15 @@ ENEMY_PER_LEVEL = {
     -- [27] is a rest spot
 }
 
-return {}
+return {
+    COMBAT_PROCESS_ID = COMBAT_PROCESS_ID,
+    REST_SPOTS = REST_SPOTS,
+    WEAPONS = WEAPONS,
+    ARMORS = ARMORS,
+    POTIONS = POTIONS,
+    ENERGY = ENERGY,
+    FOOD = FOOD,
+    ALL_ITEMS = ALL_ITEMS,
+    ENEMIES = ENEMIES,
+    ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
+}
