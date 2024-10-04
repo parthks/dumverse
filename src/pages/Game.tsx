@@ -8,20 +8,24 @@ import RestArea from "./RestArea";
 import Town from "./Town";
 
 export default function Game() {
-  const { GameStatePage, setGameStatePage, user, regenerateEnergy } = useGameStore();
+  const { GameStatePage, setGameStatePage, user, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
-    // if (GameStatePage === GameStatePages.COMBAT) {
-    //   return;
-    // }
+    if (GameStatePage === GameStatePages.COMBAT) {
+      if (interval) {
+        clearInterval(interval);
+        setRegenerateCountdown(null);
+      }
+      return;
+    }
 
     if (user?.id && user?.stamina < user?.total_stamina) {
       console.log("Regenerating energy interval started");
       interval = setInterval(async () => {
         console.log("Regenerating energy");
-        await regenerateEnergy();
-      }, 61000);
+        regenerateCountdownTickDown();
+      }, 1000);
     }
 
     return () => {
@@ -29,7 +33,7 @@ export default function Game() {
         clearInterval(interval);
       }
     };
-  }, [user?.stamina, user?.total_stamina]);
+  }, [user?.stamina, user?.total_stamina, GameStatePage]);
 
   let page = <div>Game</div>;
   if (GameStatePage === GameStatePages.BANK) page = <BankPage />;

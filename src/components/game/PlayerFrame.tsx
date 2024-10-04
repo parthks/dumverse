@@ -4,6 +4,7 @@ import { useGameStore } from "@/store/useGameStore";
 
 export function PlayerFrame() {
   const user = useGameStore((state) => state.user!);
+  const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
 
   const totalHealth = user.total_health;
   const totalStamina = user.total_stamina;
@@ -37,8 +38,14 @@ export function PlayerFrame() {
           </div>
           <div className="flex gap-1">
             {Array.from({ length: totalStamina }).map((_, index) => (
-              <img key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+              <img className="h-10" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
             ))}
+          </div>
+          {/* convert regenerateCountdown to minutes and seconds */}
+          <div className="flex gap-2">
+            {regenerateCountdown && user.total_stamina != user.stamina && (
+              <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label>
+            )}
           </div>
         </div>
         {/* Equipped weapon and armor */}

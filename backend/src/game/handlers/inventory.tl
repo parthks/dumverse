@@ -26,7 +26,7 @@ local function inventoryUseItemHandler(msg: Message)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
     -- check if current_spot is in REST_SPOTS
-    assert(utils.includes(current_spot, constants.REST_SPOTS), "User is not at a rest spot")
+    assert(helpers.IsInRestSpot(userData), "User is not at a rest spot")
 
     local results = dbAdmin:exec(string.format([[
         SELECT * FROM Inventory WHERE id = %d AND user_id = %f LIMIT 1;

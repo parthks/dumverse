@@ -11,6 +11,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export function getEquippedItem(player: GameUser) {
   const inventory = player.inventory;
   const weapon = inventory.find((item) => item.item_type === "WEAPON" && item.equipped);

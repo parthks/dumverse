@@ -173,7 +173,9 @@ local function regenerateEnergyHandler(msg: Message)
     local timestamp = msg.Timestamp
     local last_regenerate_time = userData.last_regenerate_time or 0
 
-    assert(timestamp - last_regenerate_time >= 60, "Not enough time has passed since last regeneration")
+    local regenerate_time = helpers.IsInRestSpot(userData) and 120 or 240
+
+    assert(timestamp - last_regenerate_time >= regenerate_time, "Not enough time has passed since last regeneration. Last regenerate time: " .. last_regenerate_time .. " Current time: " .. timestamp .. " User is in rest spot: " .. tostring(helpers.IsInRestSpot(userData)))
 
     local new_stamina = math.min(userData.stamina + 1, userData.total_stamina)
     dbAdmin:exec(string.format([[

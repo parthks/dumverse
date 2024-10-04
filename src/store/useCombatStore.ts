@@ -203,7 +203,7 @@ export const useCombatStore = create<CombatState>()(
         if (isAlive) {
           await useGameStore.getState().refreshUserData();
           set({ currentBattle: null, loading: false });
-          useGameStore.getState().setGameStatePage(GameStatePages.GAME_MAP);
+          useGameStore.getState().goToGameMap();
         } else {
           await useGameStore.getState().goToTown();
           set({ currentBattle: null, loading: false });

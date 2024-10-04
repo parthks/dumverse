@@ -1,5 +1,6 @@
 require('utils.globals')
 local constants = require("utils.constants")
+local utils = require("utils.utils.tl-utils")
 
 local type BaseStats = record
   damage: number
@@ -19,6 +20,10 @@ local function GetItemDetails(itemId: string): BaseItem
                       constants.FOOD[itemId as FoodIds]
   assert(itemDetails, "Item details not found")
   return itemDetails
+end
+
+local function IsInRestSpot(userData: UserData): boolean
+  return utils.includes(userData.current_spot, constants.REST_SPOTS)
 end
 
 -- check if user exists
@@ -63,5 +68,6 @@ end
 return {
   CheckUserExists = CheckUserExists,
   CalculateUserBaseStats = CalculateUserBaseStats,
-  GetItemDetails = GetItemDetails
+  GetItemDetails = GetItemDetails,
+  IsInRestSpot = IsInRestSpot,
 }

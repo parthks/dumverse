@@ -1,6 +1,7 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { IMAGES, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
+import { sleep } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { Item } from "@/types/game";
 import { useEffect } from "react";
@@ -179,7 +180,7 @@ function ShopTableItem({ item }: { item: Item }) {
 }
 
 export default function Shop() {
-  const goToTown = useGameStore((state) => state.goToTown);
+  const goDirectlyToTownPage = useGameStore((state) => state.goDirectlyToTownPage);
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
   const shopEnterAudio = new Audio(SOUNDS.BUILDING_ENTER);
   const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
@@ -222,7 +223,8 @@ export default function Shop() {
           src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"}
           onClick={async () => {
             shopEnterAudio.play();
-            await goToTown();
+            await sleep(1000);
+            goDirectlyToTownPage();
           }}
           alt={"Return to Town"}
         />

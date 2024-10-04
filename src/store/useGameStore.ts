@@ -50,10 +50,15 @@ interface GameState {
   setCurrentIslandLevel: (level: number) => void;
   lamaPosition: LamaPosition;
   setLamaPosition: (position: LamaPosition) => void;
+  goDirectlyToTownPage: () => void;
   goToTown: () => void;
   goToRestArea: () => void; // goes to the nearest rest area (+- 1 from current level)
-  exitTown: () => void;
+  goToGameMap: (resetPosition?: boolean) => void;
   regenerateEnergy: () => Promise<void>;
+  regenerateCountdown: number | null;
+  resetRegenerateCountdown: () => void;
+  regenerateCountdownTickDown: () => Promise<void>;
+  setRegenerateCountdown: (countdown: number | null) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -199,6 +204,7 @@ export const useGameStore = create<GameState>()(
       },
       lamaPosition: initialLamaPosition,
       setLamaPosition: (position) => set({ lamaPosition: position }),
+      goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN }),
       goToTown: async () => {
         const resultData = await sendAndReceiveGameMessage([
           { name: "Action", value: "User.GoToTown" },
@@ -207,6 +213,7 @@ export const useGameStore = create<GameState>()(
         if (resultData.status === "Success") {
           await get().refreshUserData();
           set({ GameStatePage: GameStatePages.TOWN });
+          get().resetRegenerateCountdown();
         }
       },
       goToRestArea: async () => {
@@ -217,10 +224,15 @@ export const useGameStore = create<GameState>()(
         if (resultData.status === "Success") {
           await get().refreshUserData();
           set({ GameStatePage: GameStatePages.REST_AREA });
+          get().resetRegenerateCountdown();
         }
       },
-      exitTown: async () => {
-        set({ GameStatePage: GameStatePages.GAME_MAP, lamaPosition: initialLamaPosition, currentIslandLevel: 0 });
+      goToGameMap: async (resetPosition = false) => {
+        set({ GameStatePage: GameStatePages.GAME_MAP });
+        if (resetPosition) {
+          set({ lamaPosition: initialLamaPosition, currentIslandLevel: 0 });
+        }
+        get().resetRegenerateCountdown();
       },
       regenerateEnergy: async () => {
         const resultData = await sendAndReceiveGameMessage([
@@ -228,6 +240,34 @@ export const useGameStore = create<GameState>()(
           { name: "UserId", value: get().user?.id.toString()! },
         ]);
         await get().refreshUserData();
+      },
+      regenerateCountdown: null,
+      resetRegenerateCountdown: () => {
+        // if in town or rest area, set the countdown to 2 minutes
+        if (get().GameStatePage !== GameStatePages.GAME_MAP && get().GameStatePage !== GameStatePages.COMBAT) {
+          console.log("setting countdown to 2 minutes");
+          set({ regenerateCountdown: 120 });
+        } else if (get().GameStatePage === GameStatePages.GAME_MAP) {
+          // if in game map, set the countdown to 4 minutes
+          console.log("setting countdown to 4 minutes");
+          set({ regenerateCountdown: 240 });
+        }
+      },
+      regenerateCountdownTickDown: async () => {
+        console.log("regenerateCountdownTickDown", get().regenerateCountdown);
+        if (get().regenerateCountdown !== null) {
+          const currentCount = get().regenerateCountdown!;
+          set({ regenerateCountdown: currentCount - 1 });
+          if (currentCount === 0) {
+            await get().regenerateEnergy();
+            set({ regenerateCountdown: null });
+          }
+        } else {
+          get().resetRegenerateCountdown();
+        }
+      },
+      setRegenerateCountdown: (countdown) => {
+        set({ regenerateCountdown: countdown });
       },
     }),
     {

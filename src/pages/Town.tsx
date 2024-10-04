@@ -5,7 +5,7 @@ import { useState } from "react";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
-  const exitTown = useGameStore((state) => state.exitTown);
+  const goToGameMap = useGameStore((state) => state.goToGameMap);
 
   const [chatOpen, setChatOpen] = useState(false);
 
@@ -21,7 +21,7 @@ export default function Town() {
       {/* bottom buttons bar */}
       <div className="z-10 absolute bottom-0 w-full p-4">
         <div className="flex justify-between items-center relative">
-          <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={exitTown} alt={"Return to Town"} />
+          <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => goToGameMap(true)} alt={"Return to Town"} />
           <div className="absolute left-[44%] translate-x-[0%]">
             <ImgButton
               src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}

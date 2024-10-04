@@ -2,6 +2,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
 import { SOUNDS } from "@/lib/constants";
+import { sleep } from "@/lib/utils";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
 
@@ -267,7 +268,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 }
 
 export default function BankPage() {
-  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goToTown } = useGameStore();
+  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage } = useGameStore();
   const [amount, setAmount] = useState(0);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
@@ -308,7 +309,15 @@ export default function BankPage() {
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"} onClick={() => goToTown()} alt={"Exit Bank"} />
+        <ImgButton
+          src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"}
+          onClick={async () => {
+            bankEnterAudio.play();
+            await sleep(1000);
+            goDirectlyToTownPage();
+          }}
+          alt={"Exit Bank"}
+        />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />
