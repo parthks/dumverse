@@ -3,13 +3,13 @@ my-process:
   hash: d29d576ab93b687df1b4e3c954cc6f2d7d1d1482951cd957357b751c3d30ca8e
 game:
   processId: rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g
-  hash: 8592181d18a8fe5ff51b2eb341bbe4a02d530aabd3e4ce5dca93f8add900916e
+  hash: 7d77ab65d5d53418aac4da92e4fe4926f170650b07705622478062589670665b
 test-dumz-token:
   processId: mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk
   hash: c74821f6a99e8cbe7d0055a5b85f0671b8fffcf6a4ce7f255d46d5a68e8e5706
 combat:
   processId: TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ
-  hash: 333463b43bbbd225764e29e6e1e291dab89713967c839c235d1abc48843a45ec
+  hash: a6ba7c48865f718ebc8eee99ddd273a3560355701f58064553c122d4213131a4
 chat:
   processId: uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI
   hash: 3d18b66a17a7c0e303bdc26290fcead132e0ffa22c931317fe950edabcb75792

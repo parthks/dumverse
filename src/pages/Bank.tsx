@@ -1,15 +1,20 @@
+import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
+
 import { InventoryBag } from "@/components/game/InventoryBag";
+import NumberTicker from "@/components/magicui/number-ticker";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
 import { SOUNDS } from "@/lib/constants";
 import { sleep } from "@/lib/time";
+import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { DUMZ_TOKEN_PROCESS_ID, GAME_PROCESS_ID } from "@/lib/utils";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
 
-function QuantityInput({ actionType, onClose }: { actionType: "deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold"; onClose: () => void }) {
+function QuantityInput({ actionType, onClose }: { actionType: BankActionType; onClose: () => void }) {
   const { user, bank, deposit, withdraw, bankTransactionLoading } = useGameStore();
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
   const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
@@ -95,32 +100,147 @@ function QuantityInput({ actionType, onClose }: { actionType: "deposit-dumz" | "
   );
 }
 
+function TransferDumz({ onClose }: { onClose: () => void }) {
+  const { user, bank, getBank, bankDataLoading } = useGameStore();
+  const [inputValue, setInputValue] = useState<number | undefined>(undefined);
+  const [dumzBalance, setDumzBalance] = useState<number | undefined>(undefined);
+  const [txnLoading, setTxnLoading] = useState(false);
+
+  const bankDumz = bank?.dumz_amount;
+
+  const fetchBalance = useCallback(async () => {
+    if (!user?.address) return;
+    const balance = await sendDryRunGameMessage({
+      tags: [
+        { name: "Action", value: "Balance" },
+        { name: "Recipient", value: user.address },
+      ],
+      process: "dumz_token",
+    });
+    setDumzBalance(parseInt(balance.data as unknown as string));
+  }, [user?.address]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance]);
+
+  const handleWithdraw = async () => {
+    if (!inputValue) return;
+    if (!bankDumz) return;
+    if (inputValue <= 0) {
+      setInputValue(undefined);
+      return;
+    }
+    if (inputValue > bankDumz) {
+      setInputValue(bankDumz);
+      return;
+    }
+    setTxnLoading(true);
+    const tags = [
+      { name: "Action", value: "Bank.PushOut" },
+      { name: "UserId", value: user!.id!.toString() },
+      { name: "Amount", value: inputValue.toString() },
+    ];
+    const initialResponse = await sendAndReceiveGameMessage({
+      tags: tags,
+    });
+    console.log("initialResponse", initialResponse, initialResponse.status);
+    const result = await pollForTransferSuccess("dumz_token", (messageTags) => {
+      const creditNotice = messageTags.find((tag) => tag.name === "Action" && tag.value === "Credit-Notice");
+      const transferToUser = messageTags.find((tag) => tag.name === "X-UserId" && tag.value === user!.id!.toString());
+      const amountTransferred = messageTags.find((tag) => tag.name === "Quantity" && tag.value === inputValue.toString());
+      return !!creditNotice && !!transferToUser && !!amountTransferred;
+    });
+    getBank();
+    fetchBalance();
+    setTxnLoading(false);
+  };
+
+  const handleDeposit = async () => {
+    if (!inputValue) return;
+    if (!dumzBalance) return;
+    if (inputValue <= 0) {
+      setInputValue(undefined);
+      return;
+    }
+    if (inputValue > dumzBalance) {
+      setInputValue(dumzBalance);
+      return;
+    }
+    setTxnLoading(true);
+    const tags = [
+      { name: "Action", value: "Transfer" },
+      { name: "X-UserId", value: user!.id!.toString() },
+      { name: "Recipient", value: GAME_PROCESS_ID },
+      { name: "Quantity", value: inputValue.toString() },
+    ];
+    const resultData = await sendAndReceiveGameMessage({
+      tags: tags,
+      process: "dumz_token",
+    });
+    const debitNotice = resultData.Messages?.find((msg) => msg.Tags.some((tag: { name: string; value: string }) => tag.name === "Action" && tag.value === "Debit-Notice"));
+    if (debitNotice) {
+      await sleep(2000); // wait for the credit notice to be processed by game process
+      setDumzBalance(dumzBalance! - inputValue);
+      getBank();
+      fetchBalance();
+    }
+    setTxnLoading(false);
+  };
+
+  const title = "Transfer $tDumz";
+  return (
+    <div
+      className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      style={{ backgroundImage: "url('https://arweave.net/PGjj1AvsLyry4Dylp3DK8HLTjatjc90t8nCqaarNlmc')", width: "500px", height: "500px" }}
+    >
+      <div className="absolute top-4 right-4">
+        <ImgButton src={"https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"} onClick={onClose} alt={"Exit Quantity Input"} />
+      </div>
+      <div className="flex flex-col items-center w-full gap-4 p-16">
+        <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
+        <p>Wallet Balance: {dumzBalance !== undefined ? dumzBalance : "--"}</p>
+        <p>Bank Balance: {bankDataLoading ? "--" : bankDumz}</p>
+        <Input
+          placeholder={`Amount to transfer`}
+          aria-label="Amount"
+          type="number"
+          value={inputValue}
+          onChange={(e) => {
+            const value = parseInt(e.target.value);
+            if (!isNaN(value)) {
+              setInputValue(value);
+            } else {
+              setInputValue(undefined);
+            }
+          }}
+          className="h-[37px] w-[153px] bg-no-repeat bg-left border-none focus-visible:ring-0"
+          style={{
+            width: "calc(153px * 1.3)",
+            height: "calc(37px * 1.3)",
+            backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
+            backgroundSize: "100% 100%",
+          }}
+        />
+        <div className="flex gap-4">
+          <ImgButton disabled={txnLoading} src={"https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"} onClick={handleDeposit} alt={"Deposit into Bank"} />
+          <ImgButton disabled={txnLoading} src={"https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"} onClick={handleWithdraw} alt={"Withdraw from Bank"} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type BankActionType = "deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold" | "transfer-dumz";
 function GeneralBankVault({ onExit }: { onExit: () => void }) {
   const { user, bank, bankDataLoading, deposit, withdraw, bankTransactionLoading } = useGameStore();
-  const [actionType, setActionType] = useState<"deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold" | null>(null);
+  const [actionType, setActionType] = useState<BankActionType | null>(null);
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
       const itemType = event.target.getAttribute("item-type");
       if (itemType) {
-        console.log(itemType);
-        if (itemType === "deposit-dumz") {
-          console.log("deposit-dumz");
-          // deposit(user?.dumz_balance ?? 0, "DUMZ");
-          setActionType("deposit-dumz");
-        } else if (itemType === "withdraw-dumz") {
-          console.log("withdraw-dumz");
-          // withdraw(bank?.dumz_amount ?? 0, "DUMZ");
-          setActionType("withdraw-dumz");
-        } else if (itemType === "deposit-gold") {
-          console.log("deposit-gold");
-          // deposit(user?.gold_balance ?? 0, "GOLD");
-          setActionType("deposit-gold");
-        } else if (itemType === "withdraw-gold") {
-          console.log("withdraw-gold");
-          // withdraw(bank?.gold_amount ?? 0, "GOLD");
-          setActionType("withdraw-gold");
-        }
+        setActionType(itemType as BankActionType);
       }
     }
   };
@@ -129,7 +249,8 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {actionType && <QuantityInput actionType={actionType} onClose={() => setActionType(null)} />}
+      {actionType && actionType !== "transfer-dumz" && <QuantityInput actionType={actionType as BankActionType} onClose={() => setActionType(null)} />}
+      {actionType === "transfer-dumz" && <TransferDumz onClose={() => setActionType(null)} />}
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
@@ -147,7 +268,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
             </text>
             <image
               href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
-              x="40%"
+              x="36%"
               y="50%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
@@ -157,13 +278,23 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
             />
             <image
               href="https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"
-              x="50%"
+              x="46%"
               y="50%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
               className={`grow-image item cursor-pointer ${bankTransactionLoading || bank.dumz_amount == 0 ? "disabled-image" : ""}`}
               item-type="withdraw-dumz"
+            />
+            <image
+              href="https://arweave.net/jsrnPQGUIpOH2NqCKbSYQtzEXvNTHtzbF921GKe3dlY"
+              x="56%"
+              y="50%"
+              width={(163 / imageWidth) * 100 * 2 + "%"}
+              height={(54 / imageHeight) * 100 * 2 + "%"}
+              preserveAspectRatio="xMidYMid meet"
+              className={`grow-image item cursor-pointer ${bankTransactionLoading ? "disabled-image" : ""}`}
+              item-type="transfer-dumz"
             />
             <text x="50%" y="67%" fontSize="100" textAnchor="middle" fill="white">
               {bankDataLoading ? "--" : `${bank.gold_amount}g`}

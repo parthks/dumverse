@@ -83,7 +83,7 @@ end
 
 local function CronTick(msg: Message)
     CRON_TICK_COUNT = CRON_TICK_COUNT + 1
-    -- need to check all ongoing battles to see if a player has not attacked in the last 20 seconds
+    -- need to check all ongoing battles to see if a player has not attacked in the last 10 seconds
     for _, battle in pairs(Battles) do
         -- print("Checking battle " .. battle.id)
         if not battle.ended and #battle.players_alive > 0 then
@@ -92,8 +92,8 @@ local function CronTick(msg: Message)
             for _, npc_id in ipairs(npcs_alive) do
                 -- print("NPC " .. npc_id .. " alive")
                 -- print("NPC " .. npc_id .. " last attack timestamp " .. battle.last_npc_attack_timestamp[npc_id])
-                if battle.last_npc_attack_timestamp[npc_id] + (20 * 1000) < msg.Timestamp then
-                    -- if player has not attacked in the last 30 seconds, the NPC will attack
+                if battle.last_npc_attack_timestamp[npc_id] + (10 * 1000) < msg.Timestamp then
+                    -- if player has not attacked in the last 10 seconds, the NPC will attack
                     -- print("NPC " .. npc_id .. " attacking player")
                     NPCAttack(npc_id, battle.id, msg.Timestamp)
                 end

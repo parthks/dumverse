@@ -1,5 +1,5 @@
 import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
-import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID } from "./utils";
+import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID, DUMZ_TOKEN_PROCESS_ID } from "./utils";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 
 export type MyMessageResult = MessageResult & {
@@ -7,10 +7,10 @@ export type MyMessageResult = MessageResult & {
   status?: "Success" | "Error";
 };
 
-type Process = "game" | "combat" | "chat";
+type Process = "game" | "combat" | "chat" | "dumz_token";
 
 function getProcessId(process: Process) {
-  return process === "chat" ? CHAT_PROCESS_ID : process === "combat" ? COMBAT_PROCESS_ID : GAME_PROCESS_ID;
+  return process === "chat" ? CHAT_PROCESS_ID : process === "combat" ? COMBAT_PROCESS_ID : process === "dumz_token" ? DUMZ_TOKEN_PROCESS_ID : GAME_PROCESS_ID;
 }
 
 export async function sendAndReceiveGameMessage({ tags, data, process = "game" }: { tags: { name: string; value: string }[]; data?: string; process?: Process }) {
@@ -53,7 +53,13 @@ function handleResultData(resultData: MessageResult): MyMessageResult {
     const message = resultData.Messages[0];
     const tags = message.Tags;
     const status = tags.find((tag: { name: string; value: string }) => tag.name === "Status")?.value;
-    const data = message.Data ? JSON.parse(message.Data) : {};
+    let data = null;
+    try {
+      data = message.Data ? JSON.parse(message.Data) : {};
+    } catch (e) {
+      console.log("error parsing data", e);
+    }
+
     newResultData.data = data;
     if (status) {
       newResultData.status = status;
@@ -68,4 +74,53 @@ function handleResultData(resultData: MessageResult): MyMessageResult {
     }
   }
   return newResultData;
+}
+
+export async function pollForTransferSuccess(process: Process, onSuccessCheck: (messageTags: { name: string; value: string }[]) => boolean) {
+  const processId = getProcessId(process);
+  const url = `https://cu.ao-testnet.xyz/results/${processId}?sort=DESC`;
+
+  try {
+    let successFound = false;
+    let attempts = 0;
+
+    // Poll for a limited number of attempts (e.g., 10 attempts)
+    while (!successFound && attempts < 10) {
+      const response = await fetch(url);
+      const result = await response.json();
+
+      console.log("result", result);
+
+      // Check if Transfer-Success message is in the result
+      const transferSuccess = result.edges.find((edge: { node: { Messages: any[] } }) => {
+        // Ensure that the edge has Messages and that Messages array is not empty
+        if (edge.node.Messages && edge.node.Messages.length > 0) {
+          for (let message of edge.node.Messages) {
+            const messageTags = message.Tags;
+            if (onSuccessCheck(messageTags)) {
+              return true; // Found a successful message
+            }
+          }
+          // return messageTags.some((tag: { name: string; value: string }) => tag.name === "Action" && tag.value === "Transfer-Success");
+        }
+        return false;
+      });
+
+      if (transferSuccess) {
+        console.log("Transfer-Success message found:", transferSuccess);
+        successFound = true;
+
+        return true; // Success
+      }
+
+      // Wait for a few seconds before polling again
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait 3 seconds
+      attempts++;
+    }
+
+    return false; // Failed to find Transfer-Success message
+  } catch (error) {
+    console.error("Error polling Transfer-Success:", error);
+    return false;
+  }
 }

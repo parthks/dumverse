@@ -1,7 +1,7 @@
 local helpers = require("game.helpers")
 require('utils.globals')
 local json = require("json")
-
+local constants = require("utils.constants")
 
 
 local function bankInfoHandler(msg: Message)
@@ -184,6 +184,49 @@ local function bankClaimAirdropHandler(msg: Message)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
+local function bankPushOutHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    helpers.CheckUserExists(user_id, msg.From)
+    local amount = tonumber(msg.Tags.Amount)
+
+    -- fetch bank data
+    local bank = dbAdmin:exec(string.format([[
+        SELECT * FROM Bank WHERE user_id = %d;
+    ]], user_id))
+    assert(#bank > 0, "You do not have any tokens in your bank")
+    local bankData: BankAccountData = bank[1] as BankAccountData
+
+    -- check if bank has enough balance
+    assert(bankData.dumz_amount >= amount,
+        string.format("Your bank does not have enough DUMZ balance. You can only transfer out %f DUMZ", bankData.dumz_amount))
+
+    -- update bank balance
+    dbAdmin:exec(string.format([[
+        UPDATE Bank SET dumz_amount = dumz_amount - %f WHERE user_id = %d;
+    ]], amount, user_id))
+
+    -- send dumz to user address
+    ao.send({ Target = constants.DUMZ_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
+    ao.send({ Target = msg.From, Status = "Success" })
+end
+
+local function bankPushInHandler(msg: Message)
+    assert(msg.From == constants.DUMZ_TOKEN_PROCESS_ID, "Invalid sender. Expected Dumz Token Process ID.")
+
+    local user_id = tonumber(msg.Tags["X-UserId"])
+    local fromAddress = msg.Tags.Sender
+    local amount = tonumber(msg.Tags.Quantity)
+    helpers.CheckUserExists(user_id, fromAddress)
+
+    -- update bank balance
+    dbAdmin:exec(string.format([[
+        UPDATE Bank SET dumz_amount = dumz_amount + %f WHERE user_id = %d;
+    ]], amount, user_id))
+
+    -- send dumz to user address
+    ao.send({ Target = fromAddress, Status = "Success" })
+end
+
 -- Add handlers
 Handlers.add("Bank.Info", Handlers.utils.hasMatchingTag('Action', 'Bank.Info'), bankInfoHandler)
 Handlers.add("Bank.Deposit", Handlers.utils.hasMatchingTag('Action', 'Bank.Deposit'), bankDepositHandler)
@@ -195,6 +238,8 @@ Handlers.add("Bank.ClaimAirdrop", Handlers.utils.hasMatchingTag('Action', 'Bank.
    ]]
 --
 
+Handlers.add("Bank.PushOut", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOut'), bankPushOutHandler)
+Handlers.add("Bank.PushIn", Handlers.utils.hasMatchingTag('Action', 'Credit-Notice'), bankPushInHandler)
 --[[
      Bank Push Out should make a dumz transaction from game ID to user address.
      Bank Pull In should listen to credit notice from user address and make a bank transaction for that User ID. Bank transaction type should be PULL_IN
