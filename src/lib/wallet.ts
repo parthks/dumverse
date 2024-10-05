@@ -1,5 +1,5 @@
 import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
-import { COMBAT_PROCESS_ID, GAME_PROCESS_ID } from "./utils";
+import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID } from "./utils";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 
 export type MyMessageResult = MessageResult & {
@@ -7,28 +7,37 @@ export type MyMessageResult = MessageResult & {
   status?: "Success" | "Error";
 };
 
-export async function sendAndReceiveGameMessage(tags: { name: string; value: string }[], process: "game" | "combat" = "game") {
+type Process = "game" | "combat" | "chat";
+
+function getProcessId(process: Process) {
+  return process === "chat" ? CHAT_PROCESS_ID : process === "combat" ? COMBAT_PROCESS_ID : GAME_PROCESS_ID;
+}
+
+export async function sendAndReceiveGameMessage(tags: { name: string; value: string }[], data: string = "", process: Process = "game") {
+  const processId = getProcessId(process);
   const action = tags.find((tag) => tag.name === "Action")?.value;
-  console.log("sending message:" + action, { tags });
+  console.log("sending message:" + action, { tags, data });
   const res = await message({
-    process: process === "game" ? GAME_PROCESS_ID : COMBAT_PROCESS_ID,
+    process: processId,
     tags: tags,
+    data: data,
     signer: createDataItemSigner(window.arweaveWallet),
   });
   let resultData = (await result({
     message: res,
-    process: process === "game" ? GAME_PROCESS_ID : COMBAT_PROCESS_ID,
+    process: processId,
   })) as MessageResult;
 
   console.log("got result: " + action, { resultData });
   return handleResultData(resultData);
 }
 
-export async function sendDryRunGameMessage(tags: { name: string; value: string }[], process: "game" | "combat" = "game") {
+export async function sendDryRunGameMessage(tags: { name: string; value: string }[], process: Process = "game") {
+  const processId = getProcessId(process);
   const action = tags.find((tag) => tag.name === "Action")?.value;
   console.log("sending dry run message:" + action, { tags });
   const resultData = (await dryrun({
-    process: process === "game" ? GAME_PROCESS_ID : COMBAT_PROCESS_ID,
+    process: processId,
     tags: tags,
     signer: createDataItemSigner(window.arweaveWallet),
   })) as MessageResult;

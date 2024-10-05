@@ -183,7 +183,7 @@ const FormData = () => {
   const gameProfiles = useAppStore((state) => state.gameProfiles);
   const setUser = useGameStore((state) => state.setUserOnLogin);
 
-  const nonNFTGameProfiles = gameProfiles.filter((profile) => !profile.nft_address);
+  const nonNFTGameProfiles = gameProfiles ? gameProfiles.filter((profile) => !profile.nft_address) : [];
 
   const [loading, setLoading] = useState(false);
 
@@ -200,7 +200,7 @@ const FormData = () => {
 
   async function handleRegister() {
     setLoading(true);
-    if (selectedOption?.existingProfile) {
+    if (selectedOption?.existingProfile && gameProfiles) {
       const gameProfile = gameProfiles.find((profile) => profile.nft_address === selectedOption.Id);
       if (!gameProfile) {
         console.error("Game profile not found");
@@ -223,9 +223,9 @@ const FormData = () => {
         .map((asset) => ({
           ...asset,
           edition: DUMDUM_ASSET_IDS.find((id) => id.id === asset.Id)?.edition,
-          existingProfile: gameProfiles.find((profile) => profile.nft_address === asset.Id),
+          existingProfile: gameProfiles?.find((profile) => profile.nft_address === asset.Id),
         })),
-    [assets]
+    [assets, gameProfiles]
   );
 
   useEffect(() => {
@@ -308,16 +308,20 @@ const FormData = () => {
       />
 
       <div className="flex flex-col gap-2 justify-center items-center">
-        {selectedOption ? (
-          selectedOption?.existingProfile ? (
+        {gameProfiles ? (
+          selectedOption ? (
+            selectedOption?.existingProfile ? (
+              <p>Using existing profile</p>
+            ) : (
+              <p>Registering new profile...</p>
+            )
+          ) : nonNFTGameProfiles.length > 0 ? (
             <p>Using existing profile</p>
           ) : (
             <p>Registering new profile...</p>
           )
-        ) : nonNFTGameProfiles.length > 0 ? (
-          <p>Using existing profile</p>
         ) : (
-          <p>Registering new profile...</p>
+          "loading..."
         )}
         <ImgButton
           disabled={loading}

@@ -6,13 +6,10 @@ import { twMerge } from "tailwind-merge";
 
 export const GAME_PROCESS_ID = "rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g"; //"EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc";
 export const COMBAT_PROCESS_ID = "TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ"; //"tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
+export const CHAT_PROCESS_ID = "uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"; //"tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
-}
-
-export function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function getEquippedItem(player: GameUser) {

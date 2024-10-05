@@ -2,7 +2,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
 import { SOUNDS } from "@/lib/constants";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/time";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
 

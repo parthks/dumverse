@@ -1,8 +1,6 @@
 local helpers = require("game.helpers")
 require('utils.globals')
 local json = require("json")
-local constants = require("utils.constants")
-local utils = require("utils.utils.tl-utils")
 
 local function inventoryInfoHandler(msg: Message)
     assert(msg.Tags.UserId, "Pass in user id")
@@ -24,7 +22,7 @@ local function inventoryUseItemHandler(msg: Message)
     local inventory_id = tonumber(msg.Tags.InventoryId)
 
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
-    local current_spot = userData.current_spot
+    -- local current_spot = userData.current_spot
     -- check if current_spot is in REST_SPOTS
     assert(helpers.IsInRestSpot(userData), "User is not at a rest spot")
 

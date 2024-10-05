@@ -1,3 +1,4 @@
+import ChatWindow from "@/components/chat/Chat";
 import ImgButton from "@/components/ui/imgButton";
 import { SOUNDS } from "@/lib/constants";
 import { useGameStore, GameStatePages } from "@/store/useGameStore";
@@ -18,22 +19,32 @@ export default function Town() {
       <img src="https://arweave.net/kr9vAhgWOI_OfA7LBGNuQxW1zAg9Eq_3vZaSebHN5HQ" alt="Background Placeholder" className="absolute top-0 left-0 w-full h-full object-cover" />
       <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop />
 
+      <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
+
       {/* bottom buttons bar */}
-      <div className="z-10 absolute bottom-0 w-full p-4">
-        <div className="flex justify-between items-center relative">
-          <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => goToGameMap(true)} alt={"Return to Town"} />
-          <div className="absolute left-[44%] translate-x-[0%]">
+      {!chatOpen && (
+        <div className="z-10 absolute bottom-0 w-full p-4">
+          <div className="flex justify-between items-center relative">
+            <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => goToGameMap(true)} alt={"Return to Town"} />
+            <div className="absolute left-[43%] translate-x-[0%]">
+              <ImgButton
+                src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
+                onClick={() => {
+                  handleBuildingSelect(GameStatePages.REST_AREA);
+                }}
+                alt={"Enter Rest Area"}
+              />
+            </div>
             <ImgButton
-              src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
+              src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
               onClick={() => {
-                handleBuildingSelect(GameStatePages.REST_AREA);
+                setChatOpen(true);
               }}
-              alt={"Enter Rest Area"}
+              alt={"Chat"}
             />
           </div>
-          {/* <ImgButton src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"} onClick={() => {}} alt={"Chat"} /> */}
         </div>
-      </div>
+      )}
 
       {/* Town map container */}
       <div className="absolute inset-0 flex items-center justify-center">

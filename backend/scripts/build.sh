@@ -39,4 +39,7 @@ amalg.lua -s combat/main.lua -o ../build/combat.lua \
     utils.utils.tl-utils utils.utils.dbAdmin utils.utils.db-utils utils.combat \
     combat.battle_helpers combat.combat_helper combat.globals combat.types 
 
+amalg.lua -s chat/main.lua -o ../build/chat.lua \
+    utils.utils.tl-utils utils.utils.dbAdmin utils.utils.db-utils \
+
 # FINAL RESULT is build/main.lua

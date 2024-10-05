@@ -1,7 +1,7 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { IMAGES, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
-import { sleep } from "@/lib/utils";
+import { sleep } from "@/lib/time";
 import { useGameStore } from "@/store/useGameStore";
 import { Item } from "@/types/game";
 import { useEffect } from "react";

@@ -20,9 +20,8 @@ interface AppState {
   setProfile: (profile: BazzarProfile | null) => void;
   setAssets: (assets: { Quantity: number; Id: string }[]) => void;
   resetProfileData: () => void;
-  gameProfiles: GameUser[];
+  gameProfiles: null | GameUser[];
   getGameProfiles: () => void;
-  setGameProfiles: (profiles: GameUser[]) => void;
 }
 export const useAppStore = create<AppState>()(
   devtools(
@@ -46,11 +45,11 @@ export const useAppStore = create<AppState>()(
         });
         useGameStore.getState().setGameStatePage(null);
       },
-      gameProfiles: [],
-      setGameProfiles: (gameProfiles) => set({ gameProfiles }),
+      gameProfiles: null,
       getGameProfiles: async () => {
         const resultData = await sendAndReceiveGameMessage([{ name: "Action", value: "User.UserProfiles" }]);
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) set({ gameProfiles: JSON.parse(resultData.Messages[0].Data) });
+        else set({ gameProfiles: [] });
       },
     }),
     {
