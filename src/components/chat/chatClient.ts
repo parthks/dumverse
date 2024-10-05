@@ -11,7 +11,7 @@ type HistoryQuery = {
 
 export type ChatClient = {
   //   aoContractClient: AoContractClient;
-
+  chatRoom: "Town" | "RestArea";
   // Reads
   readCount(): Promise<number>;
   readHistory(query?: HistoryQuery): Promise<ChatMessageHistoryType>;
@@ -22,11 +22,20 @@ export type ChatClient = {
 
 // Placeholder
 // TODO: Define these methods properly
-export const createChatClient = (): ChatClient => ({
+export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => ({
+  chatRoom,
   // Read
-  readCount: () => sendDryRunGameMessage([{ name: "Action", value: "ChatCount" }], "chat").then((reply) => parseInt(reply.data as any)),
+  readCount: () =>
+    sendDryRunGameMessage(
+      [
+        { name: "Action", value: "ChatCount" },
+        { name: "ChatRoom", value: chatRoom },
+      ],
+      "chat"
+    ).then((reply) => parseInt(reply.data as any)),
   readHistory: (query?: HistoryQuery) => {
     const queryTagsMap = {
+      ChatRoom: chatRoom,
       "Id-After": query?.idAfter?.toString(),
       "Id-Before": query?.idBefore?.toString(),
       "Timestamp-Start": query?.timeStart?.getTime().toString(),

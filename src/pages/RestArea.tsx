@@ -1,3 +1,4 @@
+import ChatWindow from "@/components/chat/Chat";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
@@ -18,6 +19,7 @@ export default function RestArea() {
   const current_spot = useGameStore((state) => state.user!.current_spot);
   console.log("current_spot", current_spot);
   const [openBag, setOpenBag] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const ReturnToTown = () => {
     return (
@@ -57,13 +59,33 @@ export default function RestArea() {
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />}
-      <div className="z-10 absolute top-4 right-4">
-        <ReturnToTown />
-      </div>
-      <div className="z-10 absolute bottom-4 left-4 flex gap-2 items-end">
-        <InventoryBag />
-        <ImgButton src={"https://arweave.net/RJfmhCUfHuvqp2I1D9rnJmlGvax4QZb20ss1SRwvXyw"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
-      </div>
+
+      <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
+
+      {!chatOpen && (
+        <div className="z-10 absolute top-4 right-4">
+          <ReturnToTown />
+        </div>
+      )}
+
+      {!chatOpen && (
+        <>
+          <div className="z-10 absolute bottom-4 left-4 flex gap-2 items-end">
+            <InventoryBag />
+            <ImgButton src={"https://arweave.net/RJfmhCUfHuvqp2I1D9rnJmlGvax4QZb20ss1SRwvXyw"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
+          </div>
+
+          <div className="z-10 absolute bottom-4 right-4 flex gap-2 items-end">
+            <ImgButton
+              src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
+              onClick={() => {
+                setChatOpen(true);
+              }}
+              alt={"Chat"}
+            />
+          </div>
+        </>
+      )}
 
       {openBag && (
         <div className="absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50">

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ChatBubble from "./ChatBubble";
 import { z } from "zod";
 import { ChatClient, createChatClient } from "./chatClient";
-import { useGameStore } from "@/store/useGameStore";
+import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { IMAGES } from "@/lib/constants";
 
@@ -116,14 +116,24 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
   );
 }
 
-function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) {
-  console.log({ historyIndex });
-  const chatClient = createChatClient();
+function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
+  const { GameStatePage, currentIslandLevel } = useGameStore((state) => state);
+
+  const CHAT_ROOM = currentIslandLevel == 0 ? "Town" : "RestArea";
+  // Add this line to create a unique key for the query
+  const queryKey = `messageHistory-${CHAT_ROOM}-${GameStatePage}`;
+
+  const chatClient = createChatClient(CHAT_ROOM);
   const user = useGameStore((state) => state.user!);
   const userAddress = user.address;
   const isInitialFetchRef = useRef(true);
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [allMessages, setAllMessages] = useState<Array<ChatMessageType>>([]);
+
+  useEffect(() => {
+    setAllMessages([]);
+  }, [GameStatePage]);
 
   //   reset isInitialFetchRef when chatOpen is false
   useEffect(() => {
@@ -139,7 +149,7 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
     hasPreviousPage,
     isFetchingPreviousPage,
   } = useInfiniteQuery({
-    queryKey: ["messageHistory", historyIndex],
+    queryKey: [queryKey],
     queryFn: async ({ pageParam }) => {
       console.log("Fetching messages with pageParam:", pageParam);
 
@@ -151,26 +161,28 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
       console.log("Fetched messages:", result);
       return result;
     },
-    initialPageParam: historyIndex,
+    initialPageParam: 0,
     getNextPageParam: () => undefined,
-    getPreviousPageParam: (nextPage) => {
-      console.log("getNextPageParam", nextPage);
-      if (nextPage.length === 0) {
+    getPreviousPageParam: (firstPage) => {
+      if (!firstPage) return undefined;
+      //   if firstPage is not an array, return undefined
+      if (!Array.isArray(firstPage)) {
         return undefined;
       }
-      const sortedIds = nextPage.map((m) => m.Id).sort((a, b) => a - b);
-      const lowestId = sortedIds[0];
-      console.log("lowestId", lowestId);
-      if (lowestId === 1) {
+      if (firstPage.length === 0) {
         return undefined;
       }
-      return lowestId;
+      const lowestId = Math.min(...firstPage.map((m) => m.Id));
+      if (lowestId <= 1) {
+        return undefined;
+      }
+      return lowestId - 1;
     },
-    // enabled: historyIndex !== undefined,
+    enabled: chatOpen,
   });
 
   const { data: newMessages, refetch: refetchNewMessages } = useQuery({
-    queryKey: ["newMessages", historyIndex],
+    queryKey: [`newMessages-${queryKey}`],
     queryFn: async () => {
       const latestId = allMessages?.[allMessages.length - 1]?.Id;
       if (latestId === undefined) return [];
@@ -179,17 +191,29 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
         idAfter: latestId,
         limit: queryPageSize,
       });
-      setLatestMessage(result[0]);
+      if (!chatOpen) setLatestMessage(result[0]);
+
       return result;
     },
     // enabled: !!historyData?.pages[0]?.length,
     refetchInterval: 5000, // Poll every 5 seconds
   });
 
-  // const allMessages = messageHistory.concat(newMessages);
+  useEffect(() => {
+    if (historyData) {
+      const newMessages = historyData.pages.flatMap((page) => page);
+      setAllMessages((prev) => removeDuplicates([...prev, ...newMessages]));
+    }
+  }, [historyData]);
 
-  const lastMessageCount = useRef(0);
+  useEffect(() => {
+    if (newMessages) {
+      setAllMessages((prev) => removeDuplicates([...prev, ...newMessages]));
+    }
+  }, [newMessages]);
+
   const messagesRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef<number>(0);
 
   const handleScroll = useCallback(() => {
     const element = messagesRef.current;
@@ -198,6 +222,7 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
       setIsAtBottom(scrollHeight - scrollTop === clientHeight);
 
       if (scrollTop === 0 && hasPreviousPage && !isFetchingPreviousPage) {
+        scrollPositionRef.current = scrollHeight;
         fetchPreviousPage();
       }
     }
@@ -205,11 +230,18 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
 
   useEffect(() => {
     const element = messagesRef.current;
+    console.log("useEffect ADDING SCROLL EVENT LISTENER", { element, chatOpen });
+    if (!chatOpen) {
+      if (element) {
+        element.removeEventListener("scroll", handleScroll);
+      }
+      return;
+    }
     if (element) {
       element.addEventListener("scroll", handleScroll);
       return () => element.removeEventListener("scroll", handleScroll);
     }
-  }, [handleScroll]);
+  }, [chatOpen, handleScroll, messagesRef]);
 
   // scroll to bottom of chat when messages are loaded and on initial fetch
   useEffect(() => {
@@ -224,7 +256,7 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
       });
     };
 
-    if (isInitialFetchRef.current && !isLoadingHistory && historyData?.pages[0]?.length) {
+    if (isInitialFetchRef.current && !isLoadingHistory && allMessages.length) {
       // Use setTimeout to ensure the content has been rendered
       setTimeout(() => {
         scrollToBottom();
@@ -232,21 +264,36 @@ function Chat({ historyIndex, onClose, chatOpen, setLatestMessage }: ChatProps) 
       }, 0);
     } else if (isAtBottom && newMessages?.length) {
       scrollToBottom();
+    } else if (scrollPositionRef.current > 0) {
+      const newScrollTop = element.scrollHeight - scrollPositionRef.current;
+      element.scrollTop = newScrollTop;
+      scrollPositionRef.current = 0;
     }
-  }, [chatOpen, isLoadingHistory, historyData, newMessages, isAtBottom]);
+  }, [chatOpen, isLoadingHistory, newMessages, isAtBottom, allMessages]);
 
-  const allMessages = useMemo(() => {
+  //   const allMessages = useMemo(() => {
+  //     const messagesMap = new Map();
+  //     console.log("redering new messages", historyData, newMessages);
+
+  //     // Add new messages to the map
+  //     newMessages?.forEach((msg) => messagesMap.set(msg.Id, msg));
+
+  //     // Add historical messages to the map, overwriting any duplicates
+  //     historyData?.pages.forEach((page) => page.forEach((msg) => messagesMap.set(msg.Id, msg)));
+
+  //     // Convert map to array, sort by timestamp
+  //     return Array.from(messagesMap.values()).sort((a, b) => a.Timestamp - b.Timestamp);
+  //   }, [newMessages, historyData]);
+  function removeDuplicates(messages: Array<ChatMessageType>) {
     const messagesMap = new Map();
-
-    // Add new messages to the map
-    newMessages?.forEach((msg) => messagesMap.set(msg.Id, msg));
-
-    // Add historical messages to the map, overwriting any duplicates
-    historyData?.pages.forEach((page) => page.forEach((msg) => messagesMap.set(msg.Id, msg)));
-
-    // Convert map to array, sort by timestamp
+    messages.forEach((msg) => messagesMap.set(msg.Id, msg));
     return Array.from(messagesMap.values()).sort((a, b) => a.Timestamp - b.Timestamp);
-  }, [newMessages, historyData]);
+  }
+  useEffect(() => {
+    if (newMessages) {
+      setAllMessages((prev) => removeDuplicates([...prev, ...newMessages]));
+    }
+  }, [newMessages]);
 
   const form = useForm();
 

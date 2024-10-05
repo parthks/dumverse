@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS Messages (
     AuthorId TEXT NOT NULL,
     AuthorName TEXT NOT NULL,
     AuthorNFT TEXT DEFAULT NULL,
+    ChatRoom TEXT DEFAULT "Town",
     Content TEXT
   );
 ]]
@@ -53,7 +54,7 @@ local function ValidateAuthorName(authorName: string): boolean
     if (#authorName < 1) then
       return false
     end
-    if (#authorName > 20) then
+    if (#authorName > 100) then
       return false
     end
   
@@ -111,29 +112,25 @@ Handlers.add(
     local authorName = msg.Tags['AuthorName']
     local authorNFT = msg.Tags['AuthorNFT'] or nil
     local content = msg.Data
+    local chatRoom = msg.Tags['ChatRoom'] or "Town"
+    assert(chatRoom == "Town" or chatRoom == "RestArea", "Invalid chat room")
+
     print("Received message id" .. messageId .. " by " .. authorName ..  " at " .. timestamp .. " and content " .. content)
 
 
     -- Validate AuthorName
-    -- if (not ValidateAuthorName(authorName)) then
-    --    print("Invalid Author Name")
-    --    return
-    -- end
-
-    -- -- Validate Content
-    -- if (not ValidateContent(content)) then
-    --    print("Invalid Content")
-    --    return
-    -- end
+    assert(ValidateAuthorName(authorName), "Invalid Author Name")
+    -- Validate Content
+    assert(ValidateContent(content), "Invalid Content")
 
     print("Saving message")
     -- Save message
     local authorNFTValue = authorNFT ~= nil and string.format("'%s'", authorNFT) or "NULL"
 
     dbAdmin:exec(string.format([[
-        INSERT INTO Messages (MessageId, Timestamp, AuthorId, AuthorName, Content, AuthorNFT)
-        VALUES ("%s", %f, "%s", "%s", "%s", %s)
-      ]], messageId, timestamp, authorId, authorName, content, authorNFTValue))
+        INSERT INTO Messages (MessageId, Timestamp, AuthorId, AuthorName, Content, AuthorNFT, ChatRoom)
+        VALUES ("%s", %f, "%s", "%s", "%s", %s, "%s")
+      ]], messageId, timestamp, authorId, authorName, content, authorNFTValue, chatRoom))
   
     print("Message saved")
     ao.send({ Target = msg.From, Status = "Success" })
@@ -188,9 +185,11 @@ Handlers.add(
   Handlers.utils.hasMatchingTag('Action', 'ChatCount'),
   function(msg: Message)
     -- print("ChatCount")
-    local count =dbAdmin:exec(string.format([[
-        SELECT COUNT(*) FROM Messages
-    ]]))
+    local chatRoom = msg.Tags['ChatRoom'] or "Town"
+    assert(chatRoom == "Town" or chatRoom == "RestArea", "Invalid chat room")
+    local count = dbAdmin:exec(string.format([[
+        SELECT COUNT(*) FROM Messages WHERE ChatRoom = "%s"
+    ]], chatRoom))
 
     print('count', count)
     
@@ -218,6 +217,8 @@ Handlers.add(
     -- local timestampStart = tonumber(msg.Tags['Timestamp-Start']) as integer
     -- local timestampEnd = tonumber(msg.Tags['Timestamp-End']) as integer
     local limit = tonumber(msg.Tags['Limit']) as integer
+    local chatRoom = msg.Tags['ChatRoom'] or "Town"
+    assert(chatRoom == "Town" or chatRoom == "RestArea", "Invalid chat room")
 
     -- Validate individual Ids
     if (not ValidateId(idAfter)) then
@@ -266,6 +267,8 @@ Handlers.add(
     ]]
 
     local whereClauses = {}
+    table.insert(whereClauses, string.format("ChatRoom = '%s'", chatRoom))
+
     if idAfter ~= nil then
         table.insert(whereClauses, string.format("Id > %f", idAfter))
     end
@@ -274,8 +277,9 @@ Handlers.add(
     end
     -- Add WHERE clause if there are any conditions
     if #whereClauses > 0 then
-        query = query .. " WHERE " .. table.concat(whereClauses, " AND ")
+        query = query .. " WHERE " .. table.concat(whereClauses, " AND ") 
     end
+
     -- Add ORDER BY and LIMIT clauses
     query = query .. " ORDER BY Timestamp DESC LIMIT " .. (limit or 100)
 
