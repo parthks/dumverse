@@ -13,7 +13,7 @@ function getProcessId(process: Process) {
   return process === "chat" ? CHAT_PROCESS_ID : process === "combat" ? COMBAT_PROCESS_ID : GAME_PROCESS_ID;
 }
 
-export async function sendAndReceiveGameMessage(tags: { name: string; value: string }[], data: string = "", process: Process = "game") {
+export async function sendAndReceiveGameMessage({ tags, data, process = "game" }: { tags: { name: string; value: string }[]; data?: string; process?: Process }) {
   const processId = getProcessId(process);
   const action = tags.find((tag) => tag.name === "Action")?.value;
   console.log("sending message:" + action, { tags, data });
@@ -32,7 +32,7 @@ export async function sendAndReceiveGameMessage(tags: { name: string; value: str
   return handleResultData(resultData);
 }
 
-export async function sendDryRunGameMessage(tags: { name: string; value: string }[], process: Process = "game") {
+export async function sendDryRunGameMessage({ tags, process = "game" }: { tags: { name: string; value: string }[]; process?: Process }) {
   const processId = getProcessId(process);
   const action = tags.find((tag) => tag.name === "Action")?.value;
   console.log("sending dry run message:" + action, { tags });

@@ -22,7 +22,7 @@ global record Battle
 end
 
 global record BattleHelpersType
-    getLatestOpenBattle: function(): Battle | nil
+    getLatestSuitableOpenBattle: function(player: CombatUserData): Battle | nil
     killNPC: function(battle_id: integer, npc_id: string, attacker_id: string, timestamp: integer)
     killPlayer: function(battle_id: integer, player_id: string, attacker_id: string, timestamp: integer)
     playerRanAway: function(battle_id: integer, player_id: string, timestamp: integer)

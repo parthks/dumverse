@@ -125,7 +125,7 @@ export default function Combat() {
         if (!battle) {
           // Schedule the next check in 1 second
           if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(checkOpenBattles, 1000);
+          timeout = setTimeout(checkOpenBattles, 5000);
         }
       }
     };

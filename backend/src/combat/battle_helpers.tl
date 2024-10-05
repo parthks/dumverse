@@ -60,9 +60,10 @@ BattleHelpers.endBattle = function(battle_id: integer, winner_id: string, timest
     BattleHelpers.update(battle_id, battle)
 end
 
-BattleHelpers.getLatestOpenBattle = function(): Battle
+BattleHelpers.getLatestSuitableOpenBattle = function(player: CombatUserData): Battle | nil
+    -- all players in same battle should have same defense (level of armor)
     for _, battle in pairs(Battles) do
-        if not battle.ended and #utils.keys(battle.players) < MAX_PLAYERS_IN_BATTLE then
+        if not battle.ended and #utils.keys(battle.players) < MAX_PLAYERS_IN_BATTLE and utils.values(battle.players)[1].defense == player.defense then
             return battle
         end
     end

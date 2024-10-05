@@ -153,17 +153,17 @@ local function ValidateId(testId: integer): boolean
     return true
   end
   
-  local function ValidateTimestamp(testTimestamp: integer): boolean
-    if (testTimestamp == nil) then
-      -- Allow nil timestamps
-      return true
-    end
-    if (testTimestamp < 0) then
-      return false
-    end
+--   local function ValidateTimestamp(testTimestamp: integer): boolean
+--     if (testTimestamp == nil) then
+--       -- Allow nil timestamps
+--       return true
+--     end
+--     if (testTimestamp < 0) then
+--       return false
+--     end
   
-    return true
-  end
+--     return true
+--   end
   
 --   local function ValidateLimit(testLimit: integer): boolean
 --     if (testLimit == nil) then

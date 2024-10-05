@@ -1,6 +1,6 @@
 
 require("combat.types")
-global MAX_PLAYERS_IN_BATTLE = 1
+global MAX_PLAYERS_IN_BATTLE = 2
 global GAME_PROCESS_ID = ao.env.Process.Tags.GameProcessId
 
 global BATTLE_COUNT: integer

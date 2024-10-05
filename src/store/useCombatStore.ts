@@ -34,15 +34,15 @@ export const useCombatStore = create<CombatState>()(
           return null;
         }
         set({ loading: true, enteringNewBattle: true });
-        const resultData = await sendAndReceiveGameMessage(
-          [
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
             {
               name: "Action",
               value: "Battle.GetOpenBattles",
             },
           ],
-          "combat"
-        );
+          process: "combat",
+        });
         const battles = resultData.data as Battle[];
         if (battles && battles.length > 0) {
           set({ currentBattle: battles?.[0], enteringNewBattle: false });
@@ -59,8 +59,8 @@ export const useCombatStore = create<CombatState>()(
         const user_id = useGameStore.getState().user?.id;
         if (!battle_id || !user_id) return null;
         set({ loading: true });
-        const resultData = await sendDryRunGameMessage(
-          [
+        const resultData = await sendDryRunGameMessage({
+          tags: [
             {
               name: "Action",
               value: "Battle.Info",
@@ -74,8 +74,8 @@ export const useCombatStore = create<CombatState>()(
               value: user_id.toString(),
             },
           ],
-          "combat"
-        );
+          process: "combat",
+        });
         const battle = resultData.data?.id ? (resultData.data as Battle) : null;
         set({ loading: false });
         if (battle) {
@@ -88,20 +88,22 @@ export const useCombatStore = create<CombatState>()(
         const user_id = useGameStore.getState().user?.id;
         if (!user_id) throw new Error("User not found");
         set({ enteringNewBattle: true });
-        const resultData = await sendAndReceiveGameMessage([
-          {
-            name: "Action",
-            value: "Combat.EnterNewCombat",
-          },
-          {
-            name: "Level",
-            value: level.toString(),
-          },
-          {
-            name: "UserId",
-            value: user_id.toString(),
-          },
-        ]);
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            {
+              name: "Action",
+              value: "Combat.EnterNewCombat",
+            },
+            {
+              name: "Level",
+              value: level.toString(),
+            },
+            {
+              name: "UserId",
+              value: user_id.toString(),
+            },
+          ],
+        });
         return resultData;
       },
       userAttack: async (npc_id: string) => {
@@ -109,8 +111,8 @@ export const useCombatStore = create<CombatState>()(
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id || !npc_id) return;
         set({ loading: true });
-        const resultData = await sendAndReceiveGameMessage(
-          [
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
             {
               name: "Action",
               value: "Battle.UserAttack",
@@ -128,8 +130,8 @@ export const useCombatStore = create<CombatState>()(
               value: npc_id,
             },
           ],
-          "combat"
-        );
+          process: "combat",
+        });
         const battle = findBattleDataMessage(resultData);
         if (battle) {
           set({ currentBattle: battle as Battle });
@@ -141,8 +143,9 @@ export const useCombatStore = create<CombatState>()(
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id) return;
         set({ loading: true });
-        const resultData = await sendAndReceiveGameMessage(
-          [
+
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
             {
               name: "Action",
               value: "Battle.UserRun",
@@ -156,8 +159,8 @@ export const useCombatStore = create<CombatState>()(
               value: battle_id.toString(),
             },
           ],
-          "combat"
-        );
+          process: "combat",
+        });
         const battle = findBattleDataMessage(resultData);
         if (battle) {
           set({ currentBattle: battle as Battle });
@@ -169,8 +172,8 @@ export const useCombatStore = create<CombatState>()(
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id) return;
         set({ loading: true });
-        const resultData = await sendAndReceiveGameMessage(
-          [
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
             {
               name: "Action",
               value: "Battle.DrinkPotion",
@@ -184,8 +187,8 @@ export const useCombatStore = create<CombatState>()(
               value: battle_id.toString(),
             },
           ],
-          "combat"
-        );
+          process: "combat",
+        });
         const battle = findBattleDataMessage(resultData);
         if (battle) {
           set({ currentBattle: battle as Battle });

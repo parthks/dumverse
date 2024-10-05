@@ -133,7 +133,7 @@ local function newUserJoinHandler(msg: Message)
         local npcs = json.decode(data.npcs) as {CombatEnemyData}
 
         -- check lastest open battle and add user to it
-        local battle = BattleHelpers.getLatestOpenBattle() as Battle
+        local battle = BattleHelpers.getLatestSuitableOpenBattle(player) as Battle
 
         if not battle then
             battle = BattleHelpers.new(msg.Timestamp)
@@ -233,8 +233,8 @@ local function userAttackHandler(msg: Message)
     elseif (utils.includes(attackEntityId, playerUserIds)) then
         -- Player attacking Player
         local log, defender_health, defender_defense = PlayerAttacksPlayer(battle.players[user_id], battle.players[attackEntityId], msg.Timestamp)
-        battle.players[user_id].defense = defender_defense
-        battle.players[user_id].health = defender_health
+        battle.players[attackEntityId].defense = defender_defense
+        battle.players[attackEntityId].health = defender_health
         
         BattleHelpers.addLogs(battle_id, log)
         if defender_health <= 0 then

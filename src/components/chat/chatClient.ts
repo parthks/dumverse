@@ -26,13 +26,13 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
   chatRoom,
   // Read
   readCount: () =>
-    sendDryRunGameMessage(
-      [
+    sendDryRunGameMessage({
+      tags: [
         { name: "Action", value: "ChatCount" },
         { name: "ChatRoom", value: chatRoom },
       ],
-      "chat"
-    ).then((reply) => parseInt(reply.data as any)),
+      process: "chat",
+    }).then((reply) => parseInt(reply.data as any)),
   readHistory: (query?: HistoryQuery) => {
     const queryTagsMap = {
       ChatRoom: chatRoom,
@@ -47,7 +47,7 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
       .map(([name, value]) => ({ name, value: value! }));
     const tags = filterTags.concat({ name: "Action", value: "ChatHistory" });
 
-    return sendDryRunGameMessage(tags, "chat").then((reply) => reply.data as any);
+    return sendDryRunGameMessage({ tags, process: "chat" }).then((reply) => reply.data as any);
   },
 
   // Write
@@ -68,6 +68,6 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
         value: chatMessage.AuthorNFT,
       });
     }
-    return sendAndReceiveGameMessage(tags, chatMessage.Content, "chat").then((reply) => reply.data);
+    return sendAndReceiveGameMessage({ tags, data: chatMessage.Content, process: "chat" }).then((reply) => reply.data);
   },
 });

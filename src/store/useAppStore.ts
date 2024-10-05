@@ -1,12 +1,10 @@
-import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
-import type {} from "@redux-devtools/extension";
-import { BazzarProfile } from "@/types/wallet";
-import { createDataItemSigner, message, result } from "@permaweb/aoconnect/browser";
-import { GAME_PROCESS_ID } from "@/lib/utils";
+import { sendAndReceiveGameMessage } from "@/lib/wallet";
 import { GameUser } from "@/types/game";
-import { GameStatePages, useGameStore } from "./useGameStore";
-import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
+import { BazzarProfile } from "@/types/wallet";
+import type {} from "@redux-devtools/extension";
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { useGameStore } from "./useGameStore";
 
 interface AppState {
   walletAddressID: string | null;
@@ -47,7 +45,7 @@ export const useAppStore = create<AppState>()(
       },
       gameProfiles: null,
       getGameProfiles: async () => {
-        const resultData = await sendAndReceiveGameMessage([{ name: "Action", value: "User.UserProfiles" }]);
+        const resultData = await sendAndReceiveGameMessage({ tags: [{ name: "Action", value: "User.UserProfiles" }] });
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) set({ gameProfiles: JSON.parse(resultData.Messages[0].Data) });
         else set({ gameProfiles: [] });
       },
