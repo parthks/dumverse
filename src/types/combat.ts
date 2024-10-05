@@ -39,6 +39,7 @@ export type Battle = {
       id: string;
       potion_used: boolean;
       potion: { id: string; item_id: ItemType; health: number };
+      added_at_timestamp: number;
     }
   >;
   npcs: Record<string, NPC>;

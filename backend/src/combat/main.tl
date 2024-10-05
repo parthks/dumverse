@@ -149,6 +149,7 @@ local function newUserJoinHandler(msg: Message)
             end
             BattleHelpers.update(battle.id, battle)
         end
+        player.added_at_timestamp = msg.Timestamp
         BattleHelpers.addPlayer(battle.id, player)
 
         local user_address = player.address

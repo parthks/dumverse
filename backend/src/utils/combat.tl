@@ -28,4 +28,5 @@ global type CombatUserData = record
     -- Additional fields specific to CombatUserData
     potion_used: boolean
     potion: CombatPotionData | nil
+    added_at_timestamp: integer
 end

@@ -240,6 +240,31 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     !!currentBattle.players_attacked.find((player) => player === userId.toString()) || // user has attacked
     !currentBattle.players_alive.find((player) => player === userId.toString()); // user is not alive
 
+  const [newPlayerTimers, setNewPlayerTimers] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const timers: Record<string, NodeJS.Timeout> = {};
+
+    Object.values(currentBattle.players).forEach((player) => {
+      console.log("!!NEW PLAYER!!", player, Date.now() - 5000, (player as any).added_at_timestamp);
+      if (player.id !== userId.toString() && (player as any).added_at_timestamp > Date.now() - 5000) {
+        const timeToWait = 5000 - (Date.now() - (player as any).added_at_timestamp);
+        setNewPlayerTimers((prev) => ({ ...prev, [player.id]: (player as any).added_at_timestamp + timeToWait }));
+        timers[player.id] = setTimeout(() => {
+          setNewPlayerTimers((prev) => {
+            const newTimers = { ...prev };
+            delete newTimers[player.id];
+            return newTimers;
+          });
+        }, timeToWait);
+      }
+    });
+
+    return () => {
+      Object.values(timers).forEach((timer) => clearTimeout(timer));
+    };
+  }, [currentBattle.players, currentBattle.created_at, userId]);
+
   const attackAudioRef = useRef<HTMLAudioElement>(null);
   const [attackedEnemyId, setAttackedEnemyId] = useState<string | null>(null);
 
@@ -280,19 +305,22 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           </div>
 
           {allPlayers.map((entity, index) => {
-            const isEnemy = entity.id.startsWith("NPC");
+            const isNPC = entity.id.startsWith("NPC");
             const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
+            const newPlayerArrived = !isNPC && !!newPlayerTimers[entity.id]; // pvp 5 second combat cooldown for new players
+            const disableAttack = loading || disableAttackButtons || newPlayerArrived;
+
             return (
               <>
                 <div key={entity.id} className="flex flex-col gap-2 w-[380px] items-center">
-                  {isEnemy && (
+                  {isNPC && (
                     <div className={`relative ${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
                       <EnemyCard enemy={entity as NPC} />
                       {attackedEnemyId === entity.id && <AttackAnimation />}
                     </div>
                   )}
 
-                  {!isEnemy && (
+                  {!isNPC && (
                     <div className={`${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
                       <PlayerCard player={entity as Battle["players"][string]} />
                     </div>
@@ -301,14 +329,14 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
                   {enemyIsAlive && (
                     <div className="flex gap-2 items-center">
                       <ImgButton
-                        disabled={loading || disableAttackButtons}
+                        disabled={disableAttack}
                         className="w-40 shrink-0"
                         src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
                         onClick={() => handleAttack(entity.id)}
                         alt={"Attack" + entity.name}
                       />
 
-                      {isEnemy && <p className="text-white text-lg font-bold text-center">20 seconds till {entity.name} attacks...</p>}
+                      {isNPC && <p className="text-white text-lg font-bold text-center">20 seconds till {entity.name} attacks...</p>}
                       {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 20 seconds...</p>} */}
                     </div>
                   )}
