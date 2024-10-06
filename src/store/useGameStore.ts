@@ -1,3 +1,4 @@
+import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { interactivePoints } from "@/pages/GameMap";
@@ -48,7 +49,7 @@ interface GameState {
   lamaPosition: LamaPosition;
   setLamaPosition: (position: LamaPosition) => void;
   goDirectlyToTownPage: () => void;
-  goToTown: () => void;
+  goToTown: (hardRefresh?: boolean) => void;
   goToRestArea: () => void; // goes to the nearest rest area (+- 1 from current level)
   goToGameMap: (resetPosition?: boolean) => void;
   regenerateEnergy: () => Promise<void>;
@@ -218,8 +219,9 @@ export const useGameStore = create<GameState>()(
       lamaPosition: initialLamaPosition,
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN }),
-      goToTown: async () => {
-        if (get().user?.current_spot !== 0) {
+      goToTown: async (hardRefresh = false) => {
+        // hardRefresh is true when going to town from combat (in case on spot one)
+        if (get().user?.current_spot !== 0 || hardRefresh) {
           const resultData = await sendAndReceiveGameMessage({
             tags: [
               { name: "Action", value: "User.GoToTown" },
@@ -233,20 +235,24 @@ export const useGameStore = create<GameState>()(
           }
         } else {
           set({ GameStatePage: GameStatePages.TOWN });
-          get().resetRegenerateCountdown();
         }
       },
       goToRestArea: async () => {
-        const resultData = await sendAndReceiveGameMessage({
-          tags: [
-            { name: "Action", value: "User.GoToRestArea" },
-            { name: "UserId", value: get().user?.id.toString()! },
-          ],
-        });
-        if (resultData.status === "Success") {
-          await get().refreshUserData();
+        const currentSpot = get().user?.current_spot;
+        if (currentSpot !== undefined && !REST_SPOTS.includes(currentSpot)) {
+          const resultData = await sendAndReceiveGameMessage({
+            tags: [
+              { name: "Action", value: "User.GoToRestArea" },
+              { name: "UserId", value: get().user?.id.toString()! },
+            ],
+          });
+          if (resultData.status === "Success") {
+            await get().refreshUserData();
+            set({ GameStatePage: GameStatePages.REST_AREA });
+            get().resetRegenerateCountdown();
+          }
+        } else {
           set({ GameStatePage: GameStatePages.REST_AREA });
-          get().resetRegenerateCountdown();
         }
       },
       goToGameMap: async (resetPosition = false) => {
@@ -254,7 +260,6 @@ export const useGameStore = create<GameState>()(
         if (resetPosition) {
           set({ lamaPosition: initialLamaPosition, currentIslandLevel: 0 });
         }
-        get().resetRegenerateCountdown();
       },
       regenerateEnergy: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -267,18 +272,21 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
+        const currentSpot = get().user?.current_spot;
+        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
+        console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
         // if in town or rest area, set the countdown to 2 minutes
-        if (get().GameStatePage !== GameStatePages.GAME_MAP && get().GameStatePage !== GameStatePages.COMBAT) {
+        if (inTownOrRestArea) {
           console.log("setting countdown to 2 minutes");
           set({ regenerateCountdown: 120 });
-        } else if (get().GameStatePage === GameStatePages.GAME_MAP) {
+        } else {
           // if in game map, set the countdown to 4 minutes
           console.log("setting countdown to 4 minutes");
           set({ regenerateCountdown: 240 });
         }
       },
       regenerateCountdownTickDown: async () => {
-        console.log("regenerateCountdownTickDown", get().regenerateCountdown);
+        // console.log("new regenerateCountdownTickDown", get().regenerateCountdown);
         if (get().regenerateCountdown !== null) {
           const currentCount = get().regenerateCountdown!;
           set({ regenerateCountdown: currentCount - 1 });
@@ -287,6 +295,7 @@ export const useGameStore = create<GameState>()(
             set({ regenerateCountdown: null });
           }
         } else {
+          console.log("resetting regenerateCountdown since it's null");
           get().resetRegenerateCountdown();
         }
       },

@@ -3,9 +3,12 @@ import { useEffect } from "react";
 import BankPage from "./Bank";
 import Combat from "./Combat";
 import GameMap from "./GameMap";
-import Shop from "./Shop";
 import RestArea from "./RestArea";
+import Shop from "./Shop";
 import Town from "./Town";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export default function Game() {
   const { GameStatePage, setGameStatePage, user, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
@@ -20,10 +23,13 @@ export default function Game() {
       return;
     }
 
+    // TODO: check this logic if timer resets when in town or rest area
+    // const inTownOrRestArea = user?.current_spot && REST_SPOTS.includes(user?.current_spot);
+
     if (user?.id && user?.stamina < user?.total_stamina) {
-      console.log("Regenerating energy interval started");
+      // console.log("Regenerating energy interval started");
       interval = setInterval(async () => {
-        console.log("Regenerating energy");
+        // console.log("Regenerating energy");
         regenerateCountdownTickDown();
       }, 1000);
     }
@@ -33,7 +39,7 @@ export default function Game() {
         clearInterval(interval);
       }
     };
-  }, [user?.stamina, user?.total_stamina, GameStatePage]);
+  }, [user?.stamina, user?.total_stamina, GameStatePage, user?.current_spot]);
 
   let page = <div>Game</div>;
   if (GameStatePage === GameStatePages.BANK) page = <BankPage />;
@@ -60,7 +66,7 @@ export default function Game() {
         <Button onClick={() => setGameStatePage(GameStatePages.GAME_MAP)}>Go to Game Map</Button>
         <Button onClick={() => setGameStatePage(GameStatePages.COMBAT)}>Go to Combat</Button>
       </div> */}
-      {page}
+      <QueryClientProvider client={queryClient}>{page}</QueryClientProvider>
     </div>
   );
 }

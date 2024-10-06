@@ -7,6 +7,7 @@ import { result } from "@permaweb/aoconnect/browser";
 import { GAME_PROCESS_ID } from "@/lib/utils";
 
 interface CombatState {
+  actionLoading: boolean;
   loading: boolean;
   enteringNewBattle: boolean;
   setEnteringNewBattle: (enteringNewBattle: boolean) => void;
@@ -28,6 +29,7 @@ export const useCombatStore = create<CombatState>()(
         set({ enteringNewBattle }); // used after 30 second timeout if no battle is found
       },
       loading: false,
+      actionLoading: false,
       currentBattle: null,
       getOpenBattles: async () => {
         if (get().currentBattle?.id) {
@@ -110,7 +112,7 @@ export const useCombatStore = create<CombatState>()(
         const user_id = useGameStore.getState().user?.id;
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id || !npc_id) return;
-        set({ loading: true });
+        set({ loading: true, actionLoading: true });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
@@ -136,13 +138,13 @@ export const useCombatStore = create<CombatState>()(
         if (battle) {
           set({ currentBattle: battle as Battle });
         }
-        set({ loading: false });
+        set({ loading: false, actionLoading: false });
       },
       userRun: async () => {
         const user_id = useGameStore.getState().user?.id;
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id) return;
-        set({ loading: true });
+        set({ loading: true, actionLoading: true });
 
         const resultData = await sendAndReceiveGameMessage({
           tags: [
@@ -165,13 +167,13 @@ export const useCombatStore = create<CombatState>()(
         if (battle) {
           set({ currentBattle: battle as Battle });
         }
-        set({ loading: false });
+        set({ loading: false, actionLoading: false });
       },
       userDrinkPotion: async () => {
         const user_id = useGameStore.getState().user?.id;
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id) return;
-        set({ loading: true });
+        set({ loading: true, actionLoading: true });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
@@ -193,7 +195,7 @@ export const useCombatStore = create<CombatState>()(
         if (battle) {
           set({ currentBattle: battle as Battle });
         }
-        set({ loading: false });
+        set({ loading: false, actionLoading: false });
       },
 
       goToMapFromBattle: async () => {
@@ -208,7 +210,7 @@ export const useCombatStore = create<CombatState>()(
           set({ currentBattle: null, loading: false });
           useGameStore.getState().goToGameMap();
         } else {
-          await useGameStore.getState().goToTown();
+          await useGameStore.getState().goToTown(true);
           set({ currentBattle: null, loading: false });
         }
       },

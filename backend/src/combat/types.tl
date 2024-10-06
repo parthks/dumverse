@@ -15,6 +15,7 @@ global record Battle
     players: {string: CombatUserData}
     npcs: {string: CombatEnemyData}
     log: {BattleLogEntry}
+    last_player_attack_timestamp: {string: integer}
     last_npc_attack_timestamp: {string: integer}
     ended: boolean
     winner: string | nil
@@ -22,7 +23,7 @@ global record Battle
 end
 
 global record BattleHelpersType
-    getLatestSuitableOpenBattle: function(player: CombatUserData): Battle | nil
+    getLatestSuitableOpenBattle: function(player: CombatUserData, level: integer): Battle | nil
     killNPC: function(battle_id: integer, npc_id: string, attacker_id: string, timestamp: integer)
     killPlayer: function(battle_id: integer, player_id: string, attacker_id: string, timestamp: integer)
     playerRanAway: function(battle_id: integer, player_id: string, timestamp: integer)

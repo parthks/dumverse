@@ -112,7 +112,7 @@ Handlers.add(
     local authorName = msg.Tags['AuthorName']
     local authorNFT = msg.Tags['AuthorNFT'] or nil
     local content = msg.Data
-    local chatRoom = msg.Tags['ChatRoom'] or "Town"
+    local chatRoom = msg.Tags['ChatRoom']
     assert(chatRoom == "Town" or chatRoom == "RestArea", "Invalid chat room")
 
     print("Received message id" .. messageId .. " by " .. authorName ..  " at " .. timestamp .. " and content " .. content)

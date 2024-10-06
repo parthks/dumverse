@@ -1,3 +1,5 @@
+export const REST_SPOTS = [0, 9, 18, 27];
+
 export const IMAGES = {
   DEFAULT_DUMDUM: "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY",
   FILLED_HEALTH: "https://arweave.net/htFD_LolJawKKO5P9BOO8B2XajxBuuxSvmTpCpNsUvA",

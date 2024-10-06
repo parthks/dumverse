@@ -55,7 +55,11 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
     const tags = [
       {
         name: "Action",
-        value: "TestChatMessage",
+        value: "ChatMessage",
+      },
+      {
+        name: "ChatRoom",
+        value: chatRoom,
       },
       {
         name: "AuthorName",

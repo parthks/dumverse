@@ -4,6 +4,7 @@ import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 // const currentBattle = {
@@ -103,11 +104,13 @@ import { useEffect, useRef, useState } from "react";
 // } as any;
 export default function Combat() {
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
+
   const currentBattle = useCombatStore((state) => state.currentBattle);
-  const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
   const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
+
+  const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
   const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
-  const combatLoading = useCombatStore((state) => state.loading);
+  // const combatLoading = useCombatStore((state) => state.loading);
 
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
 
@@ -158,39 +161,49 @@ export default function Combat() {
   }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
   // check for battle updates
-  useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null;
+  // useEffect(() => {
+  //   let timeout: NodeJS.Timeout | null = null;
 
-    const checkBattleUpdates = async () => {
-      if (currentBattle?.id) {
-        console.log("Checking for battle updates");
-        const updatedBattle = await setCurrentBattle(currentBattle.id);
+  //   const checkBattleUpdates = async () => {
+  //     if (currentBattle?.id) {
+  //       console.log("Checking for battle updates");
+  //       const updatedBattle = await setCurrentBattle(currentBattle.id);
 
-        // Use the most up-to-date battle state
-        if (updatedBattle && !updatedBattle.ended) {
-          if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(checkBattleUpdates, 5000);
-        } else {
-          // Battle has ended, clean up
-          if (timeout) {
-            clearTimeout(timeout);
-          }
-        }
-      }
-    };
+  //       // Use the most up-to-date battle state
+  //       if (updatedBattle && !updatedBattle.ended) {
+  //         if (timeout) clearTimeout(timeout);
+  //         timeout = setTimeout(checkBattleUpdates, 5000);
+  //       } else {
+  //         // Battle has ended, clean up
+  //         if (timeout) {
+  //           clearTimeout(timeout);
+  //         }
+  //       }
+  //     }
+  //   };
 
-    if (currentBattle?.id && !currentBattle.ended) {
-      checkBattleUpdates(); // Start the initial call only if battle is ongoing
-    }
+  //   if (currentBattle?.id && !currentBattle.ended) {
+  //     checkBattleUpdates(); // Start the initial call only if battle is ongoing
+  //   }
 
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
+  //   return () => {
+  //     if (timeout) {
+  //       clearTimeout(timeout);
+  //     }
+  //   };
+  // }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
 
-  console.log("combatLoading", combatLoading, "enteringNewBattle", enteringNewBattle, "currentBattle", currentBattle);
+  const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
+    queryKey: [`newMessages-${currentBattle?.id}`],
+    queryFn: async () => {
+      console.log("refetching battle updates");
+      const updatedBattle = await setCurrentBattle(currentBattle!.id);
+      return updatedBattle;
+    },
+    enabled: !!currentBattle?.id && !currentBattle?.ended,
+    refetchInterval: 1000, // Poll every 1 second
+  });
+
   if (enteringNewBattle && !currentBattle?.id) {
     return <div>Entering a new battle...</div>;
   }
@@ -221,6 +234,8 @@ export default function Combat() {
     );
   }
 
+  console.log("currentBattle", currentBattle);
+
   return (
     <div className="flex gap-4 justify-between p-8 min-h-screen bg-gray-900">
       <audio src={SOUNDS.BATTLE_AUDIO} autoPlay loop />
@@ -234,8 +249,9 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   const userId = useGameStore((state) => state.user!.id);
   const userAttack = useCombatStore((state) => state.userAttack);
   const userRun = useCombatStore((state) => state.userRun);
-  const loading = useCombatStore((state) => state.loading);
+  const actionLoading = useCombatStore((state) => state.actionLoading);
   const disableAttackButtons =
+    actionLoading ||
     currentBattle.ended || // battle has ended
     !!currentBattle.players_attacked.find((player) => player === userId.toString()) || // user has attacked
     !currentBattle.players_alive.find((player) => player === userId.toString()); // user is not alive
@@ -246,9 +262,9 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     const timers: Record<string, NodeJS.Timeout> = {};
 
     Object.values(currentBattle.players).forEach((player) => {
-      console.log("!!NEW PLAYER!!", player, Date.now() - 5000, (player as any).added_at_timestamp);
-      if (player.id !== userId.toString() && (player as any).added_at_timestamp > Date.now() - 5000) {
-        const timeToWait = 5000 - (Date.now() - (player as any).added_at_timestamp);
+      // console.log("!!NEW PLAYER!!", player, Date.now() - 8000, (player as any).added_at_timestamp);
+      if (player.id !== userId.toString() && (player as any).added_at_timestamp > Date.now() - 8000) {
+        const timeToWait = 8000 - (Date.now() - (player as any).added_at_timestamp);
         setNewPlayerTimers((prev) => ({ ...prev, [player.id]: (player as any).added_at_timestamp + timeToWait }));
         timers[player.id] = setTimeout(() => {
           setNewPlayerTimers((prev) => {
@@ -292,7 +308,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           <div className="flex flex-col gap-2 w-[380px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
-              disabled={loading || disableAttackButtons}
+              disabled={disableAttackButtons}
               className={"w-40"}
               src={"https://arweave.net/T2vJXtx4ivM9tySkAq8u2uSCLSDWRaPcIqqBYdAWBfE"}
               onClick={() => userRun()}
@@ -308,7 +324,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
             const isNPC = entity.id.startsWith("NPC");
             const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
             const newPlayerArrived = !isNPC && !!newPlayerTimers[entity.id]; // pvp 5 second combat cooldown for new players
-            const disableAttack = loading || disableAttackButtons || newPlayerArrived;
+            const disableAttack = disableAttackButtons || newPlayerArrived;
 
             return (
               <>
@@ -371,7 +387,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const filledHealth = player.health;
   const filledStamina = player.stamina;
   const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
-  const combatLoading = useCombatStore((state) => state.loading);
+  const actionLoading = useCombatStore((state) => state.actionLoading);
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
 
   const { weapon, armor } = getEquippedItem(user!);
@@ -405,7 +421,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
               <div className="flex gap-1">
                 {user?.id.toString() == player.id && (
                   <ImgButton
-                    disabled={combatLoading || player.potion_used}
+                    disabled={actionLoading || player.potion_used}
                     className="w-20 shrink-0"
                     src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
                     onClick={async () => {

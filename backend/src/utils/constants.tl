@@ -260,35 +260,35 @@ local ENEMIES = {
 }
 
 -- 9, 18, 27 are rest spots
-local ENEMY_PER_LEVEL = {
-    [1] = { ENEMIES[1] },
-    [2] = { ENEMIES[2] },
-    [3] = { ENEMIES[3] },
-    [4] = { ENEMIES[4] },
-    [5] = { ENEMIES[5] },
-    [6] = { ENEMIES[2], ENEMIES[3] },
-    [7] = { ENEMIES[3], ENEMIES[4] },
-    [8] = { ENEMIES[4], ENEMIES[5] },
-    -- [9] is a rest spot
-    [10] = { ENEMIES[6] },
-    [11] = { ENEMIES[7] },
-    [12] = { ENEMIES[8] },
-    [13] = { ENEMIES[9] },
-    [14] = { ENEMIES[6], ENEMIES[2] },
-    [15] = { ENEMIES[7], ENEMIES[3] },
-    [16] = { ENEMIES[8], ENEMIES[4] },
-    [17] = { ENEMIES[9], ENEMIES[5] },
-    -- [18] is a rest spot
-    [19] = { ENEMIES[10] },
-    [20] = { ENEMIES[11] },
-    [21] = { ENEMIES[12] },
-    [22] = { ENEMIES[13] },
-    [23] = { ENEMIES[10], ENEMIES[6] },
-    [24] = { ENEMIES[11], ENEMIES[7] },
-    [25] = { ENEMIES[12], ENEMIES[8] },
-    [26] = { ENEMIES[13], ENEMIES[9] },
-    -- [27] is a rest spot
-}
+-- local ENEMY_PER_LEVEL = {
+--     [1] = { ENEMIES[1] },
+--     [2] = { ENEMIES[2] },
+--     [3] = { ENEMIES[3] },
+--     [4] = { ENEMIES[4] },
+--     [5] = { ENEMIES[5] },
+--     [6] = { ENEMIES[2], ENEMIES[3] },
+--     [7] = { ENEMIES[3], ENEMIES[4] },
+--     [8] = { ENEMIES[4], ENEMIES[5] },
+--     -- [9] is a rest spot
+--     [10] = { ENEMIES[6] },
+--     [11] = { ENEMIES[7] },
+--     [12] = { ENEMIES[8] },
+--     [13] = { ENEMIES[9] },
+--     [14] = { ENEMIES[6], ENEMIES[2] },
+--     [15] = { ENEMIES[7], ENEMIES[3] },
+--     [16] = { ENEMIES[8], ENEMIES[4] },
+--     [17] = { ENEMIES[9], ENEMIES[5] },
+--     -- [18] is a rest spot
+--     [19] = { ENEMIES[10] },
+--     [20] = { ENEMIES[11] },
+--     [21] = { ENEMIES[12] },
+--     [22] = { ENEMIES[13] },
+--     [23] = { ENEMIES[10], ENEMIES[6] },
+--     [24] = { ENEMIES[11], ENEMIES[7] },
+--     [25] = { ENEMIES[12], ENEMIES[8] },
+--     [26] = { ENEMIES[13], ENEMIES[9] },
+--     -- [27] is a rest spot
+-- }
 
 return {
     COMBAT_PROCESS_ID = COMBAT_PROCESS_ID,
@@ -301,5 +301,5 @@ return {
     FOOD = FOOD,
     ALL_ITEMS = ALL_ITEMS,
     ENEMIES = ENEMIES,
-    ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
+    -- ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
 }

@@ -98,6 +98,18 @@ local function CronTick(msg: Message)
                     NPCAttack(npc_id, battle.id, msg.Timestamp)
                 end
             end
+
+            -- for pvp, if no npcs are alive, if a player has not attacked in the last 10 seconds, all players should attack
+            if #battle.npcs_alive == 0 then
+                for _, player_id in ipairs(battle.players_alive) do
+                    if not battle.last_player_attack_timestamp[player_id] or battle.last_player_attack_timestamp[player_id] + (10 * 1000) < msg.Timestamp then
+                        -- if player has not attacked in the last 10 seconds, players allowed to attack
+                        battle.players_attacked = {}
+                        battle.last_player_attack_timestamp[player_id] = msg.Timestamp
+                        BattleHelpers.update(battle.id, battle)
+                    end
+                end
+            end
         end
     end
 end
@@ -133,7 +145,7 @@ local function newUserJoinHandler(msg: Message)
         local npcs = json.decode(data.npcs) as {CombatEnemyData}
 
         -- check lastest open battle and add user to it
-        local battle = BattleHelpers.getLatestSuitableOpenBattle(player) as Battle
+        local battle = BattleHelpers.getLatestSuitableOpenBattle(player, tonumber(level)) as Battle
 
         if not battle then
             battle = BattleHelpers.new(msg.Timestamp)
@@ -250,6 +262,7 @@ local function userAttackHandler(msg: Message)
     end
 
     table.insert(battle.players_attacked, user_id)
+    battle.last_player_attack_timestamp[user_id] = msg.Timestamp
     BattleHelpers.update(battle_id, battle)
 
     if #battle.players_attacked >= #battle.players_alive then -- greater than or equal to in case a player has died
@@ -260,6 +273,12 @@ local function userAttackHandler(msg: Message)
         for _, npc_id in ipairs(battle.npcs_alive) do
             NPCAttack(npc_id, battle.id, msg.Timestamp)
         end
+        -- reset players attacked, in case there are no npcs alive and all players have attacked
+        if #battle.npcs_alive == 0 then
+            -- players should be allowed to attack one at a time
+            battle.players_attacked = {user_id}
+        end
+        BattleHelpers.update(battle_id, battle)
     end
 
     if BattleHelpers.checkIfBattleShouldEnd(battle.id) then

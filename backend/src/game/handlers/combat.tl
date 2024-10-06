@@ -81,7 +81,23 @@ local function enterNewCombatHandler(msg: Message)
         }
     end
 
-    local enemies = constants.ENEMY_PER_LEVEL[combat_level]
+    -- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
+    local enemy_index: integer;
+    if combat_level <= 8 then
+        -- Easy: enemies 1-5
+        enemy_index = math.random(1, 5)
+     elseif combat_level <= 17 then
+        -- Medium: enemies 6-9
+        enemy_index = math.random(6, 9)
+     elseif combat_level <= 25 then
+        -- Hard: enemies 10-12
+        enemy_index = math.random(10, 12)
+     else
+        -- Boss: enemy 13 (for level 26+)
+        enemy_index = 13
+     end
+     
+    local enemies = {constants.ENEMIES[enemy_index]}
     assert(enemies, "No enemies found for combat level: " .. combat_level)
 
     ao.send({

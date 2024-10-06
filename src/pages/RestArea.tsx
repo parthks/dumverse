@@ -4,6 +4,7 @@ import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
 import { SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import React from "react";
 import { useState } from "react";
 
 // TODO: add town rest image
@@ -14,36 +15,38 @@ const RestAreaImages = {
   27: "https://arweave.net/_ZixwsU3FTzyH0ddVB1pqMZEq-xG3UzqAVO3HoD0LFI",
 };
 
+const ReturnToTown = React.memo(() => {
+  const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const current_spot = useGameStore((state) => state.user!.current_spot);
+
+  return (
+    <>
+      {current_spot == 0 ? (
+        <ImgButton
+          src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"}
+          onClick={() => {
+            setGameStatePage(GameStatePages.TOWN);
+          }}
+          alt={"Return to Town"}
+        />
+      ) : (
+        <ImgButton
+          src={"https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"}
+          onClick={() => {
+            setGameStatePage(GameStatePages.GAME_MAP);
+          }}
+          alt={"Return to Map"}
+        />
+      )}
+    </>
+  );
+});
+
 export default function RestArea() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const current_spot = useGameStore((state) => state.user!.current_spot);
-  console.log("current_spot", current_spot);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-
-  const ReturnToTown = () => {
-    return (
-      <>
-        {current_spot == 0 ? (
-          <ImgButton
-            src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"}
-            onClick={() => {
-              setGameStatePage(GameStatePages.TOWN);
-            }}
-            alt={"Return to Town"}
-          />
-        ) : (
-          <ImgButton
-            src={"https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"}
-            onClick={() => {
-              setGameStatePage(GameStatePages.GAME_MAP);
-            }}
-            alt={"Return to Map"}
-          />
-        )}
-      </>
-    );
-  };
 
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
     return (

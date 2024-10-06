@@ -47,7 +47,6 @@ interface ChatProps {
   //   newMessages: Array<ChatMessageType>;
   //   onUserMessageSent?: () => void;
 }
-const queryClient = new QueryClient();
 
 export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolean; setChatOpen: (chatOpen: boolean) => void }) {
   const [latestMessage, setLatestMessage] = useState<ChatMessageType | null>(null);
@@ -56,7 +55,7 @@ export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolea
   return (
     <>
       <LatestPreviewMessage latestMessage={latestMessage} />
-      <QueryClientProvider client={queryClient}>{<Chat setLatestMessage={setLatestMessage} chatOpen={chatOpen} onClose={() => setChatOpen(false)} />}</QueryClientProvider>
+      {<Chat setLatestMessage={setLatestMessage} chatOpen={chatOpen} onClose={() => setChatOpen(false)} />}
     </>
   );
 }

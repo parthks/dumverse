@@ -9,7 +9,12 @@ local BattleHelpers: BattleHelpersType = {}
 
 BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer): boolean
     local battle = BattleHelpers.get(battle_id)
-    if #battle.npcs_alive == 0 or #battle.players_alive == 0 then
+    -- NPC wins if no players are alive
+    if #battle.players_alive == 0 then
+        return true
+    end
+    -- NPCs are all dead and only 1 player is alive
+    if #battle.npcs_alive == 0 and #battle.players_alive == 1 then
         return true
     end
     return false
@@ -21,7 +26,7 @@ BattleHelpers.endBattle = function(battle_id: integer, winner_id: string, timest
     if (battle.ended) then
         return
     end
-    -- TODO: Archive battle to SQL table and delete from memory
+    -- TODO: Archive battle to SQL table and delete from memory, does it help?
 
     battle.winner = winner_id
     battle.ended = true
@@ -60,10 +65,10 @@ BattleHelpers.endBattle = function(battle_id: integer, winner_id: string, timest
     BattleHelpers.update(battle_id, battle)
 end
 
-BattleHelpers.getLatestSuitableOpenBattle = function(player: CombatUserData): Battle | nil
+BattleHelpers.getLatestSuitableOpenBattle = function(player: CombatUserData, level: integer): Battle | nil
     -- all players in same battle should have same defense (level of armor)
     for _, battle in pairs(Battles) do
-        if not battle.ended and #utils.keys(battle.players) < MAX_PLAYERS_IN_BATTLE and utils.values(battle.players)[1].defense == player.defense then
+        if not battle.ended and battle.level == level and #utils.keys(battle.players) < MAX_PLAYERS_IN_BATTLE and utils.values(battle.players)[1].defense == player.defense then
             return battle
         end
     end
@@ -110,14 +115,20 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
     -- if attacker_id is a npc, add player gold to npc extra gold
     if battle.npcs[attacker_id] then
         battle.npcs[attacker_id].extra_gold = (battle.npcs[attacker_id].extra_gold or 0) + player.gold_balance
+        -- players dumz gets burned
     else
         -- if attacker_id is a player, give the gold to the other player
         if battle.players[attacker_id] then
             battle.players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) +
                 player.gold_balance
+            battle.players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) +
+                player.dumz_balance
         end
     end
-    -- intentionally not updating the player gold_balance, to keep the histroy. ok since player has been removed from players_alive
+    -- need to set to 0, in case this player also kills the other player at the same time, so then
+    -- the gold and dumz balance is not duplicated
+    battle.players[player_id].gold_balance = 0
+    battle.players[player_id].dumz_balance = 0
 
     BattleHelpers.update(battle_id, battle)
     player = battle.players[player_id]
@@ -176,7 +187,7 @@ BattleHelpers.new = function(timestamp: integer): Battle
     -- local lastBattle = Battles[#Battles] or { id = 0 }
     local id = BATTLE_COUNT + 1
     BATTLE_COUNT = id
-    local battle = {
+    local battle: Battle = {
         id = id,
         level = nil,
         -- player_id_tried_running = nil,  -- last player that tried to run. NPC will attack critical damage
@@ -187,9 +198,12 @@ BattleHelpers.new = function(timestamp: integer): Battle
         npcs = {},                      -- dictionary of npc enemy data from constants.lua. key is npc_id
         log = {},                       -- list of battle logs
         last_npc_attack_timestamp = {}, -- key is npc_id, value is timestamp
+        last_player_attack_timestamp = {}, -- key is player_id, value is timestamp
         ended = false,
         winner = nil,                   -- npc_id, or a user_id
-        created_at = timestamp
+        created_at = timestamp,
+
+
     }
     Battles[battle.id] = battle
     return battle
