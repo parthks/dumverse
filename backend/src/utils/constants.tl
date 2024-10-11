@@ -22,8 +22,29 @@ local ARMORS = {
     ARMOR_1 = {
         id = "ARMOR_1",
         name = "Wood Armor",
-        gold_price = 6000,
+        gold_price = 1000,
         defense = 1,
+        type = "ARMOR",
+    },
+    ARMOR_2 = {
+        id = "ARMOR_2",
+        name = "Iron Armor",
+        gold_price = 2000,
+        defense = 2,
+        type = "ARMOR",
+    },
+    ARMOR_3 = {
+        id = "ARMOR_3",
+        name = "Gold Armor",
+        gold_price = 5000,
+        defense = 3,
+        type = "ARMOR",
+    },
+    ARMOR_4 = {
+        id = "ARMOR_4",
+        name = "Diamond Armor",
+        gold_price = 10000,
+        defense = 4,
         type = "ARMOR",
     },
 }
@@ -63,6 +84,13 @@ local FOOD = {
         name = "Cake",
         gold_price = 10,
         health = 2,
+        type = "FOOD",
+    },
+    FOOD_2 = {
+        id = "FOOD_2",
+        name = "Whole Cake",
+        gold_price = 100,
+        health = 10,
         type = "FOOD",
     },
 }

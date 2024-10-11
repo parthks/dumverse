@@ -4,11 +4,32 @@ local json = require("json")
 local constants = require("utils.constants")
 
 local function shopInfoHandler(msg: Message)
+    local itemType = msg.Tags.ItemType as ItemType
+    local items = constants.ALL_ITEMS
+    if itemType == "WEAPON" then
+        items = constants.WEAPONS
+    elseif itemType == "ARMOR" then
+        items = constants.ARMORS
+    elseif itemType == "POTION" then
+        items = constants.POTIONS
+    elseif itemType == "FOOD" then
+        items = constants.FOOD
+    elseif itemType == "ENERGY" then
+        -- energy and potion are the same in the shop
+        -- Combine POTIONS and ENERGY tables
+        items = {}
+        for k, v in pairs(constants.POTIONS) do
+            items[k] = v
+        end
+        for k, v in pairs(constants.ENERGY) do
+            items[k] = v
+        end
+    end
     ao.send({
         Target = msg.From,
         Status = "Success",
         Data = json.encode({
-            items = constants.ALL_ITEMS
+            items = items
         })
     })
 end

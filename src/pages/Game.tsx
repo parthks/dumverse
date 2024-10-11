@@ -7,6 +7,8 @@ import RestArea from "./RestArea";
 import Shop from "./Shop";
 import Town from "./Town";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Bakery from "./Bakery";
+import Armory from "./Armory";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +50,8 @@ export default function Game() {
   if (GameStatePage === GameStatePages.COMBAT) page = <Combat />;
   if (GameStatePage === GameStatePages.TOWN) page = <Town />;
   if (GameStatePage === GameStatePages.REST_AREA) page = <RestArea />;
+  if (GameStatePage === GameStatePages.BAKERY) page = <Bakery />;
+  if (GameStatePage === GameStatePages.ARMORY) page = <Armory />;
   if (!user)
     return (
       <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>

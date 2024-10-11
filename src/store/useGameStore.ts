@@ -2,19 +2,26 @@ import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { interactivePoints } from "@/pages/GameMap";
-import { Bank, BankTransaction, GameUser, Inventory, Item, LamaPosition, Shop, TokenType } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 export enum GameStatePages {
   HOME = "HOME",
   PROFILE = "PROFILE",
-  BANK = "BANK",
-  SHOP = "SHOP",
   GAME_MAP = "GAME_MAP",
   COMBAT = "COMBAT",
   TOWN = "TOWN",
   REST_AREA = "REST_AREA",
+  BANK = "BANK",
+  SHOP = "SHOP",
+  ARMORY = "ARMORY",
+  WEAPON_SHOP = "WEAPON_SHOP",
+  NFT_SHOP = "NFT_SHOP",
+  VISITOR_CENTER = "VISITOR_CENTER",
+  HALL_OF_FAME = "HALL_OF_FAME",
+  INFIRMARY = "INFIRMARY",
+  BAKERY = "BAKERY",
 }
 
 export const initialLamaPosition: LamaPosition = {
@@ -40,7 +47,7 @@ interface GameState {
   withdraw: (amount: number, tokenType: TokenType) => Promise<void>;
   claimAirdrop: (tokenType: TokenType) => Promise<void>;
   shop: Shop | null;
-  getShop: () => Promise<void>;
+  getShop: (itemType: ItemType) => Promise<void>;
   buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
   buyItemLoading: boolean;
   consumeItem: (inventoryId: number) => Promise<void>;
@@ -181,9 +188,12 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: false });
       },
       shop: null,
-      getShop: async () => {
+      getShop: async (itemType: ItemType) => {
         const resultData = await sendDryRunGameMessage({
-          tags: [{ name: "Action", value: "Shop.Info" }],
+          tags: [
+            { name: "Action", value: "Shop.Info" },
+            { name: "ItemType", value: itemType },
+          ],
         });
         set({ shop: { items: Object.values(resultData.data.items) } });
       },

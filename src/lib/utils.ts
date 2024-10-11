@@ -52,3 +52,30 @@ export function isValidSpotToMoveTo(currentSpot: number, targetSpot: number) {
 
   return [nextSpot, previousSpot].includes(targetSpot) || (isNextSpotRest && targetSpot === nextNextSpot) || (isPreviousSpotRest && targetSpot === previousPreviousSpot);
 }
+
+// Helper functions
+const calculatePosition = (x: number, y: number) => ({
+  left: `${x}%`,
+  top: `${y}%`,
+});
+
+const calculateSize = (width: number) => {
+  const base = {
+    width: `${width}%`,
+    height: `auto`,
+  };
+
+  return base;
+};
+
+const calculateTransform = (x: number, y: number) => ({
+  transform: `translate(-${x}%, -${y}%)`,
+});
+
+export const calculatePositionAndSize = (x: number, y: number, width: number) => {
+  return {
+    ...calculatePosition(x, y),
+    ...calculateSize(width),
+    ...calculateTransform(50, 50),
+  };
+};

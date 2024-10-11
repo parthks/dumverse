@@ -1,5 +1,9 @@
 export const REST_SPOTS = [0, 9, 18, 27];
 
+export const BUILDING_IMAGES = {
+  YELLOW_SHOPKEEPER: "https://arweave.net/ERNUnhjW23_jDy4kFNk-Wmu_WFoTRgXeaCDgIYFyVws",
+};
+
 export const IMAGES = {
   DEFAULT_DUMDUM: "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY",
   FILLED_HEALTH: "https://arweave.net/htFD_LolJawKKO5P9BOO8B2XajxBuuxSvmTpCpNsUvA",
@@ -23,9 +27,13 @@ export const ITEM_ICONS = {
 export const ITEM_IMAGES = {
   WEAPON_1: "https://arweave.net/7a23JeEQssnf01L47H1FccCU7W402DrKv5nDah9fLkU",
   ARMOR_1: "https://arweave.net/aRZkLSJj01b-dhuA_fVFuYXbaF34k08f6m5vmAjWJWY",
+  ARMOR_2: "https://arweave.net/g3sIDwgFfxm3gtOseY949Sj73u0CzErJwY6ILouXkJQ",
+  ARMOR_3: "https://arweave.net/MLhl3B6tKVvJkU6wHtoakkHux9AQBsvYD-qLPkNJdOs",
+  ARMOR_4: "https://arweave.net/9sAXd4jwkWJ8Iv2LDs8HvnLEHiqdh4VCYRhXmiPs1VQ",
   POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",
   ENERGY_1: "https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y",
   FOOD_1: "https://arweave.net/-tUyiDZQCbIytBSEKfsSdLh13utGP4SKUD72eS-QrH4",
+  FOOD_2: "https://arweave.net/BirbbE8IMIvas8j_xpn_UcW-Lus3cX9IagbZnrbDbeo",
 };
 
 export const ENEMY_CARD_IMAGE = {

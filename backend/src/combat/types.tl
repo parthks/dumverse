@@ -33,8 +33,7 @@ global record BattleHelpersType
     new: function(timestamp: integer): Battle
     get: function(id: integer): Battle
     update: function(id: integer, battle: Battle)
-    checkIfBattleShouldEnd: function(battle_id: integer): boolean
-    endBattle: function(battle_id: integer, winner_id: string | nil, timestamp: integer)
+    checkIfBattleShouldEnd: function(battle_id: integer, attacker_id: string | nil, timestamp: integer): boolean
 end
 
 global type CombatEnemyData = record

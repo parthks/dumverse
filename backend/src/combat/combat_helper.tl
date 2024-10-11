@@ -142,6 +142,12 @@ local function NPCAttacksPlayer(attackingEntity: CombatEnemyData, defendingEntit
     return SimulateCombat(attacker, defender, timestamp, critical_hit)
 end
 
+local function NPCAttacksNPC(attackingEntity: CombatEnemyData, defendingEntity: CombatEnemyData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
+    local attacker = _getEntityStatsForNPC(attackingEntity)
+    local defender = _getEntityStatsForNPC(defendingEntity)
+    return SimulateCombat(attacker, defender, timestamp, critical_hit)
+end
+
 local function PlayerAttacksPlayer(attackingEntity: CombatUserData, defendingEntity: CombatUserData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
@@ -153,4 +159,5 @@ return {
     PlayerAttacksNPC = PlayerAttacksNPC,
     NPCAttacksPlayer = NPCAttacksPlayer,
     PlayerAttacksPlayer = PlayerAttacksPlayer,
+    NPCAttacksNPC = NPCAttacksNPC,
 }

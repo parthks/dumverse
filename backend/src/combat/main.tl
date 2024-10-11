@@ -9,6 +9,7 @@ local combat_helper = require("combat.combat_helper")
 local PlayerAttacksNPC = combat_helper.PlayerAttacksNPC
 local NPCAttacksPlayer = combat_helper.NPCAttacksPlayer
 local PlayerAttacksPlayer = combat_helper.PlayerAttacksPlayer
+local NPCAttacksNPC = combat_helper.NPCAttacksNPC
 
 local BattleHelpers = require("combat.battle_helpers")
 
@@ -20,13 +21,12 @@ local function GetOpenBattlesOfUser(user_address: string): {Battle}
     for _, battle in pairs(Battles) do
         if not battle.ended then
             local user_addresses = {}
+            -- get all player addresses in open battle
             for _, player in pairs(battle.players) do
-                print("player " .. player.id .. " address " .. player.address)
                 table.insert(user_addresses, player.address)
             end
-            print("user_address " .. user_address)
             if not battle.ended and utils.includes(user_address, user_addresses) then
-                print("battle " .. battle.id .. " is open")
+                print("battle " .. battle.id .. " is open for user " .. user_address)
                 table.insert(battles, battle)
             end
         end
@@ -56,32 +56,55 @@ end
 
 local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer, player_id_tried_running: string)
     local battle = BattleHelpers.get(battle_id)
+    battle.last_npc_attack_timestamp[npc_id] = timestamp
+    BattleHelpers.update(battle_id, battle)
 
-    -- pick random player and attack
+    -- filter out attacking npc_id from npcs_alive
+    local npcs_alive = utils.filter(function(val: string): boolean
+        return val ~= npc_id
+    end, battle.npcs_alive)
+    -- pick random npc to attack
+    local random_npc_id: string | nil = nil
+    if #npcs_alive > 0 then
+        random_npc_id = npcs_alive[math.random(#npcs_alive)]
+    end
+
+    -- pick random player to attack
     local alive_players = battle.players_alive
     local player_id = player_id_tried_running or alive_players[math.random(#alive_players)]
 
-    local log, defender_health, defender_defense = NPCAttacksPlayer(battle.npcs[npc_id], battle.players[player_id], timestamp, not not player_id_tried_running)
-    battle.players[player_id].defense = defender_defense
-    battle.players[player_id].health = defender_health
+    -- 15 % chance to attack a random npc
+    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 1
+
+    if (npcShouldAttackNPC) then
+        print("NPC " .. npc_id .. " attacking NPC " .. random_npc_id)
+        local log, defender_health, _ = NPCAttacksNPC(battle.npcs[npc_id], battle.npcs[random_npc_id], timestamp)
+        battle.npcs[random_npc_id].health = defender_health
+        BattleHelpers.addLogs(battle.id, log)
+        if defender_health <= 0 then
+            -- remove npc from battle
+            BattleHelpers.killNPC(battle_id, random_npc_id, npc_id, timestamp)
+        end
+    else 
+        print("NPC " .. npc_id .. " attacking player " .. player_id)
+        local log, defender_health, defender_defense = NPCAttacksPlayer(battle.npcs[npc_id], battle.players[player_id], timestamp)
+        battle.players[player_id].defense = defender_defense
+        battle.players[player_id].health = defender_health
+        BattleHelpers.addLogs(battle.id, log)
+        if defender_health <= 0 then
+            -- remove player from battle
+            BattleHelpers.killPlayer(battle.id, player_id, npc_id, timestamp)
+        end
+    end
     
-    BattleHelpers.addLogs(battle.id, log)
-    battle.last_npc_attack_timestamp[npc_id] = timestamp
     battle.players_attacked = {} -- reset player attacked list, so that all players can attack again
     BattleHelpers.update(battle.id, battle)
 
-    if defender_health <= 0 then
-        -- remove player from battle
-        BattleHelpers.killPlayer(battle.id, player_id, npc_id, timestamp)
-
-        if BattleHelpers.checkIfBattleShouldEnd(battle.id) then
-            BattleHelpers.endBattle(battle.id, npc_id, timestamp)
-        end
-    end
+    BattleHelpers.checkIfBattleShouldEnd(battle.id, npc_id, timestamp)
 end
 
 
-local function CronTick(msg: Message)
+local function CronTick(msg: Message, npcTimer: integer)
     CRON_TICK_COUNT = CRON_TICK_COUNT + 1
     -- need to check all ongoing battles to see if a player has not attacked in the last 10 seconds
     for _, battle in pairs(Battles) do
@@ -92,7 +115,8 @@ local function CronTick(msg: Message)
             for _, npc_id in ipairs(npcs_alive) do
                 -- print("NPC " .. npc_id .. " alive")
                 -- print("NPC " .. npc_id .. " last attack timestamp " .. battle.last_npc_attack_timestamp[npc_id])
-                if battle.last_npc_attack_timestamp[npc_id] + (10 * 1000) < msg.Timestamp then
+                battle = BattleHelpers.get(battle.id)
+                if (battle.last_npc_attack_timestamp[npc_id] or 0) + (npcTimer * 1000) < msg.Timestamp then
                     -- if player has not attacked in the last 10 seconds, the NPC will attack
                     -- print("NPC " .. npc_id .. " attacking player")
                     NPCAttack(npc_id, battle.id, msg.Timestamp)
@@ -223,8 +247,6 @@ local function userAttackHandler(msg: Message)
 
     local playerUserIds = battle.players_alive
     local npcIds = battle.npcs_alive
-    print("User Attack - playerUserIds " .. tostring(playerUserIds))
-    print("User Attack - npcIds " .. tostring(npcIds))
 
     -- assert that attackEntityId is in playerUserIds or npcIds - already checking in the if conditions
     -- assert(utils.includes(attackEntityId, playerUserIds) or utils.includes(attackEntityId, npcIds),
@@ -233,9 +255,11 @@ local function userAttackHandler(msg: Message)
     -- check if the UserId is in the players_attacked list
     battle = BattleHelpers.get(battle_id)
     assert(not utils.includes(user_id, battle.players_attacked), "Player has already attacked")
+    battle.last_player_attack_timestamp[user_id] = msg.Timestamp
+    BattleHelpers.update(battle_id, battle)
 
-    print("User Attack - all checks passed, attacking now")
     if (utils.includes(attackEntityId, npcIds)) then
+        print("Player " .. user_id .. " attacking NPC " .. attackEntityId)
         -- Player attacking NPC
         local log, defender_health, _ = PlayerAttacksNPC(battle.players[user_id], battle.npcs[attackEntityId], msg.Timestamp)
         BattleHelpers.addLogs(battle_id, log)
@@ -244,6 +268,7 @@ local function userAttackHandler(msg: Message)
             BattleHelpers.killNPC(battle_id, attackEntityId, user_id, msg.Timestamp)
         end
     elseif (utils.includes(attackEntityId, playerUserIds)) then
+        print("Player " .. user_id .. " attacking Player " .. attackEntityId)
         -- Player attacking Player
         local log, defender_health, defender_defense = PlayerAttacksPlayer(battle.players[user_id], battle.players[attackEntityId], msg.Timestamp)
         battle.players[attackEntityId].defense = defender_defense
@@ -262,7 +287,6 @@ local function userAttackHandler(msg: Message)
     end
 
     table.insert(battle.players_attacked, user_id)
-    battle.last_player_attack_timestamp[user_id] = msg.Timestamp
     BattleHelpers.update(battle_id, battle)
 
     if #battle.players_attacked >= #battle.players_alive then -- greater than or equal to in case a player has died
@@ -281,9 +305,7 @@ local function userAttackHandler(msg: Message)
         BattleHelpers.update(battle_id, battle)
     end
 
-    if BattleHelpers.checkIfBattleShouldEnd(battle.id) then
-        BattleHelpers.endBattle(battle.id, user_id, msg.Timestamp)
-    end
+    BattleHelpers.checkIfBattleShouldEnd(battle.id, user_id, msg.Timestamp)
 
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
 end
@@ -302,10 +324,7 @@ local function userRunHandler(msg: Message)
     if dice_roll < 4 then
         -- player runs successfully
         BattleHelpers.playerRanAway(battle.id, user_id, msg.Timestamp)
-        if BattleHelpers.checkIfBattleShouldEnd(battle.id) then
-            BattleHelpers.endBattle(battle.id, nil, msg.Timestamp)
-        end
-        BattleHelpers.update(battle_id, battle)
+        BattleHelpers.checkIfBattleShouldEnd(battle.id, nil, msg.Timestamp)
         ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
         return
     end
@@ -335,10 +354,18 @@ Handlers.add("Battle.UserRun", Handlers.utils.hasMatchingTag("Action", "Battle.U
 -- CronTick handler will get called every 10 seconds
 -- Finalize Auction Handler
 
-Handlers.add("CronTick", Handlers.utils.hasMatchingTag("Action", "Cron"), CronTick)
+-- only in case frontend is not open and no other messages are sent
+-- TODO: change cron on process to like x minutes
+Handlers.add("CronTick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg: Message)
+    CronTick(msg, 30)
+end)
+
+-- frontend calls Battle.Info every 2 seconds, so NPC will attack on time
 Handlers.prepend("CheckNPCAttacks", 
 function(): string
     return "continue"
-end, CronTick)
+end, function(msg: Message)
+    CronTick(msg, 10)
+end)
 
 return {}

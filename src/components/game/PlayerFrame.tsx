@@ -43,9 +43,8 @@ export function PlayerFrame() {
           </div>
           {/* convert regenerateCountdown to minutes and seconds */}
           <div className="flex gap-2">
-            {regenerateCountdown && user.total_stamina != user.stamina && (
-              <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label>
-            )}
+            {user.total_stamina != user.stamina &&
+              (regenerateCountdown ? <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label> : null)}
           </div>
         </div>
         {/* Equipped weapon and armor */}

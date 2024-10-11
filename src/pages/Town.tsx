@@ -56,40 +56,37 @@ export default function Town() {
               backgroundImage: `url(https://arweave.net/JuWhXSF9_XkPJplzF5sX4ppKX2pGkbvrdQR6Skbz1JE)`,
             }}
           >
-            {/* Building 7 on the hill */}
+            {/* Armory on the hill */}
             <img
               src="https://arweave.net/PYIX9T90RmDl9QHm7ccxlG5LVlcodwDOyTbVR8dEsEs"
               alt="Building 7"
               className="absolute top-[10%] left-[5.5%] w-[18%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
-                         "
+                         hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
-                console.log("Building 7 clicked!");
+                handleBuildingSelect(GameStatePages.ARMORY);
               }}
             />
-            {/* Building 6 center */}
+            {/* Hall of Fame center building */}
             <img
               src="https://arweave.net/mYFkdK6YrZdl4x6gi8BP2ZtfK1BArRCrw9_yDG3YhqE"
               alt="Building center"
               className="absolute top-[10%] left-[51%] w-[18%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
-                         "
+                         hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
-                console.log("Building 6 clicked!");
+                // handleBuildingSelect(GameStatePages.HALL_OF_FAME);
               }}
             />
-            {/* Building 8 red */}
+            {/* Weapon Shop red building */}
             <img
               src="https://arweave.net/SfNO5z6YsT6GEtyZw-y9vEpA082ziHsmROkUew73JuM"
               alt="Building 8 red"
               className="absolute top-[14%] left-[37%] w-[15%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
-                         "
+                         hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
-                console.log("Building 8 clicked!");
+                // handleBuildingSelect(GameStatePages.WEAPON_SHOP);
               }}
             />
             {/* Building Bank */}
@@ -100,23 +97,21 @@ export default function Town() {
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
                 handleBuildingSelect(GameStatePages.BANK);
               }}
             />
-            {/* Building yellow building */}
+            {/* Bakery yellow building */}
             <img
               src="https://arweave.net/uY3tPwvtedJbYBr6IZSobePo3DN9gVAa9FS5Hr27GU8"
               alt="Building yellow"
               className="absolute top-[15%] left-[83%] w-[15%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
-                         "
+                         hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
-                console.log("Building yellow clicked!");
+                handleBuildingSelect(GameStatePages.BAKERY);
               }}
             />
-            {/* Building Shop */}
+            {/* General Shop blue building */}
             <img
               src="https://arweave.net/dxDOLjfxH798ZpMtlGvX8jYu7vvL4OvR0UeR217InVM"
               alt="Building Shop"
@@ -127,28 +122,26 @@ export default function Town() {
                 handleBuildingSelect(GameStatePages.SHOP);
               }}
             />
-            {/* Building nft shop */}
+            {/* NFT Shop brown building */}
             <img
               src="https://arweave.net/uuBM_S43jQAVv3ARTu4jB2RBTEYIZzw8tJxxxB42ozE"
               alt="Building 8 red"
               className="absolute top-[31%] left-[20%] w-[20%] h-auto
                          cursor-pointer transition-all duration-300 ease-in-out
-                         "
+                         hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
-                console.log("Building right side clicked!");
+                // handleBuildingSelect(GameStatePages.NFT_SHOP);
               }}
             />
-            {/* Building right side */}
+            {/* Visitor Center right bottom building */}
             <img
               src="https://arweave.net/1gclG49yFLU9R3cW-E590MPKfXmxEqR4E1zhE3-xIso"
               alt="Building 8 red"
               className="absolute top-[51%] left-[77%] w-[23%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
-                         "
+                         hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // Add your click handler logic here
-                console.log("Building right side clicked!");
+                // handleBuildingSelect(GameStatePages.VISITOR_CENTER);
               }}
             />
           </div>

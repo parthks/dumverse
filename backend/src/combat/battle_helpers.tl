@@ -7,63 +7,139 @@ local json = require("json")
 
 local BattleHelpers: BattleHelpersType = {}
 
-BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer): boolean
+-- local function endBattle(battle_id: integer, winner_id: string, timestamp: integer)
+--     local battle = BattleHelpers.get(battle_id)
+--     -- when user attacks, after NPC attacks if NPC ends the battle then this function is called twice
+--     if (battle.ended) then
+--         return
+--     end
+--     -- TODO: Archive battle to SQL table and delete from memory, does it help?
+
+   
+--     local function playerWon(player_id: string)
+--         ao.send({
+--             Target = GAME_PROCESS_ID,
+--             UserId = player_id,
+--             Level = tostring(battle.level),
+--             Action = "Combat.PlayerWon",
+--             Data = json.encode(battle.players[player_id])
+--         })
+--     end 
+
+--     local function npcsWon(npcs_alive: {string})
+--         for _, npc_id in ipairs(npcs_alive) do
+--             local npc = battle.npcs[npc_id]
+--             if npc.extra_gold ~= nil and npc.extra_gold > 0 then
+--                 NPCS_EXTRA_GOLD[npc_id] = npc.extra_gold
+--             end
+--         end
+--     end
+
+--     battle.winner = winner_id
+--     battle.ended = true
+--     local winning_message = ''
+
+--     -- if player won
+--     if battle.players[winner_id] and #battle.npcs_alive == 0 then
+--         -- player has won the battle
+--         winning_message = "has won the battle"
+--         playerWon(winner_id)
+
+--     elseif battle.npcs[winner_id] and #battle.players_alive == 0 then
+--             winning_message = "has won the battle"
+--             -- add extra gold of npcs back to NPCS_EXTRA_GOLD table for future battles
+--             for _, npc_id in ipairs(battle.npcs_alive) do
+--                 local npc = battle.npcs[npc_id]
+--                 if npc.extra_gold ~= nil and npc.extra_gold > 0 then
+--                     NPCS_EXTRA_GOLD[npc_id] = npc.extra_gold
+--                 end
+--             end
+--         BattleHelpers.log(battle_id, timestamp, winner_id, winning_message)
+--         -- else
+--         --     BattleHelpers.log(battle_id, timestamp, nil, "No winner, battle ended. All players successfully ran away")
+    
+--     else
+--         -- try and figure out the winner
+--         -- if all players are dead, then NPC wins
+--         if #battle.players_alive == 0 and #battle.npcs_alive > 0 then
+--             winning_message = "has won the battle"
+--         end
+--     end
+
+--     BattleHelpers.update(battle_id, battle)
+-- end
+
+
+BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id: string, timestamp: integer): boolean
+    -- attacker_id is nil if player ran away
+    
     local battle = BattleHelpers.get(battle_id)
-    -- NPC wins if no players are alive
-    if #battle.players_alive == 0 then
+    if battle.ended then
         return true
     end
-    -- NPCs are all dead and only 1 player is alive
-    if #battle.npcs_alive == 0 and #battle.players_alive == 1 then
-        return true
-    end
-    return false
-end
 
-BattleHelpers.endBattle = function(battle_id: integer, winner_id: string, timestamp: integer)
-    local battle = BattleHelpers.get(battle_id)
-    -- when user attacks, after NPC attacks if NPC ends the battle then this function is called twice
-    if (battle.ended) then
-        return
-    end
-    -- TODO: Archive battle to SQL table and delete from memory, does it help?
+    local function playerWon(player_id: string)
+        ao.send({
+            Target = GAME_PROCESS_ID,
+            UserId = player_id,
+            Level = tostring(battle.level),
+            Action = "Combat.PlayerWon",
+            Data = json.encode(battle.players[player_id])
+        })
+    end 
 
-    battle.winner = winner_id
-    battle.ended = true
-    local winning_message = ''
-    if winner_id then
-        assert(battle.players[winner_id] ~= nil or battle.npcs[winner_id] ~= nil,
-            "Winner id " .. winner_id .. " not found in players or npcs")
-        if battle.players[winner_id] ~= nil and #battle.npcs_alive == 0 then
-            -- players have won the battle
-            winning_message = "has won the battle"
-
-            -- send message to all players that they have won the battle
-            for _, player_id in ipairs(battle.players_alive) do
-                ao.send({
-                    Target = GAME_PROCESS_ID,
-                    UserId = player_id,
-                    Level = tostring(battle.level),
-                    Action = "Combat.PlayerWon",
-                    Data = json.encode(battle.players[player_id])
-                })
-            end
-        elseif battle.npcs[winner_id] and #battle.players_alive == 0 then
-            winning_message = "has won the battle"
-            -- add extra gold of npcs back to NPCS_EXTRA_GOLD table for future battles
-            for _, npc_id in ipairs(battle.npcs_alive) do
-                local npc = battle.npcs[npc_id]
-                if npc.extra_gold ~= nil and npc.extra_gold > 0 then
-                    NPCS_EXTRA_GOLD[npc_id] = npc.extra_gold
-                end
+    local function npcsWon(npcs_alive: {string})
+        for _, npc_id in ipairs(npcs_alive) do
+            local npc = battle.npcs[npc_id]
+            if npc.extra_gold ~= nil and npc.extra_gold > 0 then
+                NPCS_EXTRA_GOLD[npc_id] = npc.extra_gold
             end
         end
-        BattleHelpers.log(battle_id, timestamp, winner_id, winning_message)
-        -- else
-        --     BattleHelpers.log(battle_id, timestamp, nil, "No winner, battle ended. All players successfully ran away")
+    end
+
+    local winning_message = "has won the battle"
+    local shouldEnd = false
+
+    if not attacker_id and #battle.players_alive == 0 then
+        -- player ran away
+        winning_message = "Battle ended. No players left in battle"
+        BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        shouldEnd = true
+    end
+
+    -- NPC wins if no players are alive
+    if #battle.players_alive == 0 and #battle.npcs_alive > 0 then
+        npcsWon(battle.npcs_alive)
+        -- check if attacker_id is in npcs_alive, in case both players killed themselves
+        if not utils.includes(attacker_id, battle.npcs_alive) then
+            winning_message = "has won the battle. All players perished"
+            attacker_id = battle.npcs_alive[1]
+        end
+        BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        shouldEnd = true
+    end
+
+    -- NPCs are all dead and only 1 player is alive
+    if #battle.npcs_alive == 0 and #battle.players_alive == 1 then
+        assert(battle.players_alive[1] == attacker_id)
+        playerWon(attacker_id)
+        BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        shouldEnd = true
+    end
+
+    if (#battle.players_alive == 0 and #battle.npcs_alive == 0) then
+        -- both players and npcs are dead
+        winning_message = "Battle ended. Both players and npcs perished"
+        BattleHelpers.log(battle_id, timestamp, nil, winning_message)
+        shouldEnd = true
+    end
+    if shouldEnd then
+        battle.ended = true
+        battle.winner = attacker_id
     end
     BattleHelpers.update(battle_id, battle)
 end
+
 
 BattleHelpers.getLatestSuitableOpenBattle = function(player: CombatUserData, level: integer): Battle | nil
     -- all players in same battle should have same defense (level of armor)
