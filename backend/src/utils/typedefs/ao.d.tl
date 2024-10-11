@@ -14,7 +14,9 @@ end
 
 global type MatchedHandler = function(msg: Message): function | nil
 
+
 global record Handlers
+  prepend: function
   add: function
   remove: function
   record utils

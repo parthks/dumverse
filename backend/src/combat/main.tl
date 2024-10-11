@@ -331,7 +331,14 @@ Handlers.add("Battle.Info", Handlers.utils.hasMatchingTag("Action", "Battle.Info
 Handlers.add("Battle.DrinkPotion", Handlers.utils.hasMatchingTag("Action", "Battle.DrinkPotion"), drinkPotionHandler)
 Handlers.add("Battle.UserAttack", Handlers.utils.hasMatchingTag("Action", "Battle.UserAttack"), userAttackHandler)
 Handlers.add("Battle.UserRun", Handlers.utils.hasMatchingTag("Action", "Battle.UserRun"), userRunHandler)
+
 -- CronTick handler will get called every 10 seconds
+-- Finalize Auction Handler
+
 Handlers.add("CronTick", Handlers.utils.hasMatchingTag("Action", "Cron"), CronTick)
+Handlers.prepend("CheckNPCAttacks", 
+function(): string
+    return "continue"
+end, CronTick)
 
 return {}

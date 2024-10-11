@@ -500,7 +500,10 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
     >
       <div className="flex items-center justify-between">
         <div className="w-6">{combatLoading && <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>}</div>
-        <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
+        <div className="flex-grow flex flex-col justify-center">
+          <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
+          <p className="text-white text-xl text-center">Battle ID: {currentBattle.id}</p>
+        </div>
         <div className="w-6"></div>
       </div>
       <div style={{ height: "calc(100vh - 200px)" }} className="log-container flex flex-col gap-8 overflow-y-auto">
