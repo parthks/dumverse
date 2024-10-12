@@ -51,7 +51,7 @@ function Frame({ index }: { index: number }) {
   const translateX = index === 1 ? "0" : index === 2 ? "-50%" : "-100%";
 
   return (
-    <div className={`absolute top-[${topPosition}] left-[${leftPosition}] w-full max-w-[400px]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})` }}>
+    <div className={`absolute top-[${topPosition}] w-full max-w-[400px]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
       {/* Frame background */}
       <img src="https://arweave.net/HII5ti7_t6Z21zfkfp6GyeOn0KBMGfZnayQ78BR9KJU" alt="Frame" className="absolute inset-0 w-full h-full object-cover" />
 
