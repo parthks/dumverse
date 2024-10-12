@@ -75,7 +75,7 @@ export default function Town() {
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // handleBuildingSelect(GameStatePages.HALL_OF_FAME);
+                handleBuildingSelect(GameStatePages.HALL_OF_FAME);
               }}
             />
             {/* Weapon Shop red building */}
@@ -141,7 +141,7 @@ export default function Town() {
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // handleBuildingSelect(GameStatePages.VISITOR_CENTER);
+                handleBuildingSelect(GameStatePages.VISITOR_CENTER);
               }}
             />
           </div>

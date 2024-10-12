@@ -56,7 +56,7 @@ interface GameState {
   lamaPosition: LamaPosition;
   setLamaPosition: (position: LamaPosition) => void;
   goDirectlyToTownPage: () => void;
-  goToTown: (hardRefresh?: boolean) => void;
+  goToTown: (hardRefresh?: boolean) => Promise<void>;
   goToRestArea: () => void; // goes to the nearest rest area (+- 1 from current level)
   goToGameMap: (resetPosition?: boolean) => void;
   regenerateEnergy: () => Promise<void>;
@@ -229,9 +229,9 @@ export const useGameStore = create<GameState>()(
       lamaPosition: initialLamaPosition,
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN, shop: null }),
-      goToTown: async (hardRefresh = false) => {
+      goToTown: async (playerDead = false) => {
         // hardRefresh is true when going to town from combat (in case on spot one)
-        if (get().user?.current_spot !== 0 || hardRefresh) {
+        if (get().user?.current_spot !== 0 || playerDead) {
           const resultData = await sendAndReceiveGameMessage({
             tags: [
               { name: "Action", value: "User.GoToTown" },
@@ -240,10 +240,15 @@ export const useGameStore = create<GameState>()(
           });
           if (resultData.status === "Success") {
             await get().refreshUserData();
-            set({ GameStatePage: GameStatePages.TOWN });
+            if (playerDead) {
+              set({ GameStatePage: GameStatePages.INFIRMARY });
+            } else {
+              set({ GameStatePage: GameStatePages.TOWN });
+            }
             get().resetRegenerateCountdown();
           }
         } else {
+          // TODO: show error toast and retry?
           set({ GameStatePage: GameStatePages.TOWN });
         }
       },

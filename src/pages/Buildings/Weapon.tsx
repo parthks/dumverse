@@ -12,11 +12,11 @@ export default function Weapon() {
 
   useBuildingMusic({ getBuildingData: () => getShop("WEAPON") });
 
-  if (!shop) return <div>Loading...</div>;
+  //   if (!shop) return <div>Loading...</div>;
 
-  console.log("shop", shop.items);
+  //   console.log("shop", shop.items);
   //   sort shop.items on gold_price
-  shop.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
+  shop?.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
@@ -62,7 +62,7 @@ export default function Weapon() {
               style={{ left: "50%", width: "55%", height: "auto", transform: "translate(-50%, -141%)" }}
             />
           </div>
-          {shop.items[0] && (
+          {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
@@ -76,7 +76,7 @@ export default function Weapon() {
               itemSize={30}
             />
           )}
-          {shop.items[1] && (
+          {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
@@ -89,7 +89,7 @@ export default function Weapon() {
               item={shop.items[1]}
             />
           )}
-          {shop.items[2] && (
+          {shop?.items[2] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[2], shop.items[2]?.gold_price ? "GOLD" : "DUMZ");
@@ -102,7 +102,7 @@ export default function Weapon() {
               item={shop.items[2]}
             />
           )}
-          {shop.items[3] && (
+          {shop?.items[3] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[3], shop.items[3]?.gold_price ? "GOLD" : "DUMZ");

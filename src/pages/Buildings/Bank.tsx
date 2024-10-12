@@ -245,7 +245,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
     }
   };
 
-  if (!bank) return <div>Loading...</div>;
+  // if (!bank) return <div>Loading...</div>;
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
@@ -264,7 +264,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
             <text x="50%" y="44.5%" fontSize="100" textAnchor="middle" fill="white">
-              {bankDataLoading ? "--" : `${bank.dumz_amount} $tDumz`}
+              {bankDataLoading || !bank ? "--" : `${bank.dumz_amount} $tDumz`}
             </text>
             <image
               href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
@@ -283,7 +283,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank.dumz_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || !bank || bank.dumz_amount == 0 ? "disabled-image" : ""}`}
               item-type="withdraw-dumz"
             />
             <image
@@ -297,7 +297,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               item-type="transfer-dumz"
             />
             <text x="50%" y="67%" fontSize="100" textAnchor="middle" fill="white">
-              {bankDataLoading ? "--" : `${bank.gold_amount}g`}
+              {bankDataLoading || !bank ? "--" : `${bank.gold_amount}g`}
             </text>
             {/* gold */}
             <image

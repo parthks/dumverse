@@ -164,9 +164,7 @@ export default function Shop() {
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
-  if (!shop) return <div>Loading...</div>;
-
-  console.log("shop", shop.items);
+  // if (!shop) return <div>Loading...</div>;
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
@@ -214,7 +212,7 @@ export default function Shop() {
           <img src="https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY" alt="Shop Sign" className="absolute" style={{ ...calculatePositionAndSize(32, 73, 15) }} />
           <img src={BUILDING_IMAGES.YELLOW_SHOPKEEPER} alt="Shop Keeper" className="absolute" style={{ ...calculatePositionAndSize(50, 59.5, 15) }} /> */}
 
-          {shop.items[0] && (
+          {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
@@ -224,10 +222,11 @@ export default function Shop() {
                 x: 30,
                 y: 40,
               }}
+              itemSize={20}
               item={shop.items[0]}
             />
           )}
-          {shop.items[1] && (
+          {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
@@ -237,6 +236,7 @@ export default function Shop() {
                 x: 60,
                 y: 40,
               }}
+              itemSize={18}
               item={shop.items[1]}
             />
           )}

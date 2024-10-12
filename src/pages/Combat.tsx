@@ -539,7 +539,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
               // if alive, return to map, if dead, return to town
               src={`https://arweave.net/${isAlive ? "-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y" : "n0rz0kGBK_uPI-XJ3aCPdJ3589IOl5BW2izZNOVFXaI"}`}
               onClick={() => goToMapFromBattle()}
-              alt={"Return to Game"}
+              alt={"Return to Game Map"}
             />
           </div>
         )}

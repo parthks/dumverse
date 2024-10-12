@@ -2,6 +2,7 @@ export const REST_SPOTS = [0, 9, 18, 27];
 
 export const BUILDING_IMAGES = {
   YELLOW_SHOPKEEPER: "https://arweave.net/ERNUnhjW23_jDy4kFNk-Wmu_WFoTRgXeaCDgIYFyVws",
+  GREEN_SHOPKEEPER: "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY",
   WEAPON_DEALER: "https://arweave.net/vOeUsfKdGEJRzlheQVJMRpEu2WHVdNdafuNb3QwsVnU",
 };
 

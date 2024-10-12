@@ -11,6 +11,9 @@ import Bakery from "./Buildings/Bakery";
 import Armory from "./Buildings/Armory";
 import Weapon from "./Buildings/Weapon";
 import NFTShop from "./Buildings/NFTShop";
+import Infirmary from "./Buildings/Infirmary";
+import VisitorCenter from "./Buildings/VisitorCenter";
+import HallOfFame from "./Buildings/HallOfFame";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +59,9 @@ export default function Game() {
   if (GameStatePage === GameStatePages.ARMORY) page = <Armory />;
   if (GameStatePage === GameStatePages.WEAPON_SHOP) page = <Weapon />;
   if (GameStatePage === GameStatePages.NFT_SHOP) page = <NFTShop />;
+  if (GameStatePage === GameStatePages.INFIRMARY) page = <Infirmary />;
+  if (GameStatePage === GameStatePages.VISITOR_CENTER) page = <VisitorCenter />;
+  if (GameStatePage === GameStatePages.HALL_OF_FAME) page = <HallOfFame />;
   if (!user)
     return (
       <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>

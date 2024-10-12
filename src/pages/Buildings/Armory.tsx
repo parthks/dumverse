@@ -12,11 +12,11 @@ export default function Armory() {
 
   useBuildingMusic({ getBuildingData: () => getShop("ARMOR") });
 
-  if (!shop) return <div>Loading...</div>;
+  // if (!shop) return <div>Loading...</div>;
 
-  console.log("shop", shop.items);
+  // console.log("shop", shop.items);
   //   sort shop.items on gold_price
-  shop.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
+  shop?.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
@@ -54,7 +54,7 @@ export default function Armory() {
               style={{ left: "50%", width: "20%", height: "auto", transform: "translate(20%, -310%)" }}
             />
           </div>
-          {shop.items[0] && (
+          {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
@@ -67,7 +67,7 @@ export default function Armory() {
               item={shop.items[0]}
             />
           )}
-          {shop.items[1] && (
+          {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
@@ -80,7 +80,7 @@ export default function Armory() {
               item={shop.items[1]}
             />
           )}
-          {shop.items[2] && (
+          {shop?.items[2] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[2], shop.items[2]?.gold_price ? "GOLD" : "DUMZ");
@@ -93,7 +93,7 @@ export default function Armory() {
               item={shop.items[2]}
             />
           )}
-          {shop.items[3] && (
+          {shop?.items[3] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[3], shop.items[3]?.gold_price ? "GOLD" : "DUMZ");

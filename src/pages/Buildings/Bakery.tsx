@@ -12,10 +12,9 @@ export default function Bakery() {
 
   useBuildingMusic({ getBuildingData: () => getShop("FOOD") });
 
-  if (!shop) return <div>Loading...</div>;
+  // if (!shop) return <div>Loading...</div>;
 
-  console.log("shop", shop.items);
-  shop.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
+  shop?.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
@@ -47,7 +46,8 @@ export default function Bakery() {
               style={{ left: "50%", width: "15%", height: "auto", transform: "translate(-75%, -235%)" }}
             />
           </div>
-          {shop.items[0] && (
+
+          {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
@@ -55,12 +55,12 @@ export default function Bakery() {
               }}
               position={{
                 x: 20,
-                y: 35,
+                y: 30,
               }}
               item={shop.items[0]}
             />
           )}
-          {shop.items[1] && (
+          {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
@@ -68,7 +68,7 @@ export default function Bakery() {
               }}
               position={{
                 x: 80,
-                y: 35,
+                y: 30,
               }}
               item={shop.items[1]}
             />

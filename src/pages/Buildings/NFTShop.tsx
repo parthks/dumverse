@@ -7,16 +7,14 @@ import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
 export default function NFTShop() {
-  const { shop, getShop, buyItem } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
+  const { shop, getShop } = useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("SPECIAL_ITEMS") });
 
-  if (!shop) return <div>Loading...</div>;
+  //   if (!shop) return <div>Loading...</div>;
 
-  console.log("shop", shop.items);
   //   sort shop.items on gold_price
-  shop.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
+  shop?.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
@@ -28,7 +26,7 @@ export default function NFTShop() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/-zdHJBTMFbeDkl1_WlohXNoLCw1RZh6_NX6hCAdK7eY"} alt="NFT Shop Background" className="w-full h-full object-cover" />
+          <img src={"https://arweave.net/_MuKN_4wC1nR1TenZeM7tXHaRZ8p-dL_Jm28a3-y5cg"} alt="NFT Shop Background" className="w-full h-full object-cover" />
         </div>
         <img
           src="https://arweave.net/TI0VqS8uw1bGEXB_Ew4Wl37asj-OqvS4-poR5zURri8"
@@ -36,12 +34,12 @@ export default function NFTShop() {
           className="absolute"
           style={{ ...calculatePositionAndSize(0, 0, 100), transform: "translate(0, 0%)" }}
         />
-        <img
+        {/* <img
           src="https://arweave.net/s0RQ9YQlFx8DF6HL1x3vDXkFdTaie_Car2v5tZE7hNw"
           alt="Poles"
           className="absolute"
           style={{ ...calculatePositionAndSize(50, 10, 100), transform: "translate(-50%, 100%)" }}
-        />
+        /> */}
 
         <div className="absolute inset-0">
           {/* Group the shop table, sign, and shopkeeper */}
@@ -55,12 +53,12 @@ export default function NFTShop() {
             />
             <img
               src="https://arweave.net/cEcCrEw9Wtbtc6EQIXUb6GcosDuvOjtV-9haQhovHXM"
-              alt="Hammer on Table"
+              alt="Cat"
               className="absolute"
               style={{ left: "50%", width: "50%", height: "auto", transform: "translate(25%, -126%)" }}
             />
           </div>
-          {shop.items[0] && (
+          {/* {shop.items[0] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
@@ -72,8 +70,8 @@ export default function NFTShop() {
               }}
               item={shop.items[0]}
             />
-          )}
-          {shop.items[1] && (
+          )} */}
+          {/* {shop.items[1] && (
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
@@ -85,7 +83,7 @@ export default function NFTShop() {
               }}
               item={shop.items[1]}
             />
-          )}
+          )} */}
         </div>
       </div>
     </div>
