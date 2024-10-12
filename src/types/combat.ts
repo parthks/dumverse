@@ -63,5 +63,6 @@ export type NPC = {
   damage: number;
   difficulty: string;
   gold_reward: number;
+  dumz_reward: number;
   extra_gold: number;
 };

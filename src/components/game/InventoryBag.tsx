@@ -1,4 +1,4 @@
-import { ITEM_ICONS, IMAGES } from "@/lib/constants";
+import { ITEM_ICONS, IMAGES, ITEM_IMAGES } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
@@ -25,7 +25,7 @@ export function InventoryBag() {
         <div className="flex flex-col items-center mr-2">
           <div className="relative">
             <div className={`w-10 h-10 flex justify-center items-center ${weapon ? "bg-transparent" : "bg-white"}`}>
-              <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-10 h-10 z-10 p-1" />
+              <img src={weapon ? ITEM_IMAGES[weapon.item_id as keyof typeof ITEM_IMAGES] : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-10 h-10 z-10 p-1" />
               {weapon && <img src={GREEN_BACKGROUND_IMAGE} alt="weapon background" className="absolute w-10 h-10" />}
             </div>
             {weapon && <p className="text-white text-sm text-center">40/40</p>}
@@ -35,7 +35,7 @@ export function InventoryBag() {
         <div className="flex flex-col items-center ml-2">
           <div className="relative">
             <div className={`w-10 h-10 flex justify-center items-center ${armor ? "bg-transparent" : "bg-white"}`}>
-              <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-10 h-10 z-10 p-1" />
+              <img src={armor ? ITEM_IMAGES[armor.item_id as keyof typeof ITEM_IMAGES] : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-10 h-10 z-10 p-1" />
               {armor && <img src={GREEN_BACKGROUND_IMAGE} alt="armor background" className="absolute w-10 h-10 inset-0" />}
             </div>
             {armor && <p className="text-white text-sm text-center">40/40</p>}
@@ -52,7 +52,7 @@ export function InventoryBag() {
 
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "57%", right: "24%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{user?.dumz_balance.toLocaleString()} $tDumz</label>
+          <label className="text-sm mr-1 text-white">{user?.dumz_balance.toLocaleString()} $Dumz</label>
           <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5" />
         </div>
       </div>

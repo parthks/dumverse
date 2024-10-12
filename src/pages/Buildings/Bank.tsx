@@ -1,15 +1,12 @@
-import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
-
 import { InventoryBag } from "@/components/game/InventoryBag";
-import NumberTicker from "@/components/magicui/number-ticker";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
 import { SOUNDS } from "@/lib/constants";
 import { sleep } from "@/lib/time";
+import { GAME_PROCESS_ID } from "@/lib/utils";
 import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import { useGameStore } from "@/store/useGameStore";
 import { useCallback, useEffect, useState } from "react";
-import { DUMZ_TOKEN_PROCESS_ID, GAME_PROCESS_ID } from "@/lib/utils";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
@@ -51,10 +48,10 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
   let title;
   let max = 0;
   if (actionType === "deposit-dumz") {
-    title = "Depositing how much $tDumz?";
+    title = "Depositing how much $Dumz?";
     max = user?.dumz_balance ?? 0;
   } else if (actionType === "withdraw-dumz") {
-    title = "Withdrawing how much $tDumz?";
+    title = "Withdrawing how much $Dumz?";
     max = bank?.dumz_amount ?? 0;
   } else if (actionType === "deposit-gold") {
     title = "Depositing how much Gold?";
@@ -103,7 +100,7 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
 function TransferDumz({ onClose }: { onClose: () => void }) {
   const { user, bank, getBank, bankDataLoading } = useGameStore();
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
-  const [dumzBalance, setDumzBalance] = useState<number | undefined>(undefined);
+  const [dumzBalance, seDumzBalance] = useState<number | undefined>(undefined);
   const [txnLoading, setTxnLoading] = useState(false);
 
   const bankDumz = bank?.dumz_amount;
@@ -117,7 +114,7 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
       ],
       process: "dumz_token",
     });
-    setDumzBalance(parseInt(balance.data as unknown as string));
+    seDumzBalance(parseInt(balance.data as unknown as string));
   }, [user?.address]);
 
   useEffect(() => {
@@ -181,14 +178,14 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
     const debitNotice = resultData.Messages?.find((msg) => msg.Tags.some((tag: { name: string; value: string }) => tag.name === "Action" && tag.value === "Debit-Notice"));
     if (debitNotice) {
       await sleep(2000); // wait for the credit notice to be processed by game process
-      setDumzBalance(dumzBalance! - inputValue);
+      seDumzBalance(dumzBalance! - inputValue);
       getBank();
       fetchBalance();
     }
     setTxnLoading(false);
   };
 
-  const title = "Transfer $tDumz";
+  const title = "Transfer $Dumz";
   return (
     <div
       className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -223,7 +220,7 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
           }}
         />
         <div className="flex gap-4">
-          <ImgButton disabled={txnLoading} src={"https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"} onClick={handleDeposit} alt={"Deposit into Bank"} />
+          {/* <ImgButton disabled={txnLoading} src={"https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"} onClick={handleDeposit} alt={"Deposit into Bank"} /> */}
           <ImgButton disabled={txnLoading} src={"https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"} onClick={handleWithdraw} alt={"Withdraw from Bank"} />
         </div>
       </div>
@@ -264,7 +261,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
             <text x="50%" y="44.5%" fontSize="100" textAnchor="middle" fill="white">
-              {bankDataLoading || !bank ? "--" : `${bank.dumz_amount} $tDumz`}
+              {bankDataLoading || !bank ? "--" : `${bank.dumz_amount} $Dumz`}
             </text>
             <image
               href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
@@ -365,7 +362,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
             <text x="45%" y="50%" fontSize="150" textAnchor="middle" fill="white">
-              {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $tDumz`}
+              {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $Dumz`}
             </text>
             <image
               href="https://arweave.net/-nNkBcJ5iAWv0tbYBOqZkTDabHvGGLR0jNnAC5OoVX4"

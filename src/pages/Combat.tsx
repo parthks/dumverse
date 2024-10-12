@@ -7,105 +7,105 @@ import { Battle, NPC } from "@/types/combat";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
-// const currentBattle = {
-//   log: [
-//     {
-//       timestamp: 1726346958193,
-//       message: "hits Doe Eyed Deer for 2",
-//       from: "3",
-//     },
-//     {
-//       timestamp: 1726346958193,
-//       message: "has slain Doe Eyed Deer",
-//       from: "3",
-//     },
-//     {
-//       timestamp: 1726346958193,
-//       message: "hits CryptoCherie for 1",
-//       from: "NPC_2",
-//     },
-//     {
-//       timestamp: 1726346961590,
-//       message: "hits Sad Hedgehog for 2",
-//       from: "3",
-//     },
-//     {
-//       timestamp: 1726346961590,
-//       message: "has slain Sad Hedgehog",
-//       from: "3",
-//     },
-//     {
-//       timestamp: 1726346961590,
-//       message: "has won the battle",
-//       from: "3",
-//     },
-//   ],
-//   winner: "2",
-//   npcs: {
-//     NPC_1: {
-//       health: 0,
-//       dumz_reward: 1,
-//       damage: 1,
-//       difficulty: "EASY",
-//       total_health: 1,
-//       gold_reward: 10,
-//       extra_gold: 10000,
-//       id: "NPC_1",
-//       defense: 0,
-//       name: "Doe Eyed Deer",
-//     },
-//     NPC_2: {
-//       health: 0,
-//       dumz_reward: 1,
-//       damage: 1,
-//       difficulty: "EASY",
-//       total_health: 1,
-//       gold_reward: 10,
-//       extra_gold: 0,
-//       id: "NPC_2",
-//       defense: 0,
-//       name: "Sad Hedgehog",
-//     },
-//   },
-//   npcs_alive: ["NPC_1", "NPC_2"],
-//   last_npc_attack_timestamp: {
-//     NPC_1: 1726346952043,
-//     NPC_2: 1726346958193,
-//   },
-//   level: 1,
-//   id: 39,
-//   players_attacked: ["7"],
-//   ended: false,
-//   created_at: 1726346952043,
-//   players: {
-//     "7": {
-//       potion: {
-//         health: 1,
-//         id: 12,
-//         item_id: "POTION_1",
-//       },
-//       name: "CryptoCherie",
-//       damage: 2,
-//       health: 2,
-//       potion_used: true,
-//       total_health: 2,
-//       stamina: 1,
-//       defense: 0,
-//       nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
-//       id: "2",
-//       total_stamina: 6,
-//       gold_balance: 24070,
-//       current_spot: 0,
-//       address: "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go",
-//       dumz_balance: 60,
-//     },
-//   },
-//   players_alive: ["7"],
-// } as any;
+const currentBattle = {
+  log: [
+    {
+      timestamp: 1726346958193,
+      message: "hits Doe Eyed Deer for 2",
+      from: "3",
+    },
+    {
+      timestamp: 1726346958193,
+      message: "has slain Doe Eyed Deer",
+      from: "3",
+    },
+    {
+      timestamp: 1726346958193,
+      message: "hits CryptoCherie for 1",
+      from: "NPC_2",
+    },
+    {
+      timestamp: 1726346961590,
+      message: "hits Sad Hedgehog for 2",
+      from: "3",
+    },
+    {
+      timestamp: 1726346961590,
+      message: "has slain Sad Hedgehog",
+      from: "3",
+    },
+    {
+      timestamp: 1726346961590,
+      message: "has won the battle",
+      from: "3",
+    },
+  ],
+  winner: "2",
+  npcs: {
+    NPC_1: {
+      health: 0,
+      dumz_reward: 1,
+      damage: 1,
+      difficulty: "EASY",
+      total_health: 1,
+      gold_reward: 10,
+      extra_gold: 10000,
+      id: "NPC_1",
+      defense: 0,
+      name: "Doe Eyed Deer",
+    },
+    NPC_2: {
+      health: 0,
+      dumz_reward: 1,
+      damage: 1,
+      difficulty: "EASY",
+      total_health: 1,
+      gold_reward: 10,
+      extra_gold: 0,
+      id: "NPC_2",
+      defense: 0,
+      name: "Sad Hedgehog",
+    },
+  },
+  npcs_alive: ["NPC_1", "NPC_2"],
+  last_npc_attack_timestamp: {
+    NPC_1: 1726346952043,
+    NPC_2: 1726346958193,
+  },
+  level: 1,
+  id: 39,
+  players_attacked: ["7"],
+  ended: false,
+  created_at: 1726346952043,
+  players: {
+    "5": {
+      potion: {
+        health: 1,
+        id: 12,
+        item_id: "POTION_1",
+      },
+      name: "CryptoCherie",
+      damage: 2,
+      health: 2,
+      potion_used: true,
+      total_health: 2,
+      stamina: 1,
+      defense: 0,
+      nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
+      id: "5",
+      total_stamina: 6,
+      gold_balance: 24070,
+      current_spot: 0,
+      address: "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go",
+      dumz_balance: 60,
+    },
+  },
+  players_alive: ["5"],
+} as any;
 export default function Combat() {
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
 
-  const currentBattle = useCombatStore((state) => state.currentBattle);
+  // const currentBattle = useCombatStore((state) => state.currentBattle);
   const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
 
   const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
@@ -117,107 +117,74 @@ export default function Combat() {
   const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
 
-  useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null;
-    let stopTimeout: NodeJS.Timeout | null = null;
-
-    const checkOpenBattles = async () => {
-      if (enteringNewBattle && !currentBattle?.id) {
-        console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-        const battle = await getOpenBattles();
-        if (!battle) {
-          // Schedule the next check in 1 second
-          if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(checkOpenBattles, 5000);
-        }
-      }
-    };
-
-    if (enteringNewBattle && !currentBattle?.id) {
-      console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-      checkOpenBattles();
-
-      // Stop checking after 60 seconds
-      if (stopTimeout) clearTimeout(stopTimeout);
-      stopTimeout = setTimeout(() => {
-        if (timeout) {
-          console.log("Stopped checking for open battles after 60 seconds");
-          clearTimeout(timeout);
-        }
-        setFailedToEnterBattle(true);
-        // Reset the enteringNewBattle state
-        setEnteringNewBattle(false);
-      }, 60000);
-    }
-
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      if (stopTimeout) {
-        clearTimeout(stopTimeout);
-      }
-    };
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
-
-  // check for battle updates
   // useEffect(() => {
   //   let timeout: NodeJS.Timeout | null = null;
+  //   let stopTimeout: NodeJS.Timeout | null = null;
 
-  //   const checkBattleUpdates = async () => {
-  //     if (currentBattle?.id) {
-  //       console.log("Checking for battle updates");
-  //       const updatedBattle = await setCurrentBattle(currentBattle.id);
-
-  //       // Use the most up-to-date battle state
-  //       if (updatedBattle && !updatedBattle.ended) {
+  //   const checkOpenBattles = async () => {
+  //     if (enteringNewBattle && !currentBattle?.id) {
+  //       console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+  //       const battle = await getOpenBattles();
+  //       if (!battle) {
+  //         // Schedule the next check in 1 second
   //         if (timeout) clearTimeout(timeout);
-  //         timeout = setTimeout(checkBattleUpdates, 5000);
-  //       } else {
-  //         // Battle has ended, clean up
-  //         if (timeout) {
-  //           clearTimeout(timeout);
-  //         }
+  //         timeout = setTimeout(checkOpenBattles, 5000);
   //       }
   //     }
   //   };
 
-  //   if (currentBattle?.id && !currentBattle.ended) {
-  //     checkBattleUpdates(); // Start the initial call only if battle is ongoing
+  //   if (enteringNewBattle && !currentBattle?.id) {
+  //     console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+  //     checkOpenBattles();
+
+  //     // Stop checking after 60 seconds
+  //     if (stopTimeout) clearTimeout(stopTimeout);
+  //     stopTimeout = setTimeout(() => {
+  //       if (timeout) {
+  //         console.log("Stopped checking for open battles after 60 seconds");
+  //         clearTimeout(timeout);
+  //       }
+  //       setFailedToEnterBattle(true);
+  //       // Reset the enteringNewBattle state
+  //       setEnteringNewBattle(false);
+  //     }, 60000);
   //   }
 
   //   return () => {
   //     if (timeout) {
   //       clearTimeout(timeout);
   //     }
+  //     if (stopTimeout) {
+  //       clearTimeout(stopTimeout);
+  //     }
   //   };
-  // }, [currentBattle?.id, currentBattle?.ended, setCurrentBattle]);
+  // }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
-  const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
-    queryKey: [`newMessages-${currentBattle?.id}`],
-    queryFn: async () => {
-      console.log("refetching battle updates");
-      const updatedBattle = await setCurrentBattle(currentBattle!.id);
-      return updatedBattle;
-    },
-    enabled: !!currentBattle?.id && !currentBattle?.ended,
-    refetchInterval: 1000, // Poll every 1 second
-  });
+  // const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
+  //   queryKey: [`newMessages-${currentBattle?.id}`],
+  //   queryFn: async () => {
+  //     console.log("refetching battle updates");
+  //     const updatedBattle = await setCurrentBattle(currentBattle!.id);
+  //     return updatedBattle;
+  //   },
+  //   enabled: !!currentBattle?.id && !currentBattle?.ended,
+  //   refetchInterval: 1000, // Poll every 1 second
+  // });
 
-  if (enteringNewBattle && !currentBattle?.id) {
-    return <div>Entering a new battle...</div>;
-  }
+  // if (enteringNewBattle && !currentBattle?.id) {
+  //   return <div>Entering a new battle...</div>;
+  // }
 
-  if (failedToEnterBattle) {
-    return (
-      <div>
-        <p>Checked for 60 seconds. Failed to find an open battle :(</p>
-        <div>
-          <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
-        </div>
-      </div>
-    );
-  }
+  // if (failedToEnterBattle) {
+  //   return (
+  //     <div>
+  //       <p>Checked for 60 seconds. Failed to find an open battle :(</p>
+  //       <div>
+  //         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   // if (currentBattle?.id && user?.current_battle_id !== currentBattle?.id) {
   //   return <div>Waiting for battle confirmation...</div>;
@@ -457,6 +424,11 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   const backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
   const totalHealth = enemy.total_health;
   const filledHealth = enemy.health;
+
+  const totalGold = (enemy.extra_gold ?? 0) + enemy.gold_reward;
+  // Calculate font size based on the number of digits
+  // const fontSize = totalGold.toString().length > 3 ? 15 : 20;
+
   return (
     <div
       className="w-[250px] flex flex-col bg-no-repeat bg-contain bg-center relative"
@@ -465,15 +437,37 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
         backgroundImage: `url('${backgroundImage}')`,
       }}
     >
-      <div className="absolute bottom-[19%] left-0 right-0 w-full">
-        <div className="flex gap-1 px-4 justify-start">
+      <div className="absolute bottom-[28%] left-[10%]">
+        <p className="text-white text-center font-bold" style={{ fontSize: "20px" }}>
+          {enemy.health}/{totalHealth}
+        </p>
+        {/* <div className="flex gap-1 px-4 justify-start">
           {Array.from({ length: totalHealth }).map((_, index) => (
             <img key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" className="w-[9%] " />
           ))}
-        </div>
+        </div> */}
       </div>
-      <div className="absolute bottom-[3%] left-[2%] w-[26%]">
-        <p className="text-black text-xl font-bold text-right">{(enemy.extra_gold ?? 0) + enemy.gold_reward}g</p>
+      <div className="absolute bottom-[6.5%] left-[6.5%] w-[55px]">
+        <p
+          className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+          style={{
+            fontSize: `${15}px`,
+            lineHeight: "1",
+          }}
+        >
+          {totalGold}g
+        </p>
+      </div>
+      <div className="absolute bottom-[6.5%] right-[18%]">
+        <p
+          className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+          style={{
+            fontSize: `${15}px`,
+            lineHeight: "1",
+          }}
+        >
+          {enemy.dumz_reward} $Dumz
+        </p>
       </div>
     </div>
   );

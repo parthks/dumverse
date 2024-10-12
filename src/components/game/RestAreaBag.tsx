@@ -79,7 +79,7 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex justify-center items-center">
-                  <label className="text-2xl mr-1 text-white">{user?.dumz_balance.toLocaleString()} $tDumz</label>
+                  <label className="text-2xl mr-1 text-white">{user?.dumz_balance.toLocaleString()} $Dumz</label>
                   <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-10 h-10" />
                 </div>
               </div>

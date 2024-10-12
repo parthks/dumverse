@@ -26,8 +26,14 @@ export default function Bakery() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/iXO9yfuq5d9UxbRrDpF8EnreZnaiVcu62stGpNDFZtY"} alt="Bakery Map" className="w-full h-full object-cover" />
+          <img src={"https://arweave.net/MbOnj-2PBp9wZ2V4GAalLQuNhxoornEzQMR5OJMvlxc"} alt="Bakery Map" className="w-full h-full object-cover" />
         </div>
+        <img
+          src="https://arweave.net/9RVWczCj2AjG6XAf5ZNF88x8lWaotD5hN7HpaQbB4B0"
+          alt="Bakery Table"
+          className="absolute bottom-[20%] left-0 right-0 w-full"
+          style={{ height: "auto", objectFit: "contain" }}
+        />
         <div className="absolute inset-0">
           <img
             src="https://arweave.net/SKW3ovBgOtAP4K8WrnP3tARXnpZRVgguzxSvb6FznHI"
@@ -35,6 +41,7 @@ export default function Bakery() {
             className="absolute"
             style={{ ...calculatePositionAndSize(50, 30, 25), transform: "translate(-50%, -100%)" }}
           />
+
           {/* Group the shop table, sign, and shopkeeper */}
           <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 80), transform: "translate(-50%, -100%)" }}>
             <img src="https://arweave.net/sgg2-WUXqkerD-EO494aFydCX0InP2tuWXuFMdt6N-8" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />

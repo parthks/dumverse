@@ -15,7 +15,7 @@ import { useGameStore } from "@/store/useGameStore";
 //   const itemHeight = 196; // Increased height to accommodate all elements
 //   const textWidth = 400; // Fixed width for text centering
 
-//   const priceText = item.gold_price ? `${item.gold_price} g` : `${item.dumz_price} $tDumz`;
+//   const priceText = item.gold_price ? `${item.gold_price} g` : `${item.dumz_price} $Dumz`;
 //   const fontSize = 50;
 //   const iconSize = 50;
 //   const iconGap = 10;
@@ -89,7 +89,7 @@ import { useGameStore } from "@/store/useGameStore";
 //   const plaqueWidth = 146 * 2.5;
 //   const plaqueHeight = 39 * 2.5;
 
-//   const priceText = item.gold_price ? `${item.gold_price} g` : `${item.dumz_price} $tDumz`;
+//   const priceText = item.gold_price ? `${item.gold_price} g` : `${item.dumz_price} $Dumz`;
 //   const fontSize = 40;
 //   const iconSize = 40;
 //   const iconGap = 10;

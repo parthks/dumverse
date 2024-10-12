@@ -20,7 +20,7 @@ export default function ShopItem({
   const baseX = position.x;
   const baseY = position.y;
 
-  const priceText = item.gold_price ? `${item.gold_price.toLocaleString()} g` : item.dumz_price ? `${item.dumz_price.toLocaleString()} $tDumz` : "--";
+  const priceText = item.gold_price ? `${item.gold_price.toLocaleString()} g` : item.dumz_price ? `${item.dumz_price.toLocaleString()} $Dumz` : "--";
 
   console.log(inventory);
   const alreadyOwned = inventory.some((i) => i.item_id === item.id);

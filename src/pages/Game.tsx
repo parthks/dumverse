@@ -68,7 +68,7 @@ export default function Game() {
         {/* Loading... */}
       </div>
     );
-  // return <Combat />;
+  return <Bakery />;
   // return <RestArea />;
   return (
     <div className="game-cursor">

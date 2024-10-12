@@ -45,19 +45,19 @@ export const ITEM_IMAGES = {
 };
 
 export const ENEMY_CARD_IMAGE = {
-  NPC_1: "https://arweave.net/-MMk101bDNJx0rd9vlVwTC5wbctTub-TY_4sqKT-AMA",
-  NPC_2: "https://arweave.net/MJOTlAGUXyD4ztxJ8rR3omLoTShxS7UVvGk-E1ustjg",
-  NPC_3: "https://arweave.net/XLYz4S6yzdaCiLqe8jZqwEeArH9695hHcIg1Ryb1S1U",
-  NPC_4: "https://arweave.net/c6Khfp3M3ZkzKWE9z-Y9Wf1UKf-jam2SlY9VZ76-dTw",
-  NPC_5: "https://arweave.net/Ox4_Y4ITO0T7a6pZnNYuunVDp6j7z3gPKMpHtofPcK8",
-  NPC_6: "https://arweave.net/72DfNtdzufI1G-1MdUJRJ3he23M_uyUjyQVVEl40OFk",
-  NPC_7: "https://arweave.net/vaKzEICfs9uv1_1StZayj1AlOWRuAf0Q2saHE__93Zo",
-  NPC_8: "https://arweave.net/Zff6yN-W-4Irxq_OPqY3mBMp6uE3khwQJcFOKHdUW7o",
-  NPC_9: "https://arweave.net/fc1dTE_YlfR0ZskJRYcr22wFLiCFccdBklqL6R75mNo",
-  NPC_10: "https://arweave.net/eY63Wura5pr12-CoSMg7ggMFbKPcqIHArgXmDzJYsPw",
-  NPC_11: "https://arweave.net/A8a5PEkr2ArZ55luAPPz51JZpbccsjOuAI29bTVVteo",
-  NPC_12: "https://arweave.net/w0Uycq4vARosZakjHxs26gUomrcY6L_uulzKrp5zEKI",
-  NPC_13: "https://arweave.net/PYYTaRFjjFTuxiZH80udCAkCYgFc_wqDTaRRNUS_EmQ",
+  NPC_1: "https://arweave.net/-ViThoEIwlBp5mkewLk2OjnnEKNee5SEbmeMwdsfFD0",
+  NPC_2: "https://arweave.net/sf72XoFEIwZy1SpLJ5bqEGs2WLevkHM-ljZy95lGyuY",
+  NPC_3: "https://arweave.net/S9D0Tf9Eu4lnQ3nw2MzuV0gKCgo5vlXUmME1KP3gCBI",
+  NPC_4: "https://arweave.net/5kv0IVgvrCN-Ww1GZFbNevNX3L9aKg0fBwzjK9nabrc",
+  NPC_5: "https://arweave.net/6zXMMGRVxBltXuV6LkVgJbfGhmeNUlBV-T7dJVebM2E",
+  NPC_6: "https://arweave.net/9rXqcbd-c3CPFrMD39uV27B-pfhKUCQdV4l5WmZLvqo",
+  NPC_7: "https://arweave.net/qVe1dy3dQh3xuGyQAQ2pRe-DRdMwhHLIYzkA5h3vTBo",
+  NPC_8: "https://arweave.net/hQb7hRMU4Rynz18euMo3IHEgouij2cmb7TAPocOegQA",
+  NPC_9: "https://arweave.net/ViFdKd-cUkxaJ6WAsw4xjRFKi7QeTzJop7wqmmQOQ9A",
+  NPC_10: "https://arweave.net/9VoHqEbKolMa4Gebk2dUKq-P2ZTyXGh2CCGwxtHfYjg",
+  NPC_11: "https://arweave.net/KAXnRZxDWLG_vl0GEN-OK4uOfoLddEyp2UMNezV7FqE",
+  NPC_12: "https://arweave.net/VwTxz8r7_6U3Jin7QORp_jsEa9OSMH69n1En_cbmff0",
+  NPC_13: "https://arweave.net/owTkaG8UTkdeI9lTtbAHoPjRx0MlOl1qOLxberuuWE0",
 };
 
 export const SOUNDS = {

@@ -72,7 +72,7 @@ export function PlayerFrame() {
               <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-5 h-5" />
             </div>
             <div className="flex gap-2 justify-center items-center">
-              <label className="text-white text-xl font-bold">{user.dumz_balance.toLocaleString()} $tDumz</label>
+              <label className="text-white text-xl font-bold">{user.dumz_balance.toLocaleString()} $Dumz</label>
               <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5 h-5" />
             </div>
           </div>
