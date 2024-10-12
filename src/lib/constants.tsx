@@ -28,9 +28,9 @@ export const ITEM_ICONS = {
 
 export const ITEM_IMAGES = {
   WEAPON_1: "https://arweave.net/7a23JeEQssnf01L47H1FccCU7W402DrKv5nDah9fLkU",
-  WEAPON_2: "https://arweave.net/gDEVHf6Mh3yFQMm1M-M1_j5iTnfxAuvqjrckRt6o274",
-  WEAPON_3: "https://arweave.net/C-Ug3AW2CedHtrE-KCop4OA_LQVlY2iZxbTMcofcbVA",
-  WEAPON_4: "https://arweave.net/tIJ1emj81F64q2cdToIcamRy2jVQDFmiwO65T3a2z-Y",
+  WEAPON_2: "https://arweave.net/Ew8tx7YB3t-ZC3MDYdp5jOzlF4nNHLy157EUhhrAbXs",
+  WEAPON_3: "https://arweave.net/Ndm0F4mPJhR5JmhZZvJgGDwH7YQetZVCW8S5BR-72Rk",
+  WEAPON_4: "https://arweave.net/64fmvf_r9DACOvNBeTovCX9xrNZCTcEZYeT659-BMoM",
   ARMOR_1: "https://arweave.net/aRZkLSJj01b-dhuA_fVFuYXbaF34k08f6m5vmAjWJWY",
   ARMOR_2: "https://arweave.net/xZSQX8FshEg8owZOfA_6x0-377A2taLiOxIcFDkMlE4",
   ARMOR_3: "https://arweave.net/OaEB7uVq4xT7FhAdwF8dMux1lHX_3wCSRizkrpYrieU",

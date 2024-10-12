@@ -85,10 +85,10 @@ export default function VisitorCenter() {
         src={"https://arweave.net/iYOoke2OfHWqXtW67cjHIhM7ChTnnV8PRL6S2BY-A-c"}
         alt="Window Frame"
         style={{ transform: "translate(-100%, 0%)" }}
-        className="absolute top-[0%] left-[100%] w-[20%] h-auto"
+        className="absolute top-[0%] left-[100%] w-[15%] h-auto"
       />
 
-      <div className="absolute left-[525px] inset-0 flex items-center justify-center">
+      <div className="absolute left-[550px] inset-0 flex items-center justify-center">
         <div className="relative w-full h-full">
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}

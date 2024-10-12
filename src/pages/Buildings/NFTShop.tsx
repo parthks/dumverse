@@ -26,14 +26,16 @@ export default function NFTShop() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/_MuKN_4wC1nR1TenZeM7tXHaRZ8p-dL_Jm28a3-y5cg"} alt="NFT Shop Background" className="w-full h-full object-cover" />
+          <img src={"https://arweave.net/wfQru_Ld-BGs6sq4qbKtlP6EBUYZXAAZ42mIqJQjaIM"} alt="NFT Shop Background" className="w-full h-full object-cover" />
         </div>
+
         <img
           src="https://arweave.net/TI0VqS8uw1bGEXB_Ew4Wl37asj-OqvS4-poR5zURri8"
           alt="Curtains"
           className="absolute"
           style={{ ...calculatePositionAndSize(0, 0, 100), transform: "translate(0, 0%)" }}
         />
+
         {/* <img
           src="https://arweave.net/s0RQ9YQlFx8DF6HL1x3vDXkFdTaie_Car2v5tZE7hNw"
           alt="Poles"

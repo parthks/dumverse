@@ -73,7 +73,7 @@ export default function Weapon() {
                 y: 35,
               }}
               item={shop.items[0]}
-              itemSize={30}
+              itemSize={100}
             />
           )}
           {shop?.items[1] && (
@@ -87,6 +87,7 @@ export default function Weapon() {
                 y: 35,
               }}
               item={shop.items[1]}
+              itemSize={100}
             />
           )}
           {shop?.items[2] && (
@@ -100,6 +101,7 @@ export default function Weapon() {
                 y: 35,
               }}
               item={shop.items[2]}
+              itemSize={100}
             />
           )}
           {shop?.items[3] && (
@@ -113,6 +115,7 @@ export default function Weapon() {
                 y: 35,
               }}
               item={shop.items[3]}
+              itemSize={100}
             />
           )}
         </div>

@@ -6,7 +6,7 @@ import { IMAGES, ITEM_IMAGES } from "@/lib/constants";
 export default function ShopItem({
   item,
   size = 330,
-  itemSize = 35,
+  itemSize = 150,
   position,
   handleClick,
 }: {
@@ -29,7 +29,7 @@ export default function ShopItem({
     <div className="absolute flex flex-col items-center" style={{ width: `${size}px`, top: `${baseY}%`, left: `${baseX}%`, transform: `translate(-50%, -100%)` }}>
       <div className="relative w-full flex flex-col justify-center items-center">
         {/* Item image */}
-        <img src={ITEM_IMAGES[item.id as keyof typeof ITEM_IMAGES]} alt={item.name} className={`w-[${itemSize}%] h-auto mb-[-2%]`} />
+        <img src={ITEM_IMAGES[item.id as keyof typeof ITEM_IMAGES]} alt={item.name} className={`h-auto mb-[-2%]`} style={{ width: `${itemSize}px` }} />
         <div className="w-full relative">
           {/* Shelf image */}
           <img src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs" alt="Shelf" className="w-full relative z-10" />

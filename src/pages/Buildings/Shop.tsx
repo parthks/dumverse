@@ -219,10 +219,10 @@ export default function Shop() {
                 shopBuyItemAudio.play();
               }}
               position={{
-                x: 30,
+                x: 35,
                 y: 40,
               }}
-              itemSize={20}
+              itemSize={65}
               item={shop.items[0]}
             />
           )}
@@ -233,10 +233,10 @@ export default function Shop() {
                 shopBuyItemAudio.play();
               }}
               position={{
-                x: 60,
+                x: 65,
                 y: 40,
               }}
-              itemSize={18}
+              itemSize={60}
               item={shop.items[1]}
             />
           )}

@@ -23,10 +23,10 @@ export default function HallOfFame() {
         src="https://arweave.net/3VaXHnefkV1QW875cuPZUkObeUw1OxXHNm_f9oSJz9k"
         alt="Poles"
         className="absolute"
-        style={{ ...calculatePositionAndSize(50, 70, 100), transform: "translate(-50%, -50%)" }}
+        style={{ ...calculatePositionAndSize(50, 70, 85), transform: "translate(-50%, -50%)" }}
       />
 
-      <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 35), transform: "translate(-50%, -100%)" }}>
+      <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 30), transform: "translate(-50%, -100%)" }}>
         <img src="https://arweave.net/g2i08NVCRWFbwGflpf4S7b6M2LwRwScnEK6N6chVCMM" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
         <img
           src={BUILDING_IMAGES.GREEN_SHOPKEEPER}
