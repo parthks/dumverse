@@ -34,7 +34,7 @@ export type Inventory = {
   created_at: string;
 };
 
-export type ItemType = "ARMOR" | "WEAPON" | "POTION" | "FOOD" | "ENERGY";
+export type ItemType = "ARMOR" | "WEAPON" | "POTION" | "FOOD" | "ENERGY" | "SPECIAL_ITEMS";
 
 export type Item = {
   id: string;

@@ -16,6 +16,7 @@ global enum ItemType
     "POTION"
     "FOOD"
     "ENERGY"
+    "SPECIAL_ITEMS"
 end
 
 global enum PotionIds

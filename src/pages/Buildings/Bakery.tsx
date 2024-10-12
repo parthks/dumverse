@@ -37,14 +37,14 @@ export default function Bakery() {
             style={{ ...calculatePositionAndSize(50, 30, 25), transform: "translate(-50%, -100%)" }}
           />
           {/* Group the shop table, sign, and shopkeeper */}
-          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 85), transform: "translate(-50%, -100%)" }}>
+          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 80), transform: "translate(-50%, -100%)" }}>
             <img src="https://arweave.net/sgg2-WUXqkerD-EO494aFydCX0InP2tuWXuFMdt6N-8" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
 
             <img
               src={BUILDING_IMAGES.YELLOW_SHOPKEEPER}
               alt="Shop Keeper"
               className="absolute"
-              style={{ left: "50%", width: "18%", height: "auto", transform: "translate(-75%, -213%)" }}
+              style={{ left: "50%", width: "15%", height: "auto", transform: "translate(-75%, -235%)" }}
             />
           </div>
           {shop.items[0] && (

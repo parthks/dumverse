@@ -6,7 +6,9 @@ local constants = require("utils.constants")
 local function shopInfoHandler(msg: Message)
     local itemType = msg.Tags.ItemType as ItemType
     local items = constants.ALL_ITEMS
-    if itemType == "WEAPON" then
+    if itemType == "SPECIAL_ITEMS" then
+        items = constants.SPECIAL_ITEMS
+    elseif itemType == "WEAPON" then
         items = constants.WEAPONS
     elseif itemType == "ARMOR" then
         items = constants.ARMORS
@@ -18,10 +20,10 @@ local function shopInfoHandler(msg: Message)
         -- energy and potion are the same in the shop
         -- Combine POTIONS and ENERGY tables
         items = {}
-        for k, v in pairs(constants.POTIONS) do
+        for k, v in pairs(constants.POTIONS as {string:BaseItem}) do
             items[k] = v
         end
-        for k, v in pairs(constants.ENERGY) do
+        for k, v in pairs(constants.ENERGY as {string:BaseItem}) do
             items[k] = v
         end
     end

@@ -86,7 +86,7 @@ export default function Town() {
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // handleBuildingSelect(GameStatePages.WEAPON_SHOP);
+                handleBuildingSelect(GameStatePages.WEAPON_SHOP);
               }}
             />
             {/* Building Bank */}
@@ -130,7 +130,7 @@ export default function Town() {
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
-                // handleBuildingSelect(GameStatePages.NFT_SHOP);
+                handleBuildingSelect(GameStatePages.NFT_SHOP);
               }}
             />
             {/* Visitor Center right bottom building */}

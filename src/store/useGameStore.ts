@@ -228,7 +228,7 @@ export const useGameStore = create<GameState>()(
       },
       lamaPosition: initialLamaPosition,
       setLamaPosition: (position) => set({ lamaPosition: position }),
-      goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN }),
+      goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN, shop: null }),
       goToTown: async (hardRefresh = false) => {
         // hardRefresh is true when going to town from combat (in case on spot one)
         if (get().user?.current_spot !== 0 || hardRefresh) {

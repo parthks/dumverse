@@ -6,11 +6,11 @@ import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
-export default function Armory() {
-  const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
+export default function Weapon() {
+  const { shop, getShop, buyItem } = useGameStore();
   const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
-  useBuildingMusic({ getBuildingData: () => getShop("ARMOR") });
+  useBuildingMusic({ getBuildingData: () => getShop("WEAPON") });
 
   if (!shop) return <div>Loading...</div>;
 
@@ -28,30 +28,38 @@ export default function Armory() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/0lrK0cYegAtbwOQ9oFBFAKy_iqdxYhxWpSVx6c-h80M"} alt="Armory Map" className="w-full h-full object-cover" />
+          <img src={"https://arweave.net/8LmZ0u-eK5Ir3bUrF-iSne58cmgPelPcQHWTlMd7f58"} alt="Weapon Shop Background" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0">
-          <img
-            src="https://arweave.net/wmdmI7C7SJnGXHJVJwzmxy05ikTWEJPBPrqOr8WiUWE"
-            alt="Fireplace"
-            className="absolute"
-            style={{ ...calculatePositionAndSize(0, 42, 30), transform: "translate(-30%, -50%)" }}
-          />
-          {/* Group the shop table, sign, and shopkeeper */}
-          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 50), transform: "translate(-50%, -100%)" }}>
-            <img src="https://arweave.net/kcuv5Ifubl1oQ66gyRGfFusQfX9cm61RNwf1_Upsnl4" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
-
+          <div className="absolute" style={{ ...calculatePositionAndSize(0, 58, 85), transform: "translate(0, 0)" }}>
             <img
-              src={BUILDING_IMAGES.YELLOW_SHOPKEEPER}
-              alt="Shop Keeper"
+              src="https://arweave.net/EDiX5PbGtPOVHgMxlACk2js538D13biYdlt-cAgzpK0"
+              alt="Table"
               className="absolute"
-              style={{ left: "50%", width: "20%", height: "auto", transform: "translate(-50%, -242%)" }}
+              style={{ ...calculatePositionAndSize(0, 42, 50), transform: "translate(0, 0)" }}
             />
             <img
-              src="https://arweave.net/w2uP86Q1l0ErsqM2KkMh_0s02XOMaknUvuFOtrKy86Q"
-              alt="Hammer on Table"
+              src={"https://arweave.net/yu4aXRJJyfe0VuwVn6nz2y3mQZE2X0XzVYHr9ujuXlo"}
+              alt="Tool"
               className="absolute"
-              style={{ left: "50%", width: "20%", height: "auto", transform: "translate(20%, -310%)" }}
+              style={{ ...calculatePositionAndSize(10, 92, 8), transform: "translate(0, 50%)" }}
+            />
+            <img
+              src={"https://arweave.net/fzYzWusAIwQxrtTLVYV_jtGUlNu9LXACcn7wNseUIuw"}
+              alt="Saw"
+              className="absolute"
+              style={{ ...calculatePositionAndSize(32, 92, 11), transform: "translate(0, 65%)" }}
+            />
+          </div>
+          {/* Group the shop table and shopkeeper */}
+          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 57), transform: "translate(-50%, -100%)" }}>
+            <img src="https://arweave.net/3GlvzzIUvPyYQHQj0UHDNLCBEAL5ZlMoEb-G2aeLqCQ" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
+
+            <img
+              src={BUILDING_IMAGES.WEAPON_DEALER}
+              alt="Shop Keeper"
+              className="absolute"
+              style={{ left: "50%", width: "55%", height: "auto", transform: "translate(-50%, -141%)" }}
             />
           </div>
           {shop.items[0] && (
@@ -61,10 +69,11 @@ export default function Armory() {
                 shopBuyItemAudio.play();
               }}
               position={{
-                x: 30,
-                y: 20,
+                x: 12,
+                y: 35,
               }}
               item={shop.items[0]}
+              itemSize={30}
             />
           )}
           {shop.items[1] && (
@@ -74,8 +83,8 @@ export default function Armory() {
                 shopBuyItemAudio.play();
               }}
               position={{
-                x: 30,
-                y: 50,
+                x: 37,
+                y: 35,
               }}
               item={shop.items[1]}
             />
@@ -87,8 +96,8 @@ export default function Armory() {
                 shopBuyItemAudio.play();
               }}
               position={{
-                x: 75,
-                y: 20,
+                x: 62,
+                y: 35,
               }}
               item={shop.items[2]}
             />
@@ -100,8 +109,8 @@ export default function Armory() {
                 shopBuyItemAudio.play();
               }}
               position={{
-                x: 75,
-                y: 50,
+                x: 87,
+                y: 35,
               }}
               item={shop.items[3]}
             />

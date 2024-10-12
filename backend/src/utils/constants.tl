@@ -5,12 +5,50 @@ local REST_SPOTS = { 0, 9, 18, 27 }
 
 require "utils.globals"
 
+local SPECIAL_ITEMS = {
+    WAND = {
+        id = "WAND",
+        name = "Wand",
+        gold_price = 15000,
+        damage = 5,
+        type = "WEAPON",
+    },
+    MAGIC_ROBE = {
+        id = "MAGIC_ROBE",
+        name = "Magic Robe",
+        gold_price = 12000,
+        defense = 5,
+        type = "ARMOR",
+    },
+}
+
 local WEAPONS = {
     WEAPON_1 = {
         id = "WEAPON_1",
         name = "Wood Slingshot",
-        gold_price = 5000,
+        gold_price = 1250,
+        damage = 1,
+        type = "WEAPON",
+    },
+    WEAPON_2 = {
+        id = "WEAPON_2",
+        name = "Iron Slingshot",
+        gold_price = 2500,
         damage = 2,
+        type = "WEAPON",
+    },
+    WEAPON_3 = {
+        id = "WEAPON_3",
+        name = "Gold Slingshot",
+        gold_price = 6000,
+        damage = 3,
+        type = "WEAPON",
+    },
+    WEAPON_4 = {
+        id = "WEAPON_4",
+        name = "Diamond Slingshot",
+        gold_price = 12000,
+        damage = 4,
         type = "WEAPON",
     },
 }
@@ -322,6 +360,7 @@ return {
     COMBAT_PROCESS_ID = COMBAT_PROCESS_ID,
     DUMZ_TOKEN_PROCESS_ID = DUMZ_TOKEN_PROCESS_ID,
     REST_SPOTS = REST_SPOTS,
+    SPECIAL_ITEMS = SPECIAL_ITEMS,
     WEAPONS = WEAPONS,
     ARMORS = ARMORS,
     POTIONS = POTIONS,

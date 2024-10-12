@@ -1,14 +1,16 @@
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect } from "react";
-import BankPage from "./Bank";
 import Combat from "./Combat";
 import GameMap from "./GameMap";
 import RestArea from "./RestArea";
-import Shop from "./Shop";
 import Town from "./Town";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Bakery from "./Bakery";
-import Armory from "./Armory";
+import Bank from "./Buildings/Bank";
+import Shop from "./Buildings/Shop";
+import Bakery from "./Buildings/Bakery";
+import Armory from "./Buildings/Armory";
+import Weapon from "./Buildings/Weapon";
+import NFTShop from "./Buildings/NFTShop";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +46,7 @@ export default function Game() {
   }, [user?.stamina, user?.total_stamina, GameStatePage, user?.current_spot]);
 
   let page = <div>Game</div>;
-  if (GameStatePage === GameStatePages.BANK) page = <BankPage />;
+  if (GameStatePage === GameStatePages.BANK) page = <Bank />;
   if (GameStatePage === GameStatePages.SHOP) page = <Shop />;
   if (GameStatePage === GameStatePages.GAME_MAP) page = <GameMap />;
   if (GameStatePage === GameStatePages.COMBAT) page = <Combat />;
@@ -52,6 +54,8 @@ export default function Game() {
   if (GameStatePage === GameStatePages.REST_AREA) page = <RestArea />;
   if (GameStatePage === GameStatePages.BAKERY) page = <Bakery />;
   if (GameStatePage === GameStatePages.ARMORY) page = <Armory />;
+  if (GameStatePage === GameStatePages.WEAPON_SHOP) page = <Weapon />;
+  if (GameStatePage === GameStatePages.NFT_SHOP) page = <NFTShop />;
   if (!user)
     return (
       <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>
