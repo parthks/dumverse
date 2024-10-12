@@ -145,7 +145,7 @@ local function newUserJoinHandler(msg: Message)
     local level = msg.Tags.Level
     local data = json.decode(msg.Data) as {string: string}
 
-    print("Battle.NewUserJoin - " .. msg.From .. " " .. GAME_PROCESS_ID)
+    print("Battle.NewUserJoin - user " .. user_id)
     assert(msg.From == GAME_PROCESS_ID, "Only Game process can send this message")
     assert(user_id, "UserId is required")
     assert(level, "Combat Level is required")

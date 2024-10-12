@@ -73,6 +73,14 @@ export default function VisitorCenter() {
         </div>
       </div>
 
+      {/* sign */}
+      <img
+        src={"https://arweave.net/PeSGv6_5015F9ol8zmgXXXnALvP3qELuZtXcONOPzK0"}
+        alt="Visitor Center Sign"
+        style={{ transform: "translate(0%, -100%)" }}
+        className="absolute top-[100%] left-[410px] w-[10%] h-auto"
+      />
+
       <img
         src={"https://arweave.net/iYOoke2OfHWqXtW67cjHIhM7ChTnnV8PRL6S2BY-A-c"}
         alt="Window Frame"
@@ -80,31 +88,31 @@ export default function VisitorCenter() {
         className="absolute top-[0%] left-[100%] w-[20%] h-auto"
       />
 
-      <div className="absolute left-[500px] inset-0 flex items-center justify-center">
+      <div className="absolute left-[525px] inset-0 flex items-center justify-center">
         <div className="relative w-full h-full">
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
-            className="absolute bottom-[0] left-[0%] w-[20%] h-auto"
+            className="absolute bottom-[0] left-[0%] w-[25%] h-auto"
           />
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
-            className="absolute bottom-[0] left-[25%] w-[20%] h-auto"
+            className="absolute bottom-[0] left-[25%] w-[25%] h-auto"
           />
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
-            className="absolute bottom-[0] left-[50%] w-[20%] h-auto"
+            className="absolute bottom-[0] left-[50%] w-[25%] h-auto"
           />
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
-            className="absolute bottom-[0] left-[75%] w-[20%] h-auto"
+            className="absolute bottom-[0] left-[75%] w-[25%] h-auto"
           />
         </div>
       </div>

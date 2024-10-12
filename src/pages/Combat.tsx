@@ -137,17 +137,17 @@ export default function Combat() {
       console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
       checkOpenBattles();
 
-      // Stop checking after 30 seconds
+      // Stop checking after 60 seconds
       if (stopTimeout) clearTimeout(stopTimeout);
       stopTimeout = setTimeout(() => {
         if (timeout) {
-          console.log("Stopped checking for open battles after 30 seconds");
+          console.log("Stopped checking for open battles after 60 seconds");
           clearTimeout(timeout);
         }
         setFailedToEnterBattle(true);
         // Reset the enteringNewBattle state
         setEnteringNewBattle(false);
-      }, 30000);
+      }, 60000);
     }
 
     return () => {
@@ -211,7 +211,7 @@ export default function Combat() {
   if (failedToEnterBattle) {
     return (
       <div>
-        <p>Checked for 30 seconds. Failed to find an open battle :(</p>
+        <p>Checked for 60 seconds. Failed to find an open battle :(</p>
         <div>
           <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
         </div>
