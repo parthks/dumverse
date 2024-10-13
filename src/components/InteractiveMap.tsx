@@ -41,7 +41,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     <div className="relative w-full h-full">
       <div className="absolute inset-0">
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
-        <img src={"https://arweave.net/nI5UoE2K_wRFpSsaYy3n286QSxBAdrglZ6va4D66pNA"} alt="Game Map" className="w-full h-full object-contain" />
+        <img src={"https://arweave.net/4Ag9gEnIbC8qnWQgjoV5uIER6oVLGVx8TgqvuxAVHFM"} alt="Game Map" className="w-full h-full object-contain" />
         <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
           {interactivePoints.map((point, index) => {
             // if current level is the same as the point level, then add the image to the point

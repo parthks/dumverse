@@ -72,6 +72,9 @@ local function enterNewCombatHandler(msg: Message)
     combatUserData.inventory_weapon_id = nil
     combatUserData.inventory_armor_id = nil
 
+    -- recalculate stats for damage and defense, in case item has 0 health
+    local baseStats = helpers.CalculateUserBaseStats(userData)
+
     for _, item in ipairs(inventoryItems as {InventoryItem}) do
         if item.item_type == 'POTION' then
             local potion_id = item.item_id as PotionIds
@@ -83,10 +86,17 @@ local function enterNewCombatHandler(msg: Message)
             }
         elseif item.item_type == 'ARMOR' and item.item_health > 0 then
             combatUserData.inventory_armor_id = tostring(item.id)
+            local armorData = constants.ARMORS[item.item_id as ArmorIds]
+            baseStats.defense = baseStats.defense + armorData.defense
         elseif item.item_type == 'WEAPON' and item.item_health > 0 then
             combatUserData.inventory_weapon_id = tostring(item.id)
+            local weaponData = constants.WEAPONS[item.item_id as WeaponIds]
+            baseStats.damage = baseStats.damage + weaponData.damage
         end
     end
+
+    combatUserData.defense = baseStats.defense
+    combatUserData.damage = baseStats.damage
 
     -- if armor or weapon is equipped, decrement item_health by 1
     if combatUserData.inventory_armor_id then

@@ -30,7 +30,7 @@ global INVENTORY_TABLE: string = [[
         user_id INTEGER NOT NULL,
         item_id TEXT NOT NULL,
         item_type TEXT NOT NULL,
-        item_health FLOAT DEFAULT 0,
+        item_health FLOAT DEFAULT 40,
         total_item_health FLOAT DEFAULT 40,
         equipped BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -66,16 +66,47 @@ Handlers.add("Admin.ClearDB",
     Handlers.utils.hasMatchingTag("Action", "DANGER.ClearDB"),
     function(msg: Message)
         assert(msg.From == ao.id, "You are not authorized to perform")
-        dbAdmin.db:exec("DROP TABLE IF EXISTS Users;")
-        dbAdmin.db:exec(USERS_TABLE)
+        -- dbAdmin.db:exec("DROP TABLE IF EXISTS Users;")
+        -- dbAdmin.db:exec(USERS_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Inventory;")
         dbAdmin.db:exec(INVENTORY_TABLE)
-        dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
-        dbAdmin.db:exec(BANK_TABLE)
-        dbAdmin.db:exec("DROP TABLE IF EXISTS BankTransactions;")
-        dbAdmin.db:exec(BANK_TRANSACTIONS_TABLE)
+        -- dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
+        -- dbAdmin.db:exec(BANK_TABLE)
+        -- dbAdmin.db:exec("DROP TABLE IF EXISTS BankTransactions;")
+        -- dbAdmin.db:exec(BANK_TRANSACTIONS_TABLE)
     end
 )
 -- Send({Target = ao.id, Action = "DANGER.ClearDB" })
+
+Handlers.add("Admin.UpdateInventoryTable",
+    Handlers.utils.hasMatchingTag("Action", "DANGER.UpdateInventoryTable"),
+    function(msg: Message)
+        assert(msg.From == ao.id, "You are not authorized to perform this action")
+        dbAdmin.db:exec([[
+            -- Create a new table with the updated schema
+            CREATE TABLE Inventory_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                item_id TEXT NOT NULL,
+                item_type TEXT NOT NULL,
+                item_health FLOAT DEFAULT 40,
+                total_item_health FLOAT DEFAULT 40,
+                equipped BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+            );
+
+            -- Copy data from the old table to the new one
+            INSERT INTO Inventory_new SELECT * FROM Inventory;
+
+            -- Drop the old table
+            DROP TABLE Inventory;
+
+            -- Rename the new table to the original name
+            ALTER TABLE Inventory_new RENAME TO Inventory;
+        ]])
+    end
+)
+-- Send({Target = ao.id, Action = "DANGER.UpdateInventoryTable" })
 
 return {}

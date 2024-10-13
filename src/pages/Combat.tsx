@@ -1,12 +1,14 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
-import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, SOUNDS } from "@/lib/constants";
+import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+
+// TODO repair system - calculate damage based on equipped weapon and armor. only store base user damage in db.
 
 // const currentBattle = {
 //   log: [
@@ -104,7 +106,7 @@ import { useEffect, useRef, useState } from "react";
 //       total_health: 2,
 //       stamina: 1,
 //       defense: 0,
-//       nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
+//       // nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
 //       id: "5",
 //       total_stamina: 6,
 //       gold_balance: 24070,
@@ -218,7 +220,10 @@ export default function Combat() {
   console.log("currentBattle", currentBattle);
 
   return (
-    <div className="flex gap-2 justify-between p-8 min-h-screen bg-gray-900">
+    <div
+      className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
+    >
       <audio src={SOUNDS.BATTLE_AUDIO} autoPlay loop />
       <BattleGround currentBattle={currentBattle} />
       <CombatInventory currentBattle={currentBattle} />
@@ -233,6 +238,13 @@ function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
   const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
   const actionLoading = useCombatStore((state) => state.actionLoading);
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
+  const potionsInBag = user?.inventory?.filter((item) => item.item_id === "POTION_1") ?? [];
+  const potionUsed = !!player.potion_used;
+  if (potionUsed) {
+    // remove one item from potionsInBag
+    potionsInBag.shift();
+  }
+  (player as any).inventory = potionsInBag;
 
   return (
     <div className="flex flex-col justify-between">
@@ -240,7 +252,7 @@ function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
       <InventoryBag combatInventory combatInventoryUserData={player as any} />
       <div className="flex justify-center">
         <ImgButton
-          disabled={actionLoading || player.potion_used || !player.potion}
+          disabled={actionLoading || potionUsed || !player.potion}
           // className="w-20 shrink-0"
           src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
           onClick={async () => {
@@ -315,10 +327,10 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   return (
     <div>
       <div className="flex gap-4 items-center">
-        <div className="grid grid-cols-[1fr_1fr] gap-4 items-start">
+        <div className="grid grid-cols-[1fr_1fr] gap-4 items-start w-[700px]">
           <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
 
-          <div className="flex flex-col gap-2 w-[380px] items-center">
+          <div className="flex flex-col gap-2 w-[350px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
               disabled={disableAttackButtons}
@@ -337,7 +349,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 
             return (
               <>
-                <div key={entity.id} className="flex flex-col gap-2 w-[380px] items-center">
+                <div key={entity.id} className="flex flex-col gap-2 w-[350px] items-center">
                   {isNPC && (
                     <div className={`relative ${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
                       <EnemyCard enemy={entity as NPC} />
@@ -400,11 +412,11 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   return (
     <div
       className="w-[250px] relative flex flex-col bg-[url('https://arweave.net/sX67q1nQcG8fOyyJqTOcIc2CfmAsZCocplOXJIWFN0Y')] bg-no-repeat bg-contain bg-center px-3 py-1"
-      style={{ aspectRatio: "302/421", textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000" }}
+      style={{ aspectRatio: "302/421", textShadow: "-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000" }}
     >
       <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
       <h2 className="text-white text-2xl font-bold text-center">{player.name} (P)</h2>
-      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full  object-contain mb-2" />
+      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full max-h-[226px] object-contain mb-2" />
 
       {/* <div className="flex gap-2 justify-between items-start">
         <div className="flex flex-col gap-1"> */}
@@ -463,11 +475,11 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
       </div>
       <div className="flex gap-8 ml-7 mt-1">
         <div className="flex flex-col items-center justify-between">
-          <img src={armor && isUsingArmor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="h-10" />
+          <img src={armor && isUsingArmor ? ITEM_IMAGES[armor.item_id as keyof typeof ITEM_IMAGES] : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="h-10" />
           {/* <p className="text-black text-2xl font-bold text-center">{player.damage}</p> */}
         </div>
         <div className="flex flex-col gap-1 items-center justify-between">
-          <img src={weapon && isUsingWeapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="h-10" />
+          <img src={weapon && isUsingWeapon ? ITEM_IMAGES[weapon.item_id as keyof typeof ITEM_IMAGES] : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="h-10" />
           {/* <p className="text-black text-2xl font-bold text-center">{player.defense}</p> */}
         </div>
       </div>
@@ -488,7 +500,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
     <div
       className="w-[250px] flex flex-col bg-no-repeat bg-contain bg-center relative"
       style={{
-        textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+        textShadow: "-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000",
         aspectRatio: "302/421",
         backgroundImage: `url('${backgroundImage}')`,
       }}

@@ -75,8 +75,26 @@ local function inventoryUseItemHandler(msg: Message)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
+local function inventoryRepairItemHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local inventory_id = tonumber(msg.Tags.InventoryId)
+    assert(inventory_id, "Pass in inventory_id")
+    helpers.CheckUserExists(user_id, msg.From)
+
+    dbAdmin:exec(string.format([[
+        UPDATE Inventory SET item_health = total_item_health WHERE id = %d AND user_id = %f;
+    ]], inventory_id, user_id))
+
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET dumz_balance = dumz_balance - 5 WHERE id = %f;
+    ]], user_id))
+
+    ao.send({ Target = msg.From, Status = "Success" })
+end
+
 -- Add handlers
 Handlers.add("Inventory.Info", Handlers.utils.hasMatchingTag('Action', 'Inventory.Info'), inventoryInfoHandler)
 Handlers.add("Inventory.UseItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.UseItem'), inventoryUseItemHandler)
+Handlers.add("Inventory.RepairItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.RepairItem'), inventoryRepairItemHandler)
 
 return {}

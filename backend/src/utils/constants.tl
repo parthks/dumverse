@@ -5,6 +5,7 @@ local REST_SPOTS = { 0, 9, 18, 27 }
 
 require "utils.globals"
 
+-- duplicated in weapons and armors tables
 local SPECIAL_ITEMS = {
     WAND = {
         id = "WAND",
@@ -51,6 +52,13 @@ local WEAPONS = {
         damage = 4,
         type = "WEAPON",
     },
+    WAND = {
+        id = "WAND",
+        name = "Wand",
+        gold_price = 15000,
+        damage = 5,
+        type = "WEAPON",
+    },
 }
 global type WeaponItem = record
     {BaseItem}
@@ -83,6 +91,13 @@ local ARMORS = {
         name = "Diamond Armor",
         gold_price = 10000,
         defense = 4,
+        type = "ARMOR",
+    },
+    MAGIC_ROBE = {
+        id = "MAGIC_ROBE",
+        name = "Magic Robe",
+        gold_price = 12000,
+        defense = 5,
         type = "ARMOR",
     },
 }

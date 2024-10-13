@@ -3,6 +3,7 @@ import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
 import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { useRef, useState } from "react";
+import { UserWeaponItem } from "./InventoryBag";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
   const { user, consumeItem } = useGameStore();
@@ -45,10 +46,10 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
       <audio preload="auto" ref={eatCakeAudioRef} src={SOUNDS.EAT_CAKE_AUDIO} />
 
       <div className="flex flex-col items-center justify-center h-full w-full">
-        <div className="flex w-[500px] mt-16 flex-col items-center justify-center">
-          <h2 className="text-5xl text-white font-bold">{user.name}</h2>
+        <div className="flex w-[500px] mt-12 flex-col items-center justify-center">
+          {/* <h2 className="text-5xl text-white font-bold">{user.name}</h2> */}
 
-          <div className="flex w-full mt-8 px-16 gap-4 flex-col items-center justify-between">
+          <div className="flex w-full px-16 gap-4 flex-col items-center justify-between">
             {[
               { type: "FOOD_1", count: food1 },
               { type: "ENERGY_1", count: energy1 },
@@ -69,34 +70,41 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
             ))}
           </div>
 
-          <div className="flex w-full mt-8 px-4 flex-row items-center justify-between">
+          <div className="flex flex-row gap-16 justify-between mt-4 align-baseline">
+            {/* <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-16 h-16 bg-white p-2" />
+              <label className="text-2xl mr-1 text-white">{"Weapon"}</label> */}
+            <UserWeaponItem item={weapon} bigger itemType="weapon" />
+            {/* <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-16 h-16 bg-white p-2" /> */}
+            {/* <label className="text-2xl mr-1 text-white">{"Armor"}</label> */}
+            <UserWeaponItem item={armor} bigger itemType="armor" />
+          </div>
+
+          <div className="flex w-full mt-4 px-8 flex-row justify-between items-baseline">
             <div className="flex flex-col gap-4 items-end justify-between">
               <div className="flex items-center justify-between">
                 <div className="flex justify-center items-center">
-                  <label className="text-2xl mr-1 text-white">{user?.gold_balance.toLocaleString()}g</label>
-                  <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-10 h-10 " />
+                  <label className="text-2xl mr-1 text-white">{user?.dumz_balance.toLocaleString()} $Dumz</label>
+                  <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-8" />
                 </div>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex justify-center items-center">
-                  <label className="text-2xl mr-1 text-white">{user?.dumz_balance.toLocaleString()} $Dumz</label>
-                  <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-10 h-10" />
+                  <label className="text-2xl mr-1 text-white">{0} Trunk</label>
+                  <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-8 " />
                 </div>
               </div>
             </div>
-            <div className="flex flex-row gap-4 items-center justify-between">
-              <div className="flex flex-col items-center justify-between">
-                <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-16 h-16 bg-white p-2" />
-                <label className="text-2xl mr-1 text-white">{"Weapon"}</label>
-              </div>
-              <div className="flex flex-col items-center justify-between">
-                <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-16 h-16 bg-white p-2" />
-                <label className="text-2xl mr-1 text-white">{"Armor"}</label>
+            <div className="flex flex-col gap-4 items-end justify-center">
+              <div className="flex items-center justify-center">
+                <div className="flex justify-center items-center">
+                  <label className="text-2xl mr-1 text-white">{user?.gold_balance.toLocaleString()}g</label>
+                  <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-8 " />
+                </div>
               </div>
             </div>
           </div>
 
-          <ImgButton className="mt-16" src="https://arweave.net/VzQVXdUSJOvPsXvwHfaXTwoKqDH6siG3A8qCliKmrLQ" onClick={onClose} alt="Close Bag" />
+          <ImgButton className="mt-4" src="https://arweave.net/VzQVXdUSJOvPsXvwHfaXTwoKqDH6siG3A8qCliKmrLQ" onClick={onClose} alt="Close Bag" />
         </div>
       </div>
     </div>

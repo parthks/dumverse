@@ -26,15 +26,22 @@ end
 
 global enum FoodIds
     "FOOD_1"
+    "FOOD_2"
 end
 global enum EnergyIds
     "ENERGY_1"
 end
 global enum ArmorIds
     "ARMOR_1"
+    "ARMOR_2"
+    "ARMOR_3"
+    "ARMOR_4"
 end
 global enum WeaponIds
     "WEAPON_1"
+    "WEAPON_2"
+    "WEAPON_3"
+    "WEAPON_4"
 end
 
 -- Define the base type for all items

@@ -2,6 +2,8 @@ import { ITEM_ICONS, IMAGES, ITEM_IMAGES } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { GameUser, Inventory } from "@/types/game";
+import ImgButton from "../ui/imgButton";
+import { useState } from "react";
 
 const GREEN_BACKGROUND_IMAGE = "https://arweave.net/O-OZtrbU4HPCUpTVK89Qac9Olnhr2zTA1Cdt6-cq1hs";
 const YELLOW_BACKGROUND_IMAGE = "https://arweave.net/zGg61zm00agq-bzVbsQ6fGwTuIjf9ZXx8C_i42trCx8";
@@ -45,55 +47,11 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
     >
       <div className="flex justify-center" style={{ position: "absolute", top: "21%", left: "50%", transform: "translateX(-50%)", width: "80%" }}>
         <div className="flex flex-col items-center mr-2">
-          <div className="relative">
-            <div className={`w-10 h-10 flex justify-center items-center ${weapon ? "bg-transparent" : "bg-white"}`}>
-              <img src={weapon ? ITEM_IMAGES[weapon.item_id as keyof typeof ITEM_IMAGES] : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-10 h-10 z-10 p-1" />
-              {weapon && (
-                <img
-                  src={
-                    weaponHealthPercentage && weaponHealthPercentage > 50
-                      ? GREEN_BACKGROUND_IMAGE
-                      : weaponHealthPercentage && weaponHealthPercentage > 10
-                      ? YELLOW_BACKGROUND_IMAGE
-                      : RED_BACKGROUND_IMAGE
-                  }
-                  alt="weapon background"
-                  className="absolute w-10 h-10"
-                />
-              )}
-            </div>
-            {weapon && (
-              <p className="text-white text-sm text-center">
-                {weapon.item_health}/{weapon.total_item_health}
-              </p>
-            )}
-          </div>
+          <UserWeaponItem item={weapon} itemType="weapon" />
         </div>
 
         <div className="flex flex-col items-center ml-2">
-          <div className="relative">
-            <div className={`w-10 h-10 flex justify-center items-center ${armor ? "bg-transparent" : "bg-white"}`}>
-              <img src={armor ? ITEM_IMAGES[armor.item_id as keyof typeof ITEM_IMAGES] : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-10 h-10 z-10 p-1" />
-              {armor && (
-                <img
-                  src={
-                    armorHealthPercentage && armorHealthPercentage > 50
-                      ? GREEN_BACKGROUND_IMAGE
-                      : armorHealthPercentage && armorHealthPercentage > 10
-                      ? YELLOW_BACKGROUND_IMAGE
-                      : RED_BACKGROUND_IMAGE
-                  }
-                  alt="armor background"
-                  className="absolute w-10 h-10"
-                />
-              )}
-            </div>
-            {armor && (
-              <p className="text-white text-sm text-center">
-                {armor.item_health}/{armor.total_item_health}
-              </p>
-            )}
-          </div>
+          <UserWeaponItem item={armor} itemType="armor" />
         </div>
       </div>
 
@@ -138,6 +96,64 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
           <img src={"https://arweave.net/KdHX03BPfIVtwP7LMGhProTFRB7muBEns_BpsG4zoYQ"} alt="Potion" className="w-5" />
         </div>
       </div>
+    </div>
+  );
+}
+
+// for weapon and armor
+export function UserWeaponItem({ item, bigger = false, itemType }: { item: Inventory | undefined; bigger?: boolean; itemType: "weapon" | "armor" }) {
+  const user = useGameStore((state) => state.user!);
+  const [loading, setLoading] = useState(false);
+  const repairItem = useGameStore((state) => state.repairItem);
+  const healthPercentage = item ? Math.round((item.item_health / item.total_item_health) * 100) : undefined;
+
+  return (
+    <div className="flex flex-col gap-2 items-center justify-between">
+      <div className={`relative w-${bigger ? "16" : "10"} h-${bigger ? "20" : "12"}`}>
+        {item ? (
+          <>
+            <img
+              src={healthPercentage && healthPercentage > 50 ? GREEN_BACKGROUND_IMAGE : healthPercentage && healthPercentage > 10 ? YELLOW_BACKGROUND_IMAGE : RED_BACKGROUND_IMAGE}
+              alt="weapon background"
+              className="absolute w-full h-full"
+            />
+            <div className="absolute inset-0 flex flex-col items-center">
+              <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`h-${bigger ? "14" : "9"} p-1`} />
+              <p className="text-white text-sm">
+                {item.item_health}/{item.total_item_health}
+              </p>
+            </div>
+          </>
+        ) : (
+          <div className="w-full h-full flex justify-center items-center bg-white rounded-sm">
+            <img src={itemType === "weapon" ? ITEM_ICONS.NO_WEAPON : ITEM_ICONS.NO_ARMOR} alt="no weapon" className={`w-${bigger ? "12" : "8"} h-${bigger ? "12" : "8"}`} />
+          </div>
+        )}
+      </div>
+      {item && bigger && (
+        <>
+          <ImgButton
+            disabled={loading || user.dumz_balance < 5 || (item && item.item_health === item.total_item_health)}
+            onClick={async () => {
+              setLoading(true);
+              try {
+                await repairItem(item.id);
+              } catch (error) {
+                console.error(error);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            src={"https://arweave.net/bqlsq9KfNty-8KdyKJlWFbsxu9E3Zn6budhs3IluRGk"}
+            alt="Repair weapon"
+            className="w-36"
+          />
+          <div className="flex flex-row items-center justify-center mt-2">
+            <p className="text-white text-xl">Cost - 5</p>
+            <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-6 h-6 ml-2" />
+          </div>
+        </>
+      )}
     </div>
   );
 }

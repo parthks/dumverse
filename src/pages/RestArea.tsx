@@ -2,7 +2,7 @@ import ChatWindow from "@/components/chat/Chat";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
-import { SOUNDS } from "@/lib/constants";
+import { IMAGES, SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import React from "react";
 import { useState } from "react";
@@ -42,6 +42,39 @@ const ReturnToTown = React.memo(() => {
   );
 });
 
+function RestAreaPlayerStatsDisplay() {
+  const user = useGameStore((state) => state.user!);
+  const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
+
+  const totalStamina = user.total_stamina;
+  const filledStamina = user.stamina;
+  return (
+    <div className="relative w-80 h-[80px]">
+      <img src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg" alt="Background" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
+      <div className="absolute inset-0 top-[-24px] left-[-12px] flex items-center justify-start">
+        <div className="relative">
+          <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
+          <p className="absolute inset-0 flex items-center mb-5 justify-center text-white text-xl font-bold">
+            {user.health}/{user.total_health}
+          </p>
+        </div>
+      </div>
+      <div className="absolute inset-0 top-0 flex flex-col items-center justify-center pl-14">
+        <div className="flex gap-1">
+          {Array.from({ length: totalStamina }).map((_, index) => (
+            <img className="h-10" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+          ))}
+        </div>
+        {/* convert regenerateCountdown to minutes and seconds */}
+        <div className="flex gap-2">
+          {totalStamina != filledStamina &&
+            (regenerateCountdown ? <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label> : null)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function RestArea() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const current_spot = useGameStore((state) => state.user!.current_spot);
@@ -72,10 +105,16 @@ export default function RestArea() {
       )}
 
       {!chatOpen && (
+        <div className="z-10 absolute top-4 left-4">
+          <RestAreaPlayerStatsDisplay />
+        </div>
+      )}
+
+      {!chatOpen && (
         <>
-          <div className="z-10 absolute bottom-4 left-4 flex gap-2 items-end">
+          <div className="z-10 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
             <InventoryBag />
-            <ImgButton src={"https://arweave.net/RJfmhCUfHuvqp2I1D9rnJmlGvax4QZb20ss1SRwvXyw"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
+            <ImgButton className="h-[65px]" src={"https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
           </div>
 
           <div className="z-10 absolute bottom-4 right-4 flex gap-2 items-end">

@@ -187,7 +187,7 @@ local function newUserJoinHandler(msg: Message)
         end
         player.added_at_timestamp = msg.Timestamp
         BattleHelpers.addPlayer(battle.id, player)
-
+         -- send message to game process to confirm user has been added to a new battle
         local user_address = player.address
         print("adding user " .. user_address .. " to battle " .. battle.id .. "of level " .. battle.level)
         ao.send({

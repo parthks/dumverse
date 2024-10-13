@@ -65,6 +65,7 @@ interface GameState {
   regenerateCountdownTickDown: () => Promise<void>;
   setRegenerateCountdown: (countdown: number | null) => void;
   reviveUser: () => Promise<void>;
+  repairItem: (inventoryId: number) => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -323,6 +324,16 @@ export const useGameStore = create<GameState>()(
           tags: [
             { name: "Action", value: "User.Revive" },
             { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
+      },
+      repairItem: async (inventoryId) => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Inventory.RepairItem" },
+            { name: "UserId", value: get().user?.id.toString()! },
+            { name: "InventoryId", value: inventoryId.toString() },
           ],
         });
         await get().refreshUserData();
