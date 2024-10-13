@@ -58,28 +58,59 @@ local function enterNewCombatHandler(msg: Message)
         "Invalid spot to move to. Current spot: " .. current_spot .. " Combat Level: " .. combat_level)
 
     -- get equipped inventory items - for potions
-    local equippedPotion = dbAdmin:exec(string.format([[
-        SELECT id,item_id FROM Inventory WHERE USER_ID = %f AND item_type = 'POTION' LIMIT 1;
+    local inventoryItems = dbAdmin:exec(string.format([[
+        SELECT id,item_id,item_type,item_health,equipped FROM Inventory WHERE USER_ID = %f;
     ]], user_id))
     -- add equippedPotion to userData.potion, will remove the item from inventory after battle (if used)
     local combatUserData: CombatUserData = userData as CombatUserData
     -- convert id to string
     combatUserData.id = tostring(combatUserData.id)
-    local potion = equippedPotion[1] as InventoryItem
+
+    -- local potion = equippedPotion[1] as InventoryItem
     combatUserData.potion_used = false
     combatUserData.potion = nil
-    
-    if potion then
-        local potion_id = potion.item_id as PotionIds
-        local item = constants.POTIONS[potion_id]
-        local health = item.health
+    combatUserData.inventory_weapon_id = nil
+    combatUserData.inventory_armor_id = nil
 
-        combatUserData.potion = {
-            id = potion.id,
-            item_id = potion.item_id,
-            health = health
-        }
+    for _, item in ipairs(inventoryItems as {InventoryItem}) do
+        if item.item_type == 'POTION' then
+            local potion_id = item.item_id as PotionIds
+            local potionData = constants.POTIONS[potion_id]
+            combatUserData.potion = {
+                id = item.id,
+                item_id = item.item_id,
+                health = potionData.health
+            }
+        elseif item.item_type == 'ARMOR' and item.item_health > 0 then
+            combatUserData.inventory_armor_id = tostring(item.id)
+        elseif item.item_type == 'WEAPON' and item.item_health > 0 then
+            combatUserData.inventory_weapon_id = tostring(item.id)
+        end
     end
+
+    -- if armor or weapon is equipped, decrement item_health by 1
+    if combatUserData.inventory_armor_id then
+        dbAdmin:exec(string.format([[
+            UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
+        ]], combatUserData.inventory_armor_id))
+    end
+    if combatUserData.inventory_weapon_id then
+        dbAdmin:exec(string.format([[
+            UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
+        ]], combatUserData.inventory_weapon_id))
+    end
+    
+    -- if potion then
+    --     local potion_id = potion.item_id as PotionIds
+    --     local item = constants.POTIONS[potion_id]
+    --     local health = item.health
+
+    --     combatUserData.potion = {
+    --         id = potion.id,
+    --         item_id = potion.item_id,
+    --         health = health
+    --     }
+    -- end
 
     -- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
     local function getRandomEnemyIndex(level: integer): integer

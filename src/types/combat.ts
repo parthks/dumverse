@@ -40,6 +40,8 @@ export type Battle = {
       potion_used: boolean;
       potion: { id: string; item_id: ItemType; health: number };
       added_at_timestamp: number;
+      inventory_weapon_id?: string;
+      inventory_armor_id?: string;
     }
   >;
   npcs: Record<string, NPC>;

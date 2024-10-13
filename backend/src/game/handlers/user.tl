@@ -121,6 +121,22 @@ local function userInfoHandler(msg: Message)
     })
 end
 
+local function reviveUserHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local userData = helpers.CheckUserExists(user_id, msg.From)
+
+    assert(userData.health == 0, "User is not dead")
+
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET health = 1 WHERE id = %f;
+    ]], user_id))
+
+    ao.send({
+        Target = msg.From,
+        Status = "Success"
+    })
+end
+
 local function goToTownHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
     helpers.CheckUserExists(user_id, msg.From)
@@ -198,5 +214,6 @@ Handlers.add("User.Info", Handlers.utils.hasMatchingTag('Action', 'User.Info'), 
 Handlers.add("User.GoToTown", Handlers.utils.hasMatchingTag('Action', 'User.GoToTown'), goToTownHandler)
 Handlers.add("User.GoToRestArea", Handlers.utils.hasMatchingTag('Action', 'User.GoToRestArea'), goToRestAreaHandler)
 Handlers.add("User.RegenerateEnergy", Handlers.utils.hasMatchingTag('Action', 'User.RegenerateEnergy'), regenerateEnergyHandler)
+Handlers.add("User.Revive", Handlers.utils.hasMatchingTag('Action', 'User.Revive'), reviveUserHandler)
 
 return {}

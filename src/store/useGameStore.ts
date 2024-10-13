@@ -64,6 +64,7 @@ interface GameState {
   resetRegenerateCountdown: () => void;
   regenerateCountdownTickDown: () => Promise<void>;
   setRegenerateCountdown: (countdown: number | null) => void;
+  reviveUser: () => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -316,6 +317,15 @@ export const useGameStore = create<GameState>()(
       },
       setRegenerateCountdown: (countdown) => {
         set({ regenerateCountdown: countdown });
+      },
+      reviveUser: async () => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "User.Revive" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
       },
     }),
     {

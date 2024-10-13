@@ -81,6 +81,8 @@ global type InventoryItem = record
     user_id: integer
     item_id: string
     item_type: string
+    item_health: integer
+    total_item_health: integer
     equipped: boolean
     created_at: integer
 end

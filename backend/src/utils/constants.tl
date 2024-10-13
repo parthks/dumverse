@@ -134,6 +134,8 @@ local FOOD = {
 }
 global type FoodItem = record
     {BaseItem}
+    id: string
+    type: string
     health: number
 end
 

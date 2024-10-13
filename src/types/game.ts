@@ -29,7 +29,8 @@ export type Inventory = {
   user_id: number;
   item_id: string;
   item_type: ItemType;
-  // amount: number;
+  item_health: number;
+  total_item_health: number;
   equipped: boolean;
   created_at: string;
 };

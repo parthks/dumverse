@@ -36,14 +36,28 @@ local function inventoryUseItemHandler(msg: Message)
     local itemDetails = helpers.GetItemDetails(item_id)
     assert(itemDetails, "Item details not found")
 
-    if itemDetails.type == "POTION" or itemDetails.type == "FOOD" then
-        local foodOrPotionItem = itemDetails as FoodItem
+    if itemDetails.type == "POTION" then
+        local potionItem = itemDetails as PotionItem
         -- increase health, but not exceeding total_health
-        local new_health = math.min(userData.health + foodOrPotionItem.health, userData.total_health)
+        local new_health = math.min(userData.health + potionItem.health, userData.total_health)
         dbAdmin:exec(string.format([[
             UPDATE Users
             SET health = %d
             WHERE id = %d;
+        ]], new_health, user_id))
+
+    elseif itemDetails.type == "FOOD" then
+        local foodItem = itemDetails as FoodItem
+        -- increase health
+        local new_health = userData.health
+        if foodItem.id == "FOOD_1" then
+            new_health = userData.health + 1
+        elseif foodItem.id == "FOOD_2" then
+            -- new_health = math.min(userData.health + foodItem.health, userData.total_health)
+            new_health = userData.total_health
+        end
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET health = %d WHERE id = %d;
         ]], new_health, user_id))
 
     elseif itemDetails.type == "ENERGY" then

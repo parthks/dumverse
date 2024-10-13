@@ -1,3 +1,4 @@
+import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
@@ -7,105 +8,118 @@ import { Battle, NPC } from "@/types/combat";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
-const currentBattle = {
-  log: [
-    {
-      timestamp: 1726346958193,
-      message: "hits Doe Eyed Deer for 2",
-      from: "3",
-    },
-    {
-      timestamp: 1726346958193,
-      message: "has slain Doe Eyed Deer",
-      from: "3",
-    },
-    {
-      timestamp: 1726346958193,
-      message: "hits CryptoCherie for 1",
-      from: "NPC_2",
-    },
-    {
-      timestamp: 1726346961590,
-      message: "hits Sad Hedgehog for 2",
-      from: "3",
-    },
-    {
-      timestamp: 1726346961590,
-      message: "has slain Sad Hedgehog",
-      from: "3",
-    },
-    {
-      timestamp: 1726346961590,
-      message: "has won the battle",
-      from: "3",
-    },
-  ],
-  winner: "2",
-  npcs: {
-    NPC_1: {
-      health: 0,
-      dumz_reward: 1,
-      damage: 1,
-      difficulty: "EASY",
-      total_health: 1,
-      gold_reward: 10,
-      extra_gold: 10000,
-      id: "NPC_1",
-      defense: 0,
-      name: "Doe Eyed Deer",
-    },
-    NPC_2: {
-      health: 0,
-      dumz_reward: 1,
-      damage: 1,
-      difficulty: "EASY",
-      total_health: 1,
-      gold_reward: 10,
-      extra_gold: 0,
-      id: "NPC_2",
-      defense: 0,
-      name: "Sad Hedgehog",
-    },
-  },
-  npcs_alive: ["NPC_1", "NPC_2"],
-  last_npc_attack_timestamp: {
-    NPC_1: 1726346952043,
-    NPC_2: 1726346958193,
-  },
-  level: 1,
-  id: 39,
-  players_attacked: ["7"],
-  ended: false,
-  created_at: 1726346952043,
-  players: {
-    "5": {
-      potion: {
-        health: 1,
-        id: 12,
-        item_id: "POTION_1",
-      },
-      name: "CryptoCherie",
-      damage: 2,
-      health: 2,
-      potion_used: true,
-      total_health: 2,
-      stamina: 1,
-      defense: 0,
-      nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
-      id: "5",
-      total_stamina: 6,
-      gold_balance: 24070,
-      current_spot: 0,
-      address: "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go",
-      dumz_balance: 60,
-    },
-  },
-  players_alive: ["5"],
-} as any;
+// const currentBattle = {
+//   log: [
+//     {
+//       timestamp: 1726346958193,
+//       message: "hits Doe Eyed Deer for 2",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346958193,
+//       message: "has slain Doe Eyed Deer",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346958193,
+//       message: "hits CryptoCherie for 1",
+//       from: "NPC_2",
+//     },
+//     {
+//       timestamp: 1726346961590,
+//       message: "hits Sad Hedgehog for 2",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346961590,
+//       message: "has slain Sad Hedgehog",
+//       from: "3",
+//     },
+//     {
+//       timestamp: 1726346961590,
+//       message: "has won the battle",
+//       from: "3",
+//     },
+//   ],
+//   winner: "2",
+//   npcs: {
+//     NPC_1: {
+//       health: 0,
+//       dumz_reward: 1,
+//       damage: 1,
+//       difficulty: "EASY",
+//       total_health: 1,
+//       gold_reward: 10,
+//       extra_gold: 10000,
+//       id: "NPC_1",
+//       defense: 0,
+//       name: "Doe Eyed Deer",
+//     },
+//     NPC_2: {
+//       health: 0,
+//       dumz_reward: 1,
+//       damage: 1,
+//       difficulty: "EASY",
+//       total_health: 1,
+//       gold_reward: 10,
+//       extra_gold: 0,
+//       id: "NPC_2",
+//       defense: 0,
+//       name: "Sad Hedgehog",
+//     },
+//     NPC_3: {
+//       health: 0,
+//       dumz_reward: 1,
+//       damage: 1,
+//       difficulty: "EASY",
+//       total_health: 1,
+//       gold_reward: 10,
+//       extra_gold: 0,
+//       id: "NPC_3",
+//       defense: 0,
+//       name: "Sad Hedgehog",
+//     },
+//   },
+//   npcs_alive: ["NPC_1", "NPC_2"],
+//   last_npc_attack_timestamp: {
+//     NPC_1: 1726346952043,
+//     NPC_2: 1726346958193,
+//   },
+//   level: 1,
+//   id: 39,
+//   players_attacked: ["7"],
+//   ended: false,
+//   created_at: 1726346952043,
+//   players: {
+//     "5": {
+//       potion: {
+//         health: 1,
+//         id: 12,
+//         item_id: "POTION_1",
+//       },
+//       name: "CryptoCherie",
+//       damage: 2,
+//       health: 2,
+//       potion_used: true,
+//       total_health: 2,
+//       stamina: 1,
+//       defense: 0,
+//       nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
+//       id: "5",
+//       total_stamina: 6,
+//       gold_balance: 24070,
+//       current_spot: 0,
+//       address: "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go",
+//       dumz_balance: 60,
+//     },
+//   },
+//   players_alive: ["5"],
+// } as any;
+
 export default function Combat() {
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
 
-  // const currentBattle = useCombatStore((state) => state.currentBattle);
+  const currentBattle = useCombatStore((state) => state.currentBattle);
   const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
 
   const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
@@ -117,74 +131,74 @@ export default function Combat() {
   const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
 
-  // useEffect(() => {
-  //   let timeout: NodeJS.Timeout | null = null;
-  //   let stopTimeout: NodeJS.Timeout | null = null;
+  useEffect(() => {
+    let timeout: NodeJS.Timeout | null = null;
+    let stopTimeout: NodeJS.Timeout | null = null;
 
-  //   const checkOpenBattles = async () => {
-  //     if (enteringNewBattle && !currentBattle?.id) {
-  //       console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-  //       const battle = await getOpenBattles();
-  //       if (!battle) {
-  //         // Schedule the next check in 1 second
-  //         if (timeout) clearTimeout(timeout);
-  //         timeout = setTimeout(checkOpenBattles, 5000);
-  //       }
-  //     }
-  //   };
+    const checkOpenBattles = async () => {
+      if (enteringNewBattle && !currentBattle?.id) {
+        console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+        const battle = await getOpenBattles();
+        if (!battle) {
+          // Schedule the next check in 1 second
+          if (timeout) clearTimeout(timeout);
+          timeout = setTimeout(checkOpenBattles, 5000);
+        }
+      }
+    };
 
-  //   if (enteringNewBattle && !currentBattle?.id) {
-  //     console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-  //     checkOpenBattles();
+    if (enteringNewBattle && !currentBattle?.id) {
+      console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+      checkOpenBattles();
 
-  //     // Stop checking after 60 seconds
-  //     if (stopTimeout) clearTimeout(stopTimeout);
-  //     stopTimeout = setTimeout(() => {
-  //       if (timeout) {
-  //         console.log("Stopped checking for open battles after 60 seconds");
-  //         clearTimeout(timeout);
-  //       }
-  //       setFailedToEnterBattle(true);
-  //       // Reset the enteringNewBattle state
-  //       setEnteringNewBattle(false);
-  //     }, 60000);
-  //   }
+      // Stop checking after 60 seconds
+      if (stopTimeout) clearTimeout(stopTimeout);
+      stopTimeout = setTimeout(() => {
+        if (timeout) {
+          console.log("Stopped checking for open battles after 60 seconds");
+          clearTimeout(timeout);
+        }
+        setFailedToEnterBattle(true);
+        // Reset the enteringNewBattle state
+        setEnteringNewBattle(false);
+      }, 60000);
+    }
 
-  //   return () => {
-  //     if (timeout) {
-  //       clearTimeout(timeout);
-  //     }
-  //     if (stopTimeout) {
-  //       clearTimeout(stopTimeout);
-  //     }
-  //   };
-  // }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      if (stopTimeout) {
+        clearTimeout(stopTimeout);
+      }
+    };
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
-  // const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
-  //   queryKey: [`newMessages-${currentBattle?.id}`],
-  //   queryFn: async () => {
-  //     console.log("refetching battle updates");
-  //     const updatedBattle = await setCurrentBattle(currentBattle!.id);
-  //     return updatedBattle;
-  //   },
-  //   enabled: !!currentBattle?.id && !currentBattle?.ended,
-  //   refetchInterval: 1000, // Poll every 1 second
-  // });
+  const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
+    queryKey: [`newMessages-${currentBattle?.id}`],
+    queryFn: async () => {
+      console.log("refetching battle updates");
+      const updatedBattle = await setCurrentBattle(currentBattle!.id);
+      return updatedBattle;
+    },
+    enabled: !!currentBattle?.id && !currentBattle?.ended,
+    refetchInterval: 1000, // Poll every 1 second
+  });
 
-  // if (enteringNewBattle && !currentBattle?.id) {
-  //   return <div>Entering a new battle...</div>;
-  // }
+  if (enteringNewBattle && !currentBattle?.id) {
+    return <div>Entering a new battle...</div>;
+  }
 
-  // if (failedToEnterBattle) {
-  //   return (
-  //     <div>
-  //       <p>Checked for 60 seconds. Failed to find an open battle :(</p>
-  //       <div>
-  //         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (failedToEnterBattle) {
+    return (
+      <div>
+        <p>Checked for 60 seconds. Failed to find an open battle :(</p>
+        <div>
+          <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => setGameStatePage(GameStatePages.GAME_MAP)} alt={"Return to Town"} />
+        </div>
+      </div>
+    );
+  }
 
   // if (currentBattle?.id && user?.current_battle_id !== currentBattle?.id) {
   //   return <div>Waiting for battle confirmation...</div>;
@@ -204,10 +218,41 @@ export default function Combat() {
   console.log("currentBattle", currentBattle);
 
   return (
-    <div className="flex gap-4 justify-between p-8 min-h-screen bg-gray-900">
+    <div className="flex gap-2 justify-between p-8 min-h-screen bg-gray-900">
       <audio src={SOUNDS.BATTLE_AUDIO} autoPlay loop />
       <BattleGround currentBattle={currentBattle} />
+      <CombatInventory currentBattle={currentBattle} />
       <BattleLog currentBattle={currentBattle} />
+    </div>
+  );
+}
+
+function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
+  const user = useGameStore((state) => state.user);
+  const player = currentBattle.players[user!.id.toString()];
+  const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
+  const actionLoading = useCombatStore((state) => state.actionLoading);
+  const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
+
+  return (
+    <div className="flex flex-col justify-between">
+      <div className="flex-grow"></div>
+      <InventoryBag combatInventory combatInventoryUserData={player as any} />
+      <div className="flex justify-center">
+        <ImgButton
+          disabled={actionLoading || player.potion_used || !player.potion}
+          // className="w-20 shrink-0"
+          src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
+          onClick={async () => {
+            await drinkPotion();
+            if (drinkPotionAudioRef.current) {
+              drinkPotionAudioRef.current.currentTime = 0; // Reset audio to start
+              drinkPotionAudioRef.current.play();
+            }
+          }}
+          alt={"Use Potion"}
+        />
+      </div>
     </div>
   );
 }
@@ -270,8 +315,9 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   return (
     <div>
       <div className="flex gap-4 items-center">
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-4 items-start">
+        <div className="grid grid-cols-[1fr_1fr] gap-4 items-start">
           <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
+
           <div className="flex flex-col gap-2 w-[380px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <ImgButton
@@ -281,10 +327,6 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
               onClick={() => userRun()}
               alt={"Run"}
             />
-          </div>
-
-          <div className="flex justify-center self-center">
-            <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
           </div>
 
           {allPlayers.map((entity, index) => {
@@ -324,12 +366,6 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
                     </div>
                   )}
                 </div>
-
-                {index % 2 !== 0 && index !== allPlayers.length - 1 && (
-                  <div className="flex justify-center self-center">
-                    <img className="w-[98px] h-[101px]" src={"https://arweave.net/bXDhJ_4eLp_VCErak5teFjgMRkKV7LaCg5Dbs7xOE2I"} alt="Wand" />
-                  </div>
-                )}
               </>
             );
           })}
@@ -358,28 +394,41 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
 
   const { weapon, armor } = getEquippedItem(user!);
+  const isUsingWeapon = !!player.inventory_weapon_id;
+  const isUsingArmor = !!player.inventory_armor_id;
 
   return (
     <div
-      className="w-[250px] flex flex-col bg-[url('https://arweave.net/YHfNqgt4OHoiMxr3Jm9P4FB1QUCg7fND5IBkvuQm96c')] bg-no-repeat bg-contain bg-center px-4 py-1"
-      style={{ aspectRatio: "302/421" }}
+      className="w-[250px] relative flex flex-col bg-[url('https://arweave.net/sX67q1nQcG8fOyyJqTOcIc2CfmAsZCocplOXJIWFN0Y')] bg-no-repeat bg-contain bg-center px-3 py-1"
+      style={{ aspectRatio: "302/421", textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000" }}
     >
       <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
-      <h2 className="text-black text-2xl font-bold text-center">{player.name} (P)</h2>
-      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full  max-h-[200px] object-contain mb-2" />
-      <div className="flex gap-2 justify-between items-start">
-        <div className="flex flex-col gap-1">
-          <div className="flex gap-1">
+      <h2 className="text-white text-2xl font-bold text-center">{player.name} (P)</h2>
+      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full  object-contain mb-2" />
+
+      {/* <div className="flex gap-2 justify-between items-start">
+        <div className="flex flex-col gap-1"> */}
+      {/* <div className="flex gap-1">
             {Array.from({ length: totalHealth }).map((_, index) => (
               <img className="w-5" key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
             ))}
-          </div>
-          {/* <div className="flex gap-1">
+          </div> */}
+      {/* <div className="flex gap-1">
             {Array.from({ length: totalStamina }).map((_, index) => (
               <img className="w-5" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
             ))}
           </div> */}
-          {player.potion && (
+
+      <div className="absolute flex flex-col left-1" style={{ bottom: "22%" }}>
+        <div className="relative">
+          <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
+          <p className="absolute inset-0 flex items-center mb-5 justify-center text-white text-xl font-bold">
+            {player.health}/{player.total_health}
+          </p>
+        </div>
+      </div>
+
+      {/* {player.potion && (
             <>
               <div className="flex gap-1">
                 <img className="h-7" src={ITEM_ICONS[player.potion.item_id as keyof typeof ITEM_ICONS]} alt="Potion" />
@@ -403,17 +452,23 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
                 )}
               </div>
             </>
-          )}
+          )} */}
+      {/* </div> */}
+      {/* </div> */}
+      <div className="absolute flex flex-col right-8" style={{ bottom: "5%" }}>
+        <div className="flex flex-col items-center justify-between" style={{ height: "61px" }}>
+          <p className="text-white text-xl font-bold text-center">{player.damage}</p>
+          <p className="text-white text-xl font-bold text-center">{player.defense}</p>
         </div>
-        <div className="flex gap-4">
-          <div className="flex flex-col items-center justify-between">
-            <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-8 h-8" />
-            <p className="text-black text-2xl font-bold text-center">{player.damage}</p>
-          </div>
-          <div className="flex flex-col gap-1 items-center justify-between">
-            <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-8 h-8" />
-            <p className="text-black text-2xl font-bold text-center">{player.defense}</p>
-          </div>
+      </div>
+      <div className="flex gap-8 ml-7 mt-1">
+        <div className="flex flex-col items-center justify-between">
+          <img src={armor && isUsingArmor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="h-10" />
+          {/* <p className="text-black text-2xl font-bold text-center">{player.damage}</p> */}
+        </div>
+        <div className="flex flex-col gap-1 items-center justify-between">
+          <img src={weapon && isUsingWeapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="h-10" />
+          {/* <p className="text-black text-2xl font-bold text-center">{player.defense}</p> */}
         </div>
       </div>
     </div>
@@ -433,6 +488,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
     <div
       className="w-[250px] flex flex-col bg-no-repeat bg-contain bg-center relative"
       style={{
+        textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
         aspectRatio: "302/421",
         backgroundImage: `url('${backgroundImage}')`,
       }}
@@ -489,7 +545,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
 
   return (
     <div
-      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/V4B3MJpEEAStbIOJbygQ6-lcVBR8w_8baD5TKK7u6p8')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full"
+      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/S-6Ww4DB5i7CZlzpXYXBJI8Q8u5DLOCuK6rL0W2MZrU')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full"
       style={{ aspectRatio: "649/1040", height: "calc(100vh - 60px)" }}
     >
       <div className="flex items-center justify-between">

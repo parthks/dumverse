@@ -30,6 +30,8 @@ global INVENTORY_TABLE: string = [[
         user_id INTEGER NOT NULL,
         item_id TEXT NOT NULL,
         item_type TEXT NOT NULL,
+        item_health FLOAT DEFAULT 0,
+        total_item_health FLOAT DEFAULT 40,
         equipped BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE

@@ -29,4 +29,6 @@ global type CombatUserData = record
     potion_used: boolean
     potion: CombatPotionData | nil
     added_at_timestamp: integer
+    inventory_weapon_id: string | nil
+    inventory_armor_id: string | nil
 end
