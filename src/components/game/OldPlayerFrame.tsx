@@ -1,56 +1,42 @@
-import { IMAGES } from "@/lib/constants";
+import { ITEM_ICONS, IMAGES } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
-import { InventoryBagWithoutArmor, UserWeaponItem } from "./InventoryBag";
+import { UserWeaponItem } from "./InventoryBag";
 
 export function PlayerFrame() {
-  const user = useGameStore((state) => state.user);
+  const user = useGameStore((state) => state.user!);
   const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
 
-  if (!user) return null;
+  const totalHealth = user.total_health;
   const totalStamina = user.total_stamina;
+  const filledHealth = user.health;
   const filledStamina = user.stamina;
   const { weapon, armor } = getEquippedItem(user);
 
   return (
     <div
-      className="w-[650px] bg-no-repeat bg-contain relative"
+      className="w-[750px] bg-no-repeat bg-contain relative"
       style={{
-        // transform: "scale(0.9)",
-        transformOrigin: "top left",
-        textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000",
-        backgroundImage: "url('https://arweave.net/D4-w8-n79zCDvhlM4CkwSnyOMcvtkN0gd-VuXkXXrYU')",
-        aspectRatio: "883 / 276",
+        backgroundImage: "url('https://arweave.net/N8LmY4lR7IsniufNgbFfuhN0Hd8FU1zqUVG0nuiNcLE')",
+        aspectRatio: "1881 / 570",
       }}
     >
       <img
         src={user.nft_address ? `https://arweave.net/${user.nft_address}` : IMAGES.DEFAULT_DUMDUM}
         alt="User Avatar"
-        className="absolute left-[0%] top-[6.5%] w-[30%] h-[93%] object-cover rounded-sm"
+        className="absolute left-[1.5%] top-[4%] w-[30%] h-[83%] object-contain"
       />
-      <div className="absolute left-[33%] top-[2%] flex flex-col justify-between">
-        <div className="text-white text-2xl font-bold">{user.name}</div>
+      <div className="absolute left-[32%] top-[5%] flex flex-col justify-between">
+        <div className="text-white text-xl font-bold">{user.name}</div>
       </div>
-
-      <div className="absolute w-[480px] top-[20%] h-[100px] left-[31%] flex flex-col">
-        <div className="flex items-center">
-          <div className="relative mr-4">
-            <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
-            <p className="absolute top-3 left-0 right-0 text-center text-white text-xl font-bold">
-              {user.health}/{user.total_health}
-            </p>
+      <div className="absolute w-[480px] top-[25%] h-[100px] left-[31%] flex justify-between">
+        {/* Health and stamina */}
+        <div className="absolute left-0 top-[0%] flex flex-col gap-1">
+          <div className="flex gap-2">
+            {Array.from({ length: totalHealth }).map((_, index) => (
+              <img className="w-8 h-8" key={index} src={index < filledHealth ? IMAGES.FILLED_HEALTH : IMAGES.EMPTY_HEALTH} alt="Health" />
+            ))}
           </div>
-          <UserWeaponItem repair={false} bigger item={weapon} itemType="weapon" />
-          <p className="mx-2"></p>
-          <UserWeaponItem repair={false} bigger item={armor} itemType="armor" />
-          <div className=" ml-4 flex flex-col gap-2 items-center justify-between">
-            <label className="text-white text-xl font-bold">Dmg {user.damage}</label>
-            <label className="text-white text-xl font-bold">Def {user.defense}</label>
-          </div>
-        </div>
-
-        {/* stamina */}
-        <div className="flex flex-col gap-1">
           <div className="flex gap-1">
             {Array.from({ length: totalStamina }).map((_, index) => (
               <img className="h-10" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
@@ -62,10 +48,38 @@ export function PlayerFrame() {
               (regenerateCountdown ? <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label> : null)}
           </div>
         </div>
-      </div>
+        {/* Equipped weapon and armor */}
+        <div className="absolute right-0 top-[0%] flex flex-col items-end gap-2">
+          <div className="flex gap-2 justify-center items-center">
+            <label className="text-white text-xl font-bold">Equipped</label>
 
-      <div className="absolute top-[-25%] left-[82%]">
-        <InventoryBagWithoutArmor />
+            <div className="flex gap-1 items-center mr-2">
+              {/* <div className="bg-white p-1 w-12 h-12 rounded-md flex items-center justify-center">
+                <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="" />
+              </div> */}
+              <UserWeaponItem item={weapon} itemType="weapon" />
+              <label className="text-white text-xl font-bold">{user.damage}</label>
+            </div>
+            <div className="flex gap-1 items-center">
+              {/* <div className="bg-white p-1 w-12 h-12 rounded-md flex items-center justify-center">
+                <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="" />
+              </div> */}
+              <UserWeaponItem item={armor} itemType="armor" />
+              <label className="text-white text-xl font-bold">{user.defense}</label>
+            </div>
+          </div>
+          {/* Token Amounts */}
+          <div className="flex flex-col gap-1 items-end">
+            <div className="flex gap-2 justify-center items-center ">
+              <label className="text-white text-xl font-bold">{user.gold_balance.toLocaleString()}g</label>
+              <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-5 h-5" />
+            </div>
+            <div className="flex gap-2 justify-center items-center">
+              <label className="text-white text-xl font-bold">{user.dumz_balance.toLocaleString()} $Dumz</label>
+              <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5 h-5" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

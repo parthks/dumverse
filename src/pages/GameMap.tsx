@@ -132,10 +132,10 @@ const GameMap = () => {
       <div className="z-10 absolute top-4 right-4">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
-      <div className="z-10 absolute bottom-4 left-4 flex items-end gap-2">
+      <div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
         <PlayerFrame />
       </div>
-      <div className="z-10 absolute bottom-4 left-[775px]">
+      <div className="z-10 absolute bottom-4 left-[800px]">
         {tempCurrentIslandLevel != 0 &&
           ([9, 18, 27].includes(tempCurrentIslandLevel) ? (
             <ImgButton

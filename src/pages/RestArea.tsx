@@ -51,6 +51,7 @@ function RestAreaPlayerStatsDisplay() {
   return (
     <div className="relative w-80 h-[80px]">
       <img src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg" alt="Background" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
+
       <div className="absolute inset-0 top-[-24px] left-[-12px] flex items-center justify-start">
         <div className="relative">
           <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
@@ -59,6 +60,7 @@ function RestAreaPlayerStatsDisplay() {
           </p>
         </div>
       </div>
+
       <div className="absolute inset-0 top-0 flex flex-col items-center justify-center pl-14">
         <div className="flex gap-1">
           {Array.from({ length: totalStamina }).map((_, index) => (
