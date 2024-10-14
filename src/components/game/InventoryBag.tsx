@@ -109,7 +109,10 @@ export function UserWeaponItem({ item, bigger = false, itemType }: { item: Inven
 
   return (
     <div className="flex flex-col gap-2 items-center justify-between">
-      <div className={`relative w-${bigger ? "16" : "10"} h-${bigger ? "20" : "12"}`}>
+      <div
+        className={`relative 
+        ${bigger ? "w-16 h-20" : "w-10 h-12"}`}
+      >
         {item ? (
           <>
             <img
