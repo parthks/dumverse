@@ -175,7 +175,7 @@ export function UserWeaponItem({
     <div className="flex flex-col gap-2 items-center justify-between">
       <div
         className={`relative 
-        ${bigger ? "w-16 h-20" : "w-10 h-12"}`}
+        ${bigger ? "w-16 h-[70px]" : "w-10 h-12"}`}
       >
         {item ? (
           <>
