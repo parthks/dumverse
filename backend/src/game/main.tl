@@ -1,3 +1,5 @@
+-- dead process: rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g -- eval is broken due to bug in continue handler
+
 -- OLD PROCESSES (for aogamejam)
 -- testSQL process - cNxJjUzpB8_5iUCbeO-xsCIDxbdIQF85pMorHeYW_bE
 -- main - testSQL2.1 process - EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc
@@ -23,6 +25,25 @@ if not DB then
 end
 dbAdmin = dbAdminnn.new(DB)
 
+-- Handlers.add("UpdateUserLastUpdatedAt", 
+-- function(): string
+--     return "continue"
+-- end, function(msg: Message)
+--   local user_id = tonumber(msg.Tags.UserId)
+--   -- check if user_id is a number
+--   if not user_id then
+--     print("got new message with no user_id")
+--     return
+--   end
+--   -- check if UserId present in msg and update last_updated_at
+--   if user_id then
+--     print("updating last_updated_at for user " .. user_id.. " at " .. msg.Timestamp)
+--     dbAdmin:exec(string.format([[
+--       UPDATE Users SET last_updated_at = %f WHERE id = %f;
+--   ]], msg.Timestamp, user_id))
+--   end
+-- end)
+
 -- Load all handlers
 require("game.handlers.admin")
 require("game.handlers.combat")
@@ -30,3 +51,6 @@ require("game.handlers.user")
 require("game.handlers.inventory")
 require("game.handlers.shop")
 require("game.handlers.bank")
+
+
+

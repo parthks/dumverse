@@ -2,9 +2,11 @@ import ChatWindow from "@/components/chat/Chat";
 import ImgButton from "@/components/ui/imgButton";
 import { SOUNDS } from "@/lib/constants";
 import { useGameStore, GameStatePages } from "@/store/useGameStore";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function Town() {
+  const getAllPlayersAtLocation = useGameStore((state) => state.getAllPlayersAtLocation);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const goToGameMap = useGameStore((state) => state.goToGameMap);
 
@@ -13,6 +15,13 @@ export default function Town() {
   const handleBuildingSelect = (building: GameStatePages) => {
     setGameStatePage(building);
   };
+
+  const { data: playersAtLocation } = useQuery({
+    queryKey: ["playersAtLocation", 0],
+    queryFn: () => getAllPlayersAtLocation(0),
+  });
+  console.log({ playersAtLocation });
+
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       {/* Background image */}

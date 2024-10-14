@@ -5,6 +5,7 @@ require("utils.globals")
 global USERS_TABLE: string = [[
     CREATE TABLE IF NOT EXISTS Users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        last_updated_at INTEGER DEFAULT 0,
         name TEXT NOT NULL,
         address TEXT NOT NULL,
         nft_address TEXT,
@@ -66,14 +67,14 @@ Handlers.add("Admin.ClearDB",
     Handlers.utils.hasMatchingTag("Action", "DANGER.ClearDB"),
     function(msg: Message)
         assert(msg.From == ao.id, "You are not authorized to perform")
-        -- dbAdmin.db:exec("DROP TABLE IF EXISTS Users;")
-        -- dbAdmin.db:exec(USERS_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS Users;")
+        dbAdmin.db:exec(USERS_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Inventory;")
         dbAdmin.db:exec(INVENTORY_TABLE)
-        -- dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
-        -- dbAdmin.db:exec(BANK_TABLE)
-        -- dbAdmin.db:exec("DROP TABLE IF EXISTS BankTransactions;")
-        -- dbAdmin.db:exec(BANK_TRANSACTIONS_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
+        dbAdmin.db:exec(BANK_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS BankTransactions;")
+        dbAdmin.db:exec(BANK_TRANSACTIONS_TABLE)
     end
 )
 -- Send({Target = ao.id, Action = "DANGER.ClearDB" })

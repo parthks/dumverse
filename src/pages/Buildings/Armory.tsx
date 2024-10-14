@@ -5,6 +5,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import Rive from "@rive-app/react-canvas";
 
 export default function Armory() {
   const { shop, getShop, buyItem } = useGameStore();
@@ -47,13 +48,19 @@ export default function Armory() {
           {/* Group the shop table, sign, and shopkeeper */}
           <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
             <img src="https://arweave.net/kcuv5Ifubl1oQ66gyRGfFusQfX9cm61RNwf1_Upsnl4" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
-
-            <img
+            <div style={{ width: "300px", height: "300px" }} className="absolute left-1/2 h-auto -translate-x-1/2 -translate-y-[242%]">
+              <RiveShopKeeper />
+            </div>
+            {/* <Rive
+              className="absolute left-1/2 w-1/5 h-auto -translate-x-1/2 -translate-y-[242%]"
+              src="https://public.rive.app/hosted/156163/191181/jwmTWZadb0eu_4gcTDnVow.riv"
+            /> */}
+            {/* <img
               src={BUILDING_IMAGES.YELLOW_SHOPKEEPER}
               alt="Shop Keeper"
               className="absolute"
               style={{ left: "50%", width: "20%", height: "auto", transform: "translate(-50%, -242%)" }}
-            />
+            /> */}
             <img
               src="https://arweave.net/w2uP86Q1l0ErsqM2KkMh_0s02XOMaknUvuFOtrKy86Q"
               alt="Hammer on Table"
@@ -118,3 +125,21 @@ export default function Armory() {
     </div>
   );
 }
+
+import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
+
+export const RiveShopKeeper = () => {
+  const { RiveComponent } = useRive({
+    // Load a local riv `clean_the_car.riv` or upload your own!
+    src: "https://public.rive.app/hosted/156163/191181/jwmTWZadb0eu_4gcTDnVow.riv",
+    // Be sure to specify the correct state machine (or animation) name
+    // This is optional.Provides additional layout control.
+    layout: new Layout({
+      fit: Fit.FitWidth, // Change to: rive.Fit.Contain, or Cover
+      alignment: Alignment.Center,
+    }),
+    autoplay: true,
+  });
+
+  return <RiveComponent />;
+};

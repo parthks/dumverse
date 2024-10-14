@@ -1,4 +1,5 @@
-local COMBAT_PROCESS_ID = "TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ"
+-- old combat process id - uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI
+local COMBAT_PROCESS_ID = "BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU" 
 local DUMZ_TOKEN_PROCESS_ID = "mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk"
 
 local REST_SPOTS = { 0, 9, 18, 27 }

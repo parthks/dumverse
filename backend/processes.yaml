@@ -22,11 +22,11 @@
     - name: Name
       value: Combat
     - name: GameProcessId
-      value: rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g
+      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
     - name: Authority
       value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
     - name: Cron-Interval
-      value: 10-seconds
+      value: 60-seconds
     - name: Cron-Tag-Action
       value: Cron
 

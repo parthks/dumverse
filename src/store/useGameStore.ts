@@ -37,6 +37,7 @@ interface GameState {
   user: GameUser | null;
   setUserOnLogin: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
+  getAllPlayersAtLocation: (currentSpot: number) => Promise<GameUser[]>;
   inventory: Inventory[];
   setInventory: (inventory: Inventory[]) => void;
   bank: (Bank & { transactions: BankTransaction[] }) | null;
@@ -91,7 +92,7 @@ export const useGameStore = create<GameState>()(
         }
       },
       user: null,
-      setUserOnLogin: (user) => {
+      setUserOnLogin: async (user) => {
         if (user) {
           // if (user.current_battle_id) {
           //   // user is in a battle
@@ -99,6 +100,12 @@ export const useGameStore = create<GameState>()(
           //   set({ GameStatePage: GameStatePages.COMBAT });
           // }
           // else
+          const resultData = await sendAndReceiveGameMessage({
+            tags: [
+              { name: "Action", value: "User.Login" },
+              { name: "UserId", value: user.id.toString() },
+            ],
+          });
           if (user.current_spot) {
             // user is in a spot
             set({ GameStatePage: GameStatePages.GAME_MAP, ...getCurrentLamaPosition(user) });
@@ -128,6 +135,18 @@ export const useGameStore = create<GameState>()(
         }
         return null;
       },
+      getAllPlayersAtLocation: async (currentSpot: number): Promise<GameUser[]> => {
+        // this also updates last_updated_at for current user
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "User.GetAllPlayersAtLocation" },
+            { name: "UserId", value: get().user?.id.toString()! },
+            { name: "CurrentSpot", value: currentSpot.toString() },
+          ],
+        });
+        return resultData.data as GameUser[];
+      },
+
       inventory: [],
       setInventory: (inventory) => set({ inventory }),
       bank: null,

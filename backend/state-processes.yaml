@@ -1,15 +1,15 @@
 my-process:
   processId: TovbmrelTZWZ1Ow3CiY9fb5ijsqVYe5CYUVdtr4FZ_A
   hash: d29d576ab93b687df1b4e3c954cc6f2d7d1d1482951cd957357b751c3d30ca8e
-game:
-  processId: rYNklRsZe7GL61j_VKNYtcPCYuykfRn5Pmqa6UA_Y3g
-  hash: e6a6a41a4b6d5a2f3d2965dd914a613ed843a0a9891c0e71186b74f8fd4dcdb9
 test-dumz-token:
   processId: mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk
   hash: e2b1c8b850537ecaa4766cebb86cc133d151e00870ec873a6d723a39c991dec1
-combat:
-  processId: TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ
-  hash: d9beb917f20c02ebe040f53512db5dddc765eb110e467666acbea9d862ad32ab
 chat:
-  processId: uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI
+  processId: BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU
   hash: 949a1baabb04b9412a226cff56dcc0bea1eaaf1fbbe782cc812a2f866358b4cd
+game:
+  processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+  hash: b5500e734fc926bbcd1ad6e97b6c4cfc4d83350a1fc20bcb87f0177151abdc2d
+combat:
+  processId: BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU
+  hash: d9beb917f20c02ebe040f53512db5dddc765eb110e467666acbea9d862ad32ab

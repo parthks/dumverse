@@ -204,6 +204,42 @@ local function regenerateEnergyHandler(msg: Message)
     })
 end
 
+local function getAllPlayersAtLocationHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    helpers.CheckUserExists(user_id, msg.From)
+    local current_spot = tonumber(msg.Tags.CurrentSpot)
+    assert(current_spot, "CurrentSpot is required")
+
+    -- udpate last_updated_at
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET last_updated_at = %f WHERE id = %f;
+    ]], msg.Timestamp, user_id))
+
+    local players = dbAdmin:exec(string.format([[
+        SELECT * FROM Users WHERE current_spot = %f;
+    ]], current_spot))
+
+    ao.send({
+        Target = msg.From,
+        Data = json.encode(players)
+    })
+end
+
+local function userLoginHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    helpers.CheckUserExists(user_id, msg.From)
+
+    -- update last_updated_at
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET last_updated_at = %f WHERE id = %f;
+    ]], msg.Timestamp, msg.Timestamp, user_id))
+
+    ao.send({
+        Target = msg.From,
+        Status = "Success"
+    })
+end
+
 
 
 -- Add handlers
@@ -215,5 +251,6 @@ Handlers.add("User.GoToTown", Handlers.utils.hasMatchingTag('Action', 'User.GoTo
 Handlers.add("User.GoToRestArea", Handlers.utils.hasMatchingTag('Action', 'User.GoToRestArea'), goToRestAreaHandler)
 Handlers.add("User.RegenerateEnergy", Handlers.utils.hasMatchingTag('Action', 'User.RegenerateEnergy'), regenerateEnergyHandler)
 Handlers.add("User.Revive", Handlers.utils.hasMatchingTag('Action', 'User.Revive'), reviveUserHandler)
-
+Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Action', 'User.GetAllPlayersAtLocation'), getAllPlayersAtLocationHandler)
+Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 return {}
