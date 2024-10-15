@@ -1,5 +1,6 @@
 import ChatWindow from "@/components/chat/Chat";
 import { InventoryBag } from "@/components/game/InventoryBag";
+import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
 import { IMAGES, SOUNDS } from "@/lib/constants";
@@ -99,6 +100,10 @@ export default function RestArea() {
       {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />}
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
+
+      <div className="z-10 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%]">
+        <PlayerOnlineList currentSpot={current_spot} />
+      </div>
 
       {!chatOpen && (
         <div className="z-10 absolute top-4 right-4">

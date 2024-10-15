@@ -1,12 +1,11 @@
 import ChatWindow from "@/components/chat/Chat";
+import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import ImgButton from "@/components/ui/imgButton";
 import { SOUNDS } from "@/lib/constants";
-import { useGameStore, GameStatePages } from "@/store/useGameStore";
-import { useQuery } from "@tanstack/react-query";
+import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
 
 export default function Town() {
-  const getAllPlayersAtLocation = useGameStore((state) => state.getAllPlayersAtLocation);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const goToGameMap = useGameStore((state) => state.goToGameMap);
 
@@ -16,17 +15,15 @@ export default function Town() {
     setGameStatePage(building);
   };
 
-  const { data: playersAtLocation } = useQuery({
-    queryKey: ["playersAtLocation", 0],
-    queryFn: () => getAllPlayersAtLocation(0),
-  });
-  console.log({ playersAtLocation });
-
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       {/* Background image */}
       <img src="https://arweave.net/kr9vAhgWOI_OfA7LBGNuQxW1zAg9Eq_3vZaSebHN5HQ" alt="Background Placeholder" className="absolute top-0 left-0 w-full h-full object-cover" />
       <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop />
+
+      <div className="z-10 absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5">
+        <PlayerOnlineList currentSpot={0} />
+      </div>
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 

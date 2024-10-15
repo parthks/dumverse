@@ -7,6 +7,7 @@ export type LamaPosition = {
 export type GameUser = {
   id: number;
   name: string;
+  last_updated_at: number;
   address: string;
   nft_address?: string;
   nft_special_trait?: string;
