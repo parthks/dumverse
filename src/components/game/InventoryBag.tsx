@@ -44,21 +44,21 @@ export function InventoryBagWithoutArmor() {
     >
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "25%", right: "28%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-xl mr-1 text-white">{data?.gold_balance.toLocaleString()}g</label>
+          <label className="text-xl mr-2 text-white">{data?.gold_balance.toLocaleString()}</label>
           <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-5" />
         </div>
       </div>
 
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "38%", right: "28%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-xl mr-1 text-white">{data?.dumz_balance.toLocaleString()} $Dumz</label>
+          <label className="text-xl mr-2 text-white">{data?.dumz_balance.toLocaleString()}</label>
           <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5" />
         </div>
       </div>
 
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "51%", right: "28%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-xl mr-1 text-white">{0} $Trunk</label>
+          <label className="text-xl mr-2 text-white">{0}</label>
           <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-5" />
         </div>
       </div>
@@ -157,12 +157,12 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
 // for weapon and armor
 export function UserWeaponItem({
   item,
-  bigger = false,
+  size = "small",
   itemType,
   repair = false,
 }: {
   item: Inventory | undefined;
-  bigger?: boolean;
+  size?: "bigger" | "medium" | "small";
   itemType: "weapon" | "armor";
   repair?: boolean;
 }) {
@@ -171,11 +171,15 @@ export function UserWeaponItem({
   const repairItem = useGameStore((state) => state.repairItem);
   const healthPercentage = item ? Math.round((item.item_health / item.total_item_health) * 100) : undefined;
 
+  const noItemSize = size === "bigger" ? "w-12 h-12" : size === "medium" ? "w-10 h-10" : "w-8 h-8";
+  const withItemSize = size === "bigger" ? "h-14" : size === "medium" ? "h-12" : "h-9";
+  const itemSize = size === "bigger" ? "w-16 h-[70px]" : size === "medium" ? "w-10 h-12" : "w-10 h-12";
+
   return (
     <div className="flex flex-col gap-2 items-center justify-between">
       <div
         className={`relative 
-        ${bigger ? "w-16 h-[70px]" : "w-10 h-12"}`}
+        ${itemSize}`}
       >
         {item ? (
           <>
@@ -185,7 +189,7 @@ export function UserWeaponItem({
               className="absolute w-full h-full"
             />
             <div className="absolute inset-0 flex flex-col items-center">
-              <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`h-${bigger ? "14" : "9"} p-1`} />
+              <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`${withItemSize}`} />
               <p className="text-white text-sm">
                 {item.item_health}/{item.total_item_health}
               </p>
@@ -193,7 +197,7 @@ export function UserWeaponItem({
           </>
         ) : (
           <div className="w-full h-full flex justify-center items-center bg-white rounded-sm">
-            <img src={itemType === "weapon" ? ITEM_ICONS.NO_WEAPON : ITEM_ICONS.NO_ARMOR} alt="no weapon" className={`w-${bigger ? "12" : "8"} h-${bigger ? "12" : "8"}`} />
+            <img src={itemType === "weapon" ? ITEM_ICONS.NO_WEAPON : ITEM_ICONS.NO_ARMOR} alt="no weapon" className={noItemSize} />
           </div>
         )}
       </div>

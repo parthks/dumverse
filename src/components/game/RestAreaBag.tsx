@@ -73,10 +73,10 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
           <div className="flex flex-row gap-16 justify-between mt-4 align-baseline">
             {/* <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-16 h-16 bg-white p-2" />
               <label className="text-2xl mr-1 text-white">{"Weapon"}</label> */}
-            <UserWeaponItem repair item={weapon} bigger itemType="weapon" />
+            <UserWeaponItem repair item={weapon} size="bigger" itemType="weapon" />
             {/* <img src={armor ? ITEM_ICONS.ARMOR_1 : ITEM_ICONS.NO_ARMOR} alt="armor in inventory" className="w-16 h-16 bg-white p-2" /> */}
             {/* <label className="text-2xl mr-1 text-white">{"Armor"}</label> */}
-            <UserWeaponItem repair item={armor} bigger itemType="armor" />
+            <UserWeaponItem repair item={armor} size="bigger" itemType="armor" />
           </div>
 
           <div className="flex w-full mt-4 px-8 flex-row justify-between items-baseline">

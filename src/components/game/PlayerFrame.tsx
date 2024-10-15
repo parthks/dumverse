@@ -23,13 +23,12 @@ export function PlayerFrame() {
         aspectRatio: "883 / 276",
       }}
     >
-      <img
-        src={user.nft_address ? `https://arweave.net/${user.nft_address}` : IMAGES.DEFAULT_DUMDUM}
-        alt="User Avatar"
-        className="absolute left-[0%] top-[6.5%] w-[30%] h-[93%] object-cover rounded-sm"
-      />
+      <div className={`absolute left-[0%] ${user.nft_address ? "top-[1%] h-[100%]" : "top-[16%] h-[75%]"} w-[30%]  flex items-center justify-center overflow-hidden`}>
+        <img src={user.nft_address ? `https://arweave.net/${user.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="object-contain max-w-full max-h-full" />
+      </div>
+
       <div className="absolute left-[33%] top-[2%] flex flex-col justify-between">
-        <div className="text-white text-2xl font-bold">{user.name}</div>
+        <div className="text-white text-2xl font-bold w-[200px] text-center">{user.name}</div>
       </div>
 
       <div className="absolute w-[480px] top-[20%] h-[100px] left-[31%] flex flex-col">
@@ -40,12 +39,16 @@ export function PlayerFrame() {
               {user.health}/{user.total_health}
             </p>
           </div>
-          <UserWeaponItem repair={false} bigger item={weapon} itemType="weapon" />
+          <UserWeaponItem repair={false} size="small" item={weapon} itemType="weapon" />
           <p className="mx-2"></p>
-          <UserWeaponItem repair={false} bigger item={armor} itemType="armor" />
+          <UserWeaponItem repair={false} size="small" item={armor} itemType="armor" />
           <div className=" ml-4 flex flex-col gap-2 items-center justify-between">
-            <label className="text-white text-xl font-bold">Dmg {user.damage}</label>
-            <label className="text-white text-xl font-bold">Def {user.defense}</label>
+            <label className="text-white text-xl font-bold">
+              Dmg <span className="ml-2">{user.damage}</span>
+            </label>
+            <label className="text-white text-xl font-bold">
+              Def <span className="ml-2">{user.defense}</span>
+            </label>
           </div>
         </div>
 
