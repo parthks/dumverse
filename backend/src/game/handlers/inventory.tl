@@ -79,15 +79,40 @@ local function inventoryRepairItemHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
     local inventory_id = tonumber(msg.Tags.InventoryId)
     assert(inventory_id, "Pass in inventory_id")
-    helpers.CheckUserExists(user_id, msg.From)
+    local userData = helpers.CheckUserExists(user_id, msg.From)
+
+    local repair_cost = 0
+
+    local results = dbAdmin:exec(string.format([[
+        SELECT * FROM Inventory WHERE id = %d AND user_id = %f LIMIT 1;
+    ]], inventory_id, user_id))
+    local item = results[1] as InventoryItem
+    assert(item, "Item not found")
+    local item_id = item.item_id
+    local itemDetails = helpers.GetItemDetails(item_id) as WeaponItem or ArmorItem
+    assert(itemDetails, "Item details not found")
+
+    if itemDetails.material == "WOOD" then
+        repair_cost = 5
+    elseif itemDetails.material == "IRON" then
+        repair_cost = 10
+    elseif itemDetails.material == "GOLD" then
+        repair_cost = 20
+    elseif itemDetails.material == "DIAMOND" then
+        repair_cost = 30
+    else
+        assert(false, "Invalid material")
+    end
+
+    assert(userData.dumz_balance >= repair_cost, "Insufficient dumz balance")
 
     dbAdmin:exec(string.format([[
         UPDATE Inventory SET item_health = total_item_health WHERE id = %d AND user_id = %f;
     ]], inventory_id, user_id))
 
     dbAdmin:exec(string.format([[
-        UPDATE Users SET dumz_balance = dumz_balance - 5 WHERE id = %f;
-    ]], user_id))
+        UPDATE Users SET dumz_balance = %d WHERE id = %f;
+    ]], userData.dumz_balance - repair_cost, user_id))
 
     ao.send({ Target = msg.From, Status = "Success" })
 end

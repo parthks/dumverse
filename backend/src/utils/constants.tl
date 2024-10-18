@@ -14,6 +14,7 @@ local SPECIAL_ITEMS = {
         gold_price = 15000,
         damage = 5,
         type = "WEAPON",
+        material = "MAGIC",
     },
     MAGIC_ROBE = {
         id = "MAGIC_ROBE",
@@ -21,6 +22,7 @@ local SPECIAL_ITEMS = {
         gold_price = 12000,
         defense = 5,
         type = "ARMOR",
+        material = "MAGIC",
     },
 }
 
@@ -31,6 +33,7 @@ local WEAPONS = {
         gold_price = 1250,
         damage = 1,
         type = "WEAPON",
+        material = "WOOD",
     },
     WEAPON_2 = {
         id = "WEAPON_2",
@@ -38,6 +41,7 @@ local WEAPONS = {
         gold_price = 2500,
         damage = 2,
         type = "WEAPON",
+        material = "IRON",
     },
     WEAPON_3 = {
         id = "WEAPON_3",
@@ -45,6 +49,7 @@ local WEAPONS = {
         gold_price = 6000,
         damage = 3,
         type = "WEAPON",
+        material = "GOLD",
     },
     WEAPON_4 = {
         id = "WEAPON_4",
@@ -52,6 +57,7 @@ local WEAPONS = {
         gold_price = 12000,
         damage = 4,
         type = "WEAPON",
+        material = "DIAMOND",
     },
     WAND = {
         id = "WAND",
@@ -59,11 +65,13 @@ local WEAPONS = {
         gold_price = 15000,
         damage = 5,
         type = "WEAPON",
+        material = "MAGIC",
     },
 }
 global type WeaponItem = record
     {BaseItem}
     damage: number
+    material: string
 end
 local ARMORS = {
     ARMOR_1 = {
@@ -72,6 +80,7 @@ local ARMORS = {
         gold_price = 1000,
         defense = 1,
         type = "ARMOR",
+        material = "WOOD",
     },
     ARMOR_2 = {
         id = "ARMOR_2",
@@ -79,6 +88,7 @@ local ARMORS = {
         gold_price = 2000,
         defense = 2,
         type = "ARMOR",
+        material = "IRON",
     },
     ARMOR_3 = {
         id = "ARMOR_3",
@@ -86,6 +96,7 @@ local ARMORS = {
         gold_price = 5000,
         defense = 3,
         type = "ARMOR",
+        material = "GOLD",
     },
     ARMOR_4 = {
         id = "ARMOR_4",
@@ -93,6 +104,7 @@ local ARMORS = {
         gold_price = 10000,
         defense = 4,
         type = "ARMOR",
+        material = "DIAMOND",
     },
     MAGIC_ROBE = {
         id = "MAGIC_ROBE",
@@ -100,11 +112,13 @@ local ARMORS = {
         gold_price = 12000,
         defense = 5,
         type = "ARMOR",
+        material = "MAGIC",
     },
 }
 global type ArmorItem = record
     {BaseItem}
     defense: number
+    material: string
 end
 local POTIONS = {
     POTION_1 = {

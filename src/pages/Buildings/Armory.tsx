@@ -46,27 +46,38 @@ export default function Armory() {
           />
 
           {/* Group the shop table, sign, and shopkeeper */}
-          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
-            <img src="https://arweave.net/kcuv5Ifubl1oQ66gyRGfFusQfX9cm61RNwf1_Upsnl4" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
-            <div style={{ width: "200px", height: "200px" }} className="absolute left-1/2 h-auto -translate-x-1/2 -translate-y-[221%]">
-              <RiveShopKeeper />
+          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
+            {/* Shopkeeper and Table Group */}
+            <div className="relative w-full flex flex-col items-center">
+              {/* Shopkeeper */}
+              <div
+                className="relative"
+                style={{
+                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  width: "100%",
+                  aspectRatio: 1, // Keeps the shopkeeper square
+                  // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
+                }}
+              >
+                <RiveShopKeeper />
+              </div>
+
+              {/* Shop Table */}
+              <img src="https://arweave.net/5OR4ryz5M-JLTF7rRUWPXD6s8_LM1o4KF_CgZ10_D9Q" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+
+              {/* Hammer on Table */}
+              {/* <img
+                src="https://arweave.net/w2uP86Q1l0ErsqM2KkMh_0s02XOMaknUvuFOtrKy86Q"
+                alt="Hammer on Table"
+                className="absolute"
+                style={{
+                  left: "50%",
+                  width: "10%", // Adjust as needed for responsiveness
+                  height: "auto",
+                  transform: "translate(-50%, -100%)", // Keep it centered and positioned above the table
+                }}
+              /> */}
             </div>
-            {/* <Rive
-              className="absolute left-1/2 w-1/5 h-auto -translate-x-1/2 -translate-y-[242%]"
-              src="https://public.rive.app/hosted/156163/191181/jwmTWZadb0eu_4gcTDnVow.riv"
-            /> */}
-            {/* <img
-              src={BUILDING_IMAGES.YELLOW_SHOPKEEPER}
-              alt="Shop Keeper"
-              className="absolute"
-              style={{ left: "50%", width: "20%", height: "auto", transform: "translate(-50%, -242%)" }}
-            /> */}
-            <img
-              src="https://arweave.net/w2uP86Q1l0ErsqM2KkMh_0s02XOMaknUvuFOtrKy86Q"
-              alt="Hammer on Table"
-              className="absolute"
-              style={{ left: "50%", width: "20%", height: "auto", transform: "translate(20%, -310%)" }}
-            />
           </div>
           {shop?.items[0] && (
             <ShopItem
@@ -131,7 +142,7 @@ import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 export const RiveShopKeeper = () => {
   const { RiveComponent } = useRive({
     // Load a local riv `clean_the_car.riv` or upload your own!
-    src: "/character.riv",
+    src: "/unhappy.riv",
     // Be sure to specify the correct state machine (or animation) name
     // This is optional.Provides additional layout control.
     layout: new Layout({

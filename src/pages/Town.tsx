@@ -64,7 +64,7 @@ export default function Town() {
           >
             {/* Armory on the hill */}
             <img
-              src="https://arweave.net/PYIX9T90RmDl9QHm7ccxlG5LVlcodwDOyTbVR8dEsEs"
+              src="https://arweave.net/jcrjRLjmbifAPy0nas_hHobjDIdKyMaRNmQjSD0UVvA"
               alt="Building 7"
               className="absolute top-[10%] left-[5.5%] w-[18%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out

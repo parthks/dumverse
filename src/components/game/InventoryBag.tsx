@@ -175,6 +175,9 @@ export function UserWeaponItem({
   const withItemSize = size === "bigger" ? "h-14" : size === "medium" ? "h-12" : "h-9";
   const itemSize = size === "bigger" ? "w-16 h-[70px]" : size === "medium" ? "w-10 h-12" : "w-10 h-12";
 
+  const item_id = item?.item_id;
+  const repairCost = item_id?.includes("1") ? 5 : item_id?.includes("2") ? 10 : item_id?.includes("3") ? 20 : item_id?.includes("4") ? 30 : 0;
+
   return (
     <div className="flex flex-col gap-2 items-center justify-between">
       <div
@@ -204,7 +207,7 @@ export function UserWeaponItem({
       {item && repair && (
         <>
           <ImgButton
-            disabled={loading || user.dumz_balance < 5 || (item && item.item_health === item.total_item_health)}
+            disabled={loading || user.dumz_balance < repairCost || (item && item.item_health === item.total_item_health)}
             onClick={async () => {
               setLoading(true);
               try {
@@ -220,7 +223,7 @@ export function UserWeaponItem({
             className="w-36"
           />
           <div className="flex flex-row items-center justify-center mt-2">
-            <p className="text-white text-xl">Cost - 5</p>
+            <p className="text-white text-xl">Cost - {repairCost}</p>
             <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-6 h-6 ml-2" />
           </div>
         </>

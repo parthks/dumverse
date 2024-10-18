@@ -28,7 +28,7 @@ export function PlayerFrame() {
       </div>
 
       <div className="absolute left-[33%] top-[2%] flex flex-col justify-between">
-        <div className="text-white text-2xl font-bold w-[200px] text-center">{user.name}</div>
+        <div className="text-white text-2xl font-bold w-[200px] text-center truncate">{user.name}</div>
       </div>
 
       <div className="absolute w-[480px] top-[20%] h-[100px] left-[31%] flex flex-col">

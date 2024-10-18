@@ -44,8 +44,9 @@ export type Item = {
   gold_price?: number; // either one of these
   dumz_price?: number; // either one of these
   type: ItemType;
-  defense: number;
-  damage: number;
+  defense: number; // only for armor
+  material: string; // only for weapons and armor
+  damage: number; // only for weapons
   energy?: number; // for energy items
   health?: number; // for food and potion items
 };
