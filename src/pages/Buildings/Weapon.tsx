@@ -1,4 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
@@ -52,7 +53,28 @@ export default function Weapon() {
             />
           </div>
           {/* Group the shop table and shopkeeper */}
-          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 57), transform: "translate(-50%, -100%)" }}>
+          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
+            {/* Shopkeeper and Table Group */}
+            <div className="relative w-full flex flex-col items-center">
+              {/* Shopkeeper */}
+              <div
+                className="relative"
+                style={{
+                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  width: "100%",
+                  top: "0",
+                  aspectRatio: 1, // Keeps the shopkeeper square
+                  // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
+                }}
+              >
+                <RiveShopKeeper url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
+              </div>
+
+              {/* Shop Table */}
+              <img src="https://arweave.net/wlkWadmmnZ5YLvSauURaPMTzmK4fTjbxoc4CH9Q8IH8" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+            </div>
+          </div>
+          {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 57), transform: "translate(-50%, -100%)" }}>
             <img src="https://arweave.net/3GlvzzIUvPyYQHQj0UHDNLCBEAL5ZlMoEb-G2aeLqCQ" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
 
             <img
@@ -61,7 +83,7 @@ export default function Weapon() {
               className="absolute"
               style={{ left: "50%", width: "55%", height: "auto", transform: "translate(-50%, -141%)" }}
             />
-          </div>
+          </div> */}
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {

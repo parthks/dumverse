@@ -1,9 +1,13 @@
 export const REST_SPOTS = [0, 9, 18, 27];
 
 export const BUILDING_IMAGES = {
-  YELLOW_SHOPKEEPER: "https://arweave.net/ERNUnhjW23_jDy4kFNk-Wmu_WFoTRgXeaCDgIYFyVws",
-  GREEN_SHOPKEEPER: "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY",
-  WEAPON_DEALER: "https://arweave.net/vOeUsfKdGEJRzlheQVJMRpEu2WHVdNdafuNb3QwsVnU",
+  ARMOR_WEAPON_DUMDUM: "https://arweave.net/4dn2CLoDmNzQDn6P3FksquujEsm5l6AceMAlb0rqXew",
+  BANK_GOLD_DUMDUM: "https://arweave.net/h7ES9Bq_qEedAD1s7ieCjw0bAc-EJUUQgGmHqo8BvqI",
+  DEN_DUMDUM: "https://arweave.net/tQEu_kXw8Earh0l-Xuw3XrwZm6FCzkZFF3CyD6_YAzM",
+  GENERAL_STORE_DUMDUM: "https://arweave.net/a_-rdHAdouSLMA4ctOrr5zT0RJXPmvVzrt0Ph_00BKA",
+  INFIRMARY_CAKESHOP_DUMDUM: "https://arweave.net/x1c5OjHa8FZBDE1wSsczPLWdgMaN1oEksHlUwb5f870",
+  NFT_SHOP_DUMDUM: "https://arweave.net/5MAnr9xZ91wwBxV9XaQRlpvZW2cmE_TuZgK2hfMnH40",
+  VISITOR_CENTER_HALL_FAME_DUMDUM: "https://arweave.net/5vHU45HKOUEug0HzNQqMVjxvUe0T9mKkAIR3XVmY9rY",
 };
 
 export const IMAGES = {

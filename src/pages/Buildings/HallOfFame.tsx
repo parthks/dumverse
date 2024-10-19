@@ -1,4 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { BUILDING_IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
@@ -26,7 +27,29 @@ export default function HallOfFame() {
         style={{ ...calculatePositionAndSize(50, 70, 85), transform: "translate(-50%, -50%)" }}
       />
 
-      <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 30), transform: "translate(-50%, -100%)" }}>
+      <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 30), transform: "translate(-50%, -100%)" }}>
+        {/* Shopkeeper and Table Group */}
+        <div className="relative w-full flex flex-col items-center">
+          {/* Shopkeeper */}
+          <div
+            className="relative"
+            style={{
+              maxWidth: "12vw", // Responsive size, adjust as needed
+              width: "100%",
+              top: "0",
+              aspectRatio: 1, // Keeps the shopkeeper square
+              // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
+            }}
+          >
+            <RiveShopKeeper url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
+          </div>
+
+          {/* Shop Table */}
+          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+        </div>
+      </div>
+
+      {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 30), transform: "translate(-50%, -100%)" }}>
         <img src="https://arweave.net/g2i08NVCRWFbwGflpf4S7b6M2LwRwScnEK6N6chVCMM" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
         <img
           src={BUILDING_IMAGES.GREEN_SHOPKEEPER}
@@ -34,7 +57,8 @@ export default function HallOfFame() {
           className="absolute"
           style={{ left: "50%", width: "30%", height: "auto", transform: "translate(-50%, -202%)" }}
         />
-      </div>
+      </div> */}
+
       <Frame index={1} />
       <Frame index={2} />
       <Frame index={3} />

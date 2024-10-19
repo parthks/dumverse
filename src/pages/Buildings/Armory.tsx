@@ -1,4 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
@@ -55,28 +56,16 @@ export default function Armory() {
                 style={{
                   maxWidth: "12vw", // Responsive size, adjust as needed
                   width: "100%",
+                  top: "20px",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
-                <RiveShopKeeper />
+                <RiveShopKeeper url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
 
               {/* Shop Table */}
-              <img src="https://arweave.net/5OR4ryz5M-JLTF7rRUWPXD6s8_LM1o4KF_CgZ10_D9Q" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
-
-              {/* Hammer on Table */}
-              {/* <img
-                src="https://arweave.net/w2uP86Q1l0ErsqM2KkMh_0s02XOMaknUvuFOtrKy86Q"
-                alt="Hammer on Table"
-                className="absolute"
-                style={{
-                  left: "50%",
-                  width: "10%", // Adjust as needed for responsiveness
-                  height: "auto",
-                  transform: "translate(-50%, -100%)", // Keep it centered and positioned above the table
-                }}
-              /> */}
+              <img src="https://arweave.net/C6LU2xgJ9oMwH8Ah7C-KdMGxJs6g6w76nXMpovYv7Ms" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
             </div>
           </div>
           {shop?.items[0] && (
@@ -136,21 +125,3 @@ export default function Armory() {
     </div>
   );
 }
-
-import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
-
-export const RiveShopKeeper = () => {
-  const { RiveComponent } = useRive({
-    // Load a local riv `clean_the_car.riv` or upload your own!
-    src: "/unhappy.riv",
-    // Be sure to specify the correct state machine (or animation) name
-    // This is optional.Provides additional layout control.
-    layout: new Layout({
-      fit: Fit.FitWidth, // Change to: rive.Fit.Contain, or Cover
-      alignment: Alignment.Center,
-    }),
-    autoplay: true,
-  });
-
-  return <RiveComponent />;
-};

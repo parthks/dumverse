@@ -1,4 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
@@ -45,7 +46,28 @@ export default function NFTShop() {
 
         <div className="absolute inset-0">
           {/* Group the shop table, sign, and shopkeeper */}
-          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 50), transform: "translate(-50%, -100%)" }}>
+          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
+            {/* Shopkeeper and Table Group */}
+            <div className="relative w-full flex flex-col items-center">
+              {/* Shopkeeper */}
+              <div
+                className="relative"
+                style={{
+                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  width: "100%",
+                  top: "65px",
+                  aspectRatio: 1, // Keeps the shopkeeper square
+                  // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
+                }}
+              >
+                <RiveShopKeeper url={BUILDING_IMAGES.NFT_SHOP_DUMDUM} />
+              </div>
+
+              {/* Shop Table */}
+              <img src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+            </div>
+          </div>
+          {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 50), transform: "translate(-50%, -100%)" }}>
             <img src="https://arweave.net/f1jPz7nKfZyBs58BP7AJwu9lKqk1hFCDlf0zlrJ1Iv0" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
             <img
               src={BUILDING_IMAGES.YELLOW_SHOPKEEPER}
@@ -59,7 +81,8 @@ export default function NFTShop() {
               className="absolute"
               style={{ left: "50%", width: "50%", height: "auto", transform: "translate(25%, -126%)" }}
             />
-          </div>
+          </div> */}
+
           {/* {shop.items[0] && (
             <ShopItem
               handleClick={async () => {

@@ -1,4 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
@@ -188,29 +189,36 @@ export default function Shop() {
           />
 
           {/* Group the shop table, sign, and shopkeeper */}
-          <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 55), transform: "translate(-50%, -100%)" }}>
-            <img src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
-            <img
-              src="https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY"
-              alt="Shop Sign"
-              className="absolute"
-              style={{ left: "17.7%", width: "25%", height: "auto", transform: "translate(-20%, -175%)" }}
-            />
-            <img
-              src={BUILDING_IMAGES.YELLOW_SHOPKEEPER}
-              alt="Shop Keeper"
-              className="absolute"
-              style={{ left: "50%", width: "23.1%", height: "auto", transform: "translate(-50%, -175%)" }}
-            />
+          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
+            {/* Shopkeeper and Table Group */}
+            <div className="relative w-full flex flex-col items-center">
+              {/* Shopkeeper */}
+              <div
+                className="relative"
+                style={{
+                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  width: "100%",
+                  top: "20px",
+                  aspectRatio: 1, // Keeps the shopkeeper square
+                  // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
+                }}
+              >
+                <RiveShopKeeper url={BUILDING_IMAGES.GENERAL_STORE_DUMDUM} />
+              </div>
+
+              <div className="relative">
+                {/* shop sign */}
+                <img
+                  src="https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY"
+                  alt="Shop Sign"
+                  className="absolute"
+                  style={{ left: "15%", top: "-50%", width: "25%", height: "auto", zIndex: 1 }}
+                />
+                {/* Shop Table */}
+                <img src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+              </div>
+            </div>
           </div>
-          {/* <img
-            src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4"
-            alt="Shop Table"
-            className="absolute"
-            style={{ ...calculatePositionAndSize(50, 100, 65), transform: "translate(-50%, -100%)" }}
-          />
-          <img src="https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY" alt="Shop Sign" className="absolute" style={{ ...calculatePositionAndSize(32, 73, 15) }} />
-          <img src={BUILDING_IMAGES.YELLOW_SHOPKEEPER} alt="Shop Keeper" className="absolute" style={{ ...calculatePositionAndSize(50, 59.5, 15) }} /> */}
 
           {shop?.items[0] && (
             <ShopItem

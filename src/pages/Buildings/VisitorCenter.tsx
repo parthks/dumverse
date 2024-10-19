@@ -1,5 +1,7 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
+import { BUILDING_IMAGES } from "@/lib/constants";
 
 export default function VisitorCenter() {
   useBuildingMusic({});
@@ -60,16 +62,32 @@ export default function VisitorCenter() {
         </div>
       </div>
 
-      {/* Table */}
-      <div
-        className="absolute bottom-[0px] left-[0px] bg-contain bg-center bg-no-repeat w-[400px] max-w-xl ml-4 p-8"
-        style={{ backgroundImage: "url('https://arweave.net/iGgg4X_Mb9xWoropvHjqaplkmT1SXwFUE6ejSuhE2eM')", aspectRatio: "918/1080" }}
-      >
-        <div className="absolute w-[200px] m-auto inset-0 flex flex-col items-center justify-center text-white">
-          {/* <h1 className="text-2xl md:text-3xl font-bold text-center">Welcome to</h1> */}
-          <h2 className="text-lg md:text-lg text-center mt-40 underline">Entry Fees:</h2>
-          <p className="text-base md:text-lg text-center mt-1 underline">.1984 wAR for Dumz</p>
-          <p className="text-base md:text-lg text-center mt-1 underline">.3968 wAR for non residents</p>
+      <div className="absolute bottom-[0px] left-[0px]">
+        {/* Table */}
+        <div
+          className="relative bottom-[0px] left-[0px] bg-contain bg-center bg-no-repeat w-[400px] max-w-xl ml-4 p-8"
+          style={{ zIndex: 2, backgroundImage: "url('https://arweave.net/iGgg4X_Mb9xWoropvHjqaplkmT1SXwFUE6ejSuhE2eM')", aspectRatio: "918/1080" }}
+        >
+          <div className="absolute w-[200px] m-auto inset-0 flex flex-col items-center justify-center text-white">
+            <h2 className="text-lg md:text-lg text-center mt-40 underline">Entry Fees:</h2>
+            <p className="text-base md:text-lg text-center mt-1 underline">.1984 wAR for Dumz</p>
+            <p className="text-base md:text-lg text-center mt-1 underline">.3968 wAR for non residents</p>
+          </div>
+        </div>
+
+        {/* Shopkeeper */}
+        <div
+          className="absolute"
+          style={{
+            maxWidth: "11vw",
+            width: "100%",
+            left: "calc(50% - 5.5vw)",
+            top: "25px", // Adjust this value to fine-tune the vertical position
+            aspectRatio: 1,
+            zIndex: 1, // This ensures the shopkeeper is behind the table
+          }}
+        >
+          <RiveShopKeeper url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
         </div>
       </div>
 
