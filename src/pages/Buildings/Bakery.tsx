@@ -51,7 +51,7 @@ export default function Bakery() {
               <div
                 className="relative"
                 style={{
-                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "116px",
                   aspectRatio: 1, // Keeps the shopkeeper square
@@ -82,6 +82,7 @@ export default function Bakery() {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
                 shopBuyItemAudio.play();
               }}
+              itemSize={100}
               position={{
                 x: 20,
                 y: 30,

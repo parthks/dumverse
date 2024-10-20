@@ -60,7 +60,7 @@ export default function Weapon() {
               <div
                 className="relative"
                 style={{
-                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "0",
                   aspectRatio: 1, // Keeps the shopkeeper square

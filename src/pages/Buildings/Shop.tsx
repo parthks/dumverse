@@ -196,9 +196,9 @@ export default function Shop() {
               <div
                 className="relative"
                 style={{
-                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "20px",
+                  top: "16px",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}

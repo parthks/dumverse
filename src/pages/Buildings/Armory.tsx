@@ -54,7 +54,7 @@ export default function Armory() {
               <div
                 className="relative"
                 style={{
-                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "20px",
                   aspectRatio: 1, // Keeps the shopkeeper square

@@ -53,7 +53,7 @@ export default function NFTShop() {
               <div
                 className="relative"
                 style={{
-                  maxWidth: "12vw", // Responsive size, adjust as needed
+                  maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "65px",
                   aspectRatio: 1, // Keeps the shopkeeper square
