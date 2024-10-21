@@ -6,6 +6,7 @@ import { InventoryBagWithoutArmor, UserWeaponItem } from "./InventoryBag";
 export function PlayerFrame() {
   const user = useGameStore((state) => state.user);
   const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
+  const setQuestBookOpen = useGameStore((state) => state.setQuestBookOpen);
 
   if (!user) return null;
   const totalStamina = user.total_stamina;
@@ -33,7 +34,7 @@ export function PlayerFrame() {
 
       <div className="absolute w-[480px] top-[20%] h-[100px] left-[31%] flex flex-col">
         <div className="flex items-center">
-          <div className="relative mr-4">
+          <div className="relative mr-8">
             <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
             <p className="absolute top-3 left-0 right-0 text-center text-white text-xl font-bold">
               {user.health}/{user.total_health}
@@ -49,6 +50,9 @@ export function PlayerFrame() {
             <label className="text-white text-xl font-bold">
               Def <span className="ml-2">{user.defense}</span>
             </label>
+          </div>
+          <div className="ml-4 self-start">
+            <img onClick={() => setQuestBookOpen(true)} src={"https://arweave.net/Z0HomJIgsr4nL23MZSdPoSJHzcf5KtQEQkq4vCCEnAM"} alt="Quest Book" className="w-12" />
           </div>
         </div>
 

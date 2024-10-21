@@ -67,6 +67,8 @@ interface GameState {
   setRegenerateCountdown: (countdown: number | null) => void;
   reviveUser: () => Promise<void>;
   repairItem: (inventoryId: number) => Promise<void>;
+  questBookOpen: boolean;
+  setQuestBookOpen: (open: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -357,6 +359,8 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
       },
+      questBookOpen: false,
+      setQuestBookOpen: (open) => set({ questBookOpen: open }),
     }),
     {
       name: "Game Store",

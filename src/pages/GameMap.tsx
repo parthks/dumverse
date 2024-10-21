@@ -1,4 +1,5 @@
 import { PlayerFrame } from "@/components/game/PlayerFrame";
+import QuestBook from "@/components/game/QuestBook";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
 import { SOUNDS } from "@/lib/constants";
@@ -41,7 +42,7 @@ export const lammaWidth = 5;
 export const lammaHeight = 8.2;
 
 const GameMap = () => {
-  const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, user } = useGameStore();
+  const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, user, questBookOpen } = useGameStore();
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
@@ -129,6 +130,9 @@ const GameMap = () => {
       <audio autoPlay loop>
         <source src={SOUNDS.ISLAND_AUDIO} type="audio/mpeg" />
       </audio>
+
+      {questBookOpen && <QuestBook />}
+
       <div className="z-10 absolute top-4 right-4">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
