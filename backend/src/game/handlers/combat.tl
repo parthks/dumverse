@@ -76,6 +76,8 @@ local function enterNewCombatHandler(msg: Message)
     local baseStats = helpers.CalculateUserBaseStats(userData)
 
     for _, item in ipairs(inventoryItems as {InventoryItem}) do
+        -- print("item.item_type " .. item.item_type.. " " .. item.item_id .. " " .. tostring(item.equipped))
+
         if item.item_type == 'POTION' then
             local potion_id = item.item_id as PotionIds
             local potionData = constants.POTIONS[potion_id]
@@ -84,11 +86,12 @@ local function enterNewCombatHandler(msg: Message)
                 item_id = item.item_id,
                 health = potionData.health
             }
-        elseif item.item_type == 'ARMOR' and item.item_health > 0 then
+        
+        elseif item.item_type == 'ARMOR' and tostring(item.equipped) == "1" and item.item_health > 0 then
             combatUserData.inventory_armor_id = tostring(item.id)
             local armorData = constants.ARMORS[item.item_id as ArmorIds]
             baseStats.defense = baseStats.defense + armorData.defense
-        elseif item.item_type == 'WEAPON' and item.item_health > 0 then
+        elseif item.item_type == 'WEAPON' and tostring(item.equipped) == "1" and item.item_health > 0 then
             combatUserData.inventory_weapon_id = tostring(item.id)
             local weaponData = constants.WEAPONS[item.item_id as WeaponIds]
             baseStats.damage = baseStats.damage + weaponData.damage
@@ -170,7 +173,7 @@ local function enteredNewCombatHandler(msg: Message)
     assert(battle_id, "BattleId is required")
     assert(level, "Level is required")
 
-    -- update Users table with battle_id
+    -- update Users table with battle_id 
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = %d, stamina = stamina - 1 WHERE id = %f;
     ]], battle_id, user_id))
@@ -211,7 +214,7 @@ local function playerPerishedHandler(msg: Message)
 
     -- update Users table
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, gold_balance = 0, dumz_balance = 0 WHERE id = %f;
+        UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0 WHERE id = %f;
     ]], user_id))
 
     removeUsedPotion(playerData)

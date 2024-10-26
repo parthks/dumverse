@@ -70,6 +70,7 @@ export default function Game() {
     );
   // return <Combat />;
   // return <RestArea />;
+  // return <Infirmary />;
   return (
     <div className="game-cursor">
       {/* <GameProfile /> */}

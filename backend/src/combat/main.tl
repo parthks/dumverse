@@ -54,15 +54,15 @@ local function VerifyBattleIsOnGoing(battle_id: integer): Battle
     return battle
 end
 
-local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer, player_id_tried_running: string)
-    local battle = BattleHelpers.get(battle_id)
-    battle.last_npc_attack_timestamp[npc_id] = timestamp
-    BattleHelpers.update(battle_id, battle)
+local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer, player_id_tried_running: string | nil)
+    -- local battle = BattleHelpers.get(battle_id)
+    Battles[battle_id].last_npc_attack_timestamp[npc_id] = timestamp
 
     -- filter out attacking npc_id from npcs_alive
     local npcs_alive = utils.filter(function(val: string): boolean
         return val ~= npc_id
-    end, battle.npcs_alive)
+    end, Battles[battle_id].npcs_alive)
+
     -- pick random npc to attack
     local random_npc_id: string | nil = nil
     if #npcs_alive > 0 then
@@ -70,37 +70,39 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     end
 
     -- pick random player to attack
-    local alive_players = battle.players_alive
+    local alive_players = Battles[battle_id].players_alive
     local player_id = player_id_tried_running or alive_players[math.random(#alive_players)]
 
     -- 15 % chance to attack a random npc
-    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 1
+    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 1 and player_id_tried_running == nil
 
     if (npcShouldAttackNPC) then
         print("NPC " .. npc_id .. " attacking NPC " .. random_npc_id)
-        local log, defender_health, _ = NPCAttacksNPC(battle.npcs[npc_id], battle.npcs[random_npc_id], timestamp)
-        battle.npcs[random_npc_id].health = defender_health
-        BattleHelpers.addLogs(battle.id, log)
+        local log, defender_health, _ = NPCAttacksNPC(Battles[battle_id].npcs[npc_id], Battles[battle_id].npcs[random_npc_id], timestamp)
+        -- Battles[battle_id].npcs[random_npc_id].health = defender_health
+        -- battle.npcs[random_npc_id].health = defender_health
+        BattleHelpers.addLogs(Battles[battle_id].id, log)
         if defender_health <= 0 then
             -- remove npc from battle
             BattleHelpers.killNPC(battle_id, random_npc_id, npc_id, timestamp)
         end
     else 
         print("NPC " .. npc_id .. " attacking player " .. player_id)
-        local log, defender_health, defender_defense = NPCAttacksPlayer(battle.npcs[npc_id], battle.players[player_id], timestamp)
-        battle.players[player_id].defense = defender_defense
-        battle.players[player_id].health = defender_health
-        BattleHelpers.addLogs(battle.id, log)
+        local log, defender_health, defender_defense = NPCAttacksPlayer(Battles[battle_id].npcs[npc_id], Battles[battle_id].players[player_id], timestamp, player_id_tried_running ~= nil)
+        Battles[battle_id].players[player_id].defense = defender_defense
+        Battles[battle_id].players[player_id].health = defender_health
+        
+        BattleHelpers.addLogs(battle_id, log)
         if defender_health <= 0 then
             -- remove player from battle
-            BattleHelpers.killPlayer(battle.id, player_id, npc_id, timestamp)
+            BattleHelpers.killPlayer(battle_id, player_id, npc_id, timestamp)
         end
     end
     
-    battle.players_attacked = {} -- reset player attacked list, so that all players can attack again
-    BattleHelpers.update(battle.id, battle)
+    -- battle.players_attacked = {} -- reset player attacked list, so that all players can attack again
+    Battles[battle_id].players_attacked = {}
 
-    BattleHelpers.checkIfBattleShouldEnd(battle.id, npc_id, timestamp)
+    BattleHelpers.checkIfBattleShouldEnd(battle_id, npc_id, timestamp)
 end
 
 
@@ -109,6 +111,7 @@ local function CronTick(msg: Message, npcTimer: integer)
     -- need to check all ongoing battles to see if a player has not attacked in the last 10 seconds
     for _, battle in pairs(Battles) do
         -- print("Checking battle " .. battle.id)
+        battle = BattleHelpers.get(battle.id)
         if not battle.ended and #battle.players_alive > 0 then
             -- print("Battle " .. battle.id .. " is ongoing")
             local npcs_alive = battle.npcs_alive
@@ -118,19 +121,20 @@ local function CronTick(msg: Message, npcTimer: integer)
                 battle = BattleHelpers.get(battle.id)
                 if (battle.last_npc_attack_timestamp[npc_id] or 0) + (npcTimer * 1000) < msg.Timestamp then
                     -- if player has not attacked in the last 10 seconds, the NPC will attack
-                    -- print("NPC " .. npc_id .. " attacking player")
-                    NPCAttack(npc_id, battle.id, msg.Timestamp)
+                    print("battle " .. battle.id .. " - AUTO ATTACK: NPC " .. npc_id .. " attacking player")
+                    NPCAttack(npc_id, battle.id, msg.Timestamp, nil)
                 end
             end
 
             -- for pvp, if no npcs are alive, if a player has not attacked in the last 10 seconds, all players should attack
+            battle = BattleHelpers.get(battle.id)
             if #battle.npcs_alive == 0 then
                 for _, player_id in ipairs(battle.players_alive) do
                     if not battle.last_player_attack_timestamp[player_id] or battle.last_player_attack_timestamp[player_id] + (10 * 1000) < msg.Timestamp then
                         -- if player has not attacked in the last 10 seconds, players allowed to attack
-                        battle.players_attacked = {}
-                        battle.last_player_attack_timestamp[player_id] = msg.Timestamp
-                        BattleHelpers.update(battle.id, battle)
+                        print("battle " .. battle.id .. " - AUTO PLAYER UNBLOCKED ATTACK: " .. player_id)
+                        Battles[battle.id].players_attacked = {}
+                        Battles[battle.id].last_player_attack_timestamp[player_id] = msg.Timestamp
                     end
                 end
             end
@@ -142,13 +146,17 @@ end
     
 local function newUserJoinHandler(msg: Message)
     local user_id = msg.Tags.UserId
-    local level = msg.Tags.Level
+    local level_input = msg.Tags.Level
     local data = json.decode(msg.Data) as {string: string}
 
     print("Battle.NewUserJoin - user " .. user_id)
     assert(msg.From == GAME_PROCESS_ID, "Only Game process can send this message")
     assert(user_id, "UserId is required")
-    assert(level, "Combat Level is required")
+    assert(level_input, "Combat Level is required")
+    -- check if level is a integer
+    assert(tonumber(level_input) as integer, "Combat Level is not a integer")
+    local level = tonumber(level_input) as integer
+
 
     local battles = GetOpenBattlesOfUser(msg.From)
     if #battles > 0 then
@@ -169,11 +177,11 @@ local function newUserJoinHandler(msg: Message)
         local npcs = json.decode(data.npcs) as {CombatEnemyData}
 
         -- check lastest open battle and add user to it
-        local battle = BattleHelpers.getLatestSuitableOpenBattle(player, tonumber(level)) as Battle
+        local battle = BattleHelpers.getLatestSuitableOpenBattle(player, level) as Battle
 
         if not battle then
             battle = BattleHelpers.new(msg.Timestamp)
-            battle.level = tonumber(level)
+            battle.level = level
             battle.npcs = {}
             battle.last_npc_attack_timestamp = {}
             for _, npc in ipairs(npcs) do
@@ -183,7 +191,8 @@ local function newUserJoinHandler(msg: Message)
                 battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
                 NPCS_EXTRA_GOLD[npc.id] = nil
             end
-            BattleHelpers.update(battle.id, battle)
+            -- BattleHelpers.update(battle.id, battle)
+            Battles[battle.id] = battle
         end
         player.added_at_timestamp = msg.Timestamp
         BattleHelpers.addPlayer(battle.id, player)
@@ -220,19 +229,18 @@ local function drinkPotionHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
     VerifyUserInBattle(user_id, battle_id)
-    local battle = VerifyBattleIsOnGoing(battle_id)
+    VerifyBattleIsOnGoing(battle_id)
 
-    local potion_used = battle.players[user_id].potion_used
+    local potion_used = Battles[battle_id].players[user_id].potion_used
     assert(not potion_used, "Potion already used")
 
-    local potion = battle.players[user_id].potion as CombatPotionData
+    local potion = Battles[battle_id].players[user_id].potion as CombatPotionData
     assert(potion ~= nil, "Potion not found")
     
-    battle.players[user_id].health = battle.players[user_id].health + potion.health
-    battle.players[user_id].potion_used = true
+    Battles[battle_id].players[user_id].health = Battles[battle_id].players[user_id].health + potion.health
+    Battles[battle_id].players[user_id].potion_used = true
 
-    BattleHelpers.update(battle_id, battle)
-    ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
+    ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
 end
 
 
@@ -240,28 +248,27 @@ local function userAttackHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
     VerifyUserInBattle(user_id, battle_id)
-    local battle = VerifyBattleIsOnGoing(battle_id)
+    VerifyBattleIsOnGoing(battle_id)
 
     local attackEntityId = msg.Tags.AttackEntityId
     assert(attackEntityId, "AttackEntityId is required")
 
-    local playerUserIds = battle.players_alive
-    local npcIds = battle.npcs_alive
+    local playerUserIds = Battles[battle_id].players_alive
+    local npcIds = Battles[battle_id].npcs_alive
 
     -- assert that attackEntityId is in playerUserIds or npcIds - already checking in the if conditions
     -- assert(utils.includes(attackEntityId, playerUserIds) or utils.includes(attackEntityId, npcIds),
     --     "AttackEntityId is not in playerUserIds or npcIds")
 
     -- check if the UserId is in the players_attacked list
-    battle = BattleHelpers.get(battle_id)
-    assert(not utils.includes(user_id, battle.players_attacked), "Player has already attacked")
-    battle.last_player_attack_timestamp[user_id] = msg.Timestamp
-    BattleHelpers.update(battle_id, battle)
+    -- battle = BattleHelpers.get(battle_id)
+    assert(not utils.includes(user_id, Battles[battle_id].players_attacked), "Player has already attacked")
+    Battles[battle_id].last_player_attack_timestamp[user_id] = msg.Timestamp
 
     if (utils.includes(attackEntityId, npcIds)) then
         print("Player " .. user_id .. " attacking NPC " .. attackEntityId)
         -- Player attacking NPC
-        local log, defender_health, _ = PlayerAttacksNPC(battle.players[user_id], battle.npcs[attackEntityId], msg.Timestamp)
+        local log, defender_health, _ = PlayerAttacksNPC(Battles[battle_id].players[user_id], Battles[battle_id].npcs[attackEntityId], msg.Timestamp)
         BattleHelpers.addLogs(battle_id, log)
         if defender_health <= 0 then
             -- remove npc from battle
@@ -270,44 +277,42 @@ local function userAttackHandler(msg: Message)
     elseif (utils.includes(attackEntityId, playerUserIds)) then
         print("Player " .. user_id .. " attacking Player " .. attackEntityId)
         -- Player attacking Player
-        local log, defender_health, defender_defense = PlayerAttacksPlayer(battle.players[user_id], battle.players[attackEntityId], msg.Timestamp)
-        battle.players[attackEntityId].defense = defender_defense
-        battle.players[attackEntityId].health = defender_health
+        local log, defender_health, defender_defense = PlayerAttacksPlayer(Battles[battle_id].players[user_id], Battles[battle_id].players[attackEntityId], msg.Timestamp)
+        Battles[battle_id].players[attackEntityId].defense = defender_defense
+        Battles[battle_id].players[attackEntityId].health = defender_health
         
         BattleHelpers.addLogs(battle_id, log)
         if defender_health <= 0 then
             -- remove player from battle
-            BattleHelpers.killPlayer(battle.id, attackEntityId, user_id, msg.Timestamp)
+            BattleHelpers.killPlayer(battle_id, attackEntityId, user_id, msg.Timestamp)
         end
     else
         -- assert(false, "AttackEntityId is not in playerUserIds or npcIds")
         -- race condition from the UI, do nothing
-        ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
+        ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
         return
     end
 
-    table.insert(battle.players_attacked, user_id)
-    BattleHelpers.update(battle_id, battle)
+    table.insert(Battles[battle_id].players_attacked, user_id)
 
-    if #battle.players_attacked >= #battle.players_alive then -- greater than or equal to in case a player has died
+    if #Battles[battle_id].players_attacked >= #Battles[battle_id].players_alive then -- greater than or equal to in case a player has died
         -- all players have attacked, so NPC should attack
         print("All players have attacked. NPC should attack")
-        battle = BattleHelpers.get(battle_id)
+        -- battle = BattleHelpers.get(battle_id)
         -- loop through all npcs and attack
-        for _, npc_id in ipairs(battle.npcs_alive) do
-            NPCAttack(npc_id, battle.id, msg.Timestamp)
+        for _, npc_id in ipairs(Battles[battle_id].npcs_alive) do
+            NPCAttack(npc_id, battle_id, msg.Timestamp, nil)
         end
         -- reset players attacked, in case there are no npcs alive and all players have attacked
-        if #battle.npcs_alive == 0 then
+        if #Battles[battle_id].npcs_alive == 0 then
             -- players should be allowed to attack one at a time
-            battle.players_attacked = {user_id}
+            Battles[battle_id].players_attacked = {user_id}
         end
-        BattleHelpers.update(battle_id, battle)
     end
 
-    BattleHelpers.checkIfBattleShouldEnd(battle.id, user_id, msg.Timestamp)
+    BattleHelpers.checkIfBattleShouldEnd(battle_id, user_id, msg.Timestamp)
 
-    ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
+    ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
 end
 
 
@@ -316,30 +321,28 @@ local function userRunHandler(msg: Message)
     local user_id = msg.Tags.UserId
     VerifyUserInBattle(user_id, battle_id)
     VerifyBattleIsOnGoing(battle_id)
-    local battle = BattleHelpers.get(battle_id)
 
     local dice_roll = math.random(1, 6)
     BattleHelpers.log(battle_id, msg.Timestamp, user_id,
         "attempts to run away")
     if dice_roll < 4 then
         -- player runs successfully
-        BattleHelpers.playerRanAway(battle.id, user_id, msg.Timestamp)
-        BattleHelpers.checkIfBattleShouldEnd(battle.id, nil, msg.Timestamp)
-        ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
+        BattleHelpers.playerRanAway(battle_id, user_id, msg.Timestamp)
+        BattleHelpers.checkIfBattleShouldEnd(battle_id, nil, msg.Timestamp)
+        ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
         return
     end
-    -- BattleHelpers.log(battle_id, msg.Timestamp, user_id,
-    --     "runs away unsuccessfully")
-    BattleHelpers.update(battle_id, battle)
+    BattleHelpers.log(battle_id, msg.Timestamp, user_id,
+        "runs away unsuccessfully")
 
     -- find random NPC and attack player
-    local npc_id = battle.npcs_alive[math.random(#battle.npcs_alive)]
-    local npc = battle.npcs[npc_id]
+    local npc_id = Battles[battle_id].npcs_alive[math.random(#Battles[battle_id].npcs_alive)]
+    local npc = Battles[battle_id].npcs[npc_id]
     -- NPC will attack critial damage to user_id
     NPCAttack(npc.id, battle_id, msg.Timestamp, user_id)
 
     -- player runs unsuccessfully
-    ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(battle) })
+    ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
 end
 
 

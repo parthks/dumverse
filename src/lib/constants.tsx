@@ -70,6 +70,7 @@ export const SOUNDS = {
   TOWN_AUDIO_IN_BUILDING: "https://arweave.net/Nnz_IEzTOlV7sfLaK2kYDOLhGDk_RtSEOEW-R-5YnlQ",
   BATTLE_AUDIO: "https://arweave.net/gibXjVdGHmPOP7e4AtStM8U7fRiMZZ6A2u_gKRKPhcE",
   ATTACK_AUDIO: "https://arweave.net/cONoIFz54QfP3jVuJh5dmCfJC7DrFiypMVb_KIX9oVY",
+  IS_ATTACKED_AUDIO: "https://arweave.net/fNz7e9LYrChtmlajfBKEf_bdyybUZfZSpUK9ioxkqYo",
   BUILDING_ENTER: "https://arweave.net/1y0gZbjA-jmTiC2Ocm-TQj4_bUUSfrUOuGjbb-3zBWI",
   SHOP_BUY_ITEM: "https://arweave.net/9EtNgLrsqHuXNZWPhH3NcMcxkTQhGpxRo6wvQJmcU1Q",
   REST_AREA_AUDIO: "https://arweave.net/_d4bjMzhu7UayVt5KURYwYBGrREEB6-tYA8MLI0R2r4",

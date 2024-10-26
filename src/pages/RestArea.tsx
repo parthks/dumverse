@@ -8,7 +8,6 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import React from "react";
 import { useState } from "react";
 
-// TODO: add town rest image
 const RestAreaImages = {
   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
   9: "https://arweave.net/F6Xd8uMyN78dh2Nrd9gSVCD0sEPY3BsAgd1PWJCyn4Q",

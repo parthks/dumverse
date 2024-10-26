@@ -66,15 +66,18 @@ local function shopBuyItemHandler(msg: Message)
     end
 
     -- Update inventory (unequip previous item of the same type if exists)
-    local inventory = dbAdmin:exec(string.format([[
-        SELECT * FROM Inventory WHERE user_id = %d AND equipped = TRUE AND item_type = "%s";
-    ]], user_id, item.type))
+    -- local inventory = dbAdmin:exec(string.format([[
+    --     SELECT * FROM Inventory WHERE user_id = %d AND equipped = TRUE AND item_type = "%s";
+    -- ]], user_id, item.type))
 
-    if #inventory > 0 then
-        dbAdmin:exec(string.format([[
-            UPDATE Inventory SET equipped = FALSE WHERE id = %d;
-        ]], inventory[1].id))
-    end
+    -- if #inventory > 0 then
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Inventory SET equipped = FALSE WHERE id = %d;
+    --     ]], inventory[1].id))
+    -- end
+    dbAdmin:exec(string.format([[
+        UPDATE Inventory SET equipped = FALSE WHERE user_id = %d AND item_type = "%s";
+    ]], user_id, item.type))
 
     -- Add new item to inventory
     dbAdmin:exec(string.format([[

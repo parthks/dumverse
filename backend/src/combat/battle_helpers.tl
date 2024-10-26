@@ -105,10 +105,17 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         winning_message = "Battle ended. No players left in battle"
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
         shouldEnd = true
-    end
+
+    -- player ran away, only one player left
+    elseif not attacker_id and #battle.players_alive == 1 then
+        -- player ran away
+        winning_message = "Battle ended. Only player left"
+        attacker_id = battle.players_alive[1]
+        BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        shouldEnd = true
 
     -- NPC wins if no players are alive
-    if #battle.players_alive == 0 and #battle.npcs_alive > 0 then
+    elseif #battle.players_alive == 0 and #battle.npcs_alive > 0 then
         npcsWon(battle.npcs_alive)
         -- check if attacker_id is in npcs_alive, in case both players killed themselves
         if not utils.includes(attacker_id, battle.npcs_alive) then
@@ -117,22 +124,21 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         end
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
         shouldEnd = true
-    end
 
     -- NPCs are all dead and only 1 player is alive
-    if #battle.npcs_alive == 0 and #battle.players_alive == 1 then
+    elseif #battle.npcs_alive == 0 and #battle.players_alive == 1 then
         assert(battle.players_alive[1] == attacker_id)
         playerWon(attacker_id)
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
         shouldEnd = true
-    end
 
-    if (#battle.players_alive == 0 and #battle.npcs_alive == 0) then
+    elseif (#battle.players_alive == 0 and #battle.npcs_alive == 0) then
         -- both players and npcs are dead
         winning_message = "Battle ended. Both players and npcs perished"
         BattleHelpers.log(battle_id, timestamp, nil, winning_message)
         shouldEnd = true
     end
+
     if shouldEnd then
         battle.ended = true
         battle.winner = attacker_id
@@ -144,8 +150,11 @@ end
 BattleHelpers.getLatestSuitableOpenBattle = function(player: CombatUserData, level: integer): Battle | nil
     -- all players in same battle should have same defense (level of armor)
     for _, battle in pairs(Battles) do
-        if not battle.ended and battle.level == level and #utils.keys(battle.players) < MAX_PLAYERS_IN_BATTLE and utils.values(battle.players)[1].defense == player.defense then
-            return battle
+        if not battle.ended then
+            print("checking battle " .. battle.id .. " - level " .. battle.level .. " - players " .. #utils.keys(battle.players) .. " - defense " .. utils.values(battle.players)[1].defense .. " - player defense " .. player.defense)
+            if battle.level == level and #utils.keys(battle.players) < MAX_PLAYERS_IN_BATTLE and utils.values(battle.players)[1].defense == player.defense then
+                return battle
+            end
         end
     end
     return nil
@@ -169,45 +178,50 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
         return val ~= npc_id
     end, battle.npcs_alive)
 
+    Battles[battle_id].npcs[npc_id].health = 0
+
     -- player gets npc gold + extra gold
-    battle.players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + npc.gold_reward +
+    Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + npc.gold_reward +
         npc.extra_gold
-    battle.players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + npc.dumz_reward
+        Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + npc.dumz_reward
     -- intentionally not updating the npc gold reward and extra gold, to keep the histroy. ok since npc has been removed from npcs_alive
 
-    BattleHelpers.log(battle.id, timestamp, attacker_id, "has slain " .. npc.name)
-    BattleHelpers.update(battle_id, battle)
+    BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)
+    -- BattleHelpers.update(battle_id, battle)
 end
 
 BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attacker_id: string, timestamp: integer)
-    local battle = BattleHelpers.get(battle_id)
-    battle.players_alive = utils.filter(function(val: string): boolean
+    -- local battle = BattleHelpers.get(battle_id)
+    Battles[battle_id].players_alive = utils.filter(function(val: string): boolean
         return val ~= player_id
-    end, battle.players_alive)
-    BattleHelpers.log(battle.id, timestamp, player_id, "Player has Perished")
+    end, Battles[battle_id].players_alive)
+
+    BattleHelpers.log(battle_id, timestamp, player_id, "Player has Perished")
 
     -- transfer player gold
-    local player = battle.players[player_id]
+    local player = Battles[battle_id].players[player_id]
     -- if attacker_id is a npc, add player gold to npc extra gold
-    if battle.npcs[attacker_id] then
-        battle.npcs[attacker_id].extra_gold = (battle.npcs[attacker_id].extra_gold or 0) + player.gold_balance
+    if Battles[battle_id].npcs[attacker_id] then
+        Battles[battle_id].npcs[attacker_id].extra_gold = (Battles[battle_id].npcs[attacker_id].extra_gold or 0) + player.gold_balance
         -- players dumz gets burned
     else
         -- if attacker_id is a player, give the gold to the other player
-        if battle.players[attacker_id] then
-            battle.players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) +
+        if Battles[battle_id].players[attacker_id] then
+            local attacker_player = Battles[battle_id].players[attacker_id]
+            Battles[battle_id].players[attacker_id].gold_balance = (attacker_player.gold_balance or 0) +
                 player.gold_balance
-            battle.players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) +
+                Battles[battle_id].players[attacker_id].dumz_balance = (attacker_player.dumz_balance or 0) +
                 player.dumz_balance
         end
     end
     -- need to set to 0, in case this player also kills the other player at the same time, so then
     -- the gold and dumz balance is not duplicated
-    battle.players[player_id].gold_balance = 0
-    battle.players[player_id].dumz_balance = 0
+    Battles[battle_id].players[player_id].gold_balance = 0
+    Battles[battle_id].players[player_id].dumz_balance = 0
 
-    BattleHelpers.update(battle_id, battle)
-    player = battle.players[player_id]
+    -- BattleHelpers.update(battle_id, battle)
+    player = Battles[battle_id].players[player_id]
+
     ao.send({
         Target = GAME_PROCESS_ID,
         UserId = tostring(player.id),

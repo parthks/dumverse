@@ -88,7 +88,6 @@ export function PlayerFrame() {
 // Old shit dammmmmm
 // const imageWidth = 1089; // original map width
 // const imageHeight = 611; // original map height
-// // TODO: If name is bigger than input, then truncate it and add ...
 // function LoadUserDetails() {
 //   const { user } = useGameStore();
 //   if (!user) return null;

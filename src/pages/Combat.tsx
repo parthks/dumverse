@@ -305,14 +305,14 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     };
   }, [currentBattle.players, currentBattle.created_at, userId]);
 
-  const attackAudioRef = useRef<HTMLAudioElement>(null);
+  // const attackAudioRef = useRef<HTMLAudioElement>(null);
   const [attackedEnemyId, setAttackedEnemyId] = useState<string | null>(null);
 
   const handleAttack = (enemyId: string) => {
-    if (attackAudioRef.current) {
-      attackAudioRef.current.currentTime = 0; // Reset audio to start
-      attackAudioRef.current.play();
-    }
+    // if (attackAudioRef.current) {
+    //   attackAudioRef.current.currentTime = 0; // Reset audio to start
+    //   attackAudioRef.current.play();
+    // }
     setAttackedEnemyId(enemyId);
     userAttack(enemyId);
     // Reset the attackedEnemyId after the animation duration
@@ -328,10 +328,11 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
     <div>
       <div className="flex gap-4 items-center">
         <div className="grid grid-cols-[1fr_1fr] gap-4 items-start w-[700px]">
-          <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
+          {/* <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} /> */}
 
-          <div className="flex flex-col gap-2 w-[350px] items-center">
+          <div className="relative flex flex-col gap-2 w-[350px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
+            <UserIsAttackedAnimation currentBattle={currentBattle} />
             <ImgButton
               disabled={disableAttackButtons}
               className={"w-40"}
@@ -373,8 +374,8 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
                         alt={"Attack" + entity.name}
                       />
 
-                      {isNPC && <p className="text-white text-lg font-bold text-center">20 seconds till {entity.name} attacks...</p>}
-                      {/* {!isEnemy && <p className="text-white text-lg font-bold text-center">{entity.name} has 20 seconds...</p>} */}
+                      {isNPC && <NPCAttackCountDown currentBattle={currentBattle} entity={entity as Battle["npcs"][string]} />}
+                      {!isNPC && <PlayerAttackCountDown currentBattle={currentBattle} entity={entity as Battle["players"][string]} />}
                     </div>
                   )}
                 </div>
@@ -387,9 +388,97 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   );
 }
 
+function NPCAttackCountDown({ entity, currentBattle }: { entity: Battle["npcs"][string]; currentBattle: Battle }) {
+  const lastAttackTimestamp = currentBattle.last_npc_attack_timestamp[entity.id];
+  const timeTillAttack = lastAttackTimestamp ? 10 - (Date.now() - lastAttackTimestamp) / 1000 : 10;
+  return (
+    <p className="text-white text-lg font-bold text-center">
+      {Math.ceil(timeTillAttack < 0 ? 0 : timeTillAttack)} seconds till {entity.name} attacks...
+    </p>
+  );
+}
+
+function PlayerAttackCountDown({ entity, currentBattle }: { entity: Battle["players"][string]; currentBattle: Battle }) {
+  const userId = useGameStore((state) => state.user!.id).toString();
+  // if current user has attacked, show the time till the other player attacks
+  if (!currentBattle.players_attacked.includes(userId)) {
+    return null;
+  }
+  const lastAttackTimestamp = currentBattle.last_player_attack_timestamp[entity.id];
+  const timeTillAttack = lastAttackTimestamp ? 10 - (Date.now() - lastAttackTimestamp) / 1000 : 10;
+  return (
+    <p className="text-white text-lg font-bold text-center">
+      {entity.name} has {Math.ceil(timeTillAttack < 0 ? 0 : timeTillAttack)} seconds to attack...
+    </p>
+  );
+}
+
+function UserIsAttackedAnimation({ currentBattle }: { currentBattle: Battle }) {
+  const userId = useGameStore((state) => state.user!.id).toString();
+  const [previousBattle, setPreviousBattle] = useState<Battle | null>(null);
+  const [isAttacked, setIsAttacked] = useState(false);
+  const attackAudioRef = useRef<HTMLAudioElement>(null);
+  const [key, setKey] = useState(Math.random());
+
+  useEffect(() => {
+    if (!previousBattle) {
+      setPreviousBattle(currentBattle);
+      return;
+    }
+    const previousDefense = previousBattle.players[userId].defense;
+    const currentDefense = currentBattle.players[userId].defense;
+    const previousHealth = previousBattle.players[userId].health;
+    const currentHealth = currentBattle.players[userId].health;
+    if (previousDefense !== currentDefense || previousHealth !== currentHealth) {
+      setIsAttacked(true);
+      setKey(Math.random()); // Increment the key to restart the GIF
+    }
+    setPreviousBattle(currentBattle);
+  }, [currentBattle, previousBattle]);
+
+  useEffect(() => {
+    if (isAttacked) {
+      if (attackAudioRef.current) {
+        attackAudioRef.current.currentTime = 0; // Reset audio to start
+        attackAudioRef.current.play();
+      }
+      setTimeout(() => {
+        setIsAttacked(false);
+      }, 5000);
+    }
+  }, [isAttacked]);
+
+  // useEffect(() => {
+  //   setIsAttacked(true);
+  //   console.log("isAttaxxckeddd", isAttacked);
+  // }, [isAttacked]);
+
+  return (
+    <>
+      {isAttacked && (
+        <>
+          <audio preload="auto" ref={attackAudioRef} src={SOUNDS.IS_ATTACKED_AUDIO} />
+          <div className="absolute z-10 top-0 left-0 w-full h-[80%] flex items-center justify-center">
+            <img key={key} src={`https://arweave.net/685Qo64yiYdiFtwHbi_HoMQZt-7NtWGFYLrtXJfUHcI?key=${key}`} alt="Attacked Animation" className="max-w-full max-h-full" />
+            {/* <img src="https://arweave.net/Byhqsjqy34GLYipi7RTBF0qaMevJTtwMdBWbFawGOD0" alt="Attack Animation" className="max-w-full max-h-full" /> */}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
 function AttackAnimation() {
+  const attackAudioRef = useRef<HTMLAudioElement>(null);
+  useEffect(() => {
+    if (attackAudioRef.current) {
+      attackAudioRef.current.currentTime = 0; // Reset audio to start
+      attackAudioRef.current.play();
+    }
+  }, []);
   return (
     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+      <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
       <img src="https://arweave.net/Byhqsjqy34GLYipi7RTBF0qaMevJTtwMdBWbFawGOD0" alt="Attack Animation" className="max-w-full max-h-full" />
     </div>
   );
@@ -573,7 +662,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
           const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || "";
           return (
             <div key={index} className="flex text-2xl gap-4 justify-between px-4">
-              <p className="text-white font-bold text-center">{name}:</p>
+              <p className="text-white font-bold text-center">{name ? name + ":" : ""}</p>
               <p className="text-white text-center">
                 {log.message.split(" ").map((word, index) =>
                   word === "Perished" ? (
