@@ -69,7 +69,6 @@ export default function Game() {
       </div>
     );
   // return <Combat />;
-  // return <RestArea />;
   // return <Infirmary />;
   return (
     <div className="game-cursor">
@@ -81,7 +80,10 @@ export default function Game() {
         <Button onClick={() => setGameStatePage(GameStatePages.GAME_MAP)}>Go to Game Map</Button>
         <Button onClick={() => setGameStatePage(GameStatePages.COMBAT)}>Go to Combat</Button>
       </div> */}
-      <QueryClientProvider client={queryClient}>{page}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        {page}
+        {/* <RestArea /> */}
+      </QueryClientProvider>
     </div>
   );
 }
