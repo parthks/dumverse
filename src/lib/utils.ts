@@ -1,4 +1,5 @@
-import { interactivePoints, lammaHeight, lammaWidth } from "@/pages/GameMap";
+// import { interactivePoints } from "@/components/InteractiveMap";
+import { lammaHeight, lammaWidth, interactivePoints } from "@/pages/GameMap";
 import { initialLamaPosition } from "@/store/useGameStore";
 import { GameUser } from "@/types/game";
 import { type ClassValue, clsx } from "clsx";
