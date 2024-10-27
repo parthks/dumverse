@@ -1,14 +1,15 @@
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import ChatWindow from "@/components/chat/Chat";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
 import { IMAGES, SOUNDS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import React from "react";
 import { useState } from "react";
 
-// TODO: add town rest image
 const RestAreaImages = {
   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
   9: "https://arweave.net/F6Xd8uMyN78dh2Nrd9gSVCD0sEPY3BsAgd1PWJCyn4Q",
@@ -143,8 +144,23 @@ export default function RestArea() {
       )}
 
       <div className="relative w-full h-full">
-        <div className="absolute inset-0">
+        <div className={`absolute inset-0`}>
           <img src={RestAreaImages[current_spot as keyof typeof RestAreaImages]} alt="Rest Area Background" className="w-full h-full object-cover" />
+          <div className={`absolute inset-x-0 bottom-0 flex justify-center`}>
+            <div
+              style={{
+                width: current_spot === 27 ? "15vw" : "18vw",
+                height: "60vh",
+                transform: `
+                ${cn(current_spot === 9 && "translateX(3vw)")}
+                ${cn(current_spot === 18 && "translateX(13vw) translateY(4vh)")}
+                ${cn(current_spot === 27 && "translateX(25vw) translateY(-12vh)")}
+                `,
+              }}
+            >
+              <RiveShopKeeper url={"https://arweave.net/rrX4T8R7gZJuh3onSlujy7aeZO8y4ew8Hz_ML_9cE2k"} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

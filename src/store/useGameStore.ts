@@ -1,3 +1,4 @@
+// import { interactivePoints } from "@/components/InteractiveMap";
 import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";

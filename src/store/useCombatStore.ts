@@ -61,7 +61,7 @@ export const useCombatStore = create<CombatState>()(
         const user_id = useGameStore.getState().user?.id;
         if (!battle_id || !user_id) return null;
         set({ loading: true });
-        const resultData = await sendDryRunGameMessage({
+        const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
               name: "Action",
@@ -78,7 +78,11 @@ export const useCombatStore = create<CombatState>()(
           ],
           process: "combat",
         });
-        const battle = resultData.data?.id ? (resultData.data as Battle) : null;
+        const battleMessage = resultData.Messages.find((message) => {
+          const tags = message.Tags;
+          return tags.find((tag: { name: string; value: string }) => tag.name === "Action" && tag.value === "Battle.Data");
+        })?.Data;
+        const battle = battleMessage ? (JSON.parse(battleMessage) as Battle) : null;
         set({ loading: false });
         if (battle) {
           set({ currentBattle: battle });

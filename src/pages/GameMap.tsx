@@ -8,16 +8,45 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
+// export const interactivePoints = [
+//   { x: 82.2, y: 72.8, level: 1 },
+//   { x: 78.6, y: 77.5, level: 2 },
+//   { x: 72.8, y: 79.6, level: 3 },
+//   { x: 66.8, y: 79, level: 4 },
+//   { x: 60.6, y: 72.8, level: 5 },
+//   { x: 53, y: 72.8, level: 6 },
+//   { x: 50.5, y: 66, level: 7 },
+//   { x: 48.3, y: 56.7, level: 8 },
+//   { x: 45.2, y: 52.3, level: 9 },
+//   { x: 55.5, y: 33.8, level: 10 },
+//   { x: 60, y: 31.6, level: 11 },
+//   { x: 71.5, y: 34.1, level: 12 },
+//   { x: 78.8, y: 34, level: 13 },
+//   { x: 85.3, y: 30.9, level: 14 },
+//   { x: 76.8, y: 27.6, level: 15 },
+//   { x: 70, y: 27.6, level: 16 },
+//   { x: 61.7, y: 27.2, level: 17 },
+//   { x: 52.3, y: 30.7, level: 18 },
+//   { x: 43, y: 32.8, level: 19 },
+//   { x: 38, y: 32, level: 20 },
+//   { x: 33, y: 33.4, level: 21 },
+//   { x: 28, y: 33.4, level: 22 },
+//   { x: 22.7, y: 32, level: 23 },
+//   { x: 18, y: 30, level: 24 },
+//   { x: 15.3, y: 26, level: 25 },
+//   { x: 13, y: 20.5, level: 26 },
+//   { x: 9.3, y: 20, level: 27 },
+// ];
 export const interactivePoints = [
   { x: 82.2, y: 72.8, level: 1 },
   { x: 78.6, y: 77.5, level: 2 },
   { x: 72.8, y: 79.6, level: 3 },
   { x: 66.8, y: 79, level: 4 },
   { x: 60.6, y: 72.8, level: 5 },
-  { x: 53, y: 72.8, level: 6 },
+  { x: 53.3, y: 72.8, level: 6 },
   { x: 50.5, y: 66, level: 7 },
-  { x: 48.3, y: 56.7, level: 8 },
-  { x: 44.2, y: 52.3, level: 9 },
+  { x: 47.6, y: 53.8, level: 8 },
+  { x: 45.5, y: 46.3, level: 9 },
   { x: 55.5, y: 33.8, level: 10 },
   { x: 60, y: 31.6, level: 11 },
   { x: 71.5, y: 34.1, level: 12 },
@@ -27,15 +56,15 @@ export const interactivePoints = [
   { x: 70, y: 27.6, level: 16 },
   { x: 61.7, y: 27.2, level: 17 },
   { x: 52.3, y: 30.7, level: 18 },
-  { x: 43, y: 32.8, level: 19 },
-  { x: 38, y: 32, level: 20 },
-  { x: 33, y: 33.4, level: 21 },
-  { x: 28, y: 33.4, level: 22 },
-  { x: 22.7, y: 32, level: 23 },
-  { x: 18, y: 30, level: 24 },
-  { x: 15.3, y: 26, level: 25 },
-  { x: 13, y: 20.5, level: 26 },
-  { x: 9.3, y: 20, level: 27 },
+  { x: 47, y: 33.4, level: 19 },
+  { x: 42.5, y: 33, level: 20 },
+  { x: 37, y: 32.5, level: 21 },
+  { x: 32, y: 33.4, level: 22 },
+  { x: 27, y: 32, level: 23 },
+  { x: 22, y: 30.8, level: 24 },
+  { x: 17.8, y: 30, level: 25 },
+  { x: 14.8, y: 25.4, level: 26 },
+  { x: 10.5, y: 24.5, level: 27 },
 ];
 
 export const lammaWidth = 5;
@@ -141,7 +170,7 @@ const GameMap = () => {
       </div>
       <div className="z-10 absolute bottom-4 left-[800px]">
         {tempCurrentIslandLevel != 0 &&
-          ([9, 18, 27].includes(tempCurrentIslandLevel) ? (
+          (tempCurrentIslandLevel % 9 == 0 ? (
             <ImgButton
               disabled={enterNewAreaLoading}
               onClick={async () => {
@@ -176,7 +205,7 @@ const GameMap = () => {
       <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
       <label>Step Time (in ms)</label>
       <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
-      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} interactivePoints={interactivePoints} onLevelSelect={handleLevelSelect} />
+      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} onLevelSelect={handleLevelSelect} />
     </div>
   );
 };

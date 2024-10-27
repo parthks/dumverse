@@ -1,5 +1,6 @@
 require('utils.globals')
 
+-- Send({Target = ao.id, Action = "Admin.Regenerate", UserId = "1"})
 local function adminRegenerateHandler(msg: Message)
     assert(msg.From == ao.id, "Only the game server can regenerate users")
     local user_id = tonumber(msg.Tags.UserId)

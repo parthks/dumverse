@@ -29,19 +29,19 @@ dbAdmin = dbAdminnn.new(DB)
 -- function(): string
 --     return "continue"
 -- end, function(msg: Message)
---   local user_id = tonumber(msg.Tags.UserId)
---   -- check if user_id is a number
---   if not user_id then
---     print("got new message with no user_id")
---     return
---   end
---   -- check if UserId present in msg and update last_updated_at
---   if user_id then
---     print("updating last_updated_at for user " .. user_id.. " at " .. msg.Timestamp)
---     dbAdmin:exec(string.format([[
---       UPDATE Users SET last_updated_at = %f WHERE id = %f;
---   ]], msg.Timestamp, user_id))
---   end
+  -- local user_id = tonumber(msg.Tags.UserId)
+  -- -- check if user_id is a number
+  -- if not user_id then
+  --   print("got new message with no user_id")
+  --   return
+  -- end
+  -- -- check if UserId present in msg and update last_updated_at
+  -- if user_id then
+  --   print("updating last_updated_at for user " .. user_id.. " at " .. msg.Timestamp)
+  --   dbAdmin:exec(string.format([[
+  --     UPDATE Users SET last_updated_at = %f WHERE id = %f;
+  -- ]], msg.Timestamp, user_id))
+  -- end
 -- end)
 
 -- Load all handlers

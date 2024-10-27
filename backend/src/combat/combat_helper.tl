@@ -130,10 +130,10 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
     return log, defender.health, defender.defense
 end
 
-local function PlayerAttacksNPC(attackingEntity: CombatUserData, defendingEntity: CombatEnemyData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
+local function PlayerAttacksNPC(attackingEntity: CombatUserData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, critical_hit)
+    return SimulateCombat(attacker, defender, timestamp, false)
 end
 
 local function NPCAttacksPlayer(attackingEntity: CombatEnemyData, defendingEntity: CombatUserData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
@@ -142,16 +142,16 @@ local function NPCAttacksPlayer(attackingEntity: CombatEnemyData, defendingEntit
     return SimulateCombat(attacker, defender, timestamp, critical_hit)
 end
 
-local function NPCAttacksNPC(attackingEntity: CombatEnemyData, defendingEntity: CombatEnemyData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
+local function NPCAttacksNPC(attackingEntity: CombatEnemyData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForNPC(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, critical_hit)
+    return SimulateCombat(attacker, defender, timestamp, false)
 end
 
-local function PlayerAttacksPlayer(attackingEntity: CombatUserData, defendingEntity: CombatUserData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
+local function PlayerAttacksPlayer(attackingEntity: CombatUserData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, critical_hit)
+    return SimulateCombat(attacker, defender, timestamp, false)
 end
 
 

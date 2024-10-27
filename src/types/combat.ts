@@ -30,6 +30,7 @@ export type Battle = {
   id: number;
   level: number;
   last_npc_attack_timestamp: Record<string, number>;
+  last_player_attack_timestamp: Record<string, number>;
   players_attacked: string[];
   players_alive: string[];
   npcs_alive: string[];
