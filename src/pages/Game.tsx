@@ -14,6 +14,7 @@ import NFTShop from "./Buildings/NFTShop";
 import Infirmary from "./Buildings/Infirmary";
 import VisitorCenter from "./Buildings/VisitorCenter";
 import HallOfFame from "./Buildings/HallOfFame";
+import Den from "./Buildings/Den";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +63,8 @@ export default function Game() {
   if (GameStatePage === GameStatePages.INFIRMARY) page = <Infirmary />;
   if (GameStatePage === GameStatePages.VISITOR_CENTER) page = <VisitorCenter />;
   if (GameStatePage === GameStatePages.HALL_OF_FAME) page = <HallOfFame />;
+  if (GameStatePage === GameStatePages.DEN) page = <Den/>;
+
   if (!user)
     return (
       <div className="h-screen w-screen bg-cover bg-center" style={{ backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')" }}>

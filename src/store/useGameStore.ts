@@ -22,6 +22,7 @@ export enum GameStatePages {
   HALL_OF_FAME = "HALL_OF_FAME",
   INFIRMARY = "INFIRMARY",
   BAKERY = "BAKERY",
+  DEN="DEN"
 }
 
 export const initialLamaPosition: LamaPosition = {

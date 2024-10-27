@@ -150,6 +150,16 @@ export default function Town() {
                 handleBuildingSelect(GameStatePages.VISITOR_CENTER);
               }}
             />
+             {/* <img
+              src="https://arweave.net/jcrjRLjmbifAPy0nas_hHobjDIdKyMaRNmQjSD0UVvA"
+              alt="Building 9 Den"
+              className="absolute top-[36%] left-[43%] w-[18%] h-auto 
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105"
+              onClick={() => {
+                handleBuildingSelect(GameStatePages.DEN);
+              }}
+            /> */}
           </div>
         </div>
       </div>

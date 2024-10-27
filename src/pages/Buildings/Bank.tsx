@@ -1,18 +1,30 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
-import { SOUNDS } from "@/lib/constants";
+import { SOUNDS, BUILDING_IMAGES } from "@/lib/constants";
 import { sleep } from "@/lib/time";
-import { GAME_PROCESS_ID } from "@/lib/utils";
-import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
+import { GAME_PROCESS_ID, calculatePositionAndSize } from "@/lib/utils";
+import {
+  pollForTransferSuccess,
+  sendAndReceiveGameMessage,
+  sendDryRunGameMessage,
+} from "@/lib/wallet";
 import { useGameStore } from "@/store/useGameStore";
 import { useCallback, useEffect, useState } from "react";
+import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
 
-function QuantityInput({ actionType, onClose }: { actionType: BankActionType; onClose: () => void }) {
-  const { user, bank, deposit, withdraw, bankTransactionLoading } = useGameStore();
+function QuantityInput({
+  actionType,
+  onClose,
+}: {
+  actionType: BankActionType;
+  onClose: () => void;
+}) {
+  const { user, bank, deposit, withdraw, bankTransactionLoading } =
+    useGameStore();
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
   const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
@@ -63,13 +75,26 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
   return (
     <div
       className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-      style={{ backgroundImage: "url('https://arweave.net/PGjj1AvsLyry4Dylp3DK8HLTjatjc90t8nCqaarNlmc')", width: "500px", height: "500px" }}
+      style={{
+        backgroundImage:
+          "url('https://arweave.net/PGjj1AvsLyry4Dylp3DK8HLTjatjc90t8nCqaarNlmc')",
+        width: "500px",
+        height: "500px",
+      }}
     >
       <div className="absolute top-4 right-4">
-        <ImgButton src={"https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"} onClick={onClose} alt={"Exit Quantity Input"} />
+        <ImgButton
+          src={
+            "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
+          }
+          onClick={onClose}
+          alt={"Exit Quantity Input"}
+        />
       </div>
       <div className="flex flex-col items-center w-full gap-4 p-16">
-        <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
+        <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">
+          {title}
+        </h1>
         <Input
           placeholder={`Max allowed: ${max}`}
           aria-label="Amount"
@@ -87,11 +112,18 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
           style={{
             width: "calc(153px * 1.3)",
             height: "calc(37px * 1.3)",
-            backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
+            backgroundImage:
+              "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
             backgroundSize: "100% 100%",
           }}
         />
-        <ImgButton src={"https://arweave.net/y8jNH5_eXoEWAnt-bvaf9ueaNIUVtTCY09C9XjuYDTw"} onClick={handleSubmit} alt={"Confirm Action"} />
+        <ImgButton
+          src={
+            "https://arweave.net/y8jNH5_eXoEWAnt-bvaf9ueaNIUVtTCY09C9XjuYDTw"
+          }
+          onClick={handleSubmit}
+          alt={"Confirm Action"}
+        />
       </div>
     </div>
   );
@@ -143,9 +175,15 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
     });
     console.log("initialResponse", initialResponse, initialResponse.status);
     const result = await pollForTransferSuccess("dumz_token", (messageTags) => {
-      const creditNotice = messageTags.find((tag) => tag.name === "Action" && tag.value === "Credit-Notice");
-      const transferToUser = messageTags.find((tag) => tag.name === "X-UserId" && tag.value === user!.id!.toString());
-      const amountTransferred = messageTags.find((tag) => tag.name === "Quantity" && tag.value === inputValue.toString());
+      const creditNotice = messageTags.find(
+        (tag) => tag.name === "Action" && tag.value === "Credit-Notice"
+      );
+      const transferToUser = messageTags.find(
+        (tag) => tag.name === "X-UserId" && tag.value === user!.id!.toString()
+      );
+      const amountTransferred = messageTags.find(
+        (tag) => tag.name === "Quantity" && tag.value === inputValue.toString()
+      );
       return !!creditNotice && !!transferToUser && !!amountTransferred;
     });
     getBank();
@@ -175,7 +213,12 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
       tags: tags,
       process: "dumz_token",
     });
-    const debitNotice = resultData.Messages?.find((msg) => msg.Tags.some((tag: { name: string; value: string }) => tag.name === "Action" && tag.value === "Debit-Notice"));
+    const debitNotice = resultData.Messages?.find((msg) =>
+      msg.Tags.some(
+        (tag: { name: string; value: string }) =>
+          tag.name === "Action" && tag.value === "Debit-Notice"
+      )
+    );
     if (debitNotice) {
       await sleep(2000); // wait for the credit notice to be processed by game process
       seDumzBalance(dumzBalance! - inputValue);
@@ -189,13 +232,26 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
   return (
     <div
       className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-      style={{ backgroundImage: "url('https://arweave.net/PGjj1AvsLyry4Dylp3DK8HLTjatjc90t8nCqaarNlmc')", width: "500px", height: "500px" }}
+      style={{
+        backgroundImage:
+          "url('https://arweave.net/PGjj1AvsLyry4Dylp3DK8HLTjatjc90t8nCqaarNlmc')",
+        width: "500px",
+        height: "500px",
+      }}
     >
       <div className="absolute top-4 right-4">
-        <ImgButton src={"https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"} onClick={onClose} alt={"Exit Quantity Input"} />
+        <ImgButton
+          src={
+            "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
+          }
+          onClick={onClose}
+          alt={"Exit Quantity Input"}
+        />
       </div>
       <div className="flex flex-col items-center w-full gap-4 p-16">
-        <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
+        <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">
+          {title}
+        </h1>
         <p>Wallet Balance: {dumzBalance !== undefined ? dumzBalance : "--"}</p>
         <p>Bank Balance: {bankDataLoading ? "--" : bankDumz}</p>
         <Input
@@ -215,26 +271,49 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
           style={{
             width: "calc(153px * 1.3)",
             height: "calc(37px * 1.3)",
-            backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
+            backgroundImage:
+              "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
             backgroundSize: "100% 100%",
           }}
         />
         <div className="flex gap-4">
           {/* <ImgButton disabled={txnLoading} src={"https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"} onClick={handleDeposit} alt={"Deposit into Bank"} /> */}
-          <ImgButton disabled={txnLoading} src={"https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"} onClick={handleWithdraw} alt={"Withdraw from Bank"} />
+          <ImgButton
+            disabled={txnLoading}
+            src={
+              "https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"
+            }
+            onClick={handleWithdraw}
+            alt={"Withdraw from Bank"}
+          />
         </div>
       </div>
     </div>
   );
 }
 
-type BankActionType = "deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold" | "transfer-dumz";
+type BankActionType =
+  | "deposit-dumz"
+  | "withdraw-dumz"
+  | "deposit-gold"
+  | "withdraw-gold"
+  | "transfer-dumz";
 function GeneralBankVault({ onExit }: { onExit: () => void }) {
-  const { user, bank, bankDataLoading, deposit, withdraw, bankTransactionLoading } = useGameStore();
+  const {
+    user,
+    bank,
+    bankDataLoading,
+    deposit,
+    withdraw,
+    bankTransactionLoading,
+  } = useGameStore();
   const [actionType, setActionType] = useState<BankActionType | null>(null);
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-    if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
+    if (
+      event.target instanceof SVGElement &&
+      event.target.classList.contains("item")
+    ) {
       const itemType = event.target.getAttribute("item-type");
       if (itemType) {
         setActionType(itemType as BankActionType);
@@ -246,21 +325,53 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {actionType && actionType !== "transfer-dumz" && <QuantityInput actionType={actionType as BankActionType} onClose={() => setActionType(null)} />}
-      {actionType === "transfer-dumz" && <TransferDumz onClose={() => setActionType(null)} />}
+      {actionType && actionType !== "transfer-dumz" && (
+        <QuantityInput
+          actionType={actionType as BankActionType}
+          onClose={() => setActionType(null)}
+        />
+      )}
+      {actionType === "transfer-dumz" && (
+        <TransferDumz onClose={() => setActionType(null)} />
+      )}
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
+        <ImgButton
+          src={
+            "https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"
+          }
+          onClick={onExit}
+          alt={"Exit Bank Vault"}
+        />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/MGpWofSa4O90mDCsdowZXM0KF5ZrJmxe_itNxS-iP_I"} alt="General Bank Vault" className="w-full h-full object-contain" />
+          <img
+            src={
+              "https://arweave.net/MGpWofSa4O90mDCsdowZXM0KF5ZrJmxe_itNxS-iP_I"
+            }
+            alt="General Bank Vault"
+            className="w-full h-full object-contain"
+          />
 
-          <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${imageWidth} ${imageHeight}`}
+            preserveAspectRatio="xMidYMid meet"
+            className="absolute top-0 left-0"
+            onClick={handleClick}
+          >
             {/* dumz */}
-            <text x="50%" y="44.5%" fontSize="100" textAnchor="middle" fill="white">
+            <text
+              x="50%"
+              y="44.5%"
+              fontSize="100"
+              textAnchor="middle"
+              fill="white"
+            >
               {bankDataLoading || !bank ? "--" : `${bank.dumz_amount} $Dumz`}
             </text>
             <image
@@ -270,7 +381,11 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.dumz_balance == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || user?.dumz_balance == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="deposit-dumz"
             />
             <image
@@ -280,7 +395,11 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || !bank || bank.dumz_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || !bank || bank.dumz_amount == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="withdraw-dumz"
             />
             <image
@@ -290,10 +409,18 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading ? "disabled-image" : ""
+              }`}
               item-type="transfer-dumz"
             />
-            <text x="50%" y="67%" fontSize="100" textAnchor="middle" fill="white">
+            <text
+              x="50%"
+              y="67%"
+              fontSize="100"
+              textAnchor="middle"
+              fill="white"
+            >
               {bankDataLoading || !bank ? "--" : `${bank.gold_amount}g`}
             </text>
             {/* gold */}
@@ -304,7 +431,11 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.gold_balance == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || user?.gold_balance == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="deposit-gold"
             />
             <image
@@ -314,7 +445,11 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.gold_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || bank?.gold_amount == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="withdraw-gold"
             />
           </svg>
@@ -325,11 +460,15 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 }
 
 function NftBankVault({ onExit }: { onExit: () => void }) {
-  const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading } = useGameStore();
+  const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading } =
+    useGameStore();
   const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
-    if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
+    if (
+      event.target instanceof SVGElement &&
+      event.target.classList.contains("item")
+    ) {
       const itemType = event.target.getAttribute("item-type");
       if (itemType) {
         if (itemType === "claim-dumz") {
@@ -350,18 +489,43 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
+        <ImgButton
+          src={
+            "https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"
+          }
+          onClick={onExit}
+          alt={"Exit Bank Vault"}
+        />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/ZYGuGEiNCOwDKHDdKRw20g5IpK_nopwVlO0tQcuNHPI"} alt="NFT Bank Vault" className="w-full h-full object-contain" />
+          <img
+            src={
+              "https://arweave.net/ZYGuGEiNCOwDKHDdKRw20g5IpK_nopwVlO0tQcuNHPI"
+            }
+            alt="NFT Bank Vault"
+            className="w-full h-full object-contain"
+          />
 
-          <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${imageWidth} ${imageHeight}`}
+            preserveAspectRatio="xMidYMid meet"
+            className="absolute top-0 left-0"
+            onClick={handleClick}
+          >
             {/* dumz */}
-            <text x="45%" y="50%" fontSize="150" textAnchor="middle" fill="white">
+            <text
+              x="45%"
+              y="50%"
+              fontSize="150"
+              textAnchor="middle"
+              fill="white"
+            >
               {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $Dumz`}
             </text>
             <image
@@ -371,11 +535,21 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2.5 + "%"}
               height={(54 / imageHeight) * 100 * 2.5 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_dumz_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || bank?.nft_dumz_amount == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="claim-dumz"
             />
             {/* gold */}
-            <text x="45%" y="73%" fontSize="150" textAnchor="middle" fill="white">
+            <text
+              x="45%"
+              y="73%"
+              fontSize="150"
+              textAnchor="middle"
+              fill="white"
+            >
               {bankDataLoading ? "--" : `${bank.nft_gold_amount}g`}
             </text>
             <image
@@ -385,7 +559,11 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2.5 + "%"}
               height={(54 / imageHeight) * 100 * 2.5 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_gold_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || bank?.nft_gold_amount == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="claim-gold"
             />
           </svg>
@@ -396,10 +574,20 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 }
 
 export default function BankPage() {
-  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage } = useGameStore();
+  const {
+    bank,
+    getBank,
+    deposit,
+    withdraw,
+    claimAirdrop,
+    bankTransactionLoading,
+    goDirectlyToTownPage,
+  } = useGameStore();
   const [amount, setAmount] = useState(0);
 
-  const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
+  const [vaultSelected, setVaultSelected] = useState<
+    "general-vault" | "nft-vault" | null
+  >(null);
   const backgroundAudio = new Audio(SOUNDS.TOWN_AUDIO_IN_BUILDING);
   const bankEnterAudio = new Audio(SOUNDS.BUILDING_ENTER);
 
@@ -419,13 +607,21 @@ export default function BankPage() {
 
   // if (!bank) return <div>Bank Loading...</div>;
 
-  const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-    if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
-      const itemType = event.target.getAttribute("item-type");
-      if (itemType) {
-        setVaultSelected(itemType as "general-vault" | "nft-vault");
-        // buyItem(itemType);
-      }
+  // const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
+  //   if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
+  //     const itemType = event.target.getAttribute("item-type");
+  //     if (itemType) {
+  //       setVaultSelected(itemType as "general-vault" | "nft-vault");
+  //       // buyItem(itemType);
+  //     }
+  //   }
+  // };
+
+  const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
+    const itemType = event.currentTarget.getAttribute("item-type");
+    if (itemType) {
+      setVaultSelected(itemType as "general-vault" | "nft-vault");
+      // buyItem(itemType);
     }
   };
 
@@ -435,10 +631,12 @@ export default function BankPage() {
     return <NftBankVault onExit={() => setVaultSelected(null)} />;
   }
   return (
-    <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
+    <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton
-          src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"}
+          src={
+            "https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"
+          }
           onClick={async () => {
             bankEnterAudio.play();
             await sleep(1000);
@@ -452,9 +650,79 @@ export default function BankPage() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/Rnbi6jrab33iirlfGRS6up_iPe0TW1Pn-ali8sCG2ME"} alt="Bank Map" className="w-full h-full object-contain" />
+          <img
+            src={
+              "https://arweave.net/Rnbi6jrab33iirlfGRS6up_iPe0TW1Pn-ali8sCG2ME"
+            }
+            alt="Bank Map"
+            className="w-full h-full object-contain"
+          />
+          {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+          {/* bg-[#f0ecd3]       */}
+          <div
+            className="absolute w-full h-full flex flex-col bg-[#f0ecd3] items-center justify-end"
+            style={{
+              ...calculatePositionAndSize(50, 100, 47.6),
+              transform: "translate(-50%, -100%)",
+            }}
+          >
+            <div className="relative w-full  h-full flex flex-col">
+              <div
+                className="absolute "
+                style={{
+                  maxWidth: "18vw",
+                  width: "100%",
+                  top: "9%",
+                  left: "15%",
+                  aspectRatio: 1,
+                }}
+              >
+                <RiveShopKeeper url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
+              </div>
+              <div className="relative ">
+                <img
+                  src="https://arweave.net/308P8DWdOdn9VxdCzn7zplkMJZ9YdClGZuMya5suixM"
+                  alt="Bank Table With Glass"
+                  className="relative w-full"
+                  style={{ height: "auto", top: "0%" }}
+                />
+              </div>
+            </div>
+          </div>
+          {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
-          <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+          {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+          <div
+            className="absolute w-full h-full flex bg-green- flex-col items-center justify-end"
+            style={{
+              ...calculatePositionAndSize(50, 58, 41),
+              transform: "translate(-50%, -100%)",
+            }}
+          >
+            <div className="relative w-full  h-full flex flex-row">
+              <div className="relative">
+                <img
+                  src="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
+                  item-type="general-vault"
+                  className="relative w-full grow-image item cursor-pointer"
+                  style={{ height: "auto", top: "0%", left: "-111%" }}
+                  onClick={handleClick}
+                />
+              </div>
+
+              <div className="relative">
+                <img
+                  src="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
+                  item-type="nft-vault"
+                  className="relative w-full grow-image item cursor-pointer"
+                  style={{ height: "auto", top: "0%", right: "-111%" }}
+                  onClick={handleClick}
+                />
+              </div>
+            </div>
+          </div>
+          {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+          {/* <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             <image
               href="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
               x="3.5%"
@@ -464,9 +732,9 @@ export default function BankPage() {
               preserveAspectRatio="xMidYMid meet"
               className="grow-image item cursor-pointer"
               item-type="general-vault"
-            />
-            {/* TODO: NFT Vault show lock icon if not owned */}
-            <image
+            /> */}
+          {/* TODO: NFT Vault show lock icon if not owned */}
+          {/* <image
               href="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
               x="74.5%"
               y="17%"
@@ -476,7 +744,7 @@ export default function BankPage() {
               className="grow-image item cursor-pointer"
               item-type="nft-vault"
             />
-          </svg>
+          </svg> */}
         </div>
       </div>
     </div>
