@@ -24,6 +24,13 @@ local SPECIAL_ITEMS = {
         type = "ARMOR",
         material = "MAGIC",
     },
+    RARE_NFT = {
+        id = "RARE_NFT",
+        name = "Rare NFT",
+        dumz_price = 2500,
+        nft_address = "y6atUgqwrW7dTD6Z2F_0L_Qybk5K2M-9KrIgYL9WjiQ",
+        type = "NFT",
+    },
 }
 
 local WEAPONS = {
