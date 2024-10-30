@@ -18,6 +18,7 @@ export default function NFTShop() {
   //   sort shop.items on gold_price
   shop?.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
 
+
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
@@ -73,7 +74,7 @@ export default function NFTShop() {
 
 {/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
 
-          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 58, 35), transform: "translate(-50%, -100%)" }}>
+          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 64, 35), transform: "translate(-50%, -100%)" }}>
 
           <div className="relative w-full h-full flex flex-col items-center ">
 
@@ -86,18 +87,19 @@ export default function NFTShop() {
           <div className="relative">
           <img src="https://arweave.net/rKIIgoJfpt_bgEVBVoMyOA9zLUPBuXdUucYVB9_ywdE"  alt="NFT Shop - Shelf with Robe"
                   className="relative w-full"
-                  style={{ height: "auto",top:"-30%",left:"-65%" }}/>
+                  style={{ height: "auto",top:"-37%",left:"-65%" }}/>
           </div>
           <div className="relative">
           <img src="https://arweave.net/KeziMnbKyzhrQC8qUw5TabZ-sitRT0MI9WqcUgZCXlA"  alt="NFT Shop - Shelf with Cat"
                   className="relative w-full"
-                  style={{ height: "auto" ,top:"26%",right:"-65%" }}/>
+                  style={{ height: "auto" ,top:"19%",right:"-65%" }}/>
           </div>
          </div>
 
 
             </div>
           </div>
+          {/* {"items":[{"dumz_price":2500,"type":"NFT","id":"RARE_NFT","name":"Rare NFT","nft_address":"y6atUgqwrW7dTD6Z2F_0L_Qybk5K2M-9KrIgYL9WjiQ"},{"type":"ARMOR","material":"MAGIC","id":"MAGIC_ROBE","defense":5,"name":"Magic Robe","gold_price":12000},{"type":"WEAPON","material":"MAGIC","id":"WAND","damage":5,"name":"Wand","gold_price":15000}]} */}
 
           {/* {shop?.items[0] && (
             <ShopItem

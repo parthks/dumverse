@@ -24,8 +24,8 @@ export const IMAGES = {
 };
 
 export const ITEM_ICONS = {
-  NO_WEAPON: "https://arweave.net/mjLzt15rIbcOE12JAN_iEmPJKvSgT3aardb_UF3mMTo",
-  NO_ARMOR: "https://arweave.net/lHFVFpjVvrrGj5FFPYShCRxDfIPOiHncGfmkxoO-Wks",
+  NO_WEAPON: "https://arweave.net/K7EXDycnrwtN3g2v_kpcwYZnpPmDFua9GdYl-xoH9k4",
+  NO_ARMOR: "https://arweave.net/K9j8WvEJ-7st4ng8z2N3vvyFJH8d2wzlTmB-v4PyeaA",
   WEAPON_1: "https://arweave.net/HeVvlqtkbqR_7uYrAwLG7MiSEwQw5pC4C5ZK8nJ502c",
   ARMOR_1: "https://arweave.net/rrqGSfzfbcG_k0gLqr0VbBc2nO2-KG_gCTKvCI3leFY",
   POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",

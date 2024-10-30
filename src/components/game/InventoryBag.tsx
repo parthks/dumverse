@@ -111,43 +111,46 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
 
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "46%", right: "24%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{data?.gold_balance.toLocaleString()}g</label>
+          <label className="text-sm mr-1 text-white">{data?.gold_balance.toLocaleString()}</label>
           <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-5" />
         </div>
       </div>
 
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "55%", right: "24%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{data?.dumz_balance.toLocaleString()} $Dumz</label>
+          <label className="text-sm mr-1 text-white">{data?.dumz_balance.toLocaleString()}</label>
           <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5" />
         </div>
       </div>
 
       <div className="flex items-center justify-end" style={{ position: "absolute", top: "64%", right: "24%", transform: "translateY(-50%)" }}>
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{0} $Trunk</label>
+          <label className="text-sm mr-1 text-white">{0}</label>
           <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-5" />
         </div>
       </div>
 
-      <div className="flex items-baseline justify-center" style={{ position: "absolute", width: "50%", bottom: "0%", right: "0%", transform: "translate(-50%, -50%)" }}>
+      <div className="flex items-baseline justify-center" style={{ position: "absolute", width: "50%",top:"79%", bottom: "0%", right: "0%", transform: "translate(-50%, -50%)" }}>
         {!combatInventory && (
           <>
-            <div className="flex flex-col items-center mr-5">
+            <div className="flex flex-col items-center mr-5 gap-1">
+              
+              <img src={"https://arweave.net/9Brag6Pwu1j9dmEtGbnKxfjSa7o_hC4PlOdb5IlGHlM"} alt="Energy" className="w-5 " />
               <label className="text-sm text-white">{energy1}</label>
-              <img src={"https://arweave.net/9Brag6Pwu1j9dmEtGbnKxfjSa7o_hC4PlOdb5IlGHlM"} alt="Energy" className="w-5" />
             </div>
 
-            <div className="flex flex-col items-center mr-5">
-              <label className="text-sm text-white mb-2">{food1}</label>
+            <div className="flex flex-col items-center mr-5 gap-1">
+             
               <img src={"https://arweave.net/qB5Hw-HzW1olR_XtD5nh9vTU9UjFmHg8i1l1bYvj21c"} alt="Food" className="w-8" />
+              <label className="text-sm text-white mb-2">{food1}</label>
             </div>
           </>
         )}
 
-        <div className="flex flex-col items-center">
-          <label className="text-sm text-white">{potion1}</label>
+        <div className="flex flex-col items-center gap-1">
+       
           <img src={"https://arweave.net/KdHX03BPfIVtwP7LMGhProTFRB7muBEns_BpsG4zoYQ"} alt="Potion" className="w-5" />
+          <label className="text-sm text-white">{potion1}</label>
         </div>
       </div>
     </div>
@@ -199,7 +202,7 @@ export function UserWeaponItem({
             </div>
           </>
         ) : (
-          <div className="w-full h-full flex justify-center items-center bg-white rounded-sm">
+          <div className={`w-full h-full flex justify-center items-center bg-[#2b3233] ${itemType === "weapon" ? "p-2" : "p-0"} rounded-sm`}>
             <img src={itemType === "weapon" ? ITEM_ICONS.NO_WEAPON : ITEM_ICONS.NO_ARMOR} alt="no weapon" className={noItemSize} />
           </div>
         )}
