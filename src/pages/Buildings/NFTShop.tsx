@@ -8,7 +8,8 @@ import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 
 export default function NFTShop() {
-  const { shop, getShop } = useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
+  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("SPECIAL_ITEMS") });
 
@@ -48,15 +49,17 @@ export default function NFTShop() {
           {/* Group the shop table, sign, and shopkeeper */}
           <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
             {/* Shopkeeper and Table Group */}
-            <div className="relative w-full flex flex-col items-center">
+            <div className="relative w-full h-full flex flex-col items-center">
               {/* Shopkeeper */}
               <div
-                className="relative"
+                className="absolute "
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "65px",
-                  aspectRatio: 1, // Keeps the shopkeeper square
+                  top: "-69%",
+                  aspectRatio: 1,
+                  zIndex:1,
+                 // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
@@ -67,6 +70,78 @@ export default function NFTShop() {
               <img src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
             </div>
           </div>
+
+{/* /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
+
+          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 58, 35), transform: "translate(-50%, -100%)" }}>
+
+          <div className="relative w-full h-full flex flex-col items-center ">
+
+         <div className="relative" style={{width:"50%"}}>
+          <img src="https://arweave.net/3Qwkk4zSxtN91Qs4ZccLlLhVXch-FwL1jIDRX-Vi1k0"  alt="NFT Shop - Shelf with wand"
+                  className="relative w-full"
+                  style={{ height: "auto", top: "0%", }}/>
+         </div>
+         <div className="relative w-full  h-full flex flex-row">
+          <div className="relative">
+          <img src="https://arweave.net/rKIIgoJfpt_bgEVBVoMyOA9zLUPBuXdUucYVB9_ywdE"  alt="NFT Shop - Shelf with Robe"
+                  className="relative w-full"
+                  style={{ height: "auto",top:"-30%",left:"-65%" }}/>
+          </div>
+          <div className="relative">
+          <img src="https://arweave.net/KeziMnbKyzhrQC8qUw5TabZ-sitRT0MI9WqcUgZCXlA"  alt="NFT Shop - Shelf with Cat"
+                  className="relative w-full"
+                  style={{ height: "auto" ,top:"26%",right:"-65%" }}/>
+          </div>
+         </div>
+
+
+            </div>
+          </div>
+
+          {/* {shop?.items[0] && (
+            <ShopItem
+              handleClick={async () => {
+                await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
+                shopBuyItemAudio.play();
+              }}
+              position={{
+                x: 35,
+                y: 40,
+              }}
+              itemSize={65}
+              item={shop.items[0]}
+            />
+          )}
+          {shop?.items[1] && (
+            <ShopItem
+              handleClick={async () => {
+                await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
+                shopBuyItemAudio.play();
+              }}
+              position={{
+                x: 65,
+                y: 40,
+              }}
+              itemSize={60}
+              item={shop.items[1]}
+            />
+          )}
+           {shop?.items[2] && (
+            <ShopItem
+              handleClick={async () => {
+                await buyItem(shop.items[2], shop.items[2]?.gold_price ? "GOLD" : "DUMZ");
+                shopBuyItemAudio.play();
+              }}
+              position={{
+                x: 80,
+                y: 60,
+              }}
+              itemSize={60}
+              item={shop.items[2]}
+            />
+          )} */}
+          
           {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 50), transform: "translate(-50%, -100%)" }}>
             <img src="https://arweave.net/f1jPz7nKfZyBs58BP7AJwu9lKqk1hFCDlf0zlrJ1Iv0" alt="Shop Table" className="absolute bottom-0" style={{ width: "100%", height: "auto" }} />
             <img
