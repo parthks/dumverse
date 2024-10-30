@@ -24,6 +24,13 @@ local function isValidSpotToMoveTo(currentSpot: integer, targetSpot: integer): b
         return true
     end
 
+    if currentSpot == 0 and targetSpot == 28 then
+        return true
+    end
+    if currentSpot == 0 and targetSpot == 55 then
+        return true
+    end
+
     local nextSpot = currentSpot + 1
     local previousSpot = currentSpot - 1
     local nextNextSpot = currentSpot + 2
@@ -128,26 +135,31 @@ local function enterNewCombatHandler(msg: Message)
     -- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
     local function getRandomEnemyIndex(level: integer): integer
         local enemy_index: integer;
-        if level <= 8 then
+        if level <= 27 then
             -- Easy: enemies 1-5
             enemy_index = math.random(1, 5)
-        elseif level <= 17 then
+        elseif level <= 55 then
             -- Medium: enemies 6-9
             enemy_index = math.random(6, 9)
-        elseif level <= 25 then
+        elseif level <= 80 then
             -- Hard: enemies 10-12
             enemy_index = math.random(10, 12)
         else
-            -- Boss: enemy 13 (for level 26+)
+            -- Boss: enemy 13 (for level 80+)
             enemy_index = 13
         end
         return enemy_index
     end
      
     local enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
-    local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
-    if utils.includes(combat_level, doubleEnemies) then
-        table.insert(enemies, constants.ENEMIES[getRandomEnemyIndex(combat_level)])
+    -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
+
+    -- if utils.includes(combat_level, doubleEnemies) then
+    if combat_level > 5 then
+        -- double the enemies randomly
+        if math.random(1, 2) == 1 then
+            table.insert(enemies, constants.ENEMIES[getRandomEnemyIndex(combat_level)])
+        end
     end
 
     assert(enemies, "No enemies found for combat level: " .. combat_level)

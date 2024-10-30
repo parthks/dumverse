@@ -22,6 +22,23 @@ local function setCurrentIslandHandler(msg: Message)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
+-- local function setCurrentLocationHandler(msg: Message)
+--     local user_id = tonumber(msg.Tags.UserId)
+--     local location_level = tonumber(msg.Tags.Level)
+
+--     -- check if user exists
+--     helpers.CheckUserExists(user_id, msg.From)
+
+--     assert(location_level, "Location level is required")
+--     assert(location_level == 0 or location_level == 28 or location_level == 55, "Can only travel to locations 28 or 55")
+
+--     dbAdmin:exec(string.format([[
+--         UPDATE Users SET current_spot = %f WHERE id = %f;
+--     ]], location_level, user_id))
+
+--     ao.send({ Target = msg.From, Status = "Success" })
+-- end
+
 local function addNewUserHandler(msg: Message)
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
@@ -244,6 +261,7 @@ end
 
 -- Add handlers
 Handlers.add("Users.SetCurrentIsland", Handlers.utils.hasMatchingTag('Action', 'SetCurrentIsland'), setCurrentIslandHandler)
+-- Handlers.add("Users.SetCurrentLocation", Handlers.utils.hasMatchingTag('Action', 'Users.SetCurrentLocation'), setCurrentLocationHandler)
 Handlers.add("Users.AddNewUser", Handlers.utils.hasMatchingTag('Action', 'Users.AddNewUser'), addNewUserHandler)
 Handlers.add("User.UserProfiles", Handlers.utils.hasMatchingTag('Action', 'User.UserProfiles'), userProfilesHandler)
 Handlers.add("User.Info", Handlers.utils.hasMatchingTag('Action', 'User.Info'), userInfoHandler)

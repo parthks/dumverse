@@ -1,8 +1,7 @@
 // import { interactivePoints } from "@/components/InteractiveMap";
 import { REST_SPOTS } from "@/lib/constants";
-import { getCurrentLamaPosition } from "@/lib/utils";
+import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { interactivePoints } from "@/pages/GameMap";
 import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -23,14 +22,8 @@ export enum GameStatePages {
   HALL_OF_FAME = "HALL_OF_FAME",
   INFIRMARY = "INFIRMARY",
   BAKERY = "BAKERY",
-  DEN="DEN"
+  DEN = "DEN",
 }
-
-export const initialLamaPosition: LamaPosition = {
-  x: 81,
-  y: 60,
-  src: "STAND_LEFT",
-};
 
 interface GameState {
   GameStatePage: GameStatePages | null;
@@ -56,6 +49,7 @@ interface GameState {
   consumeItem: (inventoryId: number) => Promise<void>;
   currentIslandLevel: number;
   setCurrentIslandLevel: (level: number) => void;
+  // travelToLocation: (level: number) => Promise<void>;
   lamaPosition: LamaPosition;
   setLamaPosition: (position: LamaPosition) => void;
   goDirectlyToTownPage: () => void;
@@ -248,10 +242,20 @@ export const useGameStore = create<GameState>()(
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {
-        const point = interactivePoints.find((point) => point.level == level) || initialLamaPosition;
+        const point = getInteractivePoints(level).find((point) => point.level == level) || getInitialLamaPosition();
         set({ currentIslandLevel: level, lamaPosition: { ...point, src: level == 0 ? "STAND_LEFT" : get().lamaPosition.src } });
       },
-      lamaPosition: initialLamaPosition,
+      // travelToLocation: async (level) => {
+      //   const resultData = await sendAndReceiveGameMessage({
+      //     tags: [
+      //       { name: "Action", value: "Users.SetCurrentLocation" },
+      //       { name: "UserId", value: get().user?.id.toString()! },
+      //       { name: "Level", value: level.toString() },
+      //     ],
+      //   });
+      //   await get().refreshUserData();
+      // },
+      lamaPosition: getInitialLamaPosition(),
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN, shop: null }),
       goToTown: async (playerDead = false) => {
@@ -298,7 +302,7 @@ export const useGameStore = create<GameState>()(
       goToGameMap: async (resetPosition = false) => {
         set({ GameStatePage: GameStatePages.GAME_MAP });
         if (resetPosition) {
-          set({ lamaPosition: initialLamaPosition, currentIslandLevel: 0 });
+          set({ lamaPosition: getInitialLamaPosition(), currentIslandLevel: 0 });
         }
       },
       regenerateEnergy: async () => {

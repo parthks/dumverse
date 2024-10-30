@@ -1,3 +1,5 @@
+import { LamaPosition } from "@/types/game";
+
 export const REST_SPOTS = [0, 9, 18, 27];
 
 export const BUILDING_IMAGES = {
@@ -88,3 +90,99 @@ export const LAMA_IMAGE = {
   WALKING_RIGHT: "https://arweave.net/MnL26j3J-OgeAlb3T-6AHw0LhemJS2xbqbHjAROJLdQ",
   WALKING_LEFT: "https://arweave.net/V-Fia6R8Ee6dmvp9UeLrBtw8qqZqSzyenc1lZUV8BzI",
 };
+
+export const lammaWidth = 5;
+export const lammaHeight = 8.2;
+
+// Map 1
+export const interactivePointsMap1 = [
+  { x: 82.2, y: 72.8, level: 1 },
+  { x: 78.6, y: 77.5, level: 2 },
+  { x: 72.8, y: 79.6, level: 3 },
+  { x: 66.8, y: 79, level: 4 },
+  { x: 60.6, y: 72.8, level: 5 },
+  { x: 53.3, y: 72.8, level: 6 },
+  { x: 50.5, y: 66, level: 7 },
+  { x: 47.6, y: 53.8, level: 8 },
+  { x: 45.5, y: 46.3, level: 9 },
+  { x: 55.5, y: 33.8, level: 10 },
+  { x: 60, y: 31.6, level: 11 },
+  { x: 71.5, y: 34.1, level: 12 },
+  { x: 78.8, y: 34, level: 13 },
+  { x: 85.3, y: 30.9, level: 14 },
+  { x: 76.8, y: 27.6, level: 15 },
+  { x: 70, y: 27.6, level: 16 },
+  { x: 61.7, y: 27.2, level: 17 },
+  { x: 52.3, y: 30.7, level: 18 },
+  { x: 47, y: 33.4, level: 19 },
+  { x: 42.5, y: 33, level: 20 },
+  { x: 37, y: 32.5, level: 21 },
+  { x: 32, y: 33.4, level: 22 },
+  { x: 27, y: 32, level: 23 },
+  { x: 22, y: 30.8, level: 24 },
+  { x: 17.8, y: 30, level: 25 },
+  { x: 14.8, y: 25.4, level: 26 },
+  { x: 10.5, y: 24.5, level: 27 },
+];
+
+// Map 2
+export const interactivePointsMap2 = [
+  { x: 90.2, y: 54.8, level: 28 },
+  { x: 77, y: 66, level: 29 },
+  { x: 54, y: 64.6, level: 30 },
+  { x: 33, y: 65, level: 31 },
+  { x: 17, y: 59, level: 32 },
+  { x: 24.5, y: 52.4, level: 33 },
+  { x: 55, y: 53, level: 34 },
+  { x: 76, y: 50, level: 35 },
+  { x: 87, y: 46, level: 36 },
+  { x: 85, y: 33, level: 37 },
+  { x: 72, y: 35, level: 38 },
+  { x: 62, y: 37, level: 39 },
+  { x: 52, y: 38, level: 40 },
+  { x: 41, y: 38.3, level: 41 },
+  { x: 35, y: 30, level: 42 },
+  { x: 50.5, y: 27, level: 43 },
+  { x: 76, y: 27, level: 44 },
+  { x: 84, y: 26.8, level: 45 },
+  { x: 79, y: 19.2, level: 46 },
+  { x: 69, y: 18.5, level: 47 },
+  { x: 60, y: 17.5, level: 48 },
+  { x: 50, y: 18.5, level: 49 },
+  { x: 40, y: 20, level: 50 },
+  { x: 32, y: 22, level: 51 },
+  { x: 24, y: 24, level: 52 },
+  { x: 17.7, y: 31, level: 53 },
+  { x: 14, y: 39, level: 54 },
+];
+
+// Map 3
+export const interactivePointsMap3 = [
+  { x: 90.2, y: 70, level: 55 },
+  { x: 77, y: 69, level: 56 },
+  { x: 67, y: 69, level: 57 },
+  { x: 57, y: 69, level: 58 },
+  { x: 47, y: 69, level: 59 },
+  { x: 37, y: 69, level: 60 },
+  { x: 27, y: 69, level: 61 },
+  { x: 15, y: 68, level: 62 },
+  { x: 8, y: 61, level: 63 },
+  { x: 13, y: 47, level: 64 },
+  { x: 23, y: 44, level: 65 },
+  { x: 33, y: 44, level: 66 },
+  { x: 43, y: 43, level: 67 },
+  { x: 53, y: 43, level: 68 },
+  { x: 63, y: 42, level: 69 },
+  { x: 73, y: 41, level: 70 },
+  { x: 80, y: 37, level: 71 },
+  { x: 87, y: 34, level: 72 },
+  { x: 84, y: 25, level: 73 },
+  { x: 79, y: 19, level: 74 },
+  { x: 72, y: 17.5, level: 75 },
+  { x: 64, y: 18, level: 76 },
+  { x: 56.5, y: 18, level: 77 },
+  { x: 48, y: 18, level: 78 },
+  { x: 40, y: 18, level: 79 },
+  { x: 33, y: 18, level: 80 },
+  { x: 22, y: 20, level: 81 },
+];

@@ -49,7 +49,7 @@ export async function sendDryRunGameMessage({ tags, process = "game" }: { tags: 
 function handleResultData(resultData: MessageResult): MyMessageResult {
   const newResultData = { ...resultData, data: {}, status: undefined } as MyMessageResult;
 
-  if (resultData.Messages.length > 0) {
+  if (resultData.Messages?.length > 0) {
     const message = resultData.Messages[0];
     const tags = message.Tags;
     const status = tags.find((tag: { name: string; value: string }) => tag.name === "Status")?.value;

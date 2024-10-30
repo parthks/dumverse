@@ -2,13 +2,14 @@ import { PlayerFrame } from "@/components/game/PlayerFrame";
 import QuestBook from "@/components/game/QuestBook";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
-import { SOUNDS } from "@/lib/constants";
+import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
+import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
-// export const interactivePoints = [
+// export const get = [
 //   { x: 82.2, y: 72.8, level: 1 },
 //   { x: 78.6, y: 77.5, level: 2 },
 //   { x: 72.8, y: 79.6, level: 3 },
@@ -37,38 +38,35 @@ import { useEffect, useState } from "react";
 //   { x: 13, y: 20.5, level: 26 },
 //   { x: 9.3, y: 20, level: 27 },
 // ];
-export const interactivePoints = [
-  { x: 82.2, y: 72.8, level: 1 },
-  { x: 78.6, y: 77.5, level: 2 },
-  { x: 72.8, y: 79.6, level: 3 },
-  { x: 66.8, y: 79, level: 4 },
-  { x: 60.6, y: 72.8, level: 5 },
-  { x: 53.3, y: 72.8, level: 6 },
-  { x: 50.5, y: 66, level: 7 },
-  { x: 47.6, y: 53.8, level: 8 },
-  { x: 45.5, y: 46.3, level: 9 },
-  { x: 55.5, y: 33.8, level: 10 },
-  { x: 60, y: 31.6, level: 11 },
-  { x: 71.5, y: 34.1, level: 12 },
-  { x: 78.8, y: 34, level: 13 },
-  { x: 85.3, y: 30.9, level: 14 },
-  { x: 76.8, y: 27.6, level: 15 },
-  { x: 70, y: 27.6, level: 16 },
-  { x: 61.7, y: 27.2, level: 17 },
-  { x: 52.3, y: 30.7, level: 18 },
-  { x: 47, y: 33.4, level: 19 },
-  { x: 42.5, y: 33, level: 20 },
-  { x: 37, y: 32.5, level: 21 },
-  { x: 32, y: 33.4, level: 22 },
-  { x: 27, y: 32, level: 23 },
-  { x: 22, y: 30.8, level: 24 },
-  { x: 17.8, y: 30, level: 25 },
-  { x: 14.8, y: 25.4, level: 26 },
-  { x: 10.5, y: 24.5, level: 27 },
-];
-
-export const lammaWidth = 5;
-export const lammaHeight = 8.2;
+// export const get = [
+//   { x: 82.2, y: 72.8, level: 1 },
+//   { x: 78.6, y: 77.5, level: 2 },
+//   { x: 72.8, y: 79.6, level: 3 },
+//   { x: 66.8, y: 79, level: 4 },
+//   { x: 60.6, y: 72.8, level: 5 },
+//   { x: 53.3, y: 72.8, level: 6 },
+//   { x: 50.5, y: 66, level: 7 },
+//   { x: 47.6, y: 53.8, level: 8 },
+//   { x: 45.5, y: 46.3, level: 9 },
+//   { x: 55.5, y: 33.8, level: 10 },
+//   { x: 60, y: 31.6, level: 11 },
+//   { x: 71.5, y: 34.1, level: 12 },
+//   { x: 78.8, y: 34, level: 13 },
+//   { x: 85.3, y: 30.9, level: 14 },
+//   { x: 76.8, y: 27.6, level: 15 },
+//   { x: 70, y: 27.6, level: 16 },
+//   { x: 61.7, y: 27.2, level: 17 },
+//   { x: 52.3, y: 30.7, level: 18 },
+//   { x: 47, y: 33.4, level: 19 },
+//   { x: 42.5, y: 33, level: 20 },
+//   { x: 37, y: 32.5, level: 21 },
+//   { x: 32, y: 33.4, level: 22 },
+//   { x: 27, y: 32, level: 23 },
+//   { x: 22, y: 30.8, level: 24 },
+//   { x: 17.8, y: 30, level: 25 },
+//   { x: 14.8, y: 25.4, level: 26 },
+//   { x: 10.5, y: 24.5, level: 27 },
+// ];
 
 const GameMap = () => {
   const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, user, questBookOpen } = useGameStore();
@@ -136,6 +134,7 @@ const GameMap = () => {
   }, [path, currentPathIndex]);
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
+    const interactivePoints = getInteractivePoints(currentIslandLevel);
     const currentIndex = fromStart || currentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === currentIslandLevel);
     const targetIndex = interactivePoints.findIndex((point) => point.level === level);
 
@@ -169,36 +168,79 @@ const GameMap = () => {
         <PlayerFrame />
       </div>
       <div className="z-10 absolute bottom-4 left-[800px]">
-        {tempCurrentIslandLevel != 0 &&
-          (tempCurrentIslandLevel % 9 == 0 ? (
-            <ImgButton
-              disabled={enterNewAreaLoading}
-              onClick={async () => {
-                setEnterNewAreaLoading(true);
-                await goToRestArea();
-                setEnterNewAreaLoading(false);
-              }}
-              className="shrink-0 mb-8"
-              alt="Enter Rest Area"
-              src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
-            />
-          ) : (
-            <ImgButton
-              disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
-              src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
-              onClick={async () => {
-                setEnterNewAreaLoading(true);
-                const resultData = await enterNewBattle(tempCurrentIslandLevel);
-                console.log("resultData", resultData);
-                if (resultData.status == "Success") {
-                  setGameStatePage(GameStatePages.COMBAT);
-                }
-                setEnterNewAreaLoading(false);
-              }}
-              className="shrink-0 mb-8"
-              alt={"Enter Combat"}
-            />
-          ))}
+        {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 ? (
+          <ImgButton
+            disabled={enterNewAreaLoading}
+            onClick={async () => {
+              setEnterNewAreaLoading(true);
+              await goToRestArea();
+              setEnterNewAreaLoading(false);
+            }}
+            className="shrink-0 mb-8"
+            alt="Enter Rest Area"
+            src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
+          />
+        ) : (
+          <ImgButton
+            disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
+            src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
+            onClick={async () => {
+              setEnterNewAreaLoading(true);
+              const resultData = await enterNewBattle(tempCurrentIslandLevel);
+              console.log("resultData", resultData);
+              if (resultData.status == "Success") {
+                setGameStatePage(GameStatePages.COMBAT);
+              }
+              setEnterNewAreaLoading(false);
+            }}
+            className="shrink-0 mb-8"
+            alt={"Enter Combat"}
+          />
+        )}
+      </div>
+      <div className="z-10 absolute bottom-4 right-4 flex gap-2">
+        <button
+          className="bg-white text-black px-2 py-1 rounded-md"
+          onClick={async () => {
+            // await travelToLocation(0);
+            setTempCurrentIslandLevel(0);
+            setTempLamaPosition({
+              x: interactivePointsMap1[0].x - lammaWidth / 2,
+              y: interactivePointsMap1[0].y - lammaHeight,
+              src: "STAND_LEFT",
+            });
+          }}
+        >
+          Map 1
+        </button>
+        <button
+          className="bg-white text-black px-2 py-1 rounded-md"
+          onClick={async () => {
+            // await travelToLocation(28);
+            setTempCurrentIslandLevel(28);
+            setTempLamaPosition({
+              x: interactivePointsMap2[0].x - lammaWidth / 2,
+              y: interactivePointsMap2[0].y - lammaHeight,
+              src: "STAND_LEFT",
+            });
+          }}
+        >
+          Map 2
+        </button>
+        <button
+          className="bg-white text-black px-2 py-1 rounded-md"
+          onClick={async () => {
+            // await travelToLocation(55);
+            setTempCurrentIslandLevel(55);
+            setTempLamaPosition({
+              x: interactivePointsMap3[0].x - lammaWidth / 2,
+              y: interactivePointsMap3[0].y - lammaHeight,
+              src: "STAND_LEFT",
+            });
+          }}
+        >
+          Map 3
+        </button>
       </div>
       {/* <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
       <label>Step Distance (% of map width between 0-1)</label>
