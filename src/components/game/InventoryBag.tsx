@@ -189,17 +189,9 @@ export function UserWeaponItem({
       >
         {item ? (
           <>
-            <img
-              src={healthPercentage && healthPercentage > 50 ? GREEN_BACKGROUND_IMAGE : healthPercentage && healthPercentage > 10 ? YELLOW_BACKGROUND_IMAGE : RED_BACKGROUND_IMAGE}
-              alt="weapon background"
-              className="absolute w-full h-full"
-            />
-            <div className="absolute inset-0 flex flex-col items-center">
-              <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`${withItemSize}`} />
-              <p className="text-white text-sm">
-                {item.item_health}/{item.total_item_health}
-              </p>
-            </div>
+           <div className={`w-full h-full flex justify-center items-center bg-[#2b3233] ${itemType === "weapon" ? "p-2" : "p-0"} rounded-sm`}>
+            <img src={itemType === "weapon" ? ITEM_ICONS.NO_WEAPON : ITEM_ICONS.NO_ARMOR} alt="no weapon" className={noItemSize} />
+          </div>
           </>
         ) : (
           <div className={`w-full h-full flex justify-center items-center bg-[#2b3233] ${itemType === "weapon" ? "p-2" : "p-0"} rounded-sm`}>
