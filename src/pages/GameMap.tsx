@@ -181,7 +181,7 @@ const GameMap = () => {
 
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center overflow-hidden"
+      className="h-screen w-screen bg-cover bg-center overflow-hidden relative" 
       style={{
         backgroundImage:
           "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
