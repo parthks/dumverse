@@ -212,7 +212,6 @@ export default function NFTShop() {
               </div>
             </div>
           </div>
-          {/* {"items":[{"dumz_price":2500,"type":"NFT","id":"RARE_NFT","name":"Rare NFT","nft_address":"y6atUgqwrW7dTD6Z2F_0L_Qybk5K2M-9KrIgYL9WjiQ"},{"type":"ARMOR","material":"MAGIC","id":"MAGIC_ROBE","defense":5,"name":"Magic Robe","gold_price":12000},{"type":"WEAPON","material":"MAGIC","id":"WAND","damage":5,"name":"Wand","gold_price":15000}]} */}
 
           {/* {shop?.items[0] && (
             <ShopItem
