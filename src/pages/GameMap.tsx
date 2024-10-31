@@ -306,13 +306,13 @@ const GameMap = () => {
         className="z-10 absolute"
         style={{
           width: "8%",
-          bottom: "0",
+          bottom: "2%",
           right: "7%",
-          transform: "translateY(10%)",
+        
         }}
       >
         <img
-          src="https://arweave.net/1vm2P0tny4AkvCivE2nOUpbHkAiLU-J14jvMLO9Mxcs"
+          src="https://arweave.net/SNMBnykzlRSstUwY4itORYtuLTuztI_1yrnEWbqVprs"
           alt="Boat and Dock"
           className="w-full"
         />
