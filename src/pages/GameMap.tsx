@@ -181,7 +181,7 @@ const GameMap = () => {
 
   return (
     <div
-      className="h-screen w-screen bg-cover bg-center overflow-hidden relative" 
+      className="h-screen w-screen bg-cover bg-center overflow-hidden relative"
       style={{
         backgroundImage:
           "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
@@ -242,7 +242,7 @@ const GameMap = () => {
           />
         )}
       </div>
-      <div className="z-10 absolute bottom-4 right-4 flex gap-2">
+      <div className="z-10 absolute bottom-2 right-36 flex gap-2">
         {/* <button
           className="bg-white text-black px-2 py-1 rounded-md"
           onClick={async () => {
@@ -302,21 +302,25 @@ const GameMap = () => {
           />
         )}
       </div>
-      <div
-        className="z-10 absolute"
-        style={{
-          width: "8%",
-          bottom: "2%",
-          right: "7%",
-        
-        }}
-      >
-        <img
-          src="https://arweave.net/SNMBnykzlRSstUwY4itORYtuLTuztI_1yrnEWbqVprs"
-          alt="Boat and Dock"
-          className="w-full"
-        />
-      </div>
+      {tempCurrentIslandLevel == 0 ? (
+        <div
+          className="z-10 absolute"
+          style={{
+            width: "3%",
+            bottom: "5.5%",
+            right: "11%",
+          }}
+        >
+          <img
+            src="https://arweave.net/dB07kjfdIJFICANzB7nkt2W8W2FoO4TbFnAVTHeepzw"
+            alt="Boat and Dock"
+            className="w-full"
+          />
+        </div>
+      ) : (
+        <></>
+      )}
+
       {/* <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
       <label>Step Distance (% of map width between 0-1)</label>
       <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
