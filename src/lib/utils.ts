@@ -5,8 +5,8 @@ import { twMerge } from "tailwind-merge";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "./constants";
 
 export const GAME_PROCESS_ID = "_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA"; //"EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc";
-export const COMBAT_PROCESS_ID = "BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU"; //TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
-export const CHAT_PROCESS_ID = "uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"; //"BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU"; //"tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
+export const COMBAT_PROCESS_ID = "B3OVMP1sY_wA_nh7YGhRtsXsHP2NB9zacYAGlix6Ink"; // BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU //TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
+export const CHAT_PROCESS_ID = "uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"; //"tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
 export const DUMZ_TOKEN_PROCESS_ID = "mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk";
 
 export function cn(...inputs: ClassValue[]) {

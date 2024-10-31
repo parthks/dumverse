@@ -29,7 +29,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
       // const buttonType = event.target.getAttribute("button-type");
       if (level) {
         if (isValidSpotToMoveTo(currentIslandLevel, parseInt(level))) {
-          console.log("level", level);
           onLevelSelect(parseInt(level));
         }
       }
@@ -37,7 +36,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
   };
 
   const currentMapImage = () => {
-    console.log("tempCurrentIslandLevel", tempCurrentIslandLevel);
     if (tempCurrentIslandLevel <= 27) return "https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I";
     if (tempCurrentIslandLevel <= 54) return "https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI";
     return "https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE";
