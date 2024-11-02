@@ -75,6 +75,8 @@ import { useEffect, useState } from "react";
 //   { x: 10.5, y: 24.5, level: 27 },
 // ];
 
+
+
 const GameMap = () => {
   const {
     goToTown,
@@ -100,6 +102,8 @@ const GameMap = () => {
   const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+
+  
 
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
@@ -304,7 +308,7 @@ const GameMap = () => {
           />
         )}
       </div>
-      {tempCurrentIslandLevel == 0 ? (
+      {/* {tempCurrentIslandLevel == 0 ? (
         <div
           className="z-10 absolute"
           style={{
@@ -321,7 +325,7 @@ const GameMap = () => {
         </div>
       ) : (
         <></>
-      )}
+      )} */}
 
       {/* <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
       <label>Step Distance (% of map width between 0-1)</label>

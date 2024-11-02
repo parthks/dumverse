@@ -2,7 +2,7 @@
 import { GameUser, LamaPosition } from "@/types/game";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "./constants";
+import { interactivePointsMap1,interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "./constants";
 
 export const GAME_PROCESS_ID = "_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA"; //"EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc";
 export const COMBAT_PROCESS_ID = "B3OVMP1sY_wA_nh7YGhRtsXsHP2NB9zacYAGlix6Ink"; // BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU //TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
