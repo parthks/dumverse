@@ -285,15 +285,17 @@ const GameMap = () => {
         >
           Map 3
         </button> */}
-
-        <ImgButton
-          src={
-            "https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"
-          }
-          onClick={() => setIsPopupOpen(true)}
-          alt={"Set Sail"}
-        />
-
+        {tempCurrentIslandLevel == 0 ? (
+          <ImgButton
+            src={
+              "https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"
+            }
+            onClick={() => setIsPopupOpen(true)}
+            alt={"Set Sail"}
+          />
+        ) : (
+          <></>
+        )}
         {isPopupOpen && (
           <Popup
             onClose={() => setIsPopupOpen(false)}
