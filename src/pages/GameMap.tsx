@@ -289,7 +289,7 @@ const GameMap = () => {
         >
           Map 3
         </button> */}
-        {tempCurrentIslandLevel == 0 ? (
+        {tempCurrentIslandLevel <= 27 ? (
           <ImgButton
             src={
               "https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"

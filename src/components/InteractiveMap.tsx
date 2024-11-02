@@ -95,7 +95,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
         
         <img src={currentMapImage()} alt="Game Map" className="w-full h-full object-contain" />
-        {tempCurrentIslandLevel == 0? (
+        {tempCurrentIslandLevel <= 27? (
         <div
           className="absolute"
           style={{
