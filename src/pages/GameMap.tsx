@@ -308,7 +308,7 @@ const GameMap = () => {
           />
         )}
       </div>
-      {/* {tempCurrentIslandLevel == 0 ? (
+      {/* {tempCurrentIslandLevel <= 27 ? (
         <div
           className="z-10 absolute"
           style={{
