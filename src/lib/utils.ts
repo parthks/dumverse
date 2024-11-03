@@ -30,7 +30,7 @@ export function getInteractivePoints(currentSpot: number) {
 
 export function getInitialLamaPosition(): LamaPosition {
   return {
-    x: 81,
+    x: 81.5, //81
     y: 60,
     src: "STAND_LEFT",
   };

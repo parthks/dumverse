@@ -91,7 +91,7 @@ export const LAMA_IMAGE = {
   WALKING_LEFT: "https://arweave.net/V-Fia6R8Ee6dmvp9UeLrBtw8qqZqSzyenc1lZUV8BzI",
 };
 
-export const lammaWidth = 5;
+export const lammaWidth = 4;   //5
 export const lammaHeight = 8.2;
 
 // Map 1

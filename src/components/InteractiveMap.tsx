@@ -1,9 +1,8 @@
 import { LAMA_IMAGE } from "@/lib/constants";
-import { cn,getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
+import { cn, getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
 import React from "react";
-
 
 // import {
 //   interactivePointsMap1,
@@ -67,11 +66,18 @@ interface InteractiveMapProps {
   tempCurrentIslandLevel: number;
 }
 
-const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel, lamaPosition, onLevelSelect }) => {
+const InteractiveMap: React.FC<InteractiveMapProps> = ({
+  tempCurrentIslandLevel,
+  lamaPosition,
+  onLevelSelect,
+}) => {
   const { currentIslandLevel } = useGameStore();
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-    if (event.target instanceof SVGElement && event.target.classList.contains("interactive-point")) {
+    if (
+      event.target instanceof SVGElement &&
+      event.target.classList.contains("interactive-point")
+    ) {
       const level = event.target.getAttribute("data-level");
       // const buttonType = event.target.getAttribute("button-type");
       if (level) {
@@ -86,8 +92,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     // if (tempCurrentIslandLevel <= 27) return "https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I";
     // if (tempCurrentIslandLevel <= 54) return "https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI";
     // return "https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE";\
-    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/fXXyF_eEP2ZF0IWKiBflF6HhM1FZcS-rQ9UM9tHZO20";
-    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/ojFFGryPHdTlowmEUjOCYUHKi8P8TRss6tmgD7RrO88";
+    if (tempCurrentIslandLevel <= 27)
+      return "https://arweave.net/fXXyF_eEP2ZF0IWKiBflF6HhM1FZcS-rQ9UM9tHZO20";
+    if (tempCurrentIslandLevel <= 54)
+      return "https://arweave.net/ojFFGryPHdTlowmEUjOCYUHKi8P8TRss6tmgD7RrO88";
     return "https://arweave.net/5uYkotWl32aBSpJV6j-Ykjj_aQRtGpExAYpUZsqtSuM";
   };
 
@@ -95,9 +103,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     <div className="relative w-full h-full">
       <div className="absolute inset-0">
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
-        
-        <img src={currentMapImage()} alt="Game Map" className="w-full h-full object-contain" />
-        {tempCurrentIslandLevel <= 27? (
+
+        <img
+          src={currentMapImage()}
+          alt="Game Map"
+          className="w-full h-full object-contain"
+        />
+        {/* {tempCurrentIslandLevel <= 27? (
         <div
           className="absolute"
           style={{
@@ -114,15 +126,20 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
         </div>
       ) : (
         <></>
-      )}
-     
-       
+      )} */}
 
         {/* <img src={"https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I"} alt="Game Map 1" className="w-full h-full object-contain" /> */}
         {/* <img src={"https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI"} alt="Game Map 2" className="w-full h-full object-contain" /> */}
         {/* <img src={"https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE"} alt="Game Map 3" className="w-full h-full object-contain" /> */}
 
-        <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+        <svg
+          width="100%"
+          height="100%"
+          viewBox={`0 0 ${imageWidth} ${imageHeight}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="absolute top-0 left-0"
+          onClick={handleClick}
+        >
           {getInteractivePoints(tempCurrentIslandLevel).map((point, index) => {
             // if current level is the same as the point level, then add the image to the point
             // let lammaImage = "" as any;
@@ -142,17 +159,46 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
                   r="6"
                   className={cn(
                     "interactive-point transition-colors duration-200",
-                    isValidSpotToMoveTo(currentIslandLevel, point.level) ? "hover:fill-[#63af16]" : "fill-black",
-                    point.level % 9 == 0 ? "fill-purple-700" : isValidSpotToMoveTo(currentIslandLevel, point.level) ? "fill-[#3fe406]" : "fill-black"
+                    isValidSpotToMoveTo(currentIslandLevel, point.level)
+                      ? "hover:fill-[#63af16]"
+                      : "fill-black",
+                    point.level % 9 == 0
+                      ? "fill-purple-700"
+                      : isValidSpotToMoveTo(currentIslandLevel, point.level)
+                      ? "fill-[#3fe406]"
+                      : "fill-black"
                   )}
                   data-level={point.level}
                 />
               </>
             );
           })}
-          <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="5%" height="10%" preserveAspectRatio="xMidYMid meet">
+          {/* image width="5%" height="10%"  */}
+          <image
+            href={LAMA_IMAGE[lamaPosition.src]}
+            x={`${lamaPosition.x}%`}
+            y={`${lamaPosition.y}%`}
+            width="4%"
+            height="11%"
+            preserveAspectRatio="xMidYMid meet"
+          >
             <title>Lamma</title>
           </image>
+
+          {tempCurrentIslandLevel <= 27 ? (
+            <image
+              href="https://arweave.net/dB07kjfdIJFICANzB7nkt2W8W2FoO4TbFnAVTHeepzw"
+              x="89%"
+              y="92%"
+              width="3%"
+              preserveAspectRatio="xMidYMid meet"
+            >
+              <title>Lamma</title>
+            </image>
+          ) : (
+            <></>
+          )}
+
           {/* <LoadUserDetails /> */}
           {/* {currentIslandLevel != 0 && (
             <image

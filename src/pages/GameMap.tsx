@@ -117,6 +117,9 @@ const GameMap = () => {
           const dy = targetPoint.y - lammaBottomCenterY;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
+          console.log("targetPoint.x = "+targetPoint.x);
+          console.log("targetPoint.y = "+targetPoint.y);
+
           if (distance < 0.5) {
             if (currentPathIndex === path.length - 1) {
               clearInterval(interval);
