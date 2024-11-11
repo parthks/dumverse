@@ -227,6 +227,18 @@ local function bankPushInHandler(msg: Message)
     ao.send({ Target = fromAddress, Status = "Success" })
 end
 
+local function bankAcceptQuestHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    helpers.CheckUserExists(user_id, msg.From)
+
+    -- update user quest data
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET special_item_key = 0 WHERE id = %d;
+    ]], user_id))
+
+    ao.send({ Target = msg.From, Status = "Success" })
+end
+
 -- Add handlers
 Handlers.add("Bank.Info", Handlers.utils.hasMatchingTag('Action', 'Bank.Info'), bankInfoHandler)
 Handlers.add("Bank.Deposit", Handlers.utils.hasMatchingTag('Action', 'Bank.Deposit'), bankDepositHandler)
@@ -245,6 +257,6 @@ Handlers.add("Bank.ClaimAirdrop", Handlers.utils.hasMatchingTag('Action', 'Bank.
 --
 Handlers.add("Bank.PushOut", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOut'), bankPushOutHandler)
 Handlers.add("Bank.PushIn", Handlers.utils.hasMatchingTag('Action', 'Credit-Notice'), bankPushInHandler)
-
+Handlers.add("Bank.AcceptQuest", Handlers.utils.hasMatchingTag('Action', 'Bank.AcceptQuest'), bankAcceptQuestHandler)
 
 return {}

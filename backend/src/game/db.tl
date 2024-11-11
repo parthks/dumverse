@@ -21,7 +21,12 @@ global USERS_TABLE: string = [[
         damage FLOAT DEFAULT 0,
         defense FLOAT DEFAULT 0,
         current_spot INTEGER DEFAULT 0,
-        current_battle_id INTEGER
+        current_battle_id INTEGER,
+        special_item_key INTEGER DEFAULT -1,
+        special_item_thread INTEGER DEFAULT -1,
+        special_item_bark INTEGER DEFAULT -1,
+        special_item_heart INTEGER DEFAULT -1,
+        special_item_kitten INTEGER DEFAULT -1
     );
 ]]
 
@@ -79,32 +84,46 @@ Handlers.add("Admin.ClearDB",
 )
 -- Send({Target = ao.id, Action = "DANGER.ClearDB" })
 
-Handlers.add("Admin.UpdateInventoryTable",
-    Handlers.utils.hasMatchingTag("Action", "DANGER.UpdateInventoryTable"),
+Handlers.add("Admin.UpdateTable",
+    Handlers.utils.hasMatchingTag("Action", "DANGER.UpdateTable"),
     function(msg: Message)
         assert(msg.From == ao.id, "You are not authorized to perform this action")
         dbAdmin.db:exec([[
             -- Create a new table with the updated schema
-            CREATE TABLE Inventory_new (
+            CREATE TABLE Users_new (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                item_id TEXT NOT NULL,
-                item_type TEXT NOT NULL,
-                item_health FLOAT DEFAULT 40,
-                total_item_health FLOAT DEFAULT 40,
-                equipped BOOLEAN DEFAULT FALSE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+        last_updated_at INTEGER DEFAULT 0,
+        name TEXT NOT NULL,
+        address TEXT NOT NULL,
+        nft_address TEXT,
+        nft_special_trait TEXT,
+        current_island INTEGER,
+        gold_balance FLOAT DEFAULT 0,
+        dumz_balance FLOAT DEFAULT 0,
+        health FLOAT DEFAULT 0,
+        total_health FLOAT DEFAULT 0,
+        stamina FLOAT DEFAULT 0,
+        total_stamina FLOAT DEFAULT 0,
+        last_regenerate_time INTEGER DEFAULT 0,
+        damage FLOAT DEFAULT 0,
+        defense FLOAT DEFAULT 0,
+        current_spot INTEGER DEFAULT 0,
+        current_battle_id INTEGER,
+        special_item_kitten INTEGER DEFAULT -1,
+        special_item_key INTEGER DEFAULT -1,
+        special_item_thread INTEGER DEFAULT -1,
+        special_item_bark INTEGER DEFAULT -1,
+        special_item_heart INTEGER DEFAULT -1,
             );
 
             -- Copy data from the old table to the new one
-            INSERT INTO Inventory_new SELECT * FROM Inventory;
+            INSERT INTO Users_new SELECT * FROM Users;
 
             -- Drop the old table
-            DROP TABLE Inventory;
+            DROP TABLE Users;
 
             -- Rename the new table to the original name
-            ALTER TABLE Inventory_new RENAME TO Inventory;
+            ALTER TABLE Users_new RENAME TO Users;
         ]])
     end
 )

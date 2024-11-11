@@ -180,12 +180,30 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
 
     Battles[battle_id].npcs[npc_id].health = 0
 
-    -- player gets npc gold + extra gold
-    Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + npc.gold_reward +
-        npc.extra_gold
-        Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + npc.dumz_reward
-    -- intentionally not updating the npc gold reward and extra gold, to keep the histroy. ok since npc has been removed from npcs_alive
-
+    -- if attacker_id is a player (npc count be attacking another npc as well)
+    if (Battles[battle_id].players[attacker_id] ~= nil) then
+        -- player gets npc gold + extra gold
+            Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + npc.gold_reward +
+            npc.extra_gold
+            Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + npc.dumz_reward
+        -- intentionally not updating the npc gold reward and extra gold, to keep the histroy. ok since npc has been removed from npcs_alive
+        -- give player special items if npc is special enemy
+        if npc.id == "SHIBA" then
+            Battles[battle_id].players[attacker_id].special_item_key = (Battles[battle_id].players[attacker_id].special_item_key or 0) + 1
+        end
+        if npc.id == "MOUSE" then
+            Battles[battle_id].players[attacker_id].special_item_thread = (Battles[battle_id].players[attacker_id].special_item_thread or 0) + 1
+        end
+        if npc.id == "TREE" then
+            Battles[battle_id].players[attacker_id].special_item_bark = (Battles[battle_id].players[attacker_id].special_item_bark or 0) + 1
+        end
+        if npc.id == "PEACOCK" then
+            Battles[battle_id].players[attacker_id].special_item_heart = (Battles[battle_id].players[attacker_id].special_item_heart or 0) + 1
+        end
+        if npc.id == "BLACK_SWAN" then
+            Battles[battle_id].players[attacker_id].special_item_kitten = (Battles[battle_id].players[attacker_id].special_item_kitten or 0) + 1
+        end
+    end
     BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)
     -- BattleHelpers.update(battle_id, battle)
 end

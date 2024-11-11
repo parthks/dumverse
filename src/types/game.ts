@@ -22,6 +22,11 @@ export type GameUser = {
   defense: number;
   current_spot: number;
   current_battle_id?: number;
+  special_item_key: number;
+  special_item_thread: number;
+  special_item_bark: number;
+  special_item_heart: number;
+  special_item_kitten: number;
   inventory: Inventory[];
 };
 

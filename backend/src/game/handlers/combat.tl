@@ -18,6 +18,7 @@ local function removeUsedPotion(playerData: CombatUserData)
     end
 end
 
+
 -- equivalent function in frontend/src/lib/utils.ts
 local function isValidSpotToMoveTo(currentSpot: integer, targetSpot: integer): boolean
     if currentSpot == targetSpot then
@@ -150,14 +151,60 @@ local function enterNewCombatHandler(msg: Message)
         end
         return enemy_index
     end
+
+    local function getRandomSpecialEnemy(user: UserData): EnemyData | nil
+        -- 10% chance to get a Leperchaun enemy
+        if math.random(1, 10) == 1 then
+            return constants.SPECIAL_ENEMIES["LEPERCHAUN"]
+        end
+        -- 5% chance to get a dumz maxi
+        if math.random(1, 20) == 1 then
+            return constants.SPECIAL_ENEMIES["DUMZ"]
+        end
+        
+        if user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
+            -- 20% chance to get a shiba enemy
+            if math.random(1, 5) == 1 then
+                return constants.SPECIAL_ENEMIES["SHIBA"]
+            end
+        end
+        if user.nft_address and user.special_item_thread > -1 and user.special_item_thread < 8 then
+            -- 20% chance to get a mouse enemy
+            if math.random(1, 5) == 1 then
+                return constants.SPECIAL_ENEMIES["MOUSE"]
+            end
+        end
+        if user.nft_address and user.special_item_bark > -1 and user.special_item_bark < 6 then
+            -- 20% chance to get a heart enemy
+            if math.random(1, 5) == 1 then
+                return constants.SPECIAL_ENEMIES["TREE"]
+            end
+        end
+        if user.nft_address and user.special_item_heart > -1 and user.special_item_heart < 4 then
+            -- 20% chance to get a heart enemy
+            if math.random(1, 5) == 1 then
+                return constants.SPECIAL_ENEMIES["PEACOCK"]
+            end
+        end
+
+        -- 1% chance to get a black swan enemy
+        if math.random(1, 100) == 1 and user.special_item_kitten > -1 and user.special_item_kitten < 1 then
+            return constants.SPECIAL_ENEMIES["BLACK_SWAN"]
+        end
+        return nil
+    end
      
     local enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
     -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
+    -- add special enemies
+    local special_enemy = getRandomSpecialEnemy(userData)
+    if special_enemy then
+        table.insert(enemies, special_enemy)
 
     -- if utils.includes(combat_level, doubleEnemies) then
     if combat_level > 5 then
-        -- double the enemies randomly
-        if math.random(1, 2) == 1 then
+        -- double the enemies randomly, if no special enemy
+        elseif #enemies ~= 2 and math.random(1, 2) == 1 then
             table.insert(enemies, constants.ENEMIES[getRandomEnemyIndex(combat_level)])
         end
     end
@@ -199,9 +246,16 @@ local function playerWonHandler(msg: Message)
 
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
+        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f,
+        special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
+        WHERE id = %f;
     ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance,
-        user_id))
+    playerData.special_item_kitten,
+    playerData.special_item_key,
+    playerData.special_item_thread,
+    playerData.special_item_bark,
+    playerData.special_item_heart,
+    user_id))
 
     removeUsedPotion(playerData)
 end
@@ -213,8 +267,18 @@ local function playerRanAwayHandler(msg: Message)
    
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, health = %f, gold_balance = %f, dumz_balance = %f WHERE id = %f;
-    ]], playerData.health, playerData.gold_balance, playerData.dumz_balance, user_id))
+        UPDATE Users SET current_battle_id = NULL, 
+        health = %f, gold_balance = %f, dumz_balance = %f,
+        special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
+        WHERE id = %f;
+    ]], 
+    playerData.health, playerData.gold_balance, playerData.dumz_balance,
+    playerData.special_item_kitten,
+    playerData.special_item_key,
+    playerData.special_item_thread,
+    playerData.special_item_bark,
+    playerData.special_item_heart,
+    user_id))
 
     removeUsedPotion(playerData)
 end

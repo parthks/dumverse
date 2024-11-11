@@ -24,6 +24,11 @@ global type CombatUserData = record
     defense: number
     current_spot: integer
     current_battle_id: integer | nil
+    special_item_key: integer -- default -1, becomes 0 when user accepts quest
+    special_item_thread: integer -- default -1, becomes 0 when user accepts quest
+    special_item_bark: integer  -- default -1, becomes 0 when user accepts quest
+    special_item_heart: integer -- default -1, becomes 0 when user accepts quest
+    special_item_kitten: integer -- default -1, becomes 0 when user accepts quest
     
     -- Additional fields specific to CombatUserData
     potion_used: boolean

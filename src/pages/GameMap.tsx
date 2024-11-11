@@ -2,14 +2,7 @@ import { PlayerFrame } from "@/components/game/PlayerFrame";
 import QuestBook from "@/components/game/QuestBook";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
-import {
-  interactivePointsMap1,
-  interactivePointsMap2,
-  interactivePointsMap3,
-  lammaHeight,
-  lammaWidth,
-  SOUNDS,
-} from "@/lib/constants";
+import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
 import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -75,18 +68,8 @@ import { useEffect, useState } from "react";
 //   { x: 10.5, y: 24.5, level: 27 },
 // ];
 
-
-
 const GameMap = () => {
-  const {
-    goToTown,
-    goToRestArea,
-    currentIslandLevel,
-    lamaPosition,
-    setLamaPosition,
-    user,
-    questBookOpen,
-  } = useGameStore();
+  const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, user, questBookOpen } = useGameStore();
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
@@ -97,13 +80,10 @@ const GameMap = () => {
   const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on
   // tempCurrentIslandLevel controls the level that the lamma is currently on
-  const [tempCurrentIslandLevel, setTempCurrentIslandLevel] =
-    useState(currentIslandLevel);
+  const [tempCurrentIslandLevel, setTempCurrentIslandLevel] = useState(currentIslandLevel);
   const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
-
-  
 
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
@@ -117,8 +97,8 @@ const GameMap = () => {
           const dy = targetPoint.y - lammaBottomCenterY;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          console.log("targetPoint.x = "+targetPoint.x);
-          console.log("targetPoint.y = "+targetPoint.y);
+          console.log("targetPoint.x = " + targetPoint.x);
+          console.log("targetPoint.y = " + targetPoint.y);
 
           if (distance < 0.5) {
             if (currentPathIndex === path.length - 1) {
@@ -159,15 +139,8 @@ const GameMap = () => {
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
     const interactivePoints = getInteractivePoints(currentIslandLevel);
-    const currentIndex =
-      fromStart || currentIslandLevel == 0
-        ? 0
-        : interactivePoints.findIndex(
-            (point) => point.level === currentIslandLevel
-          );
-    const targetIndex = interactivePoints.findIndex(
-      (point) => point.level === level
-    );
+    const currentIndex = fromStart || currentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === currentIslandLevel);
+    const targetIndex = interactivePoints.findIndex((point) => point.level === level);
 
     // if (currentIndex !== -1 && targetIndex !== -1) {
     let newPath;
@@ -176,9 +149,7 @@ const GameMap = () => {
       newPath = interactivePoints.slice(currentIndex, targetIndex + 1);
     } else {
       // Moving backward
-      newPath = interactivePoints
-        .slice(targetIndex, currentIndex + 1)
-        .reverse();
+      newPath = interactivePoints.slice(targetIndex, currentIndex + 1).reverse();
     }
 
     setPath(newPath.map((point) => ({ x: point.x, y: point.y })));
@@ -190,8 +161,7 @@ const GameMap = () => {
     <div
       className="h-screen w-screen bg-cover bg-center overflow-hidden relative"
       style={{
-        backgroundImage:
-          "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
+        backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
       }}
     >
       <audio autoPlay loop>
@@ -201,13 +171,7 @@ const GameMap = () => {
       {questBookOpen && <QuestBook />}
 
       <div className="z-10 absolute top-4 right-4">
-        <ImgButton
-          src={
-            "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
-          }
-          onClick={() => goToTown()}
-          alt={"Return to Town"}
-        />
+        <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
       <div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
         <PlayerFrame />
@@ -223,18 +187,12 @@ const GameMap = () => {
             }}
             className="shrink-0 mb-8"
             alt="Enter Rest Area"
-            src={
-              "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
-            }
+            src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
           />
         ) : (
           <ImgButton
-            disabled={
-              enterNewAreaLoading || user?.health == 0 || user?.stamina == 0
-            }
-            src={
-              "https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"
-            }
+            disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
+            src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
             onClick={async () => {
               setEnterNewAreaLoading(true);
               const resultData = await enterNewBattle(tempCurrentIslandLevel);
@@ -244,7 +202,7 @@ const GameMap = () => {
               }
               setEnterNewAreaLoading(false);
             }}
-            className="shrink-0 mb-8" 
+            className="shrink-0 mb-8"
             alt={"Enter Combat"}
           />
         )}
@@ -293,23 +251,11 @@ const GameMap = () => {
           Map 3
         </button> */}
         {tempCurrentIslandLevel <= 27 ? (
-          <ImgButton
-            src={
-              "https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"
-            }
-            onClick={() => setIsPopupOpen(true)}
-            alt={"Set Sail"}
-          />
+          <ImgButton src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} onClick={() => setIsPopupOpen(true)} alt={"Set Sail"} />
         ) : (
           <></>
         )}
-        {isPopupOpen && (
-          <Popup
-            onClose={() => setIsPopupOpen(false)}
-            setTempLamaPosition={setTempLamaPosition}
-            setTempCurrentIslandLevel={setTempCurrentIslandLevel}
-          />
-        )}
+        {isPopupOpen && <SetSailPopup onClose={() => setIsPopupOpen(false)} setTempLamaPosition={setTempLamaPosition} setTempCurrentIslandLevel={setTempCurrentIslandLevel} />}
       </div>
       {/* {tempCurrentIslandLevel <= 27 ? (
         <div
@@ -335,18 +281,14 @@ const GameMap = () => {
       <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
       <label>Step Time (in ms)</label>
       <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
-      <InteractiveMap
-        tempCurrentIslandLevel={tempCurrentIslandLevel}
-        lamaPosition={tempLamaPosition}
-        onLevelSelect={handleLevelSelect}
-      />
+      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} onLevelSelect={handleLevelSelect} />
     </div>
   );
 };
 
 export default GameMap;
 
-function Popup({
+function SetSailPopup({
   onClose,
   setTempLamaPosition,
   setTempCurrentIslandLevel,
@@ -361,20 +303,20 @@ function Popup({
   >;
   setTempCurrentIslandLevel: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const user = useGameStore((state) => state.user);
+  const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");
+  const ironArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_2");
+  const goldArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_3");
+
   return (
     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
       <div className=" w-[30vw] h-[60vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50">
-        <button
-          className="absolute top-2 right-2 text-6xl font-bold"
-          onClick={onClose}
-        >
+        <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
           &times;
         </button>
 
         <div className="w-full text-center">
-          <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">
-            Departing to ...
-          </h2>
+          <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">Departing to ...</h2>
         </div>
 
         <div className="w-full flex flex-col gap-6 items-center py-6">
@@ -395,9 +337,8 @@ function Popup({
         </button> */}
 
           <ImgButton
-            src={
-              "https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"
-            }
+            disabled={!goldArmor && !ironArmor}
+            src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
             onClick={async () => {
               // await travelToLocation(28);
               setTempCurrentIslandLevel(28);
@@ -414,9 +355,8 @@ function Popup({
           />
 
           <ImgButton
-            src={
-              "https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"
-            }
+            disabled={!goldArmor}
+            src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
             onClick={async () => {
               // await travelToLocation(55);
               setTempCurrentIslandLevel(55);

@@ -137,6 +137,7 @@ local function CronTick(msg: Message, npcTimer: integer)
                         Battles[battle.id].last_player_attack_timestamp[player_id] = msg.Timestamp
                     end
                 end
+                -- BattleHelpers.checkIfBattleShouldEnd(battle.id, nil, msg.Timestamp)  
             end
         end
     end
@@ -270,6 +271,7 @@ local function userAttackHandler(msg: Message)
         -- Player attacking NPC
         local log, defender_health, _ = PlayerAttacksNPC(Battles[battle_id].players[user_id], Battles[battle_id].npcs[attackEntityId], msg.Timestamp)
         BattleHelpers.addLogs(battle_id, log)
+        Battles[battle_id].npcs[attackEntityId].health = defender_health
         if defender_health <= 0 then
             -- remove npc from battle
             BattleHelpers.killNPC(battle_id, attackEntityId, user_id, msg.Timestamp)

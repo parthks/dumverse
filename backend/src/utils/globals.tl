@@ -81,6 +81,22 @@ global type UserData = record
     defense: number
     current_spot: integer
     current_battle_id: integer | nil
+    special_item_key: integer | nil -- becomes 0 when user accepts quest
+    special_item_thread: integer | nil -- becomes 0 when user accepts quest
+    special_item_bark: integer| nil -- becomes 0 when user accepts quest
+    special_item_heart: integer| nil -- becomes 0 when user accepts quest
+    special_item_kitten: integer| nil -- becomes 0 when user accepts quest
+end
+
+global type EnemyData = record
+    id: string
+    name: string
+    total_health: number
+    health: number
+    damage: number
+    difficulty: string
+    gold_reward: number | nil
+    dumz_reward: number | nil
 end
 
 -- Inventory item type

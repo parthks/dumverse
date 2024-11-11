@@ -20,8 +20,7 @@ export default function QuestBook() {
             <p style={{ fontSize: `${24 * scale}px` }}>A Siba Inu pup has run away with the vault keys! Find him to unlock the treasures buried deep within in the vault.</p>
           </div>
           <div className="self-start flex items-center justify-center gap-2 text-center mx-auto">
-            <img src="https://arweave.net/2qAoNkweWryhgbUXMJYEgS2tgew9kY2uezl2UysSPqw" alt="Keys" className="w-8" />{" "}
-            <span style={{ fontSize: `${28 * scale}px` }}>Keys found 0/3</span>
+            <img src={IMAGES.BANK_KEYS} alt="Keys" className="w-8" /> <span style={{ fontSize: `${28 * scale}px` }}>Keys found 0/3</span>
           </div>
           <div className="self-start">
             <h3 style={{ fontSize: `${28 * scale}px`, color: "#E19A4C" }}>Reward:</h3>

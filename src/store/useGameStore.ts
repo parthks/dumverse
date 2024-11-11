@@ -65,6 +65,7 @@ interface GameState {
   repairItem: (inventoryId: number) => Promise<void>;
   questBookOpen: boolean;
   setQuestBookOpen: (open: boolean) => void;
+  acceptBankQuest: () => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -367,6 +368,15 @@ export const useGameStore = create<GameState>()(
       },
       questBookOpen: false,
       setQuestBookOpen: (open) => set({ questBookOpen: open }),
+      acceptBankQuest: async () => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Bank.AcceptQuest" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
+      },
     }),
     {
       name: "Game Store",

@@ -343,7 +343,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           </div>
 
           {allPlayers.map((entity, index) => {
-            const isNPC = entity.id.startsWith("NPC");
+            const isNPC = !!(entity as NPC).difficulty;
             const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
             const newPlayerArrived = !isNPC && !!newPlayerTimers[entity.id]; // pvp 5 second combat cooldown for new players
             const disableAttack = disableAttackButtons || newPlayerArrived;
@@ -581,7 +581,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   const totalHealth = enemy.total_health;
   const filledHealth = enemy.health;
 
-  const totalGold = (enemy.extra_gold ?? 0) + enemy.gold_reward;
+  const totalGold = (enemy.extra_gold ?? 0) + (enemy.gold_reward ?? 0);
   // Calculate font size based on the number of digits
   // const fontSize = totalGold.toString().length > 3 ? 15 : 20;
 
@@ -615,17 +615,19 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
           {totalGold}g
         </p>
       </div>
-      <div className="absolute bottom-[6.5%] right-[18%]">
-        <p
-          className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
-          style={{
-            fontSize: `${15}px`,
-            lineHeight: "1",
-          }}
-        >
-          {enemy.dumz_reward} $Dumz
-        </p>
-      </div>
+      {enemy.dumz_reward && (
+        <div className="absolute bottom-[6.5%] right-[18%]">
+          <p
+            className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+            style={{
+              fontSize: `${15}px`,
+              lineHeight: "1",
+            }}
+          >
+            {enemy.dumz_reward} $Dumz
+          </p>
+        </div>
+      )}
     </div>
   );
 }

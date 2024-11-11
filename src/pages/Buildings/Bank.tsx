@@ -1,7 +1,7 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { Input } from "@/components/ui/input";
-import { SOUNDS, BUILDING_IMAGES } from "@/lib/constants";
+import { SOUNDS, BUILDING_IMAGES, IMAGES } from "@/lib/constants";
 import { sleep } from "@/lib/time";
 import { GAME_PROCESS_ID, calculatePositionAndSize } from "@/lib/utils";
 import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
@@ -334,8 +334,9 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 }
 
 function NftBankVault({ onExit }: { onExit: () => void }) {
-  const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading } = useGameStore();
+  const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading, acceptBankQuest } = useGameStore();
   const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
+  const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
@@ -354,12 +355,30 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
     }
   };
 
-  if (!bank) return <div>Loading...</div>;
+  if (!bank || !user) return <div>Loading...</div>;
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
+      </div>
+      <div className="z-10 absolute top-4 right-4">
+        <div className="flex items-center gap-2">
+          <img src={IMAGES.BANK_KEYS} alt="Keys" className="w-8" />
+          <span className="text-black text-lg">Keys found {user.special_item_key == -1 ? 0 : user.special_item_key}/3</span>
+        </div>
+        {user.special_item_key == -1 && (
+          <ImgButton
+            disabled={acceptQuestLoading}
+            src={IMAGES.ACCEPT_QUEST_BUTTON}
+            alt={"Accept Quest"}
+            onClick={async () => {
+              setAcceptQuestLoading(true);
+              await acceptBankQuest();
+              setAcceptQuestLoading(false);
+            }}
+          />
+        )}
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />

@@ -231,7 +231,7 @@ end
 --     },
 -- }
 
-local ENEMIES = {
+local ENEMIES: {EnemyData} = {
     {
         id = "NPC_1",
         name = "Doe Eyed Deer",
@@ -364,6 +364,71 @@ local ENEMIES = {
     },
 }
 
+
+
+local SPECIAL_ENEMIES = {
+    SHIBA = {
+        id = "SHIBA",
+        name = "Shiba Inu",
+        total_health = 6,
+        health = 6,
+        damage = 2,
+        difficulty = "SPECIAL",
+    },
+    LEPERCHAUN = {
+        id = "LEPERCHAUN",
+        name = "Made it Leperchaun",
+        total_health = 4,
+        health = 4,
+        damage = 4,
+        difficulty = "SPECIAL",
+        gold_reward = 2000,
+    },
+    PEACOCK = {
+        id = "PEACOCK",
+        name = "Devilish Peacock",
+        total_health = 6,
+        health = 6,
+        damage = 6,
+        difficulty = "SPECIAL",
+    },
+    TREE = {
+        id = "TREE",
+        name = "Aggravated Tree",
+        total_health = 5,
+        health = 5,
+        damage = 4,
+        difficulty = "SPECIAL",
+    },
+    MOUSE = {
+        id = "MOUSE",
+        name = "Stealthy Mouse",
+        total_health = 5,
+        health = 5,
+        damage = 2,
+        difficulty = "SPECIAL",
+    },
+    DUMZ = {
+        id = "DUMZ",
+        name = "DumDumz Maxi",
+        total_health = 12,
+        health = 12,
+        damage = 6,
+        difficulty = "SPECIAL",
+        dumz_reward = 500,
+    },
+    BLACK_SWAN = {
+        id = "BLACK_SWAN",
+        name = "Black Swan Event",
+        total_health = 18,
+        health = 18,
+        damage = 8,
+        difficulty = "SPECIAL",
+        dumz_reward = 500,
+        gold_reward = 15000,
+    },
+}
+
 -- 9, 18, 27 are rest spots
 -- local ENEMY_PER_LEVEL = {
 --     [1] = { ENEMIES[1] },
@@ -407,5 +472,6 @@ return {
     FOOD = FOOD,
     ALL_ITEMS = ALL_ITEMS,
     ENEMIES = ENEMIES,
+    SPECIAL_ENEMIES = SPECIAL_ENEMIES
     -- ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
 }

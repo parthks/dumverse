@@ -21,6 +21,8 @@ export const IMAGES = {
   GOLD_ICON: "https://arweave.net/8_z7MIgJ2v8fbdYMAKSgpwDc7exFxUJVQnd-egomLXA",
   DUMZ_ICON: "https://arweave.net/_53RnMurt-qradH-caMUJMgvvpoUVmzpM5Yjk8KQVtI",
   TRUNK_ICON: "https://arweave.net/OVmZl1tJUKOWTut1_yYzswGHLAK_-3yvSNfnDbX87C0",
+  BANK_KEYS: "https://arweave.net/2qAoNkweWryhgbUXMJYEgS2tgew9kY2uezl2UysSPqw",
+  ACCEPT_QUEST_BUTTON: "https://arweave.net/_gyKMGAD2ubfVtvROHzhapw_BcN2-B3QRSurVYlhaVw",
 };
 
 export const ITEM_ICONS = {
@@ -64,6 +66,13 @@ export const ENEMY_CARD_IMAGE = {
   NPC_11: "https://arweave.net/KAXnRZxDWLG_vl0GEN-OK4uOfoLddEyp2UMNezV7FqE",
   NPC_12: "https://arweave.net/VwTxz8r7_6U3Jin7QORp_jsEa9OSMH69n1En_cbmff0",
   NPC_13: "https://arweave.net/owTkaG8UTkdeI9lTtbAHoPjRx0MlOl1qOLxberuuWE0",
+  SHIBA: "https://arweave.net/T1MRwTrs1r0aXAnzC086lOajB-ETp-wP3LrksQCCNSI", // vault key
+  MOUSE: "https://arweave.net/P2YsdMqVYNZFMbUofF1ArW7WixsHCbNzJg4N0OrL3AI", // thread
+  TREE: "https://arweave.net/MCYuvUej12RexhI_AsQIEuOC51upXzAfbV8HEV2gGlk", // bark
+  PEACOCK: "https://arweave.net/Xss-Mc-immgjGomhx7Ozg71AEADhvoOGODLhMbv8yEQ", // heart fragment
+  DUMZ: "https://arweave.net/4ezrE12NpSOhmW34kPDR0FWK10NwBcLvE54Lhl1pOFk", // dumz loot
+  BLACK_SWAN: "https://arweave.net/rcdUY5bbvck7dAHQwthelvyIKdUy3JEeJhHoldrXqpQ", // kitten, gold and dumz loot
+  LEPERCHAUN: "https://arweave.net/eF9igMGCSyZcWgaRJBtphMI18zuu0uvrm8oiM8EX6js", // gold loot
 };
 
 export const SOUNDS = {
@@ -91,7 +100,7 @@ export const LAMA_IMAGE = {
   WALKING_LEFT: "https://arweave.net/V-Fia6R8Ee6dmvp9UeLrBtw8qqZqSzyenc1lZUV8BzI",
 };
 
-export const lammaWidth = 4;   //5
+export const lammaWidth = 4; //5
 export const lammaHeight = 8.2;
 
 // Map 1
@@ -185,7 +194,6 @@ export const interactivePointsMap2 = [
   { x: 20.5, y: 34, level: 53 },
   { x: 16.5, y: 41.3, level: 54 },
 ];
-
 
 // Map 3
 // export const interactivePointsMap3 = [
