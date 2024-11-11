@@ -139,6 +139,7 @@ const GameMap = () => {
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
     const interactivePoints = getInteractivePoints(currentIslandLevel);
+
     const currentIndex = fromStart || currentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === currentIslandLevel);
     const targetIndex = interactivePoints.findIndex((point) => point.level === level);
 
