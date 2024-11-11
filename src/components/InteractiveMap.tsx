@@ -82,8 +82,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       // const buttonType = event.target.getAttribute("button-type");
       if (level) {
         if (isValidSpotToMoveTo(currentIslandLevel, parseInt(level))) {
+          
           onLevelSelect(parseInt(level));
-          // console.log("Level Ashu:"+level);
+          console.log("Level Ashu: "+level);
         }
       }
     }

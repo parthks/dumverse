@@ -236,8 +236,14 @@ local function drinkPotionHandler(msg: Message)
 
     local potion = Battles[battle_id].players[user_id].potion as CombatPotionData
     assert(potion ~= nil, "Potion not found")
-    
-    Battles[battle_id].players[user_id].health = Battles[battle_id].players[user_id].health + potion.health
+
+    local set_new_health =  Battles[battle_id].players[user_id].health + potion.health
+
+    if (set_new_health >= Battles[battle_id].players[user_id].total_health) then
+        Battles[battle_id].players[user_id].health = Battles[battle_id].players[user_id].total_health
+     else      
+        Battles[battle_id].players[user_id].health = set_new_health
+     end
     Battles[battle_id].players[user_id].potion_used = true
 
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })

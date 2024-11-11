@@ -75,8 +75,6 @@ import { useEffect, useState } from "react";
 //   { x: 10.5, y: 24.5, level: 27 },
 // ];
 
-
-
 const GameMap = () => {
   const {
     goToTown,
@@ -103,8 +101,6 @@ const GameMap = () => {
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
 
-  
-
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
       const interval = setInterval(() => {
@@ -117,8 +113,8 @@ const GameMap = () => {
           const dy = targetPoint.y - lammaBottomCenterY;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          console.log("targetPoint.x = "+targetPoint.x);
-          console.log("targetPoint.y = "+targetPoint.y);
+          console.log("targetPoint.x = " + targetPoint.x);
+          console.log("targetPoint.y = " + targetPoint.y);
 
           if (distance < 0.5) {
             if (currentPathIndex === path.length - 1) {
@@ -159,6 +155,7 @@ const GameMap = () => {
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
     const interactivePoints = getInteractivePoints(currentIslandLevel);
+
     const currentIndex =
       fromStart || currentIslandLevel == 0
         ? 0
@@ -244,7 +241,7 @@ const GameMap = () => {
               }
               setEnterNewAreaLoading(false);
             }}
-            className="shrink-0 mb-8" 
+            className="shrink-0 mb-8"
             alt={"Enter Combat"}
           />
         )}
