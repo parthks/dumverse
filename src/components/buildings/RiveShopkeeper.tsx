@@ -17,5 +17,5 @@ export const RiveShopKeeper = ({ url }: { url: string }) => {
     },
   });
 
-  return <RiveComponent />;
+  return <RiveComponent/>;
 };

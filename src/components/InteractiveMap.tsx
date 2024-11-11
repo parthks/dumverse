@@ -83,6 +83,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({
       if (level) {
         if (isValidSpotToMoveTo(currentIslandLevel, parseInt(level))) {
           onLevelSelect(parseInt(level));
+          // console.log("Level Ashu:"+level);
         }
       }
     }

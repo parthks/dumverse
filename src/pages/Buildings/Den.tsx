@@ -1,3 +1,4 @@
+import { useState } from "react";
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
@@ -6,12 +7,23 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import ImgButton from "@/components/ui/imgButton";
+import { handler } from "tailwindcss-animate";
 
 export default function Den() {
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
   const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
+
+  const [showBlackjackGame, setShowBlackjackGame] = useState<boolean>(false);
+  const handleClick = () => {
+    setShowBlackjackGame(true);
+  };
+
+  if (showBlackjackGame) {
+    return <BlackjackGame />;
+  }
 
   return (
     <div className="h-screen relative">
@@ -110,7 +122,7 @@ export default function Den() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "6%",
+                  top: "2%",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
@@ -124,7 +136,7 @@ export default function Den() {
                   src="https://arweave.net/ZTj2H2rj4UbdPSTuzEmbW1N1jiFAxwpB27Ny21-zvA0"
                   alt="Den Counter"
                   className="relative w-full"
-                  style={{ height: "auto", top: "0%" }}
+                  style={{ height: "auto", top: "-13%" }}
                   // className="absolute "
                   // style={{ ...calculatePositionAndSize(14, 80, 28) }}
                 />
@@ -136,12 +148,12 @@ export default function Den() {
           <div
             className="absolute w-full h-full"
             style={{
-              ...calculatePositionAndSize(50.5, 49, 26),
+              ...calculatePositionAndSize(53.5, 42, 26),
               transform: "translate(-50%, -100%)",
             }}
           >
             <img
-              src="https://arweave.net/BuSrL39UbK-3tr8U3CTRNy5lOeljoZHreZLGaJ59IFQ"
+              src="https://arweave.net/OtCWzeGlhcHr4KuRc7fgRUiz4E4PAbCbd4gkbAdLwXg"
               alt="Den Window"
             />
           </div>
@@ -159,62 +171,84 @@ export default function Den() {
             />
           </div>
           {/* bg-red-400 */}
+          {/* Den Table And Chair And Playt Button*/}
           <div
             className="absolute w-full h-full flex flex-col  items-center justify-end"
             style={{
-              ...calculatePositionAndSize(51, 100, 53),
+              ...calculatePositionAndSize(51, 91, 53),
               transform: "translate(-50%, -100%)",
             }}
           >
             <div className="relative w-full flex flex-col items-center">
               <div className="relative">
-                {/* Joose */}
-                <img
-                  src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y"
-                  alt="Joose"
-                  className="absolute"
-                  style={{
-                    left: "33%",
-                    top: "24%",
-                    width: "4%",
-                    height: "auto",
-                    zIndex: 1,
-                  }}
-                />
-                {/* Joose */}
-                <img
-                  src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y"
-                  alt="Joose"
-                  className="absolute"
-                  style={{
-                    left: "57%",
-                    top: "24%",
-                    width: "4%",
-                    height: "auto",
-                    zIndex: 1,
-                  }}
-                />
-                {/* Den Money On The Table */}
-                <img
-                  src="https://arweave.net/wLPY5keJuQkEEqJeL-pPV_SvzC4FwoivVblalsjNoYo"
-                  alt="Den Money On The Table"
-                  className="absolute"
-                  style={{
-                    left: "36%",
-                    top: "22%",
-                    width: "25%",
-                    height: "auto",
-                    zIndex: 1,
-                  }}
-                />
+                {/* Play Button */}
+
+                <div
+                  style={{ top: "47%", left: "37%", width: "24%", zIndex: 1 }}
+                  className=" absolute"
+                >
+                  <ImgButton
+                    src={
+                      "https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"
+                    }
+                    onClick={handleClick}
+                    alt={"Play Button"}
+                    className=""
+                  />
+                </div>
+
                 {/* Den Table and Chair */}
                 <img
-                  src="https://arweave.net/uLMdqSRLJFYXnuMcQBx496dg6PX2Ri5tMBQgk31V6Hc"
+                  src="https://arweave.net/6Qk-lI4-2y-Yr23Lw7EbvFWgAanEgbvg0ET42jeBYdM"
                   alt="Den Table and Chair"
                   className="relative w-full"
                   style={{ height: "auto" }}
                 />
               </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BlackjackGame() {
+  return (
+    <div className="h-screen relative">
+      <div className="z-10 absolute bottom-4 left-4">
+        <ExistToTownButton />
+      </div>
+      <div className="relative w-full h-full">
+        <div className="absolute inset-0">
+          <img
+            src={
+              "https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"
+            }
+            alt="Den Blackjack Background"
+            className="w-full h-full"
+          />
+        </div>
+        <div className="absolute inset-0">
+          <div
+            className="absolute w-full h-full flex flex-col  items-center justify-end"
+            style={{
+              ...calculatePositionAndSize(50, 38, 23),
+              transform: "translate(-50%, -100%)",
+              height: "95%",
+            }}
+          >
+            <div
+              className="relative"
+              style={{
+                maxWidth: "150vw", // Responsive size, adjust as needed
+                width: "100%",
+                top: "2%",
+                aspectRatio: 1, // Keeps the shopkeeper square,
+              }}
+            >
+              <RiveShopKeeper url={BUILDING_IMAGES.DEN_DUMDUM} />
             </div>
           </div>
         </div>

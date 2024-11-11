@@ -244,7 +244,7 @@ const GameMap = () => {
               }
               setEnterNewAreaLoading(false);
             }}
-            className="shrink-0 mb-8"
+            className="shrink-0 mb-8" 
             alt={"Enter Combat"}
           />
         )}
