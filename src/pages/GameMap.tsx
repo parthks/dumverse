@@ -308,6 +308,8 @@ function SetSailPopup({
   const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");
   const ironArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_2");
   const goldArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_3");
+  // check if user has ARMOR_4 or ARMOR_5
+  const higherTierArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_4" || armor.item_id === "MAGIC_ROBE");
 
   return (
     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
@@ -338,7 +340,7 @@ function SetSailPopup({
         </button> */}
 
           <ImgButton
-            disabled={!goldArmor && !ironArmor}
+            disabled={!goldArmor && !ironArmor && !higherTierArmor}
             src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
             onClick={async () => {
               // await travelToLocation(28);
@@ -356,7 +358,7 @@ function SetSailPopup({
           />
 
           <ImgButton
-            disabled={!goldArmor}
+            disabled={!goldArmor && !higherTierArmor}
             src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
             onClick={async () => {
               // await travelToLocation(55);
