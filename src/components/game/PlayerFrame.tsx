@@ -34,7 +34,7 @@ export function PlayerFrame() {
 
       <div className="absolute w-[480px] top-[20%] h-[100px] left-[31%] flex flex-col">
         <div className="flex items-center">
-          <div className="relative mr-8">
+          <div className="relative mr-4">
             <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
             <p className="absolute top-3 left-0 right-0 text-center text-white text-xl font-bold">
               {user.health}/{user.total_health}

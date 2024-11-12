@@ -79,7 +79,7 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     if (npcShouldAttackNPC) then
         print("NPC " .. npc_id .. " attacking NPC " .. random_npc_id)
         local log, defender_health, _ = NPCAttacksNPC(Battles[battle_id].npcs[npc_id], Battles[battle_id].npcs[random_npc_id], timestamp)
-        -- Battles[battle_id].npcs[random_npc_id].health = defender_health
+        Battles[battle_id].npcs[random_npc_id].health = defender_health
         -- battle.npcs[random_npc_id].health = defender_health
         BattleHelpers.addLogs(Battles[battle_id].id, log)
         if defender_health <= 0 then

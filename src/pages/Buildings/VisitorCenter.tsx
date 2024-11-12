@@ -1,5 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
-import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { BUILDING_IMAGES } from "@/lib/constants";
 
@@ -87,7 +87,7 @@ export default function VisitorCenter() {
             zIndex: 1, // This ensures the shopkeeper is behind the table
           }}
         >
-          <RiveShopKeeper url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
+          <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import ChatWindow from "@/components/chat/Chat";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import PlayerOnlineList from "@/components/game/PlayerOnlineList";
@@ -10,24 +10,24 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import React from "react";
 import { useState } from "react";
 
-// const RestAreaImages = {  
+// const RestAreaImages = {
 //   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
 //   9: "https://arweave.net/F6Xd8uMyN78dh2Nrd9gSVCD0sEPY3BsAgd1PWJCyn4Q",
 //   18: "https://arweave.net/wSgWaCQYk3DZbdp4Qm2fI-hGptYYaYwmDfm6ParVItQ",
 //   27: "https://arweave.net/_ZixwsU3FTzyH0ddVB1pqMZEq-xG3UzqAVO3HoD0LFI",
 // };
 
-const RestAreaImages = {  
+const RestAreaImages = {
   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
   9: "https://arweave.net/Sa1M036SjBzwEnWyqRKfUO-_Iqs0wTtGFEG_yWHSxLs",
   18: "https://arweave.net/-kfQ41nBIJy39NR5iwlt-2aHMpbXTz2VTDcCcml44kY",
   27: "https://arweave.net/G8xvyj-KgEieJIi7C8s-_sv_NO-vvp9hzm0Rg47YGwM",
-  36:"https://arweave.net/nlrX-3MaCfgpRP6gPjcsB6FWNtImdlLZUN_s-p-jXHY",
-  45:"https://arweave.net/yVowdokmtYGqpchfqxO8y57J2HoGb03OopzRSEE_b6Q",
-  54:"https://arweave.net/iPVHC5o2Gowb4P0tWoFPRNGAL-RSldG2Ds6G-FGsuMM",
-  63:"https://arweave.net/NHq0gT__811VV8xylR7HsH8cVWitv5VtmqHU6Pz3PAQ",
-  72:"https://arweave.net/bQ_aRguO1CZVty_w8chWmMAIUXcrrL7RkQ4NAhgVtns",
-  81:"https://arweave.net/tdKq4FQpv0k2G08SsF2WGWKQAt4rfCiFB_83e5bt2-Q",
+  36: "https://arweave.net/nlrX-3MaCfgpRP6gPjcsB6FWNtImdlLZUN_s-p-jXHY",
+  45: "https://arweave.net/yVowdokmtYGqpchfqxO8y57J2HoGb03OopzRSEE_b6Q",
+  54: "https://arweave.net/iPVHC5o2Gowb4P0tWoFPRNGAL-RSldG2Ds6G-FGsuMM",
+  63: "https://arweave.net/NHq0gT__811VV8xylR7HsH8cVWitv5VtmqHU6Pz3PAQ",
+  72: "https://arweave.net/bQ_aRguO1CZVty_w8chWmMAIUXcrrL7RkQ4NAhgVtns",
+  81: "https://arweave.net/tdKq4FQpv0k2G08SsF2WGWKQAt4rfCiFB_83e5bt2-Q",
 };
 
 const ReturnToTown = React.memo(() => {
@@ -158,13 +158,14 @@ export default function RestArea() {
       <div className="relative w-full h-full">
         <div className={`absolute inset-0`}>
           <img src={RestAreaImages[current_spot as keyof typeof RestAreaImages]} alt="Rest Area Background" className="w-full h-full object-cover" />
-          {current_spot != 0 && <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>
-          {/* ${cn(current_spot === 18 && "translateX(13vw) translateY(4vh)")} */}
-            <div
-              style={{
-                width: current_spot === 27 ? "15vw" : "18vw",
-                height: current_spot === 45 || current_spot === 54 || current_spot === 72 ? "45vh":"60vh",
-                transform: `
+          {current_spot != 0 && (
+            <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>
+              {/* ${cn(current_spot === 18 && "translateX(13vw) translateY(4vh)")} */}
+              <div
+                style={{
+                  width: current_spot === 27 ? "15vw" : "18vw",
+                  height: current_spot === 45 || current_spot === 54 || current_spot === 72 ? "45vh" : "60vh",
+                  transform: `
                 ${cn(current_spot === 9 && "translateX(3vw)")}
                 ${cn(current_spot === 18 && "translateX(13vw)")}
                 ${cn(current_spot === 27 && "translateX(25vw) translateY(-12vh)")}
@@ -175,11 +176,12 @@ export default function RestArea() {
                 ${cn(current_spot === 72 && "translateX(23vw) translateY(-1vh)")}
                 ${cn(current_spot === 81 && "translateX(23vw) translateY(-1vh)")}
                 `,
-              }}
-            >
-              <RiveShopKeeper url={"https://arweave.net/rrX4T8R7gZJuh3onSlujy7aeZO8y4ew8Hz_ML_9cE2k"} />
+                }}
+              >
+                <RiveAnimation url={"https://arweave.net/rrX4T8R7gZJuh3onSlujy7aeZO8y4ew8Hz_ML_9cE2k"} />
+              </div>
             </div>
-          </div>}
+          )}
         </div>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { PlayerFrame } from "@/components/game/PlayerFrame";
 import QuestBook from "@/components/game/QuestBook";
 import InteractiveMap from "@/components/InteractiveMap";
@@ -6,6 +7,7 @@ import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, la
 import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import { Fit } from "@rive-app/react-canvas";
 import { useEffect, useState } from "react";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
@@ -161,9 +163,9 @@ const GameMap = () => {
   return (
     <div
       className="h-screen w-screen bg-cover bg-center overflow-hidden relative"
-      style={{
-        backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
-      }}
+      // style={{
+      //   backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
+      // }}
     >
       <audio autoPlay loop>
         <source src={SOUNDS.ISLAND_AUDIO} type="audio/mpeg" />
@@ -282,6 +284,7 @@ const GameMap = () => {
       <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
       <label>Step Time (in ms)</label>
       <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
+      <RiveAnimation fit={Fit.Cover} url={"https://arweave.net/aV1siQE3OyrMZGJTjQoqslFAXn-kU6HZ5lAmoK5sewI"} />
       <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} onLevelSelect={handleLevelSelect} />
     </div>
   );

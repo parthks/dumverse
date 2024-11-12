@@ -7,7 +7,7 @@ import { GAME_PROCESS_ID, calculatePositionAndSize } from "@/lib/utils";
 import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { useGameStore } from "@/store/useGameStore";
 import { useCallback, useEffect, useState } from "react";
-import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
@@ -364,8 +364,17 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
       </div>
       <div className="z-10 absolute top-4 right-4">
         <div className="flex items-center gap-2">
-          <img src={IMAGES.BANK_KEYS} alt="Keys" className="w-8" />
-          <span className="text-black text-lg">Keys found {user.special_item_key == -1 ? 0 : user.special_item_key}/3</span>
+          {user.special_item_key != -1 && (
+            <>
+              {/* user.special_item_key number of obtained keys and rest transparent upto a max of 3 keys */}
+              {Array.from({ length: user.special_item_key }).map((_, index) => (
+                <img src={"https://arweave.net/ZZmiA3RZ8BsaRYD88q_R3muiX5ZeDxwVawo71N-qpfg"} alt="Obtained Key" className="w-16" />
+              ))}
+              {Array.from({ length: 3 - user.special_item_key }).map((_, index) => (
+                <img src={"https://arweave.net/HwqbzSo7P7P4cOB28a1aId8GKR2HIQmZMCmdYbuqPkQ"} alt="Transparent Key" className="w-16" />
+              ))}
+            </>
+          )}
         </div>
         {user.special_item_key == -1 && (
           <ImgButton
@@ -389,19 +398,31 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
-            <text x="45%" y="50%" fontSize="150" textAnchor="middle" fill="white">
+            <text x="45%" y="40%" fontSize="150" textAnchor="middle" fill="white">
               {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $Dumz`}
             </text>
             <image
               href="https://arweave.net/-nNkBcJ5iAWv0tbYBOqZkTDabHvGGLR0jNnAC5OoVX4"
               x="40%"
-              y="53%"
+              y="43%"
               width={(163 / imageWidth) * 100 * 2.5 + "%"}
               height={(54 / imageHeight) * 100 * 2.5 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_dumz_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_dumz_amount == 0 || user.special_item_key != 3 ? "disabled-image" : ""}`}
               item-type="claim-dumz"
             />
+            {/* bank locks */}
+            {Array.from({ length: 3 }).map((_, index) => (
+              <image
+                href={"https://arweave.net/RBunabOFv3oZQQl6J6jccr-k_5XErZa2dVQUl51jV_0"}
+                x={`${33 + index * 6}%`}
+                y="50%"
+                width="12%"
+                height="12%"
+                preserveAspectRatio="xMidYMid meet"
+              />
+            ))}
+
             {/* gold */}
             <text x="45%" y="73%" fontSize="150" textAnchor="middle" fill="white">
               {bankDataLoading ? "--" : `${bank.nft_gold_amount}g`}
@@ -509,7 +530,7 @@ export default function BankPage() {
                   aspectRatio: 1,
                 }}
               >
-                <RiveShopKeeper url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
+                <RiveAnimation url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
               </div>
               <div className="relative ">
                 <img

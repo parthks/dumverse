@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
-import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
@@ -36,17 +36,10 @@ export default function Den() {
 
       <div className="relative w-full h-full ">
         <div className="absolute inset-0">
-          <img
-            src={
-              "https://arweave.net/df4TyUlYX8wpMnz-k73yi8sA-0Jk4V-GkkKGPm3Cn-I"
-            }
-            alt="Den Map"
-            className="w-full h-full  "
-          />
+          <img src={"https://arweave.net/df4TyUlYX8wpMnz-k73yi8sA-0Jk4V-GkkKGPm3Cn-I"} alt="Den Map" className="w-full h-full  " />
         </div>
         <div className="absolute inset-0">
-          {/* bg-red-600 */}{" "}
-          {/* Group the Den DumDum on the counter, Den Counter and 2 x Two Joose on the Shelf */}
+          {/* bg-red-600 */} {/* Group the Den DumDum on the counter, Den Counter and 2 x Two Joose on the Shelf */}
           <div
             className="absolute w-full h-full flex flex-col  items-center justify-end"
             style={{
@@ -57,61 +50,22 @@ export default function Den() {
           >
             <div className="relative w-full h-full flex flex-col">
               {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
-              <div
-                className="relative w-full h-full flex flex-col gap-5"
-                style={{ top: "3%" }}
-              >
+              <div className="relative w-full h-full flex flex-col gap-5" style={{ top: "3%" }}>
                 {/* Two Joose On The Shelf */}
-                <div
-                  className=" w-ful flex flex-col items-center relative"
-                  style={{ left: "-15%" }}
-                >
-                  <div
-                    className="flex gap-12  relative"
-                    style={{ left: "18px" }}
-                  >
-                    <img
-                      src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y"
-                      alt="Joose"
-                      style={{ width: "20%" }}
-                    />
-                    <img
-                      src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y"
-                      alt="Joose"
-                      style={{ width: "20%" }}
-                    />
+                <div className=" w-ful flex flex-col items-center relative" style={{ left: "-15%" }}>
+                  <div className="flex gap-12  relative" style={{ left: "18px" }}>
+                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
+                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
                   </div>
-                  <img
-                    src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs"
-                    alt="Shelf "
-                    style={{ width: "60%", height: "35%" }}
-                  />
+                  <img src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs" alt="Shelf " style={{ width: "60%", height: "35%" }} />
                 </div>
                 {/* Two Joose On The Shelf */}
-                <div
-                  className=" w-ful flex flex-col items-center relative"
-                  style={{ left: "-15%" }}
-                >
-                  <div
-                    className="flex gap-12  relative"
-                    style={{ left: "18px" }}
-                  >
-                    <img
-                      src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y"
-                      alt="Joose"
-                      style={{ width: "20%" }}
-                    />
-                    <img
-                      src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y"
-                      alt="Joose"
-                      style={{ width: "20%" }}
-                    />
+                <div className=" w-ful flex flex-col items-center relative" style={{ left: "-15%" }}>
+                  <div className="flex gap-12  relative" style={{ left: "18px" }}>
+                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
+                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
                   </div>
-                  <img
-                    src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs"
-                    alt="Shelf "
-                    style={{ width: "60%", height: "35%" }}
-                  />
+                  <img src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs" alt="Shelf " style={{ width: "60%", height: "35%" }} />
                 </div>
               </div>
 
@@ -127,7 +81,7 @@ export default function Den() {
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
-                <RiveShopKeeper url={BUILDING_IMAGES.DEN_DUMDUM} />
+                <RiveAnimation url={BUILDING_IMAGES.DEN_DUMDUM} />
               </div>
               {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
               {/* Den Counter */}
@@ -152,10 +106,7 @@ export default function Den() {
               transform: "translate(-50%, -100%)",
             }}
           >
-            <img
-              src="https://arweave.net/OtCWzeGlhcHr4KuRc7fgRUiz4E4PAbCbd4gkbAdLwXg"
-              alt="Den Window"
-            />
+            <img src="https://arweave.net/OtCWzeGlhcHr4KuRc7fgRUiz4E4PAbCbd4gkbAdLwXg" alt="Den Window" />
           </div>
           {/* Den Joose Sign */}
           <div
@@ -165,10 +116,7 @@ export default function Den() {
               transform: "translate(-50%, -100%)",
             }}
           >
-            <img
-              src="https://arweave.net/L1pQvT0yUb--UjJZYoYHMSrdcIDrY-kh1QSpYA0pZHg"
-              alt="Den Joose Sign"
-            />
+            <img src="https://arweave.net/L1pQvT0yUb--UjJZYoYHMSrdcIDrY-kh1QSpYA0pZHg" alt="Den Joose Sign" />
           </div>
           {/* bg-red-400 */}
           {/* Den Table And Chair And Playt Button*/}
@@ -183,27 +131,12 @@ export default function Den() {
               <div className="relative">
                 {/* Play Button */}
 
-                <div
-                  style={{ top: "47%", left: "37%", width: "24%", zIndex: 1 }}
-                  className=" absolute"
-                >
-                  <ImgButton
-                    src={
-                      "https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"
-                    }
-                    onClick={handleClick}
-                    alt={"Play Button"}
-                    className=""
-                  />
+                <div style={{ top: "47%", left: "37%", width: "24%", zIndex: 1 }} className=" absolute">
+                  <ImgButton src={"https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"} onClick={handleClick} alt={"Play Button"} className="" />
                 </div>
 
                 {/* Den Table and Chair */}
-                <img
-                  src="https://arweave.net/6Qk-lI4-2y-Yr23Lw7EbvFWgAanEgbvg0ET42jeBYdM"
-                  alt="Den Table and Chair"
-                  className="relative w-full"
-                  style={{ height: "auto" }}
-                />
+                <img src="https://arweave.net/6Qk-lI4-2y-Yr23Lw7EbvFWgAanEgbvg0ET42jeBYdM" alt="Den Table and Chair" className="relative w-full" style={{ height: "auto" }} />
               </div>
             </div>
           </div>
@@ -222,13 +155,7 @@ function BlackjackGame() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img
-            src={
-              "https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"
-            }
-            alt="Den Blackjack Background"
-            className="w-full h-full"
-          />
+          <img src={"https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"} alt="Den Blackjack Background" className="w-full h-full" />
         </div>
         <div className="absolute inset-0">
           <div
@@ -248,7 +175,7 @@ function BlackjackGame() {
                 aspectRatio: 1, // Keeps the shopkeeper square,
               }}
             >
-              <RiveShopKeeper url={BUILDING_IMAGES.DEN_DUMDUM} />
+              <RiveAnimation url={BUILDING_IMAGES.DEN_DUMDUM} />
             </div>
           </div>
         </div>

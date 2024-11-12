@@ -8,114 +8,154 @@ import { Battle, NPC } from "@/types/combat";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
-// TODO repair system - calculate damage based on equipped weapon and armor. only store base user damage in db.
-
 // const currentBattle = {
+//   npcs: {
+//     LEPERCHAUN: {
+//       extra_gold: 20,
+//       name: "Made it Leperchaun",
+//       damage: 4,
+//       difficulty: "SPECIAL",
+//       gold_reward: 2000,
+//       total_health: 4,
+//       health: 1,
+//       id: "LEPERCHAUN",
+//     },
+//     NPC_5: {
+//       health: 0,
+//       difficulty: "EASY",
+//       total_health: 2,
+//       name: "Adorable Red Panda",
+//       extra_gold: 0,
+//       gold_reward: 5,
+//       damage: 2,
+//       dumz_reward: 1,
+//       id: "NPC_5",
+//     },
+//   },
+//   players_alive: [],
+//   players: {
+//     "1": {
+//       health: 0,
+//       last_updated_at: 1731351508810,
+//       gold_balance: 0,
+//       defense: 0,
+//       added_at_timestamp: 1731351756449,
+//       special_item_kitten: -1,
+//       inventory_weapon_id: "240",
+//       special_item_thread: -1,
+//       damage: 3,
+//       stamina: 2,
+//       current_spot: 0,
+//       dumz_balance: 0,
+//       total_health: 2,
+//       total_stamina: 8,
+//       special_item_bark: -1,
+//       inventory_armor_id: "239",
+//       potion_used: false,
+//       special_item_heart: -1,
+//       potion: {
+//         item_id: "POTION_1",
+//         health: 1,
+//         id: 245,
+//       },
+//       name: "test1",
+//       special_item_key: -1,
+//       address: "8ZXWMPj_fq5vfGPqycbuSJQmEt9b4BOWpcyNslAPKUk",
+//       last_regenerate_time: 1731351754093,
+//       id: "14",
+//     },
+//   },
+//   winner: "LEPERCHAUN",
+//   npcs_alive: ["LEPERCHAUN"],
+//   level: 1,
 //   log: [
 //     {
-//       timestamp: 1726346958193,
-//       message: "hits Doe Eyed Deer for 2",
-//       from: "3",
+//       from: "NPC_5",
+//       timestamp: 1731351766525,
+//       message: "hits Made it Leperchaun for 2",
 //     },
 //     {
-//       timestamp: 1726346958193,
-//       message: "has slain Doe Eyed Deer",
-//       from: "3",
+//       from: "NPC_5",
+//       timestamp: 1731351766525,
+//       message: "deals 2 damage to Made it Leperchaun's health",
 //     },
 //     {
-//       timestamp: 1726346958193,
-//       message: "hits CryptoCherie for 1",
-//       from: "NPC_2",
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351766525,
+//       message: "hits Adorable Red Panda for 4",
 //     },
 //     {
-//       timestamp: 1726346961590,
-//       message: "hits Sad Hedgehog for 2",
-//       from: "3",
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351766525,
+//       message: "deals 4 damage to Adorable Red Panda's health",
 //     },
 //     {
-//       timestamp: 1726346961590,
-//       message: "has slain Sad Hedgehog",
-//       from: "3",
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351766525,
+//       message: "has slain Adorable Red Panda",
 //     },
 //     {
-//       timestamp: 1726346961590,
+//       from: "1",
+//       timestamp: 1731351774503,
+//       message: "attack misses",
+//     },
+//     {
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351774503,
+//       message: "hits test1 for 4",
+//     },
+//     {
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351774503,
+//       message: "deals 2 damage to test1's defense",
+//     },
+//     {
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351774503,
+//       message: "deals 2 damage to test1's health",
+//     },
+//     {
+//       from: "1",
+//       timestamp: 1731351779152,
+//       message: "hits Made it Leperchaun for 3",
+//     },
+//     {
+//       from: "1",
+//       timestamp: 1731351779152,
+//       message: "deals 3 damage to Made it Leperchaun's health",
+//     },
+//     {
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351779152,
+//       message: "hits test1 for 4",
+//     },
+//     {
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351779152,
+//       message: "deals 4 damage to test1's health",
+//     },
+//     {
+//       from: "1",
+//       timestamp: 1731351779152,
+//       message: "Player has Perished",
+//     },
+//     {
+//       from: "LEPERCHAUN",
+//       timestamp: 1731351779152,
 //       message: "has won the battle",
-//       from: "3",
 //     },
 //   ],
-//   winner: "2",
-//   npcs: {
-//     NPC_1: {
-//       health: 0,
-//       dumz_reward: 1,
-//       damage: 1,
-//       difficulty: "EASY",
-//       total_health: 1,
-//       gold_reward: 10,
-//       extra_gold: 10000,
-//       id: "NPC_1",
-//       defense: 0,
-//       name: "Doe Eyed Deer",
-//     },
-//     NPC_2: {
-//       health: 0,
-//       dumz_reward: 1,
-//       damage: 1,
-//       difficulty: "EASY",
-//       total_health: 1,
-//       gold_reward: 10,
-//       extra_gold: 0,
-//       id: "NPC_2",
-//       defense: 0,
-//       name: "Sad Hedgehog",
-//     },
-//     NPC_3: {
-//       health: 0,
-//       dumz_reward: 1,
-//       damage: 1,
-//       difficulty: "EASY",
-//       total_health: 1,
-//       gold_reward: 10,
-//       extra_gold: 0,
-//       id: "NPC_3",
-//       defense: 0,
-//       name: "Sad Hedgehog",
-//     },
+//   created_at: 1731351756449,
+//   players_attacked: {},
+//   ended: true,
+//   last_player_attack_timestamp: {
+//     "1": 1731351779152,
 //   },
-//   npcs_alive: ["NPC_1", "NPC_2"],
 //   last_npc_attack_timestamp: {
-//     NPC_1: 1726346952043,
-//     NPC_2: 1726346958193,
+//     LEPERCHAUN: 1731351779152,
+//     NPC_5: 1731351766525,
 //   },
-//   level: 1,
-//   id: 39,
-//   players_attacked: ["7"],
-//   ended: false,
-//   created_at: 1726346952043,
-//   players: {
-//     "5": {
-//       potion: {
-//         health: 1,
-//         id: 12,
-//         item_id: "POTION_1",
-//       },
-//       name: "CryptoCherie",
-//       damage: 2,
-//       health: 2,
-//       potion_used: true,
-//       total_health: 2,
-//       stamina: 1,
-//       defense: 0,
-//       // nft_address: "B9-lCfmpAqDLhcyLL054pEYzNZlV6ZyseBsuxx2C-IY",
-//       id: "5",
-//       total_stamina: 6,
-//       gold_balance: 24070,
-//       current_spot: 0,
-//       address: "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go",
-//       dumz_balance: 60,
-//     },
-//   },
-//   players_alive: ["5"],
+//   id: 110,
 // } as any;
 
 export default function Combat() {
@@ -505,7 +545,11 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
     >
       <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
       <h2 className="text-white text-2xl font-bold text-center">{player.name} (P)</h2>
-      <img src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM} alt={player.name} className="w-full max-h-[226px] object-contain mb-2" />
+      <img
+        src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM}
+        alt={player.name}
+        className={`w-full ${player.nft_address ? "max-h-[226px]" : "max-h-[212px] mt-4"} object-contain mb-2`}
+      />
 
       {/* <div className="flex gap-2 justify-between items-start">
         <div className="flex flex-col gap-1"> */}
@@ -604,15 +648,15 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
           ))}
         </div> */}
       </div>
-      <div className="absolute bottom-[6.5%] left-[6.5%] w-[55px]">
+      <div className={`absolute w-[65px] ${enemy.id == "LEPERCHAUN" ? "left-[38%] bottom-[7%]" : "left-[2.5%] bottom-[6.5%]"}`}>
         <p
           className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
           style={{
-            fontSize: `${15}px`,
+            fontSize: `${enemy.id == "LEPERCHAUN" ? 18 : 15}px`,
             lineHeight: "1",
           }}
         >
-          {totalGold}g
+          {totalGold.toLocaleString()}g
         </p>
       </div>
       {enemy.dumz_reward && (

@@ -1,5 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
-import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
@@ -40,7 +40,7 @@ export default function Infirmary() {
                 aspectRatio: 1, // Keeps the shopkeeper square
               }}
             >
-              <RiveShopKeeper url={"/purple_loop.riv"} />
+              <RiveAnimation url={"/purple_loop.riv"} />
               <img src="/shopkeeper_chat.gif" alt="Shopkeeper Chat" className="absolute top-0 right-0 h-auto" style={{ transform: "translate(75%, -40%)" }} />
             </div>
           </div>

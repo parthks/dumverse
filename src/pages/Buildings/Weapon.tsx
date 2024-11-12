@@ -1,5 +1,5 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
-import { RiveShopKeeper } from "@/components/buildings/RiveShopkeeper";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
@@ -67,7 +67,7 @@ export default function Weapon() {
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
-                <RiveShopKeeper url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
+                <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
 
               {/* Shop Table */}
