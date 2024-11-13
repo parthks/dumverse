@@ -65,7 +65,7 @@ end
    ]]
 -- TODO: Implement this function
 
-local GreenAddresses = {
+local GreenAddresses: {string} = {
   "mBG6Igksjm_yMPddfIgJrkekAo3U1KHJsDBYbL-bIZk",
   "zpnlyUAPfSGUjl1o1WPA592oxQ8V4FNBKBWdyWUx47M",
   "qP7DsdCysO8oyl2ChZFxmKSsPTRUnpzhu9YImV15Gl4",
@@ -1124,7 +1124,6 @@ local GreenAddresses = {
   "qaDH29wnnvQPyID7Di963SEZI2jNwV_3nTwqO0VJAus",
   "mg047KVmLj_MnOsGLZVBW9WT627P3Er2ecGEycGK2j4",
   "AfPbOc7qEGuxoNwpylT5LXxeXpQHi6HeiA61DG9Wcog",
-  null,
   "iBjEcjnLH6L2BKP5qsQ9bFS839grM6UdVaJbnP-s_1E",
   "EPs2CmcRZAIkPm29PWT2lTe6lzvuvvEoQtJFI_zTOI0",
   "4pTPxsGbGMTO8pV8hBfvgBdBW3dqE0aFloiBiWjSDuc",
@@ -1499,7 +1498,7 @@ local GreenAddresses = {
   "5WVHn_zNjuBjk31l-PdO1ZL5riXJvtSryBx1yla9HdU",
   "KDLUTdME_jGHxVae40jLHQ17wUiK1SbrNCTlYumEnbw"
 }
-local RedAddresses = {
+local RedAddresses: {string} = {
   "fjqNSagtQ5pilAYT9QzHm4MqfCvpdnTrAiSZmjQQdHY",
   "vNOpUy0d473pBmDzWN0FOLHgq6JiyPS2SR1oTFLTnlc",
   "mCuPtpdobtJfDybONuHseBjwzM9DTa5szITSPmB5-lU",
@@ -1561,7 +1560,7 @@ local RedAddresses = {
   "rOulB4m8tN7jI6JQBeWY3QpGH0NQOSGxsOKqxJdKmcE",
   "oYEyrDlnsKZGcqFzRLN9qs-d5gZ9oE6gXd0mtieUxuU"
 }
-local PurpleAddresses = {
+local PurpleAddresses: {string} = {
   "wmwKpa1Jsj2M476IPREZNOmAFPkfgtn7CV7_RGMHTXU",
   "XjOTLoGuCiROpU09IcpZ8d3WmVPGmjWLhG1oFqanXTg",
   "d9DhRG2nCi96KH7FS05nEwG_xfCLWjOfEMdT6XoSJ7k",
@@ -1649,7 +1648,7 @@ local PurpleAddresses = {
   "dCCj366N4Nb-kNUVKHUF-cLV-jCo0dnC47DN3zXUABE",
   "CwA4wQgajnhWh9XX2L1L9JJAqqll5bAkG2RACGDN164"
 }
-local BlueAddresses = {
+local BlueAddresses: {string} = {
   "D-nwbb-gDwO8slepJAt6AsZX5oBub82u1ayWyNfMm_A",
   "RHD_5Kne0Cg8VLwLjhG4bz9np1U1mAPK2io9FVvJseI",
   "yWgVjFA4lpV0Akgpf-bd-KawKHW1Xi-P93Gwh67WU5c",
@@ -1724,7 +1723,7 @@ local BlueAddresses = {
   "72yixluH8t6aWcTJ_L1AX064As4U29wLldrp0WHQwH0",
   "cUFk1h0usXigsCky_qmtel0wCfpGvwAvaVQ9hZtHEsM"
 }
-local GoldAddresses = {
+local GoldAddresses: {string} = {
   "e3MA3Mx590GEKWqXbjN20IUnWTlrxYuZGmeOOj2iHSg",
   "H3Ok4dORPD6h8jVYpC4pgG62AjmFELI-CaW0A-TActQ",
   "8A0L27TxWyHi3zZ0ke8ul2G_dnPqFzh2F2ND5Lyxw_I",
@@ -1749,7 +1748,7 @@ local GoldAddresses = {
   "NhRamO7nIxMSlw00otp5fP_Tc1uXyx7d6f8BNftjvQg",
   "ogYuy5Bo46XIXP2mI1HAj_Algzw4hYo4qzFidLyvkkI"
 }
-local AgentAddresses = {
+local AgentAddresses: {string} = {
   "y6atUgqwrW7dTD6Z2F_0L_Qybk5K2M-9KrIgYL9WjiQ",
   "Q_RqxX2lgKuh8GYlS5dEfpLb4RqAd7_eC-6nZTHWr9Q",
   "9_ceX-xq0rC2HGg2cejMXl6jvbPbqZVL8MAP737X91Q",
@@ -2061,27 +2060,39 @@ local AgentAddresses = {
   "BgWug-kJJLtk2jrObfPsJixboQWc5tLz7pS30fL3WxY"
 }
 
-local function getNFTBankAmountForNFT(nft_address): (Int, Int)
+local function getNFTBankAmountForNFT(nft_address: string): (number, number)
   if not nft_address then
     return 0, 0
   end
-  if GreenAddresses[nft_address] then
-    return 1000, 1000
+  for _, address in ipairs(GreenAddresses) do
+    if address == nft_address then
+      return 1000, 1000
+    end
   end
-  if AgentAddresses[nft_address] then
-    return 2000, 1500
+  for _, address in ipairs(AgentAddresses) do
+    if address == nft_address then
+      return 2000, 1500
+    end
   end
-  if BlueAddresses[nft_address] then
-    return 3000, 1500
+  for _, address in ipairs(BlueAddresses) do
+    if address == nft_address then
+      return 3000, 1500
+    end
   end
-  if PurpleAddresses[nft_address] then
-    return 2500, 1500
+  for _, address in ipairs(PurpleAddresses) do
+    if address == nft_address then
+      return 2500, 1500
+    end
   end
-  if RedAddresses[nft_address] then
-    return 3500, 1500
+  for _, address in ipairs(RedAddresses) do
+    if address == nft_address then
+      return 3500, 1500
+    end
   end
-  if GoldAddresses[nft_address] then
-    return 5000, 3000
+  for _, address in ipairs(GoldAddresses) do
+    if address == nft_address then
+      return 5000, 3000
+    end
   end
   return 10000, 10000
 end
