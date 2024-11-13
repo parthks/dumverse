@@ -59,8 +59,8 @@ local function addNewUserHandler(msg: Message)
     local profiles = dbAdmin:exec(getUserQuery)
     assert(#profiles == 0, "User already exists")
 
-    local nft_gold_amount = nft_address and 12000 or 10000
-    local nft_dumz_amount = nft_address and 80 or 40
+    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    
     local starting_gold = 10000
     local starting_dumz = 50
     local bank_gold_amount = 10000
