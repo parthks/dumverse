@@ -193,21 +193,22 @@ const GameMap = () => {
             src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
           />
         ) : (
-          <ImgButton
-            disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
-            src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
-            onClick={async () => {
-              setEnterNewAreaLoading(true);
-              const resultData = await enterNewBattle(tempCurrentIslandLevel);
-              console.log("resultData", resultData);
-              if (resultData.status == "Success") {
-                setGameStatePage(GameStatePages.COMBAT);
-              }
-              setEnterNewAreaLoading(false);
-            }}
-            className="shrink-0 mb-8"
-            alt={"Enter Combat"}
-          />
+          tempCurrentIslandLevel != 0 && (
+            <ImgButton
+              disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
+              src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
+              onClick={async () => {
+                setEnterNewAreaLoading(true);
+                const resultData = await enterNewBattle(tempCurrentIslandLevel);
+                if (resultData.status == "Success") {
+                  setGameStatePage(GameStatePages.COMBAT);
+                }
+                setEnterNewAreaLoading(false);
+              }}
+              className="shrink-0 mb-8"
+              alt={"Enter Combat"}
+            />
+          )
         )}
       </div>
       <div className="z-10 absolute bottom-2 right-36 flex gap-2">

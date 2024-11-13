@@ -648,17 +648,19 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
           ))}
         </div> */}
       </div>
-      <div className={`absolute w-[65px] ${enemy.id == "LEPERCHAUN" ? "left-[38%] bottom-[7%]" : "left-[2.5%] bottom-[6.5%]"}`}>
-        <p
-          className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
-          style={{
-            fontSize: `${enemy.id == "LEPERCHAUN" ? 18 : 15}px`,
-            lineHeight: "1",
-          }}
-        >
-          {totalGold.toLocaleString()}g
-        </p>
-      </div>
+      {totalGold != 0 && (
+        <div className={`absolute w-[65px] ${enemy.id == "LEPERCHAUN" ? "left-[38%] bottom-[7%]" : "left-[2.5%] bottom-[6.5%]"}`}>
+          <p
+            className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+            style={{
+              fontSize: `${enemy.id == "LEPERCHAUN" ? 18 : 15}px`,
+              lineHeight: "1",
+            }}
+          >
+            {totalGold.toLocaleString()}g
+          </p>
+        </div>
+      )}
       {enemy.dumz_reward && (
         <div className="absolute bottom-[6.5%] right-[18%]">
           <p

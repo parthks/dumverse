@@ -183,9 +183,9 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
     -- if attacker_id is a player (npc count be attacking another npc as well)
     if (Battles[battle_id].players[attacker_id] ~= nil) then
         -- player gets npc gold + extra gold
-            Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + npc.gold_reward +
-            npc.extra_gold
-            Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + npc.dumz_reward
+            Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + (npc.dumz_reward or 0)
+            Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + (npc.gold_reward or 0) +
+            (npc.extra_gold or 0)
         -- intentionally not updating the npc gold reward and extra gold, to keep the histroy. ok since npc has been removed from npcs_alive
         -- give player special items if npc is special enemy
         if npc.id == "SHIBA" then
@@ -220,7 +220,9 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
     local player = Battles[battle_id].players[player_id]
     -- if attacker_id is a npc, add player gold to npc extra gold
     if Battles[battle_id].npcs[attacker_id] then
-        Battles[battle_id].npcs[attacker_id].extra_gold = (Battles[battle_id].npcs[attacker_id].extra_gold or 0) + player.gold_balance
+        if attacker_id ~= "SHIBA" and attacker_id ~= "MOUSE" and attacker_id ~= "TREE" and attacker_id ~= "DUMZ" and attacker_id ~= "PEACOCK" then
+            Battles[battle_id].npcs[attacker_id].extra_gold = (Battles[battle_id].npcs[attacker_id].extra_gold or 0) + player.gold_balance
+        end
         -- players dumz gets burned
     else
         -- if attacker_id is a player, give the gold to the other player

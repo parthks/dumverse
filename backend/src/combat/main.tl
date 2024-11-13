@@ -135,9 +135,13 @@ local function CronTick(msg: Message, npcTimer: integer)
                         print("battle " .. battle.id .. " - AUTO PLAYER UNBLOCKED ATTACK: " .. player_id)
                         Battles[battle.id].players_attacked = {}
                         Battles[battle.id].last_player_attack_timestamp[player_id] = msg.Timestamp
+                        
                     end
                 end
-                -- BattleHelpers.checkIfBattleShouldEnd(battle.id, nil, msg.Timestamp)  
+                -- race condition that hangs the game
+                if #battle.players_alive == 1 then
+                    BattleHelpers.checkIfBattleShouldEnd(battle.id,battle.players_alive[1], msg.Timestamp)  
+                end
             end
         end
     end
@@ -303,6 +307,7 @@ local function userAttackHandler(msg: Message)
 
     table.insert(Battles[battle_id].players_attacked, user_id)
 
+    -- cron will call this, can case race conditions...
     if #Battles[battle_id].players_attacked >= #Battles[battle_id].players_alive then -- greater than or equal to in case a player has died
         -- all players have attacked, so NPC should attack
         print("All players have attacked. NPC should attack")
