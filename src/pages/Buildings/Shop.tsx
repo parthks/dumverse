@@ -6,6 +6,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import GifComponent from "@/components/Dialogue/Dialogue";
 
 // function ShopItem({ item, position }: { item: Item; position: number }) {
 //   const { buyItemLoading } = useGameStore();
@@ -193,18 +194,28 @@ export default function Shop() {
             {/* Shopkeeper and Table Group */}
             <div className="relative w-full flex flex-col items-center">
               {/* Shopkeeper */}
+              <div className="relative h-full flex items-center">
               <div
-                className="relative"
+                className="relative h-full "
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "16px",
+                  top: "17px",
+                  left:"22%",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
-                <RiveAnimation url={BUILDING_IMAGES.GENERAL_STORE_DUMDUM} />
+                <RiveAnimation url={BUILDING_IMAGES.GENERAL_STORE_DUMDUM}/>
+                {/* <GifComponent  className="top-[-120%] right-[-85%] bg-red-900"/> */}
+              
               </div>
+              <div className="relative" style={{left:"-23%",top:"-70px"}}>
+              <GifComponent  className="top-[-120%] right-[-85%] "/>
+              </div>
+            
+              </div>
+           
 
               <div className="relative">
                 {/* shop sign */}
