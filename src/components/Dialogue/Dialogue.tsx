@@ -52,6 +52,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
         setQuestAccepted(true);
         setDialogueIndex(retrievedData.BANK || 0);
       } else {
+        setQuestAccepted(false);
         setGifSrc(`${DIALOGUES.BANK.dialogue_quest}?${Date.now()}`);
         const timer = setTimeout(() => {
           setShowButton(true);
