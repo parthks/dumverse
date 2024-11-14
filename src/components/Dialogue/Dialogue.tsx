@@ -18,7 +18,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
   onClickFunction,
   buttonDisable,
 }) => {
-  const { GameStatePage, user } = useGameStore();
+  const { GameStatePage, user, refreshUserData} = useGameStore();
   const [showButton, setShowButton] = useState(false);
   const [gifSrc, setGifSrc] = useState("");
   const [questAccepted, setQuestAccepted] = useState(false);
@@ -100,9 +100,12 @@ const GifComponent: React.FC<GifComponentProps> = ({
   }, [dialogueIndex, questAccepted, GameStatePage]);
 
   const handleQuestAcceptance = async () => {
-    setQuestAccepted(true);
-    setShowButton(false);
-    await onClickFunction();
+    if (user){
+      setQuestAccepted(true);
+      setShowButton(false);
+      await onClickFunction();
+      await refreshUserData(user.id)
+    }
   };
 
   return (
