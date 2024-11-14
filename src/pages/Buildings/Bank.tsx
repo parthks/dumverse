@@ -448,6 +448,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 export default function BankPage() {
   const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage,acceptBankQuest } = useGameStore();
   const [amount, setAmount] = useState(0);
+  const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
   const backgroundAudio = new Audio(SOUNDS.TOWN_AUDIO_IN_BUILDING);
@@ -521,20 +522,24 @@ export default function BankPage() {
             }}
           >
             <div className="relative w-full  h-full flex flex-col">
-              <div className="absolute h-full flex items-center " style={{top:"-8%",left:"17%"}}>
+              {/* <div className="absolute h-full flex items-center " style={{top:"-8%",left:"17%"}}> */}
               <div
-                className=" "
+                className=" absolute"
                 style={{
                   maxWidth: "18vw",
                   width: "100%",
-                  
+                  top:"8%",left:"17%",
                   aspectRatio: 1,
                 }}
               >
                 <RiveAnimation url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
               </div>
-              <GifComponent className=" relative top-[-15%] left-[-5%] z-10" buttonClassName="" onClickFunction={async ()=>console.log("Done")}/>
-              </div>
+              <GifComponent className=" absolute top-[-3%] left-[50%] z-10" buttonClassName="" onClickFunction={async () => {
+              setAcceptQuestLoading(true);
+              await acceptBankQuest();
+              setAcceptQuestLoading(false);
+            }} buttonDisable={acceptQuestLoading}/>
+              {/* </div> */}
             
               <div className="relative ">
                 <img

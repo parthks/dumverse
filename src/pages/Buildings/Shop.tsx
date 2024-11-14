@@ -194,7 +194,6 @@ export default function Shop() {
             {/* Shopkeeper and Table Group */}
             <div className="relative w-full flex flex-col items-center">
               {/* Shopkeeper */}
-              <div className="relative h-full flex items-center">
               <div
                 className="relative h-full "
                 style={{
@@ -210,11 +209,8 @@ export default function Shop() {
                 {/* <GifComponent  className="top-[-120%] right-[-85%] bg-red-900"/> */}
               
               </div>
-              <div className="relative" style={{left:"-23%",top:"-70px"}}>
-              {/* <GifComponent  className="top-[-120%] right-[-85%] "/> */}
-              </div>
-            
-              </div>
+           
+             
            
 
               <div className="relative">

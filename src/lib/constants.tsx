@@ -115,21 +115,21 @@ export const DIALOGUES = {
     dialogue3: "https://arweave.net/7R1IX9jZa5ob9UWpjHGMTm8-pYQE4zGk4vuTQ8NViig",
     dialogue4: "https://arweave.net/qUJWJdW4bHBd7wwHwSgBgkIgOfkyXxs2PKXrb8HgPNE"
   },
-  GENERAL_STORE: {
+  SHOP: {
     dialogue_quest: "https://arweave.net/7zLwzlAohhjNhn-Cwe93oFWbSMXX5mWxRSyLR_x4rQA", 
     dialogue1: "https://arweave.net/wV-ly7iiA_lzSY1DK8MG6oC2TvOPAC1V96e27vuGrw4", 
     dialogue2: "https://arweave.net/xedMWI4cj51IztRLv8oLBoV-Yr5lsV1wIhrtkx75uxs", 
     dialogue3: "https://arweave.net/jEOKxhuVYyorImvdoBDDiwocSP0UVWv3xeIxbuQMa-M",
     dialogue4: "https://arweave.net/5JUWuWeZ6ZDH0r20nkluGgJwe3ouN9WvmYI-0J4Dmd8"
   },
-  NFT_HOLDER_SHOP: {
+  NFT_SHOP: {
     dialogue_quest: "https://arweave.net/0NjPck0obcXL13-tCwLftVTdYJpBikltkNgFkKbPxzY", 
     dialogue1: "https://arweave.net/k_vNZaNdwkcLDcMpKQcRdHuLdpYRdygtDjW87ykYAHU", 
     dialogue2: "https://arweave.net/76A-7UQTjCTG22sGjAB8zp2jrL6YBjxBsIaQNWSV_MY", 
     dialogue3: "https://arweave.net/Hy-vzZrupb-6rMOZhkM2sbZLjw5z32dGwGhSd40hmO0",
     dialogue4: "https://arweave.net/D6Z_bvhPKZt29eUFB9kl0D-T-rk_uOPnQ71BrUt4hJc"
   },
-  WEAPON: {
+  WEAPON_SHOP: {
     dialogue_quest: "https://arweave.net/_KB6DqbGSTjdpq1DX8_QVLUvrRFI3ahXAZKAokC60FE", 
     dialogue1: "https://arweave.net/3kmTLB75St9uVGv9TpTXAJBCurhcRNPwzkbx__1BDCI", 
     dialogue2: "https://arweave.net/Iq2_w62eMzAdUl_T7t_r5UAQfteImka3qN9Zf6-gZAo", 
