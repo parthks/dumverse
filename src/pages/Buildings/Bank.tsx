@@ -8,6 +8,7 @@ import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessag
 import { useGameStore } from "@/store/useGameStore";
 import { useCallback, useEffect, useState } from "react";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
+import GifComponent from "@/components/Dialogue/Dialogue";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
@@ -445,7 +446,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 }
 
 export default function BankPage() {
-  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage } = useGameStore();
+  const { bank, getBank, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage,acceptBankQuest } = useGameStore();
   const [amount, setAmount] = useState(0);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
@@ -520,18 +521,21 @@ export default function BankPage() {
             }}
           >
             <div className="relative w-full  h-full flex flex-col">
+              <div className="absolute h-full flex items-center " style={{top:"-8%",left:"17%"}}>
               <div
-                className="absolute "
+                className=" "
                 style={{
                   maxWidth: "18vw",
                   width: "100%",
-                  top: "8%",
-                  left: "15%",
+                  
                   aspectRatio: 1,
                 }}
               >
                 <RiveAnimation url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
               </div>
+              <GifComponent className=" relative top-[-15%] left-[-5%] z-10" buttonClassName="" onClickFunction={async ()=>console.log("Done")}/>
+              </div>
+            
               <div className="relative ">
                 <img
                   src="https://arweave.net/308P8DWdOdn9VxdCzn7zplkMJZ9YdClGZuMya5suixM"

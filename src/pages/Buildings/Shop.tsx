@@ -201,7 +201,7 @@ export default function Shop() {
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "17px",
-                  left:"22%",
+                  left:"7%",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
@@ -211,7 +211,7 @@ export default function Shop() {
               
               </div>
               <div className="relative" style={{left:"-23%",top:"-70px"}}>
-              <GifComponent  className="top-[-120%] right-[-85%] "/>
+              {/* <GifComponent  className="top-[-120%] right-[-85%] "/> */}
               </div>
             
               </div>
