@@ -509,7 +509,7 @@ export default function BankPage() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/Rnbi6jrab33iirlfGRS6up_iPe0TW1Pn-ali8sCG2ME"} alt="Bank Map" className="w-full h-full object-contain" />
+          <img src={"https://arweave.net/v-SSxfaVV5sID-uCyEvH-0BA7eNgmK2_rmEaif6godQ"} alt="Bank Map" className="w-full h-full object-contain" />
           {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
           {/* bg-[#f0ecd3]       */}
           <div

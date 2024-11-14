@@ -14,10 +14,15 @@ end
 
 
 -- create a helper simulates combat that is based on dice rolls (1-4 is a successful hit, 5-6 is a miss).
-local function _verifyAttackSuccessful(): (boolean, number)
+local function _verifyPlayerAttackAttackSuccessful(): (boolean, number)
+    local attacker_roll = math.random(1, 6)
+    local success = attacker_roll <= 5
+    return success
+end
+local function _verifyNPCAttackAttackSuccessful(): (boolean, number)
     local attacker_roll = math.random(1, 6)
     local success = attacker_roll <= 4
-    return success, attacker_roll
+    return success
 end
 
 -- Helper function to get entity stats
@@ -64,13 +69,18 @@ end
 
 -- attackingEntityType = "player" or "npc"
 -- defendingEntityType = "player" or "npc"
-local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntityStats, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
+local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntityStats, timestamp: integer, critical_hit: boolean, attacker_type: string): ({BattleLogEntry}, number, number)
 
     local log: {BattleLogEntry} = {}
 
     print("SimulateCombat - attacker " .. attacker.name .. " defender " .. defender.name)
 
-    local success, _ = _verifyAttackSuccessful()
+    local success = false
+    if attacker_type == "player" then
+        success = _verifyPlayerAttackAttackSuccessful()
+    else
+        success = _verifyNPCAttackAttackSuccessful()
+    end
 
     if success or critical_hit then
         local damage = attacker.damage
@@ -133,25 +143,25 @@ end
 local function PlayerAttacksNPC(attackingEntity: CombatUserData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false)
+    return SimulateCombat(attacker, defender, timestamp, false, "player")
 end
 
 local function NPCAttacksPlayer(attackingEntity: CombatEnemyData, defendingEntity: CombatUserData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForNPC(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, critical_hit)
+    return SimulateCombat(attacker, defender, timestamp, critical_hit, "npc")
 end
 
 local function NPCAttacksNPC(attackingEntity: CombatEnemyData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForNPC(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false)
+    return SimulateCombat(attacker, defender, timestamp, false, "npc")
 end
 
 local function PlayerAttacksPlayer(attackingEntity: CombatUserData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false)
+    return SimulateCombat(attacker, defender, timestamp, false, "player")
 end
 
 
