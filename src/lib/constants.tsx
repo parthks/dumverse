@@ -70,7 +70,7 @@ export const ENEMY_CARD_IMAGE = {
   MOUSE: "https://arweave.net/P2YsdMqVYNZFMbUofF1ArW7WixsHCbNzJg4N0OrL3AI", // thread
   TREE: "https://arweave.net/MCYuvUej12RexhI_AsQIEuOC51upXzAfbV8HEV2gGlk", // bark
   PEACOCK: "https://arweave.net/Xss-Mc-immgjGomhx7Ozg71AEADhvoOGODLhMbv8yEQ", // heart fragment
-  DUMZ: "https://arweave.net/4ezrE12NpSOhmW34kPDR0FWK10NwBcLvE54Lhl1pOFk", // dumz loot
+  DUMZ: "https://arweave.net/wW6WIyG3cy36BxoJuPM5y0YHJabdPFCH9Ea77l6I1vQ", // dumz loot
   BLACK_SWAN: "https://arweave.net/rcdUY5bbvck7dAHQwthelvyIKdUy3JEeJhHoldrXqpQ", // kitten, gold and dumz loot
   LEPERCHAUN: "https://arweave.net/eF9igMGCSyZcWgaRJBtphMI18zuu0uvrm8oiM8EX6js", // gold loot
 };

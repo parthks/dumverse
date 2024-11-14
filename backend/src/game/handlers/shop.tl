@@ -79,10 +79,19 @@ local function shopBuyItemHandler(msg: Message)
         UPDATE Inventory SET equipped = FALSE WHERE user_id = %d AND item_type = "%s";
     ]], user_id, item.type))
 
-    -- Add new item to inventory
-    dbAdmin:exec(string.format([[
-        INSERT INTO Inventory (user_id, item_id, item_type, equipped) VALUES (%d, "%s", "%s", TRUE);
-    ]], user_id, item_id, item.type))
+    if item_id == "FOOD_2" then
+        -- add 10 cake slices
+        for _ = 1, 10 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type, equipped) VALUES (%d, "%s", "%s", TRUE);
+            ]], user_id, "FOOD_1", "FOOD"))
+        end
+    else
+        -- Add new item to inventory
+        dbAdmin:exec(string.format([[
+            INSERT INTO Inventory (user_id, item_id, item_type, equipped) VALUES (%d, "%s", "%s", TRUE);
+        ]], user_id, item_id, item.type))
+    end
 
     -- Update user balance
     local newBalance: number
