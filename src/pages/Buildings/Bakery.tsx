@@ -2,6 +2,7 @@ import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
+import GifComponent from "@/components/Dialogue/Dialogue";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
@@ -60,6 +61,7 @@ export default function Bakery() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.INFIRMARY_CAKESHOP_DUMDUM} />
               </div>
+              <GifComponent className="absolute h-[20vh] translate-x-[12vw] translate-y-[8vh]"/>
 
               {/* Shop Table */}
               <img src="https://arweave.net/TH9bwqkcXxXUvTUuMPSANB8KgWskr8m255Pb0u3Iz6w" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />

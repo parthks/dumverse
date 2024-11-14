@@ -3,6 +3,8 @@ import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
+import GifComponent from "@/components/Dialogue/Dialogue";
+
 
 export default function Infirmary() {
   const [revived, setRevived] = useState(false);
@@ -41,7 +43,8 @@ export default function Infirmary() {
               }}
             >
               <RiveAnimation url={"/purple_loop.riv"} />
-              <img src="/shopkeeper_chat.gif" alt="Shopkeeper Chat" className="absolute top-0 right-0 h-auto" style={{ transform: "translate(75%, -40%)" }} />
+              {/* <img src="/shopkeeper_chat.gif" alt="Shopkeeper Chat" className="absolute top-0 right-0 h-auto" style={{ transform: "translate(75%, -40%)" }} /> */}
+              <GifComponent className=" absolute h-[20vh] translate-x-[19vw] translate-y-[-44vh]"/>
             </div>
           </div>
         </div>

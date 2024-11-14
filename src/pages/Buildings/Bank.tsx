@@ -496,7 +496,8 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      <div
+      { user.special_item_key===-1 &&
+     <> <div
         className=" absolute z-10"
         style={{
           maxWidth: "18vw",
@@ -517,7 +518,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
           setAcceptQuestLoading(false);
         }}
         buttonDisable={acceptQuestLoading}
-      />
+      /> </>}
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton
           src={
@@ -664,6 +665,7 @@ export default function BankPage() {
   const {
     bank,
     getBank,
+    user,
     deposit,
     withdraw,
     claimAirdrop,
@@ -769,11 +771,11 @@ export default function BankPage() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
               </div>
-              {/* <GifComponent className=" absolute top-[-3%] left-[50%] z-10" buttonClassName="" onClickFunction={async () => {
+            { user?.special_item_key===0 && <GifComponent className=" absolute h-[20vh] translate-x-[24vw] translate-y-[2vh]" buttonClassName="" onClickFunction={async () => {
               setAcceptQuestLoading(true);
               await acceptBankQuest();
               setAcceptQuestLoading(false);
-            }} buttonDisable={acceptQuestLoading}/> */}
+            }} buttonDisable={acceptQuestLoading}/>}
               {/* </div> */}
 
               <div className="relative ">

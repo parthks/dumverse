@@ -7,7 +7,7 @@ interface GifComponentProps {
   className?: string;
   buttonClassName?: string;
   buttonAppearTime?: number;
-  onClickFunction: () => Promise<void>;
+  onClickFunction?: () => Promise<void>;
   buttonDisable?: boolean;
 }
 
@@ -40,9 +40,14 @@ const GifComponent: React.FC<GifComponentProps> = ({
     const initialData = {
       BANK: 0,
       DEN: 0,
-      GENERAL_STORE: 0,
-      NFT_HOLDER_SHOP: 0,
-      WEAPON: 0,
+      SHOP: 0,
+      NFT_SHOP: 0,
+      WEAPON_SHOP: 0,
+      HALL_OF_FAME:0,
+      INFIRMARY:0,
+      ARMORY:0,
+      BAKERY:0,
+      VISITOR_CENTER:0,
     };
     const retrievedData = { ...initialData, ...savedData };
     localStorage.setItem("currentDialogue", JSON.stringify(retrievedData));
@@ -61,6 +66,29 @@ const GifComponent: React.FC<GifComponentProps> = ({
         return () => clearTimeout(timer);
       }
     }
+
+   if (GameStatePage === GameStatePages.HALL_OF_FAME && user){
+    setQuestAccepted(true);
+    setDialogueIndex(retrievedData.HALL_OF_FAME);
+   }
+
+   if (GameStatePage === GameStatePages.INFIRMARY && user){
+    setQuestAccepted(true);
+    setDialogueIndex(retrievedData.INFIRMARY || 0);
+   }
+   if (GameStatePage === GameStatePages.ARMORY && user){
+    setQuestAccepted(true);
+    setDialogueIndex(retrievedData.ARMORY || 0);
+   }
+   if (GameStatePage === GameStatePages.BAKERY && user){
+    setQuestAccepted(true);
+    setDialogueIndex(retrievedData.BAKERY || 0);
+   }
+   if (GameStatePage === GameStatePages.VISITOR_CENTER && user){
+    setQuestAccepted(true);
+    setDialogueIndex(retrievedData.VISITOR_CENTER || 0);
+   }
+
   }, [GameStatePage, user]);
 
   // Increment dialogueIndex when page is visited and update localStorage
@@ -78,6 +106,38 @@ const GifComponent: React.FC<GifComponentProps> = ({
         const updatedData = { ...savedData, BANK: newIndex };
         localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
       }
+
+      if (GameStatePage === GameStatePages.HALL_OF_FAME ){
+        const newIndex = (savedData.HALL_OF_FAME + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, HALL_OF_FAME: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+       }
+       if (GameStatePage === GameStatePages.INFIRMARY ){
+        const newIndex = (savedData.INFIRMARY + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, ARMORY: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+       }
+       if (GameStatePage === GameStatePages.ARMORY ){
+        const newIndex = (savedData.ARMORY + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, ARMORY: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+       }
+       if (GameStatePage === GameStatePages.BAKERY ){
+        const newIndex = (savedData.BAKERY + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, BAKERY: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+       }
+       if (GameStatePage === GameStatePages.VISITOR_CENTER ){
+        const newIndex = 0; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, VISITOR_CENTER: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+       }
+
     }
   }, [GameStatePage, questAccepted]);
 
@@ -101,7 +161,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
   }, [dialogueIndex, questAccepted, GameStatePage]);
 
   const handleQuestAcceptance = async () => {
-    if (user){
+    if (user && onClickFunction){
       setQuestAccepted(true);
       setShowButton(false);
       await onClickFunction();

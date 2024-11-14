@@ -1,6 +1,7 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
+import GifComponent from "@/components/Dialogue/Dialogue";
 import { BUILDING_IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
@@ -43,6 +44,7 @@ export default function HallOfFame() {
           >
             <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
           </div>
+          <GifComponent className=" absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh]"/>
 
           {/* Shop Table */}
           <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
