@@ -510,7 +510,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
         <RiveAnimation url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
       </div>
       <GifComponent
-        className=" absolute h-[30vh] translate-x-[16vw] translate-y-[63vh] z-10"
+        className=" absolute h-[20vh] translate-x-[16vw] translate-y-[63vh] z-10"
         buttonClassName=""
         onClickFunction={async () => {
           setAcceptQuestLoading(true);
