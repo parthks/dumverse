@@ -76,7 +76,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
       // Set a new timer
       const newTimer = setTimeout(() => {
         setDisplayMessage(null);
-      }, 30000);
+      }, 3000);
 
       setTimer(newTimer);
     }

@@ -556,7 +556,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
             </>
           )}
         </div>
-        {user.special_item_key == -1 && (
+        {/* {user.special_item_key == -1 && (
           <ImgButton
             disabled={acceptQuestLoading}
             src={IMAGES.ACCEPT_QUEST_BUTTON}
@@ -567,7 +567,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               setAcceptQuestLoading(false);
             }}
           />
-        )}
+        )} */}
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />
