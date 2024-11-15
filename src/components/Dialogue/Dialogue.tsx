@@ -53,7 +53,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
     localStorage.setItem("currentDialogue", JSON.stringify(retrievedData));
 
     if (GameStatePage === GameStatePages.BANK && user) {
-      if (user.special_item_key === 0) {
+      if (user.special_item_key > -1) {
         setQuestAccepted(true);
         setDialogueIndex(retrievedData.BANK || 0);
       } else {

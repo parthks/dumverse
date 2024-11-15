@@ -29,7 +29,7 @@ amalg.lua -s game/main.lua -o ../build/game.lua \
     game.handlers.user \
     game.handlers.inventory \
     game.handlers.shop \
-    game.handlers.bank
+    game.handlers.bank 
 
 amalg.lua -s tokens/dumz.lua -o ../build/dumz.lua \
     utils.utils.bint utils.utils.tl-utils \

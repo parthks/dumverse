@@ -715,12 +715,14 @@ export default function BankPage() {
       // buyItem(itemType);
     }
   };
+  if ( !user) return <div>Loading...</div>;
 
   if (vaultSelected === "general-vault") {
     return <GeneralBankVault onExit={() => setVaultSelected(null)} />;
   } else if (vaultSelected === "nft-vault") {
     return <NftBankVault onExit={() => setVaultSelected(null)} />;
   }
+
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
@@ -771,7 +773,7 @@ export default function BankPage() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.BANK_GOLD_DUMDUM} />
               </div>
-            { user?.special_item_key===0 && <GifComponent className=" absolute h-[20vh] translate-x-[24vw] translate-y-[2vh]" buttonClassName="" onClickFunction={async () => {
+            { user.special_item_key>-1  && <GifComponent className=" absolute h-[20vh] translate-x-[24vw] translate-y-[2vh]" buttonClassName="" onClickFunction={async () => {
               setAcceptQuestLoading(true);
               await acceptBankQuest();
               setAcceptQuestLoading(false);
