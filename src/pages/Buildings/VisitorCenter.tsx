@@ -1,6 +1,7 @@
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
+import GifComponent from "@/components/Dialogue/Dialogue";
 import { BUILDING_IMAGES } from "@/lib/constants";
 
 export default function VisitorCenter() {
@@ -89,6 +90,7 @@ export default function VisitorCenter() {
         >
           <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
         </div>
+        <GifComponent className="absolute h-[20vh] translate-x-[15vw] translate-y-[-56vh]"/>
       </div>
 
       {/* sign */}

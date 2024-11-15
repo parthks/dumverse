@@ -2,6 +2,7 @@ import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
+import GifComponent from "@/components/Dialogue/Dialogue";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
@@ -57,12 +58,14 @@ export default function Armory() {
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "20px",
+                  left:"-6%",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
                 <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
+              <GifComponent className="absolute h-[20vh] translate-x-[9.5vw] translate-y-[-1vh] z-50"/>
 
               {/* Shop Table */}
               <img src="https://arweave.net/C6LU2xgJ9oMwH8Ah7C-KdMGxJs6g6w76nXMpovYv7Ms" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />

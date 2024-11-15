@@ -179,7 +179,13 @@ export default function Shop() {
 
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/8kiel2lmr7r9HppfIDFbHaio2o-IGASvIKe8igZGDxM"} alt="Shop Map" className="w-full h-full object-contain" />
+          <img
+            src={
+              "https://arweave.net/8kiel2lmr7r9HppfIDFbHaio2o-IGASvIKe8igZGDxM"
+            }
+            alt="Shop Map"
+            className="w-full h-full object-contain"
+          />
         </div>
         <div className="absolute inset-0">
           <img
@@ -190,32 +196,32 @@ export default function Shop() {
           />
 
           {/* Group the shop table, sign, and shopkeeper */}
-          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
+          <div
+            className="absolute w-full h-full flex flex-col items-center justify-end"
+            style={{
+              ...calculatePositionAndSize(50, 100, 48),
+              transform: "translate(-50%, -100%)",
+            }}
+          >
             {/* Shopkeeper and Table Group */}
             <div className="relative w-full flex flex-col items-center">
               {/* Shopkeeper */}
-              <div className="relative h-full flex items-center">
               <div
                 className="relative h-full "
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "17px",
-                  left:"22%",
+                  left: "7%",
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
-                <RiveAnimation url={BUILDING_IMAGES.GENERAL_STORE_DUMDUM}/>
+                <RiveAnimation url={BUILDING_IMAGES.GENERAL_STORE_DUMDUM} />
                 {/* <GifComponent  className="top-[-120%] right-[-85%] bg-red-900"/> */}
+              </div>
+
               
-              </div>
-              <div className="relative" style={{left:"-23%",top:"-70px"}}>
-              <GifComponent  className="top-[-120%] right-[-85%] "/>
-              </div>
-            
-              </div>
-           
 
               <div className="relative">
                 {/* shop sign */}
@@ -223,10 +229,21 @@ export default function Shop() {
                   src="https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY"
                   alt="Shop Sign"
                   className="absolute"
-                  style={{ left: "15%", top: "-50%", width: "25%", height: "auto", zIndex: 1 }}
+                  style={{
+                    left: "15%",
+                    top: "-50%",
+                    width: "25%",
+                    height: "auto",
+                    zIndex: 1,
+                  }}
                 />
                 {/* Shop Table */}
-                <img src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+                <img
+                  src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4"
+                  alt="Shop Table"
+                  className="relative w-full"
+                  style={{ height: "auto" }}
+                />
               </div>
             </div>
           </div>
@@ -234,7 +251,10 @@ export default function Shop() {
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
+                await buyItem(
+                  shop.items[0],
+                  shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
+                );
                 shopBuyItemAudio.play();
               }}
               position={{
@@ -248,7 +268,10 @@ export default function Shop() {
           {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
+                await buyItem(
+                  shop.items[1],
+                  shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
+                );
                 shopBuyItemAudio.play();
               }}
               position={{
