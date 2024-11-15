@@ -2,16 +2,20 @@ import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
+import GifComponent from "@/components/Dialogue/Dialogue";
 import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import { useState } from "react";
 
 export default function Weapon() {
-  const { shop, getShop, buyItem } = useGameStore();
+  const { shop, getShop, buyItem, acceptWeaponQuest } = useGameStore();
   const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("WEAPON") });
+
+  const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   //   if (!shop) return <div>Loading...</div>;
 
@@ -29,31 +33,62 @@ export default function Weapon() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/8LmZ0u-eK5Ir3bUrF-iSne58cmgPelPcQHWTlMd7f58"} alt="Weapon Shop Background" className="w-full h-full object-cover" />
+          <img
+            src={
+              "https://arweave.net/8LmZ0u-eK5Ir3bUrF-iSne58cmgPelPcQHWTlMd7f58"
+            }
+            alt="Weapon Shop Background"
+            className="w-full h-full object-cover"
+          />
         </div>
         <div className="absolute inset-0">
-          <div className="absolute" style={{ ...calculatePositionAndSize(0, 58, 85), transform: "translate(0, 0)" }}>
+          <div
+            className="absolute"
+            style={{
+              ...calculatePositionAndSize(0, 58, 85),
+              transform: "translate(0, 0)",
+            }}
+          >
             <img
               src="https://arweave.net/EDiX5PbGtPOVHgMxlACk2js538D13biYdlt-cAgzpK0"
               alt="Table"
               className="absolute"
-              style={{ ...calculatePositionAndSize(0, 42, 50), transform: "translate(0, 0)" }}
+              style={{
+                ...calculatePositionAndSize(0, 42, 50),
+                transform: "translate(0, 0)",
+              }}
             />
             <img
-              src={"https://arweave.net/yu4aXRJJyfe0VuwVn6nz2y3mQZE2X0XzVYHr9ujuXlo"}
+              src={
+                "https://arweave.net/yu4aXRJJyfe0VuwVn6nz2y3mQZE2X0XzVYHr9ujuXlo"
+              }
               alt="Tool"
               className="absolute"
-              style={{ ...calculatePositionAndSize(10, 92, 8), transform: "translate(0, 50%)" }}
+              style={{
+                ...calculatePositionAndSize(10, 92, 8),
+                transform: "translate(0, 50%)",
+              }}
             />
             <img
-              src={"https://arweave.net/fzYzWusAIwQxrtTLVYV_jtGUlNu9LXACcn7wNseUIuw"}
+              src={
+                "https://arweave.net/fzYzWusAIwQxrtTLVYV_jtGUlNu9LXACcn7wNseUIuw"
+              }
               alt="Saw"
               className="absolute"
-              style={{ ...calculatePositionAndSize(32, 92, 11), transform: "translate(0, 65%)" }}
+              style={{
+                ...calculatePositionAndSize(32, 92, 11),
+                transform: "translate(0, 65%)",
+              }}
             />
           </div>
           {/* Group the shop table and shopkeeper */}
-          <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
+          <div
+            className="absolute w-full h-full flex flex-col items-center justify-end"
+            style={{
+              ...calculatePositionAndSize(50, 100, 48),
+              transform: "translate(-50%, -100%)",
+            }}
+          >
             {/* Shopkeeper and Table Group */}
             <div className="relative w-full flex flex-col items-center">
               {/* Shopkeeper */}
@@ -69,9 +104,22 @@ export default function Weapon() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
-
+              <GifComponent
+                className="absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh]"
+                onClickFunction={async () => {
+                  setAcceptQuestLoading(true);
+                  await acceptWeaponQuest();
+                  setAcceptQuestLoading(false);
+                }}
+                buttonDisable={acceptQuestLoading}
+              />
               {/* Shop Table */}
-              <img src="https://arweave.net/wlkWadmmnZ5YLvSauURaPMTzmK4fTjbxoc4CH9Q8IH8" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+              <img
+                src="https://arweave.net/wlkWadmmnZ5YLvSauURaPMTzmK4fTjbxoc4CH9Q8IH8"
+                alt="Shop Table"
+                className="relative w-full"
+                style={{ height: "auto" }}
+              />
             </div>
           </div>
           {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 57), transform: "translate(-50%, -100%)" }}>
@@ -87,7 +135,10 @@ export default function Weapon() {
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
+                await buyItem(
+                  shop.items[0],
+                  shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
+                );
                 shopBuyItemAudio.play();
               }}
               position={{
@@ -101,7 +152,10 @@ export default function Weapon() {
           {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
+                await buyItem(
+                  shop.items[1],
+                  shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
+                );
                 shopBuyItemAudio.play();
               }}
               position={{
@@ -115,7 +169,10 @@ export default function Weapon() {
           {shop?.items[2] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(shop.items[2], shop.items[2]?.gold_price ? "GOLD" : "DUMZ");
+                await buyItem(
+                  shop.items[2],
+                  shop.items[2]?.gold_price ? "GOLD" : "DUMZ"
+                );
                 shopBuyItemAudio.play();
               }}
               position={{
@@ -129,7 +186,10 @@ export default function Weapon() {
           {shop?.items[3] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(shop.items[3], shop.items[3]?.gold_price ? "GOLD" : "DUMZ");
+                await buyItem(
+                  shop.items[3],
+                  shop.items[3]?.gold_price ? "GOLD" : "DUMZ"
+                );
                 shopBuyItemAudio.play();
               }}
               position={{

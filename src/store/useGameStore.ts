@@ -66,6 +66,10 @@ interface GameState {
   questBookOpen: boolean;
   setQuestBookOpen: (open: boolean) => void;
   acceptBankQuest: () => Promise<void>;
+  acceptNFTShopQuest:()=>Promise<void>;
+  acceptWeaponQuest:()=>Promise<void>;
+  acceptShopQuest:()=>Promise<void>;
+  acceptDenQuest:()=>Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -371,7 +375,44 @@ export const useGameStore = create<GameState>()(
       acceptBankQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
           tags: [
-            { name: "Action", value: "Bank.AcceptQuest" },
+            { name: "Action", value: "Quest.BankQuestAccept" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
+      },
+      acceptNFTShopQuest: async () => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Quest.NFTShopQuestAccept" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
+      },
+      acceptWeaponQuest: async () => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Quest.WeaponQuestAccept" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
+      },
+   
+      acceptShopQuest: async () => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Quest.ShopQuestAccept" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        await get().refreshUserData();
+      },
+      acceptDenQuest: async () => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Quest.DenQuestAccept" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });

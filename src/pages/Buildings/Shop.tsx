@@ -7,6 +7,7 @@ import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import GifComponent from "@/components/Dialogue/Dialogue";
+import { useState } from "react";
 
 // function ShopItem({ item, position }: { item: Item; position: number }) {
 //   const { buyItemLoading } = useGameStore();
@@ -161,10 +162,13 @@ import GifComponent from "@/components/Dialogue/Dialogue";
 // }
 
 export default function Shop() {
-  const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading, acceptShopQuest } =
+    useGameStore();
   const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
+
+  const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   // if (!shop) return <div>Loading...</div>;
 
@@ -219,9 +223,16 @@ export default function Shop() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.GENERAL_STORE_DUMDUM} />
                 {/* <GifComponent  className="top-[-120%] right-[-85%] bg-red-900"/> */}
+                <GifComponent
+                  className="absolute h-[20vh] translate-x-[13vw] translate-y-[-35vh] z-10"
+                  onClickFunction={async () => {
+                    setAcceptQuestLoading(true);
+                    await acceptShopQuest();
+                    setAcceptQuestLoading(false);
+                  }}
+                  buttonDisable={acceptQuestLoading}
+                />
               </div>
-
-              
 
               <div className="relative">
                 {/* shop sign */}

@@ -7,7 +7,7 @@ interface GifComponentProps {
   className?: string;
   buttonClassName?: string;
   buttonAppearTime?: number;
-  onClickFunction?: () => Promise<void>;
+  onClickFunction?: ()=>Promise<void>;
   buttonDisable?: boolean;
 }
 
@@ -67,6 +67,66 @@ const GifComponent: React.FC<GifComponentProps> = ({
       }
     }
 
+    if (GameStatePage === GameStatePages.NFT_SHOP && user) {
+      if (user.special_item_thread > -1) {
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.NFT_SHOP || 0);
+      } else {
+        setQuestAccepted(false);
+        setGifSrc(`${DIALOGUES.NFT_SHOP.dialogue_quest}?${Date.now()}`);
+        const timer = setTimeout(() => {
+          setShowButton(true);
+        }, buttonAppearTime);
+
+        return () => clearTimeout(timer);
+      }
+    }
+
+    if (GameStatePage === GameStatePages.WEAPON_SHOP && user) {
+      if (user.special_item_bark > -1) {
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.WEAPON_SHOP || 0);
+      } else {
+        setQuestAccepted(false);
+        setGifSrc(`${DIALOGUES.WEAPON_SHOP.dialogue_quest}?${Date.now()}`);
+        const timer = setTimeout(() => {
+          setShowButton(true);
+        }, buttonAppearTime);
+
+        return () => clearTimeout(timer);
+      }
+    }
+
+    if (GameStatePage === GameStatePages.SHOP && user) {
+      if (user.special_item_heart > -1) {
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.SHOP || 0);
+      } else {
+        setQuestAccepted(false);
+        setGifSrc(`${DIALOGUES.SHOP.dialogue_quest}?${Date.now()}`);
+        const timer = setTimeout(() => {
+          setShowButton(true);
+        }, buttonAppearTime);
+
+        return () => clearTimeout(timer);
+      }
+    }
+
+    if (GameStatePage === GameStatePages.DEN && user) {
+      if (user.special_item_kitten > -1) {
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.DEN || 0);
+      } else {
+        setQuestAccepted(false);
+        setGifSrc(`${DIALOGUES.DEN.dialogue_quest}?${Date.now()}`);
+        const timer = setTimeout(() => {
+          setShowButton(true);
+        }, buttonAppearTime);
+
+        return () => clearTimeout(timer);
+      }
+    }
+
    if (GameStatePage === GameStatePages.HALL_OF_FAME && user){
     setQuestAccepted(true);
     setDialogueIndex(retrievedData.HALL_OF_FAME);
@@ -104,6 +164,34 @@ const GifComponent: React.FC<GifComponentProps> = ({
 
         // Update dialogueIndex in localStorage
         const updatedData = { ...savedData, BANK: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+      }
+
+      if (GameStatePage === GameStatePages.NFT_SHOP) {
+        const newIndex = (savedData.NFT_SHOP + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, NFT_SHOP: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+      }
+
+      if (GameStatePage === GameStatePages.WEAPON_SHOP) {
+        const newIndex = (savedData.WEAPON_SHOP + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, WEAPON_SHOP: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+      }
+
+      if (GameStatePage === GameStatePages.SHOP) {
+        const newIndex = (savedData.SHOP + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, SHOP: newIndex };
+        localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
+      }
+
+      if (GameStatePage === GameStatePages.DEN) {
+        const newIndex = (savedData.DEN + 1) % 4; 
+        setDialogueIndex(newIndex);
+        const updatedData = { ...savedData, DEN: newIndex };
         localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
       }
 
@@ -161,17 +249,18 @@ const GifComponent: React.FC<GifComponentProps> = ({
   }, [dialogueIndex, questAccepted, GameStatePage]);
 
   const handleQuestAcceptance = async () => {
-    if (user && onClickFunction){
+    console.log("Button clicked"); 
+    if (onClickFunction) {
       setQuestAccepted(true);
       setShowButton(false);
       await onClickFunction();
-      await refreshUserData(user.id)
     }
   };
+  
 
   return (
     <div className={`${className}`}>
-      <div className="relative">
+      <div className="relative w-full h-full">
         {gifSrc && (
           <img
             src={gifSrc}
@@ -181,7 +270,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
         )}
         {showButton && !questAccepted && (
           // <button
-          //   className={`absolute bottom-[23%] right-[20%] bg-gray-800 text-white px-4 py-2 rounded-md ${buttonClassName}`}
+          //   className={`absolute bottom-[23%] right-[20%] bg-gray-800 text-white px-4 py-2 rounded-md z-10 ${buttonClassName}`}
           //   onClick={handleQuestAcceptance}
           // >
           //   Accept Quest
@@ -189,8 +278,8 @@ const GifComponent: React.FC<GifComponentProps> = ({
           // top-[55%] right-[35%]
           <ImgButton
             src={IMAGES.ACCEPT_QUEST_BUTTON}
-            disabled={buttonDisable}
             alt={"Accept Quest"}
+            disabled={buttonDisable}
             onClick={handleQuestAcceptance}
             className={`absolute bottom-[23%] right-[20%] ${buttonClassName}`}
           />
