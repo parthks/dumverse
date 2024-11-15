@@ -6,7 +6,7 @@ It allows for a workflow similar to that in web development with _Typescript_, w
 
 ## How to Use
 
-1. `luarocks install tl && luarocks install cyan && luarocks install amalg`
+1. `luarocks install tl 0.15.3-1 && luarocks install cyan 0.3.1-2 && luarocks install amalg 0.8-1`
 2. Write your code in _Teal_ (using `.tl` files)
 3. Add your modules into the Squishy file (used to generate the final amalgamation). Modify the build.sh folder on adding a new tl file that needs to be built.
 4. Use `npm run build` to create your `main.lua` output in the build-lua folder
