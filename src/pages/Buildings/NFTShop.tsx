@@ -11,14 +11,7 @@ import GifComponent from "@/components/Dialogue/Dialogue";
 import { useState } from "react";
 
 export default function NFTShop() {
-  const {
-    shop,
-    getShop,
-    buyItem,
-    buyItemLoading,
-    inventory,
-    acceptNFTShopQuest,
-  } = useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading, inventory, acceptNFTShopQuest } = useGameStore();
   const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("SPECIAL_ITEMS") });
@@ -42,13 +35,7 @@ export default function NFTShop() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img
-            src={
-              "https://arweave.net/wfQru_Ld-BGs6sq4qbKtlP6EBUYZXAAZ42mIqJQjaIM"
-            }
-            alt="NFT Shop Background"
-            className="w-full h-full object-cover"
-          />
+          <img src={"https://arweave.net/wfQru_Ld-BGs6sq4qbKtlP6EBUYZXAAZ42mIqJQjaIM"} alt="NFT Shop Background" className="w-full h-full object-cover" />
         </div>
 
         <img
@@ -86,7 +73,7 @@ export default function NFTShop() {
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
                   top: "-69%",
-                  left: "22%",
+                  left:"22%",
                   aspectRatio: 1,
                   zIndex: 1,
                   // Keeps the shopkeeper square
@@ -95,23 +82,17 @@ export default function NFTShop() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.NFT_SHOP_DUMDUM} />
               </div>
-              <GifComponent
-                className="absolute h-[20vh] translate-x-[6vw] translate-y-[-25vh]"
-                onClickFunction={async () => {
-                  setAcceptQuestLoading(true);
-                  await acceptNFTShopQuest();
-                  setAcceptQuestLoading(false);
-                }}
-                buttonDisable={acceptQuestLoading}
-              />
+              <GifComponent className="absolute h-[20vh] translate-x-[6vw] translate-y-[-25vh]" onClickFunction={async () => {
+       setAcceptQuestLoading(true);
+       await acceptNFTShopQuest();
+       setAcceptQuestLoading(false);
+        
+         
+        }} buttonDisable={acceptQuestLoading}
+       />
 
               {/* Shop Table */}
-              <img
-                src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo"
-                alt="Shop Table"
-                className="relative w-full"
-                style={{ height: "auto" }}
-              />
+              <img src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
             </div>
           </div>
 
@@ -125,10 +106,7 @@ export default function NFTShop() {
             }}
           >
             <div className="relative w-full h-full flex flex-col items-center ">
-              <div
-                className="relative flex flex-col items-center gap-3"
-                style={{ width: "50%" }}
-              >
+              <div className="relative flex flex-col items-center gap-3" style={{ width: "50%" }}>
                 <img
                   src="https://arweave.net/3Qwkk4zSxtN91Qs4ZccLlLhVXch-FwL1jIDRX-Vi1k0"
                   alt="NFT Shop - Shelf with wand"
@@ -137,21 +115,14 @@ export default function NFTShop() {
                 />
                 <ImgButton
                   disabled={
-                    buyItemLoading ||
-                    (inventory.some((i) => i.item_id === shop?.items[2].id) &&
-                      (shop?.items[2].type
-                        ? ["WEAPON", "ARMOR"].includes(shop.items[2].type)
-                        : false))
+                    buyItemLoading || (inventory.some((i) => i.item_id === shop?.items[2].id) && (shop?.items[2].type ? ["WEAPON", "ARMOR"].includes(shop.items[2].type) : false))
                   }
                   src="https://arweave.net/SyQA7SYryT_kycFIuBKCIEBlDSLLkF_4BLmOkI0RCBk"
                   alt={`Buy ${shop?.items[2].name}`}
                   data-item-type={shop?.items[2].id}
                   onClick={async () => {
                     if (shop?.items[2]) {
-                      await buyItem(
-                        shop?.items[2],
-                        shop?.items[2]?.gold_price ? "GOLD" : "DUMZ"
-                      );
+                      await buyItem(shop?.items[2], shop?.items[2]?.gold_price ? "GOLD" : "DUMZ");
                       shopBuyItemAudio.play();
                     }
                   }}
@@ -165,29 +136,18 @@ export default function NFTShop() {
                     className="relative w-full"
                     style={{ height: "auto", top: "-37%", left: "-65%" }}
                   />
-                  <div
-                    className="relative"
-                    style={{ height: "auto", top: "-37%", left: "-65%" }}
-                  >
+                  <div className="relative" style={{ height: "auto", top: "-37%", left: "-65%" }}>
                     <ImgButton
                       disabled={
                         buyItemLoading ||
-                        (inventory.some(
-                          (i) => i.item_id === shop?.items[1].id
-                        ) &&
-                          (shop?.items[1].type
-                            ? ["WEAPON", "ARMOR"].includes(shop.items[1].type)
-                            : false))
+                        (inventory.some((i) => i.item_id === shop?.items[1].id) && (shop?.items[1].type ? ["WEAPON", "ARMOR"].includes(shop.items[1].type) : false))
                       }
                       src="https://arweave.net/SyQA7SYryT_kycFIuBKCIEBlDSLLkF_4BLmOkI0RCBk"
                       alt={`Buy ${shop?.items[1].name}`}
                       data-item-type={shop?.items[1].id}
                       onClick={async () => {
                         if (shop?.items[1]) {
-                          await buyItem(
-                            shop?.items[1],
-                            shop?.items[1]?.gold_price ? "GOLD" : "DUMZ"
-                          );
+                          await buyItem(shop?.items[1], shop?.items[1]?.gold_price ? "GOLD" : "DUMZ");
                           shopBuyItemAudio.play();
                         }
                       }}
@@ -201,29 +161,18 @@ export default function NFTShop() {
                     className="relative w-full"
                     style={{ height: "auto", top: "19%", right: "-65%" }}
                   />
-                  <div
-                    className="relative"
-                    style={{ height: "auto", top: "19%", right: "-65%" }}
-                  >
+                  <div className="relative" style={{ height: "auto", top: "19%", right: "-65%" }}>
                     <ImgButton
                       disabled={
                         buyItemLoading ||
-                        (inventory.some(
-                          (i) => i.item_id === shop?.items[0].id
-                        ) &&
-                          (shop?.items[0].type
-                            ? ["WEAPON", "ARMOR"].includes(shop.items[0].type)
-                            : false))
+                        (inventory.some((i) => i.item_id === shop?.items[0].id) && (shop?.items[0].type ? ["WEAPON", "ARMOR"].includes(shop.items[0].type) : false))
                       }
                       src="https://arweave.net/SyQA7SYryT_kycFIuBKCIEBlDSLLkF_4BLmOkI0RCBk"
                       alt={`Buy ${shop?.items[0].name}`}
                       data-item-type={shop?.items[0].id}
                       onClick={async () => {
                         if (shop?.items[0]) {
-                          await buyItem(
-                            shop?.items[0],
-                            shop?.items[0]?.gold_price ? "GOLD" : "DUMZ"
-                          );
+                          await buyItem(shop?.items[0], shop?.items[0]?.gold_price ? "GOLD" : "DUMZ");
                           shopBuyItemAudio.play();
                         }
                       }}

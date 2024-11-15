@@ -20,7 +20,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
 }) => {
   const { GameStatePage, user, refreshUserData} = useGameStore();
   const [showButton, setShowButton] = useState(false);
-  const [gifSrc, setGifSrc] = useState("");
+  const [gifSrc, setGifSrc] = useState<string | null>("");
   const [questAccepted, setQuestAccepted] = useState(false);
   const [dialogueIndex, setDialogueIndex] = useState(0);
 
@@ -204,7 +204,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
        if (GameStatePage === GameStatePages.INFIRMARY ){
         const newIndex = (savedData.INFIRMARY + 1) % 4; 
         setDialogueIndex(newIndex);
-        const updatedData = { ...savedData, ARMORY: newIndex };
+        const updatedData = { ...savedData, INFIRMARY: newIndex };
         localStorage.setItem("currentDialogue", JSON.stringify(updatedData));
        }
        if (GameStatePage === GameStatePages.ARMORY ){
@@ -252,8 +252,10 @@ const GifComponent: React.FC<GifComponentProps> = ({
     console.log("Button clicked"); 
     if (onClickFunction) {
       setQuestAccepted(true);
+      setGifSrc(null)
       setShowButton(false);
       await onClickFunction();
+      console.log("Dana");
     }
   };
   
@@ -279,7 +281,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
           <ImgButton
             src={IMAGES.ACCEPT_QUEST_BUTTON}
             alt={"Accept Quest"}
-            disabled={buttonDisable}
+           disabled={buttonDisable}
             onClick={handleQuestAcceptance}
             className={`absolute bottom-[23%] right-[20%] ${buttonClassName}`}
           />
