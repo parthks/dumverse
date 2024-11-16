@@ -471,6 +471,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
   } = useGameStore();
   const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
+  const [hasAcceptQuest, setHasAcceptQuest] = useState(false);
 
   const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
     if (
@@ -496,7 +497,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      { user.special_item_key===-1 &&
+      { hasAcceptQuest===false &&
      <> <div
         className=" absolute z-10"
         style={{
@@ -514,8 +515,9 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
         buttonClassName=""
         onClickFunction={async () => {
           setAcceptQuestLoading(true);
+          setHasAcceptQuest(true);
           await acceptBankQuest();
-          setAcceptQuestLoading(false);
+          setAcceptQuestLoading(false);      
         }}
         buttonDisable={acceptQuestLoading}
       /> </>}

@@ -51,7 +51,6 @@ interface ChatProps {
 export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolean; setChatOpen: (chatOpen: boolean) => void }) {
   const [latestMessage, setLatestMessage] = useState<ChatMessageType | null>(null);
   //   const user = useGameStore((state) => state.user!);
-
   return (
     <>
       <LatestPreviewMessage latestMessage={latestMessage} />
@@ -101,7 +100,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
         width: "408px",
         height: "99px",
       }}
-      className="absolute bottom-20 right-4 z-10"
+      className="absolute bottom-20 right-4 z-10 bg-red-600"
     >
       <div className="flex items-center space-x-4 p-4">
         <img src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="w-16 h-16 object-contain" />
@@ -156,7 +155,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idBefore: pageParam ? pageParam + 1 : undefined,
         limit: queryPageSize,
       });
-      //   setLatestMessage(result[0]);
+      //  setLatestMessage(result[0]);
       console.log("Fetched messages:", result);
       return result;
     },

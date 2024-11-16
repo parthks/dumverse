@@ -249,13 +249,12 @@ const GifComponent: React.FC<GifComponentProps> = ({
   }, [dialogueIndex, questAccepted, GameStatePage]);
 
   const handleQuestAcceptance = async () => {
-    console.log("Button clicked"); 
+    console.log("Quest Accept clicked"); 
     if (onClickFunction) {
       setQuestAccepted(true);
       setGifSrc(null)
       setShowButton(false);
       await onClickFunction();
-      console.log("Dana");
     }
   };
   
