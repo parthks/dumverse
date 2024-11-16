@@ -41,21 +41,13 @@ local function inventoryUseItemHandler(msg: Message)
         -- increase health, but not exceeding total_health
         local new_health = math.min(userData.health + potionItem.health, userData.total_health)
         dbAdmin:exec(string.format([[
-            UPDATE Users
-            SET health = %d
-            WHERE id = %d;
+            UPDATE Users SET health = %d WHERE id = %d;
         ]], new_health, user_id))
 
     elseif itemDetails.type == "FOOD" then
         local foodItem = itemDetails as FoodItem
         -- increase health
-        local new_health = userData.health
-        if foodItem.id == "FOOD_1" then
-            new_health = userData.health + 1
-        elseif foodItem.id == "FOOD_2" then
-            -- new_health = math.min(userData.health + foodItem.health, userData.total_health)
-            new_health = userData.total_health
-        end
+        local new_health = math.min(userData.health + foodItem.health, userData.total_health)
         dbAdmin:exec(string.format([[
             UPDATE Users SET health = %d WHERE id = %d;
         ]], new_health, user_id))

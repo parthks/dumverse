@@ -126,6 +126,7 @@ global type BankAccountData = record
     dumz_amount: number
     nft_gold_amount: number
     nft_dumz_amount: number
+    nft_trunk_amount: number
 end
 
 -- Bank transaction type

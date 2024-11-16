@@ -42,6 +42,7 @@ interface GameState {
   deposit: (amount: number, tokenType: TokenType) => Promise<void>;
   withdraw: (amount: number, tokenType: TokenType) => Promise<void>;
   claimAirdrop: (tokenType: TokenType) => Promise<void>;
+  claimTrunk: () => Promise<void>;
   shop: Shop | null;
   getShop: (itemType: ItemType) => Promise<void>;
   buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
@@ -66,10 +67,10 @@ interface GameState {
   questBookOpen: boolean;
   setQuestBookOpen: (open: boolean) => void;
   acceptBankQuest: () => Promise<void>;
-  acceptNFTShopQuest:()=>Promise<void>;
-  acceptWeaponQuest:()=>Promise<void>;
-  acceptShopQuest:()=>Promise<void>;
-  acceptDenQuest:()=>Promise<void>;
+  acceptNFTShopQuest: () => Promise<void>;
+  acceptWeaponQuest: () => Promise<void>;
+  acceptShopQuest: () => Promise<void>;
+  acceptDenQuest: () => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -206,6 +207,17 @@ export const useGameStore = create<GameState>()(
             { name: "Action", value: "Bank.ClaimAirdrop" },
             { name: "UserId", value: get().user?.id.toString()! },
             { name: "TokenType", value: tokenType },
+          ],
+        });
+        await Promise.all([get().refreshUserData(), get().getBank()]);
+        set({ bankTransactionLoading: false });
+      },
+      claimTrunk: async () => {
+        set({ bankTransactionLoading: true });
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Bank.PushOutTrunk" },
+            { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
         await Promise.all([get().refreshUserData(), get().getBank()]);
@@ -399,7 +411,7 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
       },
-   
+
       acceptShopQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
           tags: [

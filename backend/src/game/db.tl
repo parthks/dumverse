@@ -52,6 +52,7 @@ global BANK_TABLE: string = [[
         dumz_amount FLOAT DEFAULT 0,
         nft_gold_amount FLOAT DEFAULT 0,
         nft_dumz_amount FLOAT DEFAULT 0,
+        nft_trunk_amount FLOAT DEFAULT 0,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
     );
 ]]
@@ -61,7 +62,7 @@ global BANK_TRANSACTIONS_TABLE: string = [[
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         amount FLOAT DEFAULT 0,
-        token_type TEXT NOT NULL CHECK(token_type IN ('GOLD', 'DUMZ')),
+        token_type TEXT NOT NULL CHECK(token_type IN ('GOLD', 'DUMZ', 'TRUNK')),
         transaction_type TEXT NOT NULL CHECK(transaction_type IN ('DEPOSIT', 'WITHDRAW', 'CLAIM_AIRDROP', 'AIRDROP', 'PULL_OUT', 'PULL_IN')),
         created_at INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
@@ -83,6 +84,35 @@ Handlers.add("Admin.ClearDB",
     end
 )
 -- Send({Target = ao.id, Action = "DANGER.ClearDB" })
+
+Handlers.add("Admin.UpdateBankTransactionsTable",
+    Handlers.utils.hasMatchingTag("Action", "DANGER.UpdateBankTransactionsTable"),
+    function(msg: Message)
+        assert(msg.From == ao.id, "You are not authorized to perform this action")
+        dbAdmin.db:exec([[
+            -- Create a new table with the updated schema
+            CREATE TABLE BankTransactions_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                amount FLOAT DEFAULT 0,
+                token_type TEXT NOT NULL CHECK(token_type IN ('GOLD', 'DUMZ', 'TRUNK')),
+                transaction_type TEXT NOT NULL CHECK(transaction_type IN ('DEPOSIT', 'WITHDRAW', 'CLAIM_AIRDROP', 'AIRDROP', 'PULL_OUT', 'PULL_IN')),
+                created_at INTEGER NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+            );
+
+            -- Copy data from the old table to the new one
+            INSERT INTO BankTransactions_new SELECT * FROM BankTransactions;
+
+            -- Drop the old table
+            DROP TABLE BankTransactions;
+
+            -- Rename the new table to the original name
+            ALTER TABLE BankTransactions_new RENAME TO BankTransactions;
+        ]])
+    end
+)
+-- Send({Target = ao.id, Action = "DANGER.UpdateBankTransactionsTable" })
 
 Handlers.add("Admin.UpdateTable",
     Handlers.utils.hasMatchingTag("Action", "DANGER.UpdateTable"),

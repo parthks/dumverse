@@ -59,7 +59,7 @@ local function addNewUserHandler(msg: Message)
     local profiles = dbAdmin:exec(getUserQuery)
     assert(#profiles == 0, "User already exists")
 
-    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    local nft_dumz_amount, nft_gold_amount, nft_trunk_amount = helpers.getNFTBankAmountForNFT(nft_address)
     
     local starting_gold = 10000
     local starting_dumz = 50
@@ -87,9 +87,9 @@ local function addNewUserHandler(msg: Message)
 
     -- Insert into Bank
     local insert_bank_result = dbAdmin:exec(string.format([[
-        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
-        VALUES (%d, %f, %f, %f, %f);
-    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
+        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount, nft_trunk_amount)
+        VALUES (%d, %f, %f, %f, %f, %f);
+    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount, nft_trunk_amount))
 
     assert(insert_bank_result, "Failed to insert into Bank")
 
@@ -244,11 +244,24 @@ end
 
 local function userLoginHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    helpers.CheckUserExists(user_id, msg.From)
+    local timestamp = msg.Timestamp
+    local userData = helpers.CheckUserExists(user_id, msg.From)
+    local last_regenerate_time = userData.last_regenerate_time or 0
+
+    local time_since_last_regenerate = timestamp - last_regenerate_time
+    -- regenerate 1 energy per 2 minutes
+    local energy_to_regenerate = math.floor(time_since_last_regenerate / 120)
+
+    if energy_to_regenerate > 0 and userData.stamina < userData.total_stamina then
+        local new_stamina = math.min(userData.stamina + energy_to_regenerate, userData.total_stamina)
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET stamina = %f, last_regenerate_time = %f WHERE id = %f;
+        ]], new_stamina, timestamp, user_id))
+    end
 
     -- update last_updated_at
     dbAdmin:exec(string.format([[
-        UPDATE Users SET last_updated_at = %f WHERE id = %f;
+        UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f WHERE id = %f;
     ]], msg.Timestamp, msg.Timestamp, user_id))
 
     ao.send({

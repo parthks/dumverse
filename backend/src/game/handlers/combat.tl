@@ -234,8 +234,8 @@ local function enteredNewCombatHandler(msg: Message)
 
     -- update Users table with battle_id 
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = %d, stamina = stamina - 1 WHERE id = %f;
-    ]], battle_id, user_id))
+        UPDATE Users SET current_battle_id = %d, stamina = stamina - 1, last_regenerate_time = %f WHERE id = %f;
+    ]], battle_id, msg.Timestamp, user_id))
 end
 
 local function playerWonHandler(msg: Message)

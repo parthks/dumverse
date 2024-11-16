@@ -205,8 +205,42 @@ local function bankPushOutHandler(msg: Message)
         UPDATE Bank SET dumz_amount = dumz_amount - %f WHERE user_id = %d;
     ]], amount, user_id))
 
+    -- add a bank transaction
+    dbAdmin:exec(string.format([[
+        INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_OUT", %f);
+    ]], user_id, amount, "DUMZ", msg.Timestamp))    
+
     -- send dumz to user address
     ao.send({ Target = constants.DUMZ_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
+    ao.send({ Target = msg.From, Status = "Success" })
+end
+
+local function bankPushOutTrunkHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    helpers.CheckUserExists(user_id, msg.From)
+
+    -- fetch bank data
+    local bank = dbAdmin:exec(string.format([[
+        SELECT * FROM Bank WHERE user_id = %d;
+    ]], user_id))
+    assert(#bank > 0, "You do not have any tokens in your bank")
+    local bankData: BankAccountData = bank[1] as BankAccountData
+
+    -- check if bank has enough balance
+    assert(bankData.nft_trunk_amount ~= 0, "Your bank does not have any TRUNK airdrop available")
+
+    -- update bank balance
+    dbAdmin:exec(string.format([[
+        UPDATE Bank SET nft_trunk_amount = 0 WHERE user_id = %d;
+    ]], user_id))
+
+    -- add a bank transaction
+    dbAdmin:exec(string.format([[
+        INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_OUT", %f);
+    ]], user_id, bankData.nft_trunk_amount, "TRUNK", msg.Timestamp))
+
+    -- send trunk to user address
+    ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(math.floor(bankData.nft_trunk_amount)) })
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
@@ -222,6 +256,11 @@ local function bankPushInHandler(msg: Message)
     dbAdmin:exec(string.format([[
         UPDATE Bank SET dumz_amount = dumz_amount + %f WHERE user_id = %d;
     ]], amount, user_id))
+
+    -- add a bank transaction
+    dbAdmin:exec(string.format([[
+        INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_IN", %f);
+    ]], user_id, amount, "DUMZ", msg.Timestamp))
 
     -- send dumz to user address
     ao.send({ Target = fromAddress, Status = "Success" })
@@ -256,6 +295,7 @@ Handlers.add("Bank.ClaimAirdrop", Handlers.utils.hasMatchingTag('Action', 'Bank.
    ]]
 --
 Handlers.add("Bank.PushOut", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOut'), bankPushOutHandler)
+Handlers.add("Bank.PushOutTrunk", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOutTrunk'), bankPushOutTrunkHandler)
 Handlers.add("Bank.PushIn", Handlers.utils.hasMatchingTag('Action', 'Credit-Notice'), bankPushInHandler)
 -- Handlers.add("Bank.AcceptQuest", Handlers.utils.hasMatchingTag('Action', 'Bank.AcceptQuest'), bankAcceptQuestHandler)
 

@@ -2060,41 +2060,41 @@ local AgentAddresses: {string} = {
   "BgWug-kJJLtk2jrObfPsJixboQWc5tLz7pS30fL3WxY"
 }
 
-local function getNFTBankAmountForNFT(nft_address: string): (number, number)
+local function getNFTBankAmountForNFT(nft_address: string): (number, number, number)
   if not nft_address then
-    return 0, 0
+    return 0, 0, 0
   end
   for _, address in ipairs(GreenAddresses) do
     if address == nft_address then
-      return 1000, 1000
+      return 1000, 1000, 1
     end
   end
   for _, address in ipairs(AgentAddresses) do
     if address == nft_address then
-      return 2000, 1500
+      return 2000, 1500, 1
     end
   end
   for _, address in ipairs(BlueAddresses) do
     if address == nft_address then
-      return 3000, 1500
+      return 3000, 1500, 1
     end
   end
   for _, address in ipairs(PurpleAddresses) do
     if address == nft_address then
-      return 2500, 1500
+      return 2500, 1500, 1
     end
   end
   for _, address in ipairs(RedAddresses) do
     if address == nft_address then
-      return 3500, 1500
+      return 3500, 1500, 1
     end
   end
   for _, address in ipairs(GoldAddresses) do
     if address == nft_address then
-      return 5000, 3000
+      return 5000, 3000, 1
     end
   end
-  return 10000, 10000
+  return 10000, 10000, 1
 end
 
 return {
