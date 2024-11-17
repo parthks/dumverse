@@ -150,30 +150,30 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
   const setLastDisplayedMessageId = useGameStore((state) => state.setLastDisplayedMessageId);
 console.log("Ashu: "+JSON.stringify(latestMessage));
   useEffect(() => {
-    if (latestMessage && latestMessage.Id !== lastDisplayedMessageId && latestMessage.AuthorId.toString()!==user?.address) {
+    if (latestMessage) {
 
       setDisplayMessage(latestMessage);
       setLastDisplayedMessageId(latestMessage.Id);
 
-      // Clear any existing timer
-      if (timer) {
-        clearTimeout(timer);
-      }
+      // // Clear any existing timer
+      // if (timer) {
+      //   clearTimeout(timer);
+      // }
 
-      // Set a new timer to hide the message
-      const newTimer = setTimeout(() => {
-        setDisplayMessage(null);
-      }, 3000);
+      // // Set a new timer to hide the message
+      // const newTimer = setTimeout(() => {
+      //   setDisplayMessage(null);
+      // }, 3000);
 
-      setTimer(newTimer);
+      // setTimer(newTimer);
     }
 
     // Cleanup function to clear the timer
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
+    // return () => {
+    //   if (timer) {
+    //     clearTimeout(timer);
+    //   }
+    // };
   }, [latestMessage]);
 
   if (!displayMessage) return null;
@@ -282,7 +282,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idAfter: latestId,
         limit: queryPageSize,
       });
-      if (!chatOpen) setLatestMessage(result[0]);
+      if (chatOpen) setLatestMessage(result[0]);
 
       return result;
     },
