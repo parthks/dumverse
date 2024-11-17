@@ -146,11 +146,11 @@ export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolea
 function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageType | null }) {
   const [displayMessage, setDisplayMessage] = useState<ChatMessageType | null>(null);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const { lastDisplayedMessageId } = useGameStore();
+  const { lastDisplayedMessageId, user } = useGameStore();
   const setLastDisplayedMessageId = useGameStore((state) => state.setLastDisplayedMessageId);
-
+console.log("Ashu: "+JSON.stringify(latestMessage));
   useEffect(() => {
-    if (latestMessage && latestMessage.Id !== lastDisplayedMessageId) {
+    if (latestMessage && latestMessage.Id !== lastDisplayedMessageId && latestMessage.AuthorId.toString()!==user?.address) {
 
       setDisplayMessage(latestMessage);
       setLastDisplayedMessageId(latestMessage.Id);
