@@ -251,10 +251,10 @@ const GifComponent: React.FC<GifComponentProps> = ({
   const handleQuestAcceptance = async () => {
     console.log("Quest Accept clicked"); 
     if (onClickFunction) {
-      setQuestAccepted(true);
-      setGifSrc(null)
-      setShowButton(false);
       await onClickFunction();
+      setGifSrc(null);
+      setShowButton(false);
+      setQuestAccepted(true);
     }
   };
   
