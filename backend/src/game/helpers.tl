@@ -54,7 +54,13 @@ local function CalculateUserBaseStats(userData: UserData): BaseStats
     baseStats.total_health = 2
     baseStats.stamina = 8
     baseStats.total_stamina = 8
+    if utils.includes(userData.nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+      baseStats.total_health = 4
+      baseStats.total_stamina = 16
+    end
   end
+
+
 
   return baseStats
 end
@@ -2064,6 +2070,9 @@ local function getNFTBankAmountForNFT(nft_address: string): (number, number)
   if not nft_address then
     return 0, 0
   end
+  if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+    return 10000, 10000
+  end
   for _, address in ipairs(GreenAddresses) do
     if address == nft_address then
       return 1000, 1000
@@ -2094,7 +2103,7 @@ local function getNFTBankAmountForNFT(nft_address: string): (number, number)
       return 5000, 3000
     end
   end
-  return 10000, 10000
+  return 0, 0
 end
 
 return {

@@ -1,7 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ConnectButton from "@/components/wallet/ConnectButton";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import DUMDUM_ASSET_IDS from "@/lib/DumDumAssetIds";
+import { DUMDUM_ASSET_IDS } from "@/lib/DumDumAssetIds";
 import { useAppStore } from "@/store/useAppStore";
 
 import ImgButton from "@/components/ui/imgButton";

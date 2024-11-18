@@ -7,6 +7,13 @@ local REST_SPOTS = { 0, 9, 18, 27 }
 
 require "utils.globals"
 
+local ONE_OF_ONE_ASSET_IDS: {string} = {
+    "A8ucm402DGkcJWydu1iibXGvpsDSnI5rj3Z-zP7JjB4",
+    "XYkNDhHBAPF85xy7E56mmZR4VJTS8os0JbxNh_fdRZE",
+    "2UMirpNKMZ9MDpApI3gI0Dy0975fC-vOK3UoIeMM2yg",
+    "5U-KMM4rJ2x19xEEgSIHVdDopxuTXgCjaQgTUrNFiKE",
+}
+
 -- duplicated in weapons and armors tables
 local SPECIAL_ITEMS = {
     WAND = {
@@ -465,6 +472,7 @@ return {
     COMBAT_PROCESS_ID = COMBAT_PROCESS_ID,
     DUMZ_TOKEN_PROCESS_ID = DUMZ_TOKEN_PROCESS_ID,
     TRUNK_TOKEN_PROCESS_ID = TRUNK_TOKEN_PROCESS_ID,
+    ONE_OF_ONE_ASSET_IDS = ONE_OF_ONE_ASSET_IDS,
     REST_SPOTS = REST_SPOTS,
     SPECIAL_ITEMS = SPECIAL_ITEMS,
     WEAPONS = WEAPONS,

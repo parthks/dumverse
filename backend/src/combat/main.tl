@@ -34,14 +34,14 @@ local function GetOpenBattlesOfUser(user_address: string): {Battle}
     return battles
 end
 
-local function VerifyUserInBattle(user_id: string, battle_id: integer): boolean
+local function VerifyUserInBattle(user_id: string, battle_id: integer): CombatUserData
     assert(user_id, "UserId is required")
     assert(battle_id, "BattleId is required")
     local battle = BattleHelpers.get(battle_id)
     assert(battle, "Battle not found")
     for _, player in pairs(battle.players) do
         if tostring(player.id) == tostring(user_id) then
-            return true
+            return player
         end
     end
     assert(false, "User not in battle")
@@ -332,13 +332,17 @@ end
 local function userRunHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
-    VerifyUserInBattle(user_id, battle_id)
+    local user = VerifyUserInBattle(user_id, battle_id)
     VerifyBattleIsOnGoing(battle_id)
 
     local dice_roll = math.random(1, 6)
     BattleHelpers.log(battle_id, msg.Timestamp, user_id,
         "attempts to run away")
-    if dice_roll < 4 then
+    local isOneOfOne = utils.includes(user.nft_address, ONE_OF_ONE_ASSET_IDS)
+    local runaway_successful = (isOneOfOne and dice_roll ~= 6) or dice_roll < 4
+    print("runaway dice roll " .. dice_roll .. " - " .. (runaway_successful and "successful" or "unsuccessful"))
+
+    if runaway_successful then
         -- player runs successfully
         BattleHelpers.playerRanAway(battle_id, user_id, msg.Timestamp)
         BattleHelpers.checkIfBattleShouldEnd(battle_id, nil, msg.Timestamp)

@@ -1,6 +1,8 @@
 local json = require("json")
 local helpers = require("game.helpers")
 local constants = require("utils.constants")
+local utils = require("utils.utils.tl-utils")
+
 
 local REST_SPOTS = constants.REST_SPOTS;
 
@@ -92,6 +94,25 @@ local function addNewUserHandler(msg: Message)
     ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
     assert(insert_bank_result, "Failed to insert into Bank")
+
+    if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+        -- 10 cake, 5 potions, 4 joose
+        for _ = 1, 10 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");
+            ]], newUserId, "FOOD_1", "FOOD"))
+        end
+        for _ = 1, 5 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");
+            ]], newUserId, "POTION_1", "POTION"))
+        end
+        for _ = 1, 4 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");
+            ]], newUserId, "ENERGY_1", "ENERGY"))
+        end
+    end
 
     -- Debug print
     print("New user created with ID: " .. tostring(newUserId))
