@@ -74,6 +74,8 @@ interface GameState {
   acceptDenQuest: () => Promise<void>;
   lastDisplayedMessageId: number | null;
   setLastDisplayedMessageId: (state: number | null) => void;
+  isSettingsOpen: boolean;
+  setIsSettingsOpen: (open: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -443,6 +445,8 @@ export const useGameStore = create<GameState>()(
       },
       lastDisplayedMessageId: null,
       setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),
+      isSettingsOpen: false,
+      setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
     }),
     {
       name: "Game Store",

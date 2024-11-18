@@ -1,11 +1,10 @@
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { PlayerFrame } from "@/components/game/PlayerFrame";
 import QuestBook from "@/components/game/QuestBook";
-import Settings from "@/components/game/Settings";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
-import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
+import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
 import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -73,14 +72,13 @@ import { useEffect, useState } from "react";
 // ];
 
 const GameMap = () => {
-  const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, user, questBookOpen } = useGameStore();
+  const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen } = useGameStore();
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
   const [stepDistance, setStepDistance] = useState("0.5");
   const [stepTime, setStepTime] = useState("50");
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on
@@ -141,28 +139,25 @@ const GameMap = () => {
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
     const interactivePoints = getInteractivePoints(currentIslandLevel);
-    console.log("interactivePoints Ashu: "+JSON.stringify(interactivePoints));
-    console.log("currentIslandLevel Ashu: "+currentIslandLevel);
+    console.log("interactivePoints Ashu: " + JSON.stringify(interactivePoints));
+    console.log("currentIslandLevel Ashu: " + currentIslandLevel);
 
     const currentIndex = fromStart || currentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === currentIslandLevel);
-    console.log("currentIndex Ashu: "+currentIndex);
+    console.log("currentIndex Ashu: " + currentIndex);
 
     const targetIndex = interactivePoints.findIndex((point) => point.level === level);
-    console.log("targetIndex Ashu: "+targetIndex);
-
+    console.log("targetIndex Ashu: " + targetIndex);
 
     // if (currentIndex !== -1 && targetIndex !== -1) {
     let newPath;
     if (currentIndex < targetIndex) {
       // Moving forward
       newPath = interactivePoints.slice(currentIndex, targetIndex + 1);
-      console.log("newPath Forward Ashu: "+JSON.stringify(newPath));
-
+      console.log("newPath Forward Ashu: " + JSON.stringify(newPath));
     } else {
       // Moving backward
       newPath = interactivePoints.slice(targetIndex, currentIndex + 1).reverse();
-      console.log("newPath Backward Ashu: "+JSON.stringify(newPath));
-
+      console.log("newPath Backward Ashu: " + JSON.stringify(newPath));
     }
 
     setPath(newPath.map((point) => ({ x: point.x, y: point.y })));
@@ -184,7 +179,6 @@ const GameMap = () => {
       </audio> */}
 
       {questBookOpen && <QuestBook />}
-      {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
       <div className="z-10 absolute top-4 right-4">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />

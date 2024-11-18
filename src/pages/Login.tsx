@@ -10,6 +10,7 @@ import { useProfile } from "@/components/wallet/hooks";
 import { useGameStore } from "@/store/useGameStore";
 import { LOGIN_VIDEO } from "@/lib/constants";
 import GameMap from "./GameMap";
+import Settings from "@/components/game/Settings";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -136,6 +137,8 @@ function Tutorial({ onClose }: { onClose: () => void }) {
 
 function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject<HTMLVideoElement> }) {
   const profileLoading = useAppStore((state) => state.profileLoading);
+  const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
+  const isSettingsOpen = useGameStore((state) => state.isSettingsOpen);
   const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
@@ -149,8 +152,9 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
   return (
     <div className="h-screen flex justify-center items-center">
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+      {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
-      <div className="absolute bottom-4 right-4">
+      <div className="absolute bottom-4 right-4 flex gap-4 items-center justify-end">
         <ImgButton
           src="https://arweave.net/F5cG9iaRzliwIizUPBJ8UXWT6y5HUkFvB87NYLOs5tU"
           alt="Open Tutorial Video"
@@ -158,6 +162,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
             setShowTutorial(true);
           }}
         />
+        <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
       </div>
       {profileLoading ? (
         <p className="text-white absolute top-[450px] text-2xl font-bold">Loading...</p>
