@@ -13,6 +13,7 @@ global USERS_TABLE: string = [[
         current_island INTEGER,
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
+        trunk_balance FLOAT DEFAULT 0,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
@@ -50,9 +51,9 @@ global BANK_TABLE: string = [[
         user_id INTEGER NOT NULL,
         gold_amount FLOAT DEFAULT 0,
         dumz_amount FLOAT DEFAULT 0,
+        trunk_amount FLOAT DEFAULT 0,
         nft_gold_amount FLOAT DEFAULT 0,
         nft_dumz_amount FLOAT DEFAULT 0,
-        nft_trunk_amount FLOAT DEFAULT 0,
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
     );
 ]]

@@ -51,6 +51,7 @@ end
 global enum TokenType
    "GOLD"
    "DUMZ"
+   "TRUNK"
 end
 
 global enum TransactionType
@@ -72,6 +73,7 @@ global type UserData = record
     current_island: integer | nil
     gold_balance: number
     dumz_balance: number
+    trunk_balance: number
     health: number
     total_health: number
     stamina: number
@@ -124,9 +126,9 @@ global type BankAccountData = record
     user_id: integer
     gold_amount: number
     dumz_amount: number
+    trunk_amount: number
     nft_gold_amount: number
     nft_dumz_amount: number
-    nft_trunk_amount: number
 end
 
 -- Bank transaction type

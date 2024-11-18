@@ -42,7 +42,7 @@ interface GameState {
   deposit: (amount: number, tokenType: TokenType) => Promise<void>;
   withdraw: (amount: number, tokenType: TokenType) => Promise<void>;
   claimAirdrop: (tokenType: TokenType) => Promise<void>;
-  claimTrunk: () => Promise<void>;
+  // claimTrunk: () => Promise<void>;
   shop: Shop | null;
   getShop: (itemType: ItemType) => Promise<void>;
   buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
@@ -214,17 +214,17 @@ export const useGameStore = create<GameState>()(
         await Promise.all([get().refreshUserData(), get().getBank()]);
         set({ bankTransactionLoading: false });
       },
-      claimTrunk: async () => {
-        set({ bankTransactionLoading: true });
-        const resultData = await sendAndReceiveGameMessage({
-          tags: [
-            { name: "Action", value: "Bank.PushOutTrunk" },
-            { name: "UserId", value: get().user?.id.toString()! },
-          ],
-        });
-        await Promise.all([get().refreshUserData(), get().getBank()]);
-        set({ bankTransactionLoading: false });
-      },
+      // claimTrunk: async () => {
+      //   set({ bankTransactionLoading: true });
+      //   const resultData = await sendAndReceiveGameMessage({
+      //     tags: [
+      //       { name: "Action", value: "Bank.PushOutTrunk" },
+      //       { name: "UserId", value: get().user?.id.toString()! },
+      //     ],
+      //   });
+      //   await Promise.all([get().refreshUserData(), get().getBank()]);
+      //   set({ bankTransactionLoading: false });
+      // },
       shop: null,
       getShop: async (itemType: ItemType) => {
         const resultData = await sendDryRunGameMessage({

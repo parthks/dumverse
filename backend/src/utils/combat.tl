@@ -15,6 +15,7 @@ global type CombatUserData = record
     current_island: integer | nil
     gold_balance: integer
     dumz_balance: integer
+    trunk_balance: integer
     health: number
     total_health: number
     stamina: number

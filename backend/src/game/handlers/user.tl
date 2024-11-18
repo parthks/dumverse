@@ -59,7 +59,7 @@ local function addNewUserHandler(msg: Message)
     local profiles = dbAdmin:exec(getUserQuery)
     assert(#profiles == 0, "User already exists")
 
-    local nft_dumz_amount, nft_gold_amount, nft_trunk_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
     
     local starting_gold = 10000
     local starting_dumz = 50
@@ -87,9 +87,9 @@ local function addNewUserHandler(msg: Message)
 
     -- Insert into Bank
     local insert_bank_result = dbAdmin:exec(string.format([[
-        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount, nft_trunk_amount)
+        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
         VALUES (%d, %f, %f, %f, %f, %f);
-    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount, nft_trunk_amount))
+    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
     assert(insert_bank_result, "Failed to insert into Bank")
 

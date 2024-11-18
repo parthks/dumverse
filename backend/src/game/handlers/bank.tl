@@ -20,7 +20,7 @@ local function bankInfoHandler(msg: Message)
 end
 
 local function bankDepositHandler(msg: Message)
-    assert(msg.Tags.TokenType == "GOLD" or msg.Tags.TokenType == "DUMZ", "Invalid bank type")
+    assert(msg.Tags.TokenType == "GOLD" or msg.Tags.TokenType == "DUMZ" or msg.Tags.TokenType == "TRUNK", "Invalid bank type")
     assert(msg.Tags.UserId, "Pass in user id")
     assert(msg.Tags.Amount, "Pass in amount")
     local amount = tonumber(msg.Tags.Amount)
@@ -34,6 +34,8 @@ local function bankDepositHandler(msg: Message)
     -- check if user has enough balance
     if tokenType == "GOLD" then
         assert(userData.gold_balance >= amount, "User does not have enough GOLD balance")
+    elseif tokenType == "TRUNK" then
+        assert(userData.trunk_balance >= amount, "User does not have enough TRUNK balance")
     else
         assert(userData.dumz_balance >= amount, "User does not have enough DUMZ balance")
     end
@@ -48,6 +50,10 @@ local function bankDepositHandler(msg: Message)
         dbAdmin:exec(string.format([[
             UPDATE Bank SET gold_amount = gold_amount + %f WHERE user_id = %f;
         ]], amount, msg.Tags.UserId))
+    elseif tokenType == "TRUNK" then
+        dbAdmin:exec(string.format([[
+            UPDATE Bank SET trunk_amount = trunk_amount + %f WHERE user_id = %f;
+        ]], amount, msg.Tags.UserId))
     else
         dbAdmin:exec(string.format([[
             UPDATE Bank SET dumz_amount = dumz_amount + %f WHERE user_id = %f;
@@ -59,6 +65,10 @@ local function bankDepositHandler(msg: Message)
         dbAdmin:exec(string.format([[
             UPDATE Users SET gold_balance = %f WHERE id = %f;
         ]], userData.gold_balance - amount, msg.Tags.UserId))
+    elseif tokenType == "TRUNK" then
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET trunk_balance = %f WHERE id = %f;
+        ]], userData.trunk_balance - amount, msg.Tags.UserId))
     else
         dbAdmin:exec(string.format([[
             UPDATE Users SET dumz_balance = %f WHERE id = %f;
@@ -129,7 +139,7 @@ end
 local function bankClaimAirdropHandler(msg: Message)
     local tokenType = msg.Tags.TokenType as TokenType
     local user_id = tonumber(msg.Tags.UserId)
-    assert(tokenType == "GOLD" or tokenType == "DUMZ", "Invalid bank type")
+    assert(tokenType == "GOLD" or tokenType == "DUMZ", "Invalid token type")
 
     -- check user data
     helpers.CheckUserExists(user_id, msg.From)
@@ -187,8 +197,14 @@ end
 local function bankPushOutHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
     helpers.CheckUserExists(user_id, msg.From)
+    local tokenType = msg.Tags.TokenType as TokenType
+    assert(tokenType == "TRUNK" or tokenType == "DUMZ", "Invalid token type")
     local amount = tonumber(msg.Tags.Amount)
 
+    if tokenType == "TRUNK" then
+        amount = math.floor(amount)
+    end
+
     -- fetch bank data
     local bank = dbAdmin:exec(string.format([[
         SELECT * FROM Bank WHERE user_id = %d;
@@ -197,70 +213,92 @@ local function bankPushOutHandler(msg: Message)
     local bankData: BankAccountData = bank[1] as BankAccountData
 
     -- check if bank has enough balance
-    assert(bankData.dumz_amount >= amount,
-        string.format("Your bank does not have enough DUMZ balance. You can only transfer out %f DUMZ", bankData.dumz_amount))
-
+    if tokenType == "TRUNK" then
+        assert(bankData.trunk_amount >= amount,
+            string.format("Your bank does not have enough TRUNK balance. You can only transfer out %f TRUNK", bankData.trunk_amount))
+    else
+        assert(bankData.dumz_amount >= amount,
+            string.format("Your bank does not have enough DUMZ balance. You can only transfer out %f DUMZ", bankData.dumz_amount))
+    end
+   
     -- update bank balance
-    dbAdmin:exec(string.format([[
-        UPDATE Bank SET dumz_amount = dumz_amount - %f WHERE user_id = %d;
-    ]], amount, user_id))
+    if tokenType == "TRUNK" then
+        dbAdmin:exec(string.format([[
+            UPDATE Bank SET trunk_amount = trunk_amount - %f WHERE user_id = %d;
+        ]], amount, user_id))
+    else
+        dbAdmin:exec(string.format([[
+            UPDATE Bank SET dumz_amount = dumz_amount - %f WHERE user_id = %d;
+        ]], amount, user_id))
+    end
 
     -- add a bank transaction
     dbAdmin:exec(string.format([[
         INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_OUT", %f);
-    ]], user_id, amount, "DUMZ", msg.Timestamp))    
+    ]], user_id, amount, tokenType, msg.Timestamp))    
 
     -- send dumz to user address
-    ao.send({ Target = constants.DUMZ_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
+    if tokenType == "DUMZ" then
+        ao.send({ Target = constants.DUMZ_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
+    else
+        ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
+    end
+
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
-local function bankPushOutTrunkHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId)
-    helpers.CheckUserExists(user_id, msg.From)
+-- local function bankPushOutTrunkHandler(msg: Message)
+--     local user_id = tonumber(msg.Tags.UserId)
+--     helpers.CheckUserExists(user_id, msg.From)
 
-    -- fetch bank data
-    local bank = dbAdmin:exec(string.format([[
-        SELECT * FROM Bank WHERE user_id = %d;
-    ]], user_id))
-    assert(#bank > 0, "You do not have any tokens in your bank")
-    local bankData: BankAccountData = bank[1] as BankAccountData
+--     -- fetch bank data
+--     local bank = dbAdmin:exec(string.format([[
+--         SELECT * FROM Bank WHERE user_id = %d;
+--     ]], user_id))
+--     assert(#bank > 0, "You do not have any tokens in your bank")
+--     local bankData: BankAccountData = bank[1] as BankAccountData
 
-    -- check if bank has enough balance
-    assert(bankData.nft_trunk_amount ~= 0, "Your bank does not have any TRUNK airdrop available")
+--     -- check if bank has enough balance
+--     assert(bankData.nft_trunk_amount ~= 0, "Your bank does not have any TRUNK airdrop available")
 
-    -- update bank balance
-    dbAdmin:exec(string.format([[
-        UPDATE Bank SET nft_trunk_amount = 0 WHERE user_id = %d;
-    ]], user_id))
+--     -- update bank balance
+--     dbAdmin:exec(string.format([[
+--         UPDATE Bank SET nft_trunk_amount = 0 WHERE user_id = %d;
+--     ]], user_id))
 
-    -- add a bank transaction
-    dbAdmin:exec(string.format([[
-        INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_OUT", %f);
-    ]], user_id, bankData.nft_trunk_amount, "TRUNK", msg.Timestamp))
+--     -- add a bank transaction
+--     dbAdmin:exec(string.format([[
+--         INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_OUT", %f);
+--     ]], user_id, bankData.nft_trunk_amount, "TRUNK", msg.Timestamp))
 
-    -- send trunk to user address
-    ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(math.floor(bankData.nft_trunk_amount)) })
-    ao.send({ Target = msg.From, Status = "Success" })
-end
+--     -- send trunk to user address
+--     ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(math.floor(bankData.nft_trunk_amount)) })
+--     ao.send({ Target = msg.From, Status = "Success" })
+-- end
 
 local function bankPushInHandler(msg: Message)
-    assert(msg.From == constants.DUMZ_TOKEN_PROCESS_ID, "Invalid sender. Expected Dumz Token Process ID.")
-
+    assert(msg.From == constants.DUMZ_TOKEN_PROCESS_ID or msg.From == constants.TRUNK_TOKEN_PROCESS_ID, "Invalid sender. Expected Dumz Token Process ID or Trunk Token Process ID.")
+    local tokenType = msg.From == constants.DUMZ_TOKEN_PROCESS_ID and "DUMZ" or "TRUNK"
     local user_id = tonumber(msg.Tags["X-UserId"])
     local fromAddress = msg.Tags.Sender
     local amount = tonumber(msg.Tags.Quantity)
     helpers.CheckUserExists(user_id, fromAddress)
 
     -- update bank balance
-    dbAdmin:exec(string.format([[
-        UPDATE Bank SET dumz_amount = dumz_amount + %f WHERE user_id = %d;
-    ]], amount, user_id))
+    if tokenType == "DUMZ" then
+        dbAdmin:exec(string.format([[
+            UPDATE Bank SET dumz_amount = dumz_amount + %f WHERE user_id = %d;
+        ]], amount, user_id))
+    else
+        dbAdmin:exec(string.format([[
+            UPDATE Bank SET trunk_amount = trunk_amount + %f WHERE user_id = %d;
+        ]], amount, user_id))
+    end
 
     -- add a bank transaction
     dbAdmin:exec(string.format([[
         INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_IN", %f);
-    ]], user_id, amount, "DUMZ", msg.Timestamp))
+    ]], user_id, amount, tokenType, msg.Timestamp))
 
     -- send dumz to user address
     ao.send({ Target = fromAddress, Status = "Success" })
@@ -295,7 +333,7 @@ Handlers.add("Bank.ClaimAirdrop", Handlers.utils.hasMatchingTag('Action', 'Bank.
    ]]
 --
 Handlers.add("Bank.PushOut", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOut'), bankPushOutHandler)
-Handlers.add("Bank.PushOutTrunk", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOutTrunk'), bankPushOutTrunkHandler)
+-- Handlers.add("Bank.PushOutTrunk", Handlers.utils.hasMatchingTag('Action', 'Bank.PushOutTrunk'), bankPushOutTrunkHandler)
 Handlers.add("Bank.PushIn", Handlers.utils.hasMatchingTag('Action', 'Credit-Notice'), bankPushInHandler)
 -- Handlers.add("Bank.AcceptQuest", Handlers.utils.hasMatchingTag('Action', 'Bank.AcceptQuest'), bankAcceptQuestHandler)
 
