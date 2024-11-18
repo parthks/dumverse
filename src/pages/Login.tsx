@@ -297,13 +297,15 @@ const FormData = () => {
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
-              <div className="py-1">
-                {dumdumAssets.map((option) => (
-                  <div key={option.Id} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleOptionSelect(option)}>
-                    <img src={`https://arweave.net/${option.Id}`} alt="NFT Preview" className="w-10 h-10 object-contain" />
-                    {option.edition}
-                  </div>
-                ))}
+              <div className="py-1 max-h-[300px] overflow-y-auto">
+                <div className="grid grid-cols-5 gap-4 p-4">
+                  {dumdumAssets.map((option) => (
+                    <div key={option.Id} className="flex flex-col items-center p-2 hover:bg-gray-100 cursor-pointer rounded" onClick={() => handleOptionSelect(option)}>
+                      <img src={`https://arweave.net/${option.Id}`} alt="NFT Preview" className="w-12 h-12 object-contain" />
+                      <span className="text-sm mt-1">#{option.edition}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </PopoverContent>
           </Popover>
