@@ -12,15 +12,13 @@ import { useEffect, useRef, useState } from "react";
 
 // const currentBattle = {
 //   npcs: {
-//     LEPERCHAUN: {
-//       extra_gold: 20,
-//       name: "Made it Leperchaun",
-//       damage: 4,
+//     PEACOCK: {
+//       id: "PEACOCK",
+//       name: "Devilish Peacock",
+//       total_health: 6,
+//       health: 6,
+//       damage: 6,
 //       difficulty: "SPECIAL",
-//       gold_reward: 2000,
-//       total_health: 4,
-//       health: 1,
-//       id: "LEPERCHAUN",
 //     },
 //     NPC_5: {
 //       health: 0,
@@ -295,7 +293,6 @@ function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
   const player = currentBattle.players[user!.id.toString()];
   const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
   const actionLoading = useCombatStore((state) => state.actionLoading);
-  // const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
   const potionsInBag = user?.inventory?.filter((item) => item.item_id === "POTION_1") ?? [];
   const potionUsed = !!player.potion_used;
   if (potionUsed) {
@@ -643,6 +640,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
 }
 
 function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
+  const special_item_hearts = useGameStore((state) => state.user?.special_item_heart ?? 0);
   const backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
   const totalHealth = enemy.total_health;
   const filledHealth = enemy.health;
@@ -670,6 +668,15 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
           ))}
         </div> */}
       </div>
+      {enemy.id == "PEACOCK" && (
+        <div className={`absolute w-[215px] left-[20px] bottom-[5%]`}>
+          {special_item_hearts <= 0 && (<img  src="https://arweave.net/h5GrIKLk1Q4Mv0xAF82ZS2Nwh1ESa1kTy5P_9dpirCo" alt="Special Item Heart Top Left" className="w-8 h-8 mx-auto" />)}
+          {special_item_hearts == 1 && (<img  src="https://arweave.net/ogpB0YYqkb7isSQ-J-r62GpcyiColpPqEGMhSh1Wn1g" alt="Special Item Heart Top Right" className="w-8 h-8 mx-auto" />)}
+          {special_item_hearts == 2 && (<img  src="https://arweave.net/GyghY_YYyptw3Nrx3g-CG248YSaBrwa5l2fJbkYuzjI" alt="Special Item Heart Bottom Right" className="w-8 h-8 mx-auto" />)}
+          {special_item_hearts >= 3 && (<img  src="https://arweave.net/dqMWqLwe9ABVOez_1FJqTVebASXNU8lXvYDJ3LJSoak" alt="Special Item Heart Bottom Left" className="w-8 h-8 mx-auto" />)}
+
+        </div>
+      )}
       {totalGold != 0 && (
         <div className={`absolute w-[65px] ${enemy.id == "LEPERCHAUN" ? "left-[38%] bottom-[7%]" : "left-[2.5%] bottom-[6.5%]"}`}>
           <p
