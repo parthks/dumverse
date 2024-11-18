@@ -54,7 +54,13 @@ local function CalculateUserBaseStats(userData: UserData): BaseStats
     baseStats.total_health = 2
     baseStats.stamina = 8
     baseStats.total_stamina = 8
+    if utils.includes(userData.nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+      baseStats.total_health = 4
+      baseStats.total_stamina = 16
+    end
   end
+
+
 
   return baseStats
 end
@@ -2060,41 +2066,44 @@ local AgentAddresses: {string} = {
   "BgWug-kJJLtk2jrObfPsJixboQWc5tLz7pS30fL3WxY"
 }
 
-local function getNFTBankAmountForNFT(nft_address: string): (number, number, number)
-  if not nft_address then
-    return 0, 0, 0
+local function getNFTBankAmountForNFT(nft_address: string | nil): (number, number)
+  if nft_address == nil then
+    return 0, 0
+  end
+  if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+    return 10000, 10000
   end
   for _, address in ipairs(GreenAddresses) do
     if address == nft_address then
-      return 1000, 1000, 1
+      return 1000, 1000
     end
   end
   for _, address in ipairs(AgentAddresses) do
     if address == nft_address then
-      return 2000, 1500, 1
+      return 2000, 1500
     end
   end
   for _, address in ipairs(BlueAddresses) do
     if address == nft_address then
-      return 3000, 1500, 1
+      return 3000, 1500
     end
   end
   for _, address in ipairs(PurpleAddresses) do
     if address == nft_address then
-      return 2500, 1500, 1
+      return 2500, 1500
     end
   end
   for _, address in ipairs(RedAddresses) do
     if address == nft_address then
-      return 3500, 1500, 1
+      return 3500, 1500
     end
   end
   for _, address in ipairs(GoldAddresses) do
     if address == nft_address then
-      return 5000, 3000, 1
+      return 5000, 3000
     end
   end
-  return 10000, 10000, 1
+  return 0, 0
 end
 
 return {

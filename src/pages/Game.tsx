@@ -17,11 +17,12 @@ import HallOfFame from "./Buildings/HallOfFame";
 import Den from "./Buildings/Den";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/canvas";
+import Settings from "@/components/game/Settings";
 
 const queryClient = new QueryClient();
 
 export default function Game() {
-  const { GameStatePage, setGameStatePage, user, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
+  const { GameStatePage, setGameStatePage, isSettingsOpen, setIsSettingsOpen, user, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -87,6 +88,7 @@ export default function Game() {
         <Button onClick={() => setGameStatePage(GameStatePages.COMBAT)}>Go to Combat</Button>
       </div> */}
       <QueryClientProvider client={queryClient}>
+        {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
         {page}
         {/* <Combat /> */}
         {/* <RestArea /> */}

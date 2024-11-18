@@ -7935,4 +7935,12 @@ const DUMDUM_ASSET_IDS = [
     edition: 1983,
   },
 ];
-export default DUMDUM_ASSET_IDS;
+
+const SPECIAL_ONE_OF_ONE_ASSET_IDS = [
+  "A8ucm402DGkcJWydu1iibXGvpsDSnI5rj3Z-zP7JjB4",
+  "XYkNDhHBAPF85xy7E56mmZR4VJTS8os0JbxNh_fdRZE",
+  "2UMirpNKMZ9MDpApI3gI0Dy0975fC-vOK3UoIeMM2yg",
+  "5U-KMM4rJ2x19xEEgSIHVdDopxuTXgCjaQgTUrNFiKE",
+];
+
+export { DUMDUM_ASSET_IDS, SPECIAL_ONE_OF_ONE_ASSET_IDS };

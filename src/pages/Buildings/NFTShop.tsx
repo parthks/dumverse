@@ -9,10 +9,10 @@ import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "@/components/ui/imgButton";
 import GifComponent from "@/components/Dialogue/Dialogue";
 import { useState } from "react";
+import audioManager from "@/utils/audioManager";
 
 export default function NFTShop() {
   const { shop, getShop, buyItem, buyItemLoading, inventory, acceptNFTShopQuest } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("SPECIAL_ITEMS") });
 
@@ -123,7 +123,7 @@ export default function NFTShop() {
                   onClick={async () => {
                     if (shop?.items[2]) {
                       await buyItem(shop?.items[2], shop?.items[2]?.gold_price ? "GOLD" : "DUMZ");
-                      shopBuyItemAudio.play();
+                      audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                     }
                   }}
                 />
@@ -148,7 +148,7 @@ export default function NFTShop() {
                       onClick={async () => {
                         if (shop?.items[1]) {
                           await buyItem(shop?.items[1], shop?.items[1]?.gold_price ? "GOLD" : "DUMZ");
-                          shopBuyItemAudio.play();
+                          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                         }
                       }}
                     />
@@ -173,7 +173,7 @@ export default function NFTShop() {
                       onClick={async () => {
                         if (shop?.items[0]) {
                           await buyItem(shop?.items[0], shop?.items[0]?.gold_price ? "GOLD" : "DUMZ");
-                          shopBuyItemAudio.play();
+                          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                         }
                       }}
                     />

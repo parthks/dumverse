@@ -1,6 +1,8 @@
 local json = require("json")
 local helpers = require("game.helpers")
 local constants = require("utils.constants")
+local utils = require("utils.utils.tl-utils")
+
 
 local REST_SPOTS = constants.REST_SPOTS;
 
@@ -39,6 +41,28 @@ end
 --     ao.send({ Target = msg.From, Status = "Success" })
 -- end
 
+local function OneOfOnesSpecialItemsHandler(nft_address: string, user_id: number)
+    if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+        -- 10 cake, 5 potions, 4 joose
+        print("Granting special items to 1/1 NFT user")
+        for _ = 1, 10 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");
+            ]], user_id, "FOOD_1", "FOOD"))
+        end
+        for _ = 1, 5 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");
+            ]], user_id, "POTION_1", "POTION"))
+        end
+        for _ = 1, 4 do
+            dbAdmin:exec(string.format([[
+                INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");
+            ]], user_id, "ENERGY_1", "ENERGY"))
+        end
+    end
+end
+
 local function addNewUserHandler(msg: Message)
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
@@ -59,7 +83,7 @@ local function addNewUserHandler(msg: Message)
     local profiles = dbAdmin:exec(getUserQuery)
     assert(#profiles == 0, "User already exists")
 
-    local nft_dumz_amount, nft_gold_amount, nft_trunk_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
     
     local starting_gold = 10000
     local starting_dumz = 50
@@ -87,12 +111,14 @@ local function addNewUserHandler(msg: Message)
 
     -- Insert into Bank
     local insert_bank_result = dbAdmin:exec(string.format([[
-        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount, nft_trunk_amount)
-        VALUES (%d, %f, %f, %f, %f, %f);
-    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount, nft_trunk_amount))
+        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
+        VALUES (%d, %f, %f, %f, %f);
+    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
     assert(insert_bank_result, "Failed to insert into Bank")
 
+    OneOfOnesSpecialItemsHandler(nft_address, newUserId as number)
+    
     -- Debug print
     print("New user created with ID: " .. tostring(newUserId))
 
@@ -103,6 +129,45 @@ local function addNewUserHandler(msg: Message)
             status = "Success"
         })
     })
+end
+
+local function upgradeExistingProfileHandler(msg: Message)
+    local user_address = msg.From
+    local nft_address = msg.Tags.NFT_Address
+    assert(nft_address, "NFT_Address is required")
+    local userData = dbAdmin:exec(string.format([[
+        SELECT * FROM Users WHERE address = "%s" and nft_address is NULL;
+    ]], user_address))
+    assert(#userData == 1, "User not found")
+    local user_id = userData[1].id
+    -- update nft_address
+    local tempUserData = {
+        nft_address = nft_address,
+    }
+    local baseStats = helpers.CalculateUserBaseStats(tempUserData)
+    -- update, total_stamina, total_health, health stamina, nft_address
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET nft_address = "%s", total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
+    ]], nft_address, baseStats.total_stamina, baseStats.total_health, baseStats.health, baseStats.stamina, user_id))
+
+    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    -- update bank
+    dbAdmin:exec(string.format([[
+        UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+    ]], nft_dumz_amount, nft_gold_amount, user_id))
+
+    OneOfOnesSpecialItemsHandler(nft_address, user_id as number)
+
+     -- Debug print
+     print("user upgraded with ID: " .. tostring(user_id))
+
+     ao.send({
+         Target = msg.From,
+         Data = json.encode({
+             status = "Success"
+         })
+     })
+
 end
 
 local function userProfilesHandler(msg: Message)
@@ -276,6 +341,7 @@ end
 Handlers.add("Users.SetCurrentIsland", Handlers.utils.hasMatchingTag('Action', 'SetCurrentIsland'), setCurrentIslandHandler)
 -- Handlers.add("Users.SetCurrentLocation", Handlers.utils.hasMatchingTag('Action', 'Users.SetCurrentLocation'), setCurrentLocationHandler)
 Handlers.add("Users.AddNewUser", Handlers.utils.hasMatchingTag('Action', 'Users.AddNewUser'), addNewUserHandler)
+Handlers.add("Users.UpgradeExistingProfile", Handlers.utils.hasMatchingTag('Action', 'Users.UpgradeExistingProfile'), upgradeExistingProfileHandler)
 Handlers.add("User.UserProfiles", Handlers.utils.hasMatchingTag('Action', 'User.UserProfiles'), userProfilesHandler)
 Handlers.add("User.Info", Handlers.utils.hasMatchingTag('Action', 'User.Info'), userInfoHandler)
 Handlers.add("User.GoToTown", Handlers.utils.hasMatchingTag('Action', 'User.GoToTown'), goToTownHandler)

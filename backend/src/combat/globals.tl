@@ -21,6 +21,13 @@ if not NPCS_EXTRA_GOLD then
     NPCS_EXTRA_GOLD = {}
 end
 
+global ONE_OF_ONE_ASSET_IDS: {string} = {
+    "A8ucm402DGkcJWydu1iibXGvpsDSnI5rj3Z-zP7JjB4",
+    "XYkNDhHBAPF85xy7E56mmZR4VJTS8os0JbxNh_fdRZE",
+    "2UMirpNKMZ9MDpApI3gI0Dy0975fC-vOK3UoIeMM2yg",
+    "5U-KMM4rJ2x19xEEgSIHVdDopxuTXgCjaQgTUrNFiKE",
+}
+
 global CRON_TICK_COUNT = 0
 
 

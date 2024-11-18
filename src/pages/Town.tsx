@@ -1,6 +1,7 @@
 import ChatWindow from "@/components/chat/Chat";
 import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import ImgButton from "@/components/ui/imgButton";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
@@ -8,6 +9,7 @@ import { useState } from "react";
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const goToGameMap = useGameStore((state) => state.goToGameMap);
+  const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
 
   const [chatOpen, setChatOpen] = useState(false);
 
@@ -15,11 +17,13 @@ export default function Town() {
     setGameStatePage(building);
   };
 
+  useBackgroundMusic(SOUNDS.TOWN_AUDIO);
+
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       {/* Background image */}
       <img src="https://arweave.net/kr9vAhgWOI_OfA7LBGNuQxW1zAg9Eq_3vZaSebHN5HQ" alt="Background Placeholder" className="absolute top-0 left-0 w-full h-full object-cover" />
-      <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop />
+      {/* <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop /> */}
 
       <div className="z-10 absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5">
         <PlayerOnlineList currentSpot={0} />
@@ -41,13 +45,16 @@ export default function Town() {
                 alt={"Enter Rest Area"}
               />
             </div>
-            <ImgButton
-              src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
-              onClick={() => {
-                setChatOpen(true);
-              }}
-              alt={"Chat"}
-            />
+            <div className="flex gap-4 items-center justify-end">
+              <ImgButton
+                src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
+                onClick={() => {
+                  setChatOpen(true);
+                }}
+                alt={"Chat"}
+              />
+              <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
+            </div>
           </div>
         </div>
       )}
@@ -150,7 +157,7 @@ export default function Town() {
                 handleBuildingSelect(GameStatePages.VISITOR_CENTER);
               }}
             />
-             {/* <img
+            {/* <img
               src="https://arweave.net/jcrjRLjmbifAPy0nas_hHobjDIdKyMaRNmQjSD0UVvA"
               alt="Building 9 Den"
               className="absolute top-[36%] left-[43%] w-[18%] h-auto 

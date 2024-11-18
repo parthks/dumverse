@@ -14,6 +14,7 @@ export type GameUser = {
   current_island?: number;
   gold_balance: number;
   dumz_balance: number;
+  trunk_balance: number;
   health: number;
   total_health: number;
   stamina: number;
@@ -65,12 +66,12 @@ export type Bank = {
   user_id: number;
   gold_amount: number;
   dumz_amount: number;
+  trunk_amount: number;
   nft_gold_amount: number;
   nft_dumz_amount: number;
-  nft_trunk_amount: number;
 };
 
-export type TokenType = "GOLD" | "DUMZ";
+export type TokenType = "GOLD" | "DUMZ" | "TRUNK";
 
 export type BankTransaction = {
   id: number;

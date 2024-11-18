@@ -1,7 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import ConnectButton from "@/components/wallet/ConnectButton";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import DUMDUM_ASSET_IDS from "@/lib/DumDumAssetIds";
+import { DUMDUM_ASSET_IDS } from "@/lib/DumDumAssetIds";
 import { useAppStore } from "@/store/useAppStore";
 
 import ImgButton from "@/components/ui/imgButton";
@@ -10,8 +10,7 @@ import { useProfile } from "@/components/wallet/hooks";
 import { useGameStore } from "@/store/useGameStore";
 import { LOGIN_VIDEO } from "@/lib/constants";
 import GameMap from "./GameMap";
-import { GameUser, Inventory } from "@/types/game";
-
+import Settings from "@/components/game/Settings";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -77,6 +76,7 @@ export default function App() {
               src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
               onClick={() => {
                 if (videoRef.current) {
+                  videoRef.current.volume = localStorage.getItem("music-volume") ? parseFloat(localStorage.getItem("music-volume")!) : 1;
                   videoRef.current.play();
                 }
                 setPlaying(true);
@@ -137,6 +137,8 @@ function Tutorial({ onClose }: { onClose: () => void }) {
 
 function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject<HTMLVideoElement> }) {
   const profileLoading = useAppStore((state) => state.profileLoading);
+  const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
+  const isSettingsOpen = useGameStore((state) => state.isSettingsOpen);
   const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
@@ -150,8 +152,9 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
   return (
     <div className="h-screen flex justify-center items-center">
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
+      {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
-      <div className="absolute bottom-4 right-4">
+      <div className="absolute bottom-4 right-4 flex gap-4 items-center justify-end">
         <ImgButton
           src="https://arweave.net/F5cG9iaRzliwIizUPBJ8UXWT6y5HUkFvB87NYLOs5tU"
           alt="Open Tutorial Video"
@@ -159,6 +162,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
             setShowTutorial(true);
           }}
         />
+        <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
       </div>
       {profileLoading ? (
         <p className="text-white absolute top-[450px] text-2xl font-bold">Loading...</p>
@@ -175,7 +179,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
 }
 
 const FormData = () => {
-  const [selectedOption, setSelectedOption] = useState<{ edition: number;  existingProfile: GameUser; Quantity:number;Id: string; } | null>(null);
+  const [selectedOption, setSelectedOption] = useState<{ edition: number; Id: string; existingProfile: boolean } | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
 
@@ -211,6 +215,8 @@ const FormData = () => {
       }
       await setUser(gameProfile);
     } else if (nonNFTGameProfiles.length > 0) {
+      console.log("upgrading existing profile with NFT", selectedOption);
+      if (selectedOption?.Id) await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id);
       await setUser(nonNFTGameProfiles[0]);
     } else {
       if (!name || name === "") return;
@@ -291,13 +297,15 @@ const FormData = () => {
               </div>
             </PopoverTrigger>
             <PopoverContent className="w-full p-0">
-              <div className="py-1">
-                {dumdumAssets.map((option) => (
-                  <div key={option.Id} className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleOptionSelect(option)}>
-                    <img src={`https://arweave.net/${option.Id}`} alt="NFT Preview" className="w-10 h-10 object-contain" />
-                    {option.edition}
-                  </div>
-                ))}
+              <div className="py-1 max-h-[300px] overflow-y-auto">
+                <div className="grid grid-cols-5 gap-4 p-4">
+                  {dumdumAssets.map((option) => (
+                    <div key={option.Id} className="flex flex-col items-center p-2 hover:bg-gray-100 cursor-pointer rounded" onClick={() => handleOptionSelect(option)}>
+                      <img src={`https://arweave.net/${option.Id}`} alt="NFT Preview" className="w-12 h-12 object-contain" />
+                      <span className="text-sm mt-1">#{option.edition}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </PopoverContent>
           </Popover>
@@ -311,13 +319,9 @@ const FormData = () => {
 
       <div className="flex flex-col gap-2 justify-center items-center">
         {gameProfiles ? (
-          selectedOption ? (
-            selectedOption?.existingProfile ? (
-              <p>Using existing profile</p>
-            ) : (
-              <p>Registering new profile...</p>
-            )
-          ) : nonNFTGameProfiles.length > 0 ? (
+          nonNFTGameProfiles.length > 0 && selectedOption ? (
+            <p>Upgrading existing profile with NFT</p>
+          ) : nonNFTGameProfiles.length > 0 || selectedOption?.existingProfile ? (
             <p>Using existing profile</p>
           ) : (
             <p>Registering new profile...</p>

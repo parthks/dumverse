@@ -8,6 +8,7 @@ import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import GifComponent from "@/components/Dialogue/Dialogue";
 import { useState } from "react";
+import audioManager from "@/utils/audioManager";
 
 // function ShopItem({ item, position }: { item: Item; position: number }) {
 //   const { buyItemLoading } = useGameStore();
@@ -164,7 +165,6 @@ import { useState } from "react";
 export default function Shop() {
   const { shop, getShop, buyItem, buyItemLoading, acceptShopQuest } =
     useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
@@ -266,7 +266,7 @@ export default function Shop() {
                   shop.items[0],
                   shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
                 );
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 35,
@@ -283,7 +283,7 @@ export default function Shop() {
                   shop.items[1],
                   shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
                 );
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 65,

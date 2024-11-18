@@ -1,18 +1,15 @@
-import { useState } from "react";
 import ExistToTownButton from "@/components/buildings/ExistToTownButton";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
-import ShopItem from "@/components/buildings/ShopItem";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
-import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
+import ImgButton from "@/components/ui/imgButton";
+import { BUILDING_IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
-import ImgButton from "@/components/ui/imgButton";
-import { handler } from "tailwindcss-animate";
+import { useState } from "react";
 
 export default function Den() {
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 

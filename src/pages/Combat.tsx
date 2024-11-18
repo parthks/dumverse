@@ -1,24 +1,24 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
+import audioManager from "@/utils/audioManager";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 // const currentBattle = {
 //   npcs: {
-//     LEPERCHAUN: {
-//       extra_gold: 20,
-//       name: "Made it Leperchaun",
-//       damage: 4,
+//     PEACOCK: {
+//       id: "PEACOCK",
+//       name: "Devilish Peacock",
+//       total_health: 6,
+//       health: 6,
+//       damage: 6,
 //       difficulty: "SPECIAL",
-//       gold_reward: 2000,
-//       total_health: 4,
-//       health: 1,
-//       id: "LEPERCHAUN",
 //     },
 //     NPC_5: {
 //       health: 0,
@@ -259,12 +259,28 @@ export default function Combat() {
 
   console.log("currentBattle", currentBattle);
 
+  return <MainBattlePage currentBattle={currentBattle} />;
+
+  // return (
+  //   <div
+  //     className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
+  //     style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
+  //   >
+  //     <audio src={SOUNDS.BATTLE_AUDIO} autoPlay loop />
+  //     <BattleGround currentBattle={currentBattle} />
+  //     <CombatInventory currentBattle={currentBattle} />
+  //     <BattleLog currentBattle={currentBattle} />
+  //   </div>
+  // );
+}
+
+function MainBattlePage({currentBattle}: {currentBattle: Battle}) {
+  useBackgroundMusic(SOUNDS.BATTLE_AUDIO)
   return (
     <div
       className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
     >
-      <audio src={SOUNDS.BATTLE_AUDIO} autoPlay loop />
       <BattleGround currentBattle={currentBattle} />
       <CombatInventory currentBattle={currentBattle} />
       <BattleLog currentBattle={currentBattle} />
@@ -277,7 +293,6 @@ function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
   const player = currentBattle.players[user!.id.toString()];
   const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
   const actionLoading = useCombatStore((state) => state.actionLoading);
-  const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
   const potionsInBag = user?.inventory?.filter((item) => item.item_id === "POTION_1") ?? [];
   const potionUsed = !!player.potion_used;
   if (potionUsed) {
@@ -296,11 +311,13 @@ function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
           // className="w-20 shrink-0"
           src={"https://arweave.net/K815sdYLj_pFQQ_95fSY3P-55XinoUZiTskuJEgaK8w"}
           onClick={async () => {
+            audioManager.playSFX(SOUNDS.DRINK_POTION_AUDIO);
             await drinkPotion();
-            if (drinkPotionAudioRef.current) {
-              drinkPotionAudioRef.current.currentTime = 0; // Reset audio to start
-              drinkPotionAudioRef.current.play();
-            }
+
+            // if (drinkPotionAudioRef.current) {
+            //   drinkPotionAudioRef.current.currentTime = 0; // Reset audio to start
+            //   drinkPotionAudioRef.current.play();
+            // }
           }}
           alt={"Use Potion"}
         />
@@ -478,10 +495,11 @@ function UserIsAttackedAnimation({ currentBattle }: { currentBattle: Battle }) {
 
   useEffect(() => {
     if (isAttacked) {
-      if (attackAudioRef.current) {
-        attackAudioRef.current.currentTime = 0; // Reset audio to start
-        attackAudioRef.current.play();
-      }
+      // if (attackAudioRef.current) {
+        // attackAudioRef.current.currentTime = 0; // Reset audio to start
+        // attackAudioRef.current.play();
+      audioManager.playSFX(SOUNDS.IS_ATTACKED_AUDIO);
+      // }
       setTimeout(() => {
         setIsAttacked(false);
       }, 5000);
@@ -497,7 +515,7 @@ function UserIsAttackedAnimation({ currentBattle }: { currentBattle: Battle }) {
     <>
       {isAttacked && (
         <>
-          <audio preload="auto" ref={attackAudioRef} src={SOUNDS.IS_ATTACKED_AUDIO} />
+          {/* <audio preload="auto" ref={attackAudioRef} src={SOUNDS.IS_ATTACKED_AUDIO} /> */}
           <div className="absolute z-10 top-0 left-0 w-full h-[80%] flex items-center justify-center">
             <img key={key} src={`https://arweave.net/685Qo64yiYdiFtwHbi_HoMQZt-7NtWGFYLrtXJfUHcI?key=${key}`} alt="Attacked Animation" className="max-w-full max-h-full" />
             {/* <img src="https://arweave.net/Byhqsjqy34GLYipi7RTBF0qaMevJTtwMdBWbFawGOD0" alt="Attack Animation" className="max-w-full max-h-full" /> */}
@@ -511,14 +529,15 @@ function UserIsAttackedAnimation({ currentBattle }: { currentBattle: Battle }) {
 function AttackAnimation() {
   const attackAudioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
-    if (attackAudioRef.current) {
-      attackAudioRef.current.currentTime = 0; // Reset audio to start
-      attackAudioRef.current.play();
-    }
+    audioManager.playSFX(SOUNDS.ATTACK_AUDIO);
+    // if (attackAudioRef.current) {
+      // attackAudioRef.current.currentTime = 0; // Reset audio to start
+      // attackAudioRef.current.play();
+    // }
   }, []);
   return (
     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-      <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} />
+      {/* <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} /> */}
       <img src="https://arweave.net/Byhqsjqy34GLYipi7RTBF0qaMevJTtwMdBWbFawGOD0" alt="Attack Animation" className="max-w-full max-h-full" />
     </div>
   );
@@ -532,7 +551,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const filledStamina = player.stamina;
   const drinkPotion = useCombatStore((state) => state.userDrinkPotion);
   const actionLoading = useCombatStore((state) => state.actionLoading);
-  const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
+  // const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
 
   const { weapon, armor } = getEquippedItem(user!);
   const isUsingWeapon = !!player.inventory_weapon_id;
@@ -543,7 +562,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
       className="w-[250px] relative flex flex-col bg-[url('https://arweave.net/sX67q1nQcG8fOyyJqTOcIc2CfmAsZCocplOXJIWFN0Y')] bg-no-repeat bg-contain bg-center px-3 py-1"
       style={{ aspectRatio: "302/421", textShadow: "-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000" }}
     >
-      <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
+      {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
       <h2 className="text-white text-2xl font-bold text-center">{player.name} (P)</h2>
       <img
         src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM}
@@ -621,6 +640,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
 }
 
 function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
+  const special_item_hearts = useGameStore((state) => state.user?.special_item_heart ?? 0);
   const backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
   const totalHealth = enemy.total_health;
   const filledHealth = enemy.health;
@@ -648,6 +668,15 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
           ))}
         </div> */}
       </div>
+      {enemy.id == "PEACOCK" && (
+        <div className={`absolute w-[215px] left-[20px] bottom-[5%]`}>
+          {special_item_hearts <= 0 && (<img  src="https://arweave.net/h5GrIKLk1Q4Mv0xAF82ZS2Nwh1ESa1kTy5P_9dpirCo" alt="Special Item Heart Top Left" className="w-8 h-8 mx-auto" />)}
+          {special_item_hearts == 1 && (<img  src="https://arweave.net/ogpB0YYqkb7isSQ-J-r62GpcyiColpPqEGMhSh1Wn1g" alt="Special Item Heart Top Right" className="w-8 h-8 mx-auto" />)}
+          {special_item_hearts == 2 && (<img  src="https://arweave.net/GyghY_YYyptw3Nrx3g-CG248YSaBrwa5l2fJbkYuzjI" alt="Special Item Heart Bottom Right" className="w-8 h-8 mx-auto" />)}
+          {special_item_hearts >= 3 && (<img  src="https://arweave.net/dqMWqLwe9ABVOez_1FJqTVebASXNU8lXvYDJ3LJSoak" alt="Special Item Heart Bottom Left" className="w-8 h-8 mx-auto" />)}
+
+        </div>
+      )}
       {totalGold != 0 && (
         <div className={`absolute w-[65px] ${enemy.id == "LEPERCHAUN" ? "left-[38%] bottom-[7%]" : "left-[2.5%] bottom-[6.5%]"}`}>
           <p

@@ -29,6 +29,7 @@ interface GameState {
   GameStatePage: GameStatePages | null;
   setGameStatePage: (state: GameStatePages | null) => void;
   registerNewUser: (name: string, nft?: string) => Promise<void>;
+  upgradeExistingProfile: (nftAddress: string) => Promise<void>;
   user: GameUser | null;
   setUserOnLogin: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
@@ -42,7 +43,7 @@ interface GameState {
   deposit: (amount: number, tokenType: TokenType) => Promise<void>;
   withdraw: (amount: number, tokenType: TokenType) => Promise<void>;
   claimAirdrop: (tokenType: TokenType) => Promise<void>;
-  claimTrunk: () => Promise<void>;
+  // claimTrunk: () => Promise<void>;
   shop: Shop | null;
   getShop: (itemType: ItemType) => Promise<void>;
   buyItem: (item: Item, tokenType: TokenType) => Promise<void>;
@@ -71,6 +72,10 @@ interface GameState {
   acceptWeaponQuest: () => Promise<void>;
   acceptShopQuest: () => Promise<void>;
   acceptDenQuest: () => Promise<void>;
+  lastDisplayedMessageId: number | null;
+  setLastDisplayedMessageId: (state: number | null) => void;
+  isSettingsOpen: boolean;
+  setIsSettingsOpen: (open: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -94,6 +99,14 @@ export const useGameStore = create<GameState>()(
             get().setUserOnLogin(data.data);
           }
         }
+      },
+      upgradeExistingProfile: async (nftAddress) => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Users.UpgradeExistingProfile" },
+            { name: "NFT_Address", value: nftAddress },
+          ],
+        });
       },
       user: null,
       setUserOnLogin: async (user) => {
@@ -212,17 +225,17 @@ export const useGameStore = create<GameState>()(
         await Promise.all([get().refreshUserData(), get().getBank()]);
         set({ bankTransactionLoading: false });
       },
-      claimTrunk: async () => {
-        set({ bankTransactionLoading: true });
-        const resultData = await sendAndReceiveGameMessage({
-          tags: [
-            { name: "Action", value: "Bank.PushOutTrunk" },
-            { name: "UserId", value: get().user?.id.toString()! },
-          ],
-        });
-        await Promise.all([get().refreshUserData(), get().getBank()]);
-        set({ bankTransactionLoading: false });
-      },
+      // claimTrunk: async () => {
+      //   set({ bankTransactionLoading: true });
+      //   const resultData = await sendAndReceiveGameMessage({
+      //     tags: [
+      //       { name: "Action", value: "Bank.PushOutTrunk" },
+      //       { name: "UserId", value: get().user?.id.toString()! },
+      //     ],
+      //   });
+      //   await Promise.all([get().refreshUserData(), get().getBank()]);
+      //   set({ bankTransactionLoading: false });
+      // },
       shop: null,
       getShop: async (itemType: ItemType) => {
         const resultData = await sendDryRunGameMessage({
@@ -430,6 +443,10 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
       },
+      lastDisplayedMessageId: null,
+      setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),
+      isSettingsOpen: false,
+      setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
     }),
     {
       name: "Game Store",

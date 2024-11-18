@@ -9,6 +9,8 @@ import { useGameStore } from "@/store/useGameStore";
 import { useCallback, useEffect, useState } from "react";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import GifComponent from "@/components/Dialogue/Dialogue";
+import audioManager from "@/utils/audioManager";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
@@ -16,7 +18,6 @@ const imageHeight = 2160;
 function QuantityInput({ actionType, onClose }: { actionType: BankActionType; onClose: () => void }) {
   const { user, bank, deposit, withdraw, bankTransactionLoading } = useGameStore();
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
-  const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   const handleSubmit = async () => {
     if (!inputValue) {
@@ -36,6 +37,9 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
     } else if (actionType === "withdraw-dumz") {
       console.log("withdraw-dumz");
       await withdraw(inputValue ?? 0, "DUMZ");
+    } else if (actionType === "deposit-trunk") {
+      console.log("deposit-trunk");
+      await deposit(inputValue ?? 0, "TRUNK");
     } else if (actionType === "deposit-gold") {
       console.log("deposit-gold");
       await deposit(inputValue ?? 0, "GOLD");
@@ -43,7 +47,7 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
       console.log("withdraw-gold");
       await withdraw(inputValue ?? 0, "GOLD");
     }
-    bankInteractAudio.play();
+    audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
     onClose();
   };
 
@@ -61,6 +65,9 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
   } else if (actionType === "withdraw-gold") {
     title = "Withdrawing how much Gold?";
     max = bank?.gold_amount ?? 0;
+  } else if (actionType === "deposit-trunk") {
+    title = "Depositing how much Trunk?";
+    max = user?.trunk_balance ?? 0;
   }
   return (
     <div
@@ -103,13 +110,13 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
   );
 }
 
-function TransferDumz({ onClose }: { onClose: () => void }) {
+function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType: "dumz_token" | "trunk_token" }) {
   const { user, bank, getBank, bankDataLoading } = useGameStore();
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
-  const [dumzBalance, seDumzBalance] = useState<number | undefined>(undefined);
+  const [tokenBalance, setTokenBalance] = useState<number | undefined>(undefined);
   const [txnLoading, setTxnLoading] = useState(false);
 
-  const bankDumz = bank?.dumz_amount;
+  const bankDumz = tokenType === "dumz_token" ? bank?.dumz_amount : tokenType === "trunk_token" ? bank?.trunk_amount : undefined;
 
   const fetchBalance = useCallback(async () => {
     if (!user?.address) return;
@@ -118,9 +125,9 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
         { name: "Action", value: "Balance" },
         { name: "Recipient", value: user.address },
       ],
-      process: "dumz_token",
+      process: tokenType,
     });
-    seDumzBalance(parseInt(balance.data as unknown as string));
+    setTokenBalance(parseInt(balance.data as unknown as string));
   }, [user?.address]);
 
   useEffect(() => {
@@ -143,12 +150,13 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
       { name: "Action", value: "Bank.PushOut" },
       { name: "UserId", value: user!.id!.toString() },
       { name: "Amount", value: inputValue.toString() },
+      { name: "TokenType", value: tokenType === "dumz_token" ? "DUMZ" : "TRUNK" },
     ];
     const initialResponse = await sendAndReceiveGameMessage({
       tags: tags,
     });
     console.log("initialResponse", initialResponse, initialResponse.status);
-    const result = await pollForTransferSuccess("dumz_token", (messageTags) => {
+    const result = await pollForTransferSuccess(tokenType, (messageTags) => {
       const creditNotice = messageTags.find((tag) => tag.name === "Action" && tag.value === "Credit-Notice");
       const transferToUser = messageTags.find((tag) => tag.name === "X-UserId" && tag.value === user!.id!.toString());
       const amountTransferred = messageTags.find((tag) => tag.name === "Quantity" && tag.value === inputValue.toString());
@@ -157,17 +165,18 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
     getBank();
     fetchBalance();
     setTxnLoading(false);
+    setInputValue(undefined);
   };
 
   const handleDeposit = async () => {
     if (!inputValue) return;
-    if (!dumzBalance) return;
+    if (!tokenBalance) return;
     if (inputValue <= 0) {
       setInputValue(undefined);
       return;
     }
-    if (inputValue > dumzBalance) {
-      setInputValue(dumzBalance);
+    if (inputValue > tokenBalance) {
+      setInputValue(tokenBalance);
       return;
     }
     setTxnLoading(true);
@@ -179,14 +188,15 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
     ];
     const resultData = await sendAndReceiveGameMessage({
       tags: tags,
-      process: "dumz_token",
+      process: tokenType,
     });
     const debitNotice = resultData.Messages?.find((msg) => msg.Tags.some((tag: { name: string; value: string }) => tag.name === "Action" && tag.value === "Debit-Notice"));
     if (debitNotice) {
       await sleep(2000); // wait for the credit notice to be processed by game process
-      seDumzBalance(dumzBalance! - inputValue);
+      setTokenBalance(tokenBalance! - inputValue);
       getBank();
       fetchBalance();
+      setInputValue(undefined);
     }
     setTxnLoading(false);
   };
@@ -206,7 +216,7 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
       </div>
       <div className="flex flex-col items-center w-full gap-4 p-16">
         <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
-        <p>Wallet Balance: {dumzBalance !== undefined ? dumzBalance : "--"}</p>
+        <p>Wallet Balance: {tokenBalance !== undefined ? tokenBalance : "--"}</p>
         <p>Bank Balance: {bankDataLoading ? "--" : bankDumz}</p>
         <Input
           placeholder={`Amount to transfer`}
@@ -238,7 +248,7 @@ function TransferDumz({ onClose }: { onClose: () => void }) {
   );
 }
 
-type BankActionType = "deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold" | "transfer-dumz";
+type BankActionType = "deposit-dumz" | "withdraw-dumz" | "deposit-gold" | "withdraw-gold" | "transfer-dumz" | "transfer-trunk" | "deposit-trunk";
 function GeneralBankVault({ onExit }: { onExit: () => void }) {
   const { user, bank, bankDataLoading, deposit, withdraw, bankTransactionLoading } = useGameStore();
   const [actionType, setActionType] = useState<BankActionType | null>(null);
@@ -256,8 +266,11 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {actionType && actionType !== "transfer-dumz" && <QuantityInput actionType={actionType as BankActionType} onClose={() => setActionType(null)} />}
-      {actionType === "transfer-dumz" && <TransferDumz onClose={() => setActionType(null)} />}
+      {actionType && actionType !== "transfer-dumz" && actionType !== "transfer-trunk" && (
+        <QuantityInput actionType={actionType as BankActionType} onClose={() => setActionType(null)} />
+      )}
+      {actionType === "transfer-dumz" && <TransferTokens tokenType="dumz_token" onClose={() => setActionType(null)} />}
+      {actionType === "transfer-trunk" && <TransferTokens tokenType="trunk_token" onClose={() => setActionType(null)} />}
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
@@ -269,14 +282,39 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
           <img src={"https://arweave.net/MGpWofSa4O90mDCsdowZXM0KF5ZrJmxe_itNxS-iP_I"} alt="General Bank Vault" className="w-full h-full object-contain" />
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+            <text x="50%" y="35%" fontSize="100" textAnchor="middle" fill="white">
+              {bankDataLoading || !bank ? "--" : `${bank.trunk_amount ?? 0} trunk`}
+            </text>
+            {/* trunk */}
+            <image
+              href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
+              x="40%"
+              y="40%"
+              width={(163 / imageWidth) * 100 * 2 + "%"}
+              height={(54 / imageHeight) * 100 * 2 + "%"}
+              preserveAspectRatio="xMidYMid meet"
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.trunk_balance == 1 ? "disabled-image" : ""}`}
+              item-type="deposit-trunk"
+            />
+            <image
+              href="https://arweave.net/jsrnPQGUIpOH2NqCKbSYQtzEXvNTHtzbF921GKe3dlY"
+              x="50%"
+              y="40%"
+              width={(163 / imageWidth) * 100 * 2 + "%"}
+              height={(54 / imageHeight) * 100 * 2 + "%"}
+              preserveAspectRatio="xMidYMid meet"
+              className={`grow-image item cursor-pointer ${bankTransactionLoading ? "disabled-image" : ""}`}
+              item-type="transfer-trunk"
+            />
+
             {/* dumz */}
-            <text x="50%" y="44.5%" fontSize="100" textAnchor="middle" fill="white">
+            <text x="50%" y="53%" fontSize="100" textAnchor="middle" fill="white">
               {bankDataLoading || !bank ? "--" : `${bank.dumz_amount} $Dumz`}
             </text>
             <image
               href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
               x="36%"
-              y="50%"
+              y="58%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
@@ -286,7 +324,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
             <image
               href="https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"
               x="46%"
-              y="50%"
+              y="58%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
@@ -296,21 +334,21 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
             <image
               href="https://arweave.net/jsrnPQGUIpOH2NqCKbSYQtzEXvNTHtzbF921GKe3dlY"
               x="56%"
-              y="50%"
+              y="58%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
               className={`grow-image item cursor-pointer ${bankTransactionLoading ? "disabled-image" : ""}`}
               item-type="transfer-dumz"
             />
-            <text x="50%" y="67%" fontSize="100" textAnchor="middle" fill="white">
+            <text x="50%" y="73%" fontSize="100" textAnchor="middle" fill="white">
               {bankDataLoading || !bank ? "--" : `${bank.gold_amount}g`}
             </text>
             {/* gold */}
             <image
               href="https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"
               x="40%"
-              y="72%"
+              y="77%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
@@ -320,7 +358,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
             <image
               href="https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"
               x="50%"
-              y="72%"
+              y="77%"
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
@@ -335,8 +373,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 }
 
 function NftBankVault({ onExit }: { onExit: () => void }) {
-  const { user, bank, bankDataLoading, claimAirdrop, claimTrunk, bankTransactionLoading, acceptBankQuest } = useGameStore();
-  const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
+  const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading, acceptBankQuest } = useGameStore();
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
@@ -346,25 +383,26 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
         if (itemType === "claim-dumz") {
           console.log("claim-dumz");
           await claimAirdrop("DUMZ");
-          bankInteractAudio.play();
+          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         } else if (itemType === "claim-gold") {
           console.log("claim-gold");
           await claimAirdrop("GOLD");
-          bankInteractAudio.play();
-        } else if (itemType === "claim-trunk") {
-          console.log("claim-trunk");
-          await claimTrunk();
-          bankInteractAudio.play();
+          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         }
+        // else if (itemType === "claim-trunk") {
+        //   console.log("claim-trunk");
+        //   await claimTrunk();
+        //   audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
+        // }
       }
     }
   };
 
-  if (!bank || !user) return <div>Loading...</div>;
+  // if (!bank || !user) return <div>Loading...</div>;
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {user.special_item_key===-1 && (
+      {user?.special_item_key === -1 && (
         <>
           {" "}
           <div
@@ -396,7 +434,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
       </div>
       <div className="z-10 absolute top-4 right-4">
         <div className="flex items-center gap-2">
-          {user.special_item_key != -1 && (
+          {user && user.special_item_key != -1 && (
             <>
               {/* user.special_item_key number of obtained keys and rest transparent upto a max of 3 keys */}
               {Array.from({ length: user.special_item_key }).map((_, index) => (
@@ -427,9 +465,50 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
           <img src={"https://arweave.net/ZYGuGEiNCOwDKHDdKRw20g5IpK_nopwVlO0tQcuNHPI"} alt="NFT Bank Vault" className="w-full h-full object-contain" />
-
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             {/* dumz */}
+            <text x="45%" y="40%" fontSize="150" textAnchor="middle" fill="white">
+              {bankDataLoading || !bank ? "--" : `${bank.nft_dumz_amount} $Dumz`}
+            </text>
+            <image
+              href="https://arweave.net/-nNkBcJ5iAWv0tbYBOqZkTDabHvGGLR0jNnAC5OoVX4"
+              x="40%"
+              y="43%"
+              width={(163 / imageWidth) * 100 * 2.5 + "%"}
+              height={(54 / imageHeight) * 100 * 2.5 + "%"}
+              preserveAspectRatio="xMidYMid meet"
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_dumz_amount == 0 || user?.special_item_key != 3 ? "disabled-image" : ""}`}
+              item-type="claim-dumz"
+            />
+            {/* bank locks */}
+            {Array.from({ length: 3 }).map((_, index) => (
+              <image
+                href={"https://arweave.net/RBunabOFv3oZQQl6J6jccr-k_5XErZa2dVQUl51jV_0"}
+                x={`${33 + index * 6}%`}
+                y="50%"
+                width="12%"
+                height="12%"
+                preserveAspectRatio="xMidYMid meet"
+              />
+            ))}
+
+            {/* gold */}
+            <text x="45%" y="73%" fontSize="150" textAnchor="middle" fill="white">
+              {bankDataLoading || !bank ? "--" : `${bank.nft_gold_amount}g`}
+            </text>
+            <image
+              href="https://arweave.net/-nNkBcJ5iAWv0tbYBOqZkTDabHvGGLR0jNnAC5OoVX4"
+              x="40%"
+              y="77%"
+              width={(163 / imageWidth) * 100 * 2.5 + "%"}
+              height={(54 / imageHeight) * 100 * 2.5 + "%"}
+              preserveAspectRatio="xMidYMid meet"
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_gold_amount == 0 ? "disabled-image" : ""}`}
+              item-type="claim-gold"
+            />
+          </svg>
+
+          {/* <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             <text x="45%" y="35%" fontSize="100" textAnchor="middle" fill="white">
               {bankDataLoading ? "--" : `${bank.nft_dumz_amount} $Dumz`}
             </text>
@@ -443,7 +522,6 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_dumz_amount == 0 || user.special_item_key != 3 ? "disabled-image" : ""}`}
               item-type="claim-dumz"
             />
-            {/* trunk */}
             <text x="45%" y="50%" fontSize="100" textAnchor="middle" fill="white">
               {bankDataLoading ? "--" : `${bank.nft_trunk_amount} $Trunk`}
             </text>
@@ -458,7 +536,6 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               item-type="claim-trunk"
             />
 
-            {/* bank locks */}
             {Array.from({ length: 3 }).map((_, index) => (
               <image
                 href={"https://arweave.net/RBunabOFv3oZQQl6J6jccr-k_5XErZa2dVQUl51jV_0"}
@@ -470,7 +547,6 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               />
             ))}
 
-            {/* gold */}
             <text x="45%" y="76%" fontSize="100" textAnchor="middle" fill="white">
               {bankDataLoading ? "--" : `${bank.nft_gold_amount}g`}
             </text>
@@ -484,7 +560,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_gold_amount == 0 ? "disabled-image" : ""}`}
               item-type="claim-gold"
             />
-          </svg>
+          </svg> */}
         </div>
       </div>
     </div>
@@ -497,34 +573,13 @@ export default function BankPage() {
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
-  const backgroundAudio = new Audio(SOUNDS.TOWN_AUDIO_IN_BUILDING);
-  const bankEnterAudio = new Audio(SOUNDS.BUILDING_ENTER);
+  useBackgroundMusic(SOUNDS.TOWN_AUDIO_IN_BUILDING);
 
   useEffect(() => {
-    const getBankAndPlayAudio = async () => {
-      bankEnterAudio.play();
-      await getBank();
-    };
-    getBankAndPlayAudio();
-
-    backgroundAudio.loop = true;
-    backgroundAudio.play();
-    return () => {
-      backgroundAudio.pause();
-    };
-  }, []);
-
-  // if (!bank) return <div>Bank Loading...</div>;
-
-  // const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-  //   if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
-  //     const itemType = event.target.getAttribute("item-type");
-  //     if (itemType) {
-  //       setVaultSelected(itemType as "general-vault" | "nft-vault");
-  //       // buyItem(itemType);
-  //     }
-  //   }
-  // };
+    if (user) {
+      getBank();
+    }
+  }, [user]);
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     const itemType = event.currentTarget.getAttribute("item-type");
@@ -547,7 +602,7 @@ export default function BankPage() {
         <ImgButton
           src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"}
           onClick={async () => {
-            bankEnterAudio.play();
+            audioManager.playSFX(SOUNDS.BUILDING_ENTER);
             await sleep(1000);
             goDirectlyToTownPage();
           }}

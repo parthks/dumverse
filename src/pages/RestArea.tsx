@@ -4,6 +4,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { IMAGES, SOUNDS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -94,6 +95,7 @@ function RestAreaPlayerStatsDisplay() {
 
 export default function RestArea() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const current_spot = useGameStore((state) => state.user!.current_spot);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -108,9 +110,11 @@ export default function RestArea() {
     );
   }
 
+  useBackgroundMusic(current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO);
+
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />}
+      {/* {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />} */}
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
@@ -137,7 +141,7 @@ export default function RestArea() {
             <ImgButton className="h-[65px]" src={"https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
           </div>
 
-          <div className="z-10 absolute bottom-4 right-4 flex gap-2 items-end">
+          <div className="z-10 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
             <ImgButton
               src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
               onClick={() => {
@@ -145,6 +149,7 @@ export default function RestArea() {
               }}
               alt={"Chat"}
             />
+            <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
           </div>
         </>
       )}
