@@ -146,15 +146,11 @@ export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolea
 function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageType | null }) {
   const [displayMessage, setDisplayMessage] = useState<ChatMessageType | null>(null);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-  const { lastDisplayedMessageId, user } = useGameStore();
-  const setLastDisplayedMessageId = useGameStore((state) => state.setLastDisplayedMessageId);
-console.log("Ashu: "+JSON.stringify(latestMessage));
+
   useEffect(() => {
     if (latestMessage) {
 
       setDisplayMessage(latestMessage);
-      setLastDisplayedMessageId(latestMessage.Id);
-
       // // Clear any existing timer
       // if (timer) {
       //   clearTimeout(timer);

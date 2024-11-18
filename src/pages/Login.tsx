@@ -10,6 +10,8 @@ import { useProfile } from "@/components/wallet/hooks";
 import { useGameStore } from "@/store/useGameStore";
 import { LOGIN_VIDEO } from "@/lib/constants";
 import GameMap from "./GameMap";
+import { GameUser, Inventory } from "@/types/game";
+
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -173,7 +175,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
 }
 
 const FormData = () => {
-  const [selectedOption, setSelectedOption] = useState<{ edition: number; Id: string; existingProfile: boolean } | null>(null);
+  const [selectedOption, setSelectedOption] = useState<{ edition: number;  existingProfile: GameUser; Quantity:number;Id: string; } | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
 
