@@ -7,12 +7,12 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import audioManager from "@/utils/audioManager";
 import Rive from "@rive-app/react-canvas";
 
 export default function Armory() {
   const { shop, getShop, buyItem } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
-
+  
   useBuildingMusic({ getBuildingData: () => getShop("ARMOR") });
 
   // if (!shop) return <div>Loading...</div>;
@@ -75,7 +75,7 @@ export default function Armory() {
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 30,
@@ -88,7 +88,7 @@ export default function Armory() {
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 30,
@@ -101,7 +101,7 @@ export default function Armory() {
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[2], shop.items[2]?.gold_price ? "GOLD" : "DUMZ");
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 75,
@@ -114,7 +114,7 @@ export default function Armory() {
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[3], shop.items[3]?.gold_price ? "GOLD" : "DUMZ");
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 75,

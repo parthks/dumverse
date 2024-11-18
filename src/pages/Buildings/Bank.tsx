@@ -9,6 +9,8 @@ import { useGameStore } from "@/store/useGameStore";
 import { useCallback, useEffect, useState } from "react";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import GifComponent from "@/components/Dialogue/Dialogue";
+import audioManager from "@/utils/audioManager";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 
 const imageWidth = 3840;
 const imageHeight = 2160;
@@ -16,7 +18,6 @@ const imageHeight = 2160;
 function QuantityInput({ actionType, onClose }: { actionType: BankActionType; onClose: () => void }) {
   const { user, bank, deposit, withdraw, bankTransactionLoading } = useGameStore();
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
-  const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   const handleSubmit = async () => {
     if (!inputValue) {
@@ -43,7 +44,7 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
       console.log("withdraw-gold");
       await withdraw(inputValue ?? 0, "GOLD");
     }
-    bankInteractAudio.play();
+    audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
     onClose();
   };
 
@@ -336,7 +337,6 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
 function NftBankVault({ onExit }: { onExit: () => void }) {
   const { user, bank, bankDataLoading, claimAirdrop, claimTrunk, bankTransactionLoading, acceptBankQuest } = useGameStore();
-  const bankInteractAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
   const [hasAcceptQuest, setHasAcceptQuest] = useState(false);
 
@@ -347,15 +347,15 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
         if (itemType === "claim-dumz") {
           console.log("claim-dumz");
           await claimAirdrop("DUMZ");
-          bankInteractAudio.play();
+          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         } else if (itemType === "claim-gold") {
           console.log("claim-gold");
           await claimAirdrop("GOLD");
-          bankInteractAudio.play();
+          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         } else if (itemType === "claim-trunk") {
           console.log("claim-trunk");
           await claimTrunk();
-          bankInteractAudio.play();
+          audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         }
       }
     }
@@ -499,34 +499,8 @@ export default function BankPage() {
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   const [vaultSelected, setVaultSelected] = useState<"general-vault" | "nft-vault" | null>(null);
-  const backgroundAudio = new Audio(SOUNDS.TOWN_AUDIO_IN_BUILDING);
-  const bankEnterAudio = new Audio(SOUNDS.BUILDING_ENTER);
-
-  useEffect(() => {
-    const getBankAndPlayAudio = async () => {
-      bankEnterAudio.play();
-      await getBank();
-    };
-    getBankAndPlayAudio();
-
-    backgroundAudio.loop = true;
-    backgroundAudio.play();
-    return () => {
-      backgroundAudio.pause();
-    };
-  }, []);
-
-  // if (!bank) return <div>Bank Loading...</div>;
-
-  // const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
-  //   if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
-  //     const itemType = event.target.getAttribute("item-type");
-  //     if (itemType) {
-  //       setVaultSelected(itemType as "general-vault" | "nft-vault");
-  //       // buyItem(itemType);
-  //     }
-  //   }
-  // };
+  useBackgroundMusic(SOUNDS.TOWN_AUDIO_IN_BUILDING)
+ 
 
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     const itemType = event.currentTarget.getAttribute("item-type");
@@ -549,7 +523,7 @@ export default function BankPage() {
         <ImgButton
           src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"}
           onClick={async () => {
-            bankEnterAudio.play();
+            audioManager.playSFX(SOUNDS.BUILDING_ENTER);
             await sleep(1000);
             goDirectlyToTownPage();
           }}

@@ -7,11 +7,11 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import audioManager from "@/utils/audioManager";
 import { useState } from "react";
 
 export default function Weapon() {
   const { shop, getShop, buyItem, acceptWeaponQuest } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("WEAPON") });
 
@@ -139,7 +139,7 @@ export default function Weapon() {
                   shop.items[0],
                   shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
                 );
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 12,
@@ -156,7 +156,7 @@ export default function Weapon() {
                   shop.items[1],
                   shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
                 );
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 37,
@@ -173,7 +173,7 @@ export default function Weapon() {
                   shop.items[2],
                   shop.items[2]?.gold_price ? "GOLD" : "DUMZ"
                 );
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 62,
@@ -190,7 +190,7 @@ export default function Weapon() {
                   shop.items[3],
                   shop.items[3]?.gold_price ? "GOLD" : "DUMZ"
                 );
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 87,

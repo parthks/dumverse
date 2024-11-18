@@ -4,6 +4,7 @@ import { getEquippedItem } from "@/lib/utils";
 import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { UserWeaponItem } from "./InventoryBag";
+import audioManager from "@/utils/audioManager";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
   const { user, consumeItem } = useGameStore();
@@ -27,11 +28,11 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
     setConsumeItemLoading(true);
     await consumeItem(inventoryId);
     if (item_type === "POTION_1") {
-      drinkPotionAudioRef.current?.play();
+      audioManager.playSFX(SOUNDS.DRINK_POTION_AUDIO);
     } else if (item_type === "ENERGY_1") {
-      drinkJooseAudioRef.current?.play();
+      audioManager.playSFX(SOUNDS.DRINK_JOOSE_AUDIO);
     } else if (item_type === "FOOD_1") {
-      eatCakeAudioRef.current?.play();
+      audioManager.playSFX(SOUNDS.EAT_CAKE_AUDIO);
     }
     setConsumeItemLoading(false);
   };
@@ -41,9 +42,9 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
       className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/DbU1JV6vG2wV9WP1h-UmIpsSPs0knHEGeBkxt0hEVTQ')] bg-no-repeat bg-contain bg-center p-4"
       style={{ aspectRatio: "392/425" }}
     >
-      <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} />
-      <audio preload="auto" ref={drinkJooseAudioRef} src={SOUNDS.DRINK_JOOSE_AUDIO} />
-      <audio preload="auto" ref={eatCakeAudioRef} src={SOUNDS.EAT_CAKE_AUDIO} />
+      {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
+      {/* <audio preload="auto" ref={drinkJooseAudioRef} src={SOUNDS.DRINK_JOOSE_AUDIO} /> */}
+      {/* <audio preload="auto" ref={eatCakeAudioRef} src={SOUNDS.EAT_CAKE_AUDIO} /> */}
 
       <div className="flex flex-col items-center justify-center h-full w-full">
         <div className="flex w-[500px] mt-12 flex-col items-center justify-center">

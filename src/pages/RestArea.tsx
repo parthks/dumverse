@@ -4,6 +4,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import RestAreaBag from "@/components/game/RestAreaBag";
 import ImgButton from "@/components/ui/imgButton";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { IMAGES, SOUNDS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -108,9 +109,11 @@ export default function RestArea() {
     );
   }
 
+  useBackgroundMusic(current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO);
+
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />}
+      {/* {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />} */}
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 

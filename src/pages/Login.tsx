@@ -75,6 +75,7 @@ export default function App() {
               src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
               onClick={() => {
                 if (videoRef.current) {
+                  videoRef.current.volume = localStorage.getItem("music-volume") ? parseFloat(localStorage.getItem("music-volume")!) : 1;
                   videoRef.current.play();
                 }
                 setPlaying(true);

@@ -4,6 +4,7 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { IMAGES, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { useGameStore } from "@/store/useGameStore";
 import { Item } from "@/types/game";
+import audioManager from "@/utils/audioManager";
 import { useEffect } from "react";
 
 const imageWidth = 3840;
@@ -181,7 +182,7 @@ function ShopTableItem({ item }: { item: Item }) {
 
 export default function Shop() {
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
+  // const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   // useBuildingMusic({ getBuildingData: getShop });
 
@@ -194,7 +195,7 @@ export default function Shop() {
         const item = shop.items.find((item) => item.id === itemId);
         if (!item) return;
         await buyItem(item, item.gold_price ? "GOLD" : "DUMZ");
-        shopBuyItemAudio.play();
+        audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         // buyItem(itemType);
       }
     }

@@ -1,8 +1,10 @@
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { PlayerFrame } from "@/components/game/PlayerFrame";
 import QuestBook from "@/components/game/QuestBook";
+import Settings from "@/components/game/Settings";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
 import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
@@ -78,6 +80,7 @@ const GameMap = () => {
   const [stepDistance, setStepDistance] = useState("0.5");
   const [stepTime, setStepTime] = useState("50");
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on
@@ -157,6 +160,8 @@ const GameMap = () => {
     setTempCurrentIslandLevel(level);
   };
 
+  useBackgroundMusic(SOUNDS.ISLAND_AUDIO);
+
   return (
     <div
       className="h-screen w-screen bg-cover bg-center overflow-hidden relative"
@@ -164,14 +169,18 @@ const GameMap = () => {
       //   backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
       // }}
     >
-      <audio autoPlay loop>
+      {/* <audio autoPlay loop>
         <source src={SOUNDS.ISLAND_AUDIO} type="audio/mpeg" />
-      </audio>
+      </audio> */}
 
       {questBookOpen && <QuestBook />}
+      {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
       <div className="z-10 absolute top-4 right-4">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
+      </div>
+      <div className="z-10 absolute bottom-4 right-4">
+        <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
       </div>
       <div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
         <PlayerFrame />

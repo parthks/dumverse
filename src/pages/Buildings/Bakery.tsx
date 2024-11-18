@@ -7,10 +7,10 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import { BUILDING_IMAGES, SOUNDS } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
+import audioManager from "@/utils/audioManager";
 
 export default function Bakery() {
   const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
-  const shopBuyItemAudio = new Audio(SOUNDS.SHOP_BUY_ITEM);
 
   useBuildingMusic({ getBuildingData: () => getShop("FOOD") });
 
@@ -82,7 +82,7 @@ export default function Bakery() {
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               itemSize={100}
               position={{
@@ -96,7 +96,7 @@ export default function Bakery() {
             <ShopItem
               handleClick={async () => {
                 await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
-                shopBuyItemAudio.play();
+                audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
                 x: 80,

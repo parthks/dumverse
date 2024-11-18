@@ -1,6 +1,7 @@
 import ChatWindow from "@/components/chat/Chat";
 import PlayerOnlineList from "@/components/game/PlayerOnlineList";
 import ImgButton from "@/components/ui/imgButton";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
@@ -15,11 +16,13 @@ export default function Town() {
     setGameStatePage(building);
   };
 
+  useBackgroundMusic(SOUNDS.TOWN_AUDIO);
+
   return (
     <div className="relative h-screen w-screen overflow-hidden">
       {/* Background image */}
       <img src="https://arweave.net/kr9vAhgWOI_OfA7LBGNuQxW1zAg9Eq_3vZaSebHN5HQ" alt="Background Placeholder" className="absolute top-0 left-0 w-full h-full object-cover" />
-      <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop />
+      {/* <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop /> */}
 
       <div className="z-10 absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5">
         <PlayerOnlineList currentSpot={0} />
