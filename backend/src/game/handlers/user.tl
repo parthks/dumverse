@@ -90,13 +90,14 @@ local function addNewUserHandler(msg: Message)
     -- Insert into Bank
     local insert_bank_result = dbAdmin:exec(string.format([[
         INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
-        VALUES (%d, %f, %f, %f, %f, %f);
+        VALUES (%d, %f, %f, %f, %f);
     ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
     assert(insert_bank_result, "Failed to insert into Bank")
 
     if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
         -- 10 cake, 5 potions, 4 joose
+        print("Granting special items to 1/1 NFT user")
         for _ = 1, 10 do
             dbAdmin:exec(string.format([[
                 INSERT INTO Inventory (user_id, item_id, item_type) VALUES (%d, "%s", "%s");

@@ -2066,8 +2066,8 @@ local AgentAddresses: {string} = {
   "BgWug-kJJLtk2jrObfPsJixboQWc5tLz7pS30fL3WxY"
 }
 
-local function getNFTBankAmountForNFT(nft_address: string): (number, number)
-  if not nft_address then
+local function getNFTBankAmountForNFT(nft_address: string | nil): (number, number)
+  if nft_address == nil then
     return 0, 0
   end
   if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
