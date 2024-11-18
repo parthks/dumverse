@@ -29,6 +29,7 @@ interface GameState {
   GameStatePage: GameStatePages | null;
   setGameStatePage: (state: GameStatePages | null) => void;
   registerNewUser: (name: string, nft?: string) => Promise<void>;
+  upgradeExistingProfile: (nftAddress: string) => Promise<void>;
   user: GameUser | null;
   setUserOnLogin: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
@@ -96,6 +97,14 @@ export const useGameStore = create<GameState>()(
             get().setUserOnLogin(data.data);
           }
         }
+      },
+      upgradeExistingProfile: async (nftAddress) => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Users.UpgradeExistingProfile" },
+            { name: "NFT_Address", value: nftAddress },
+          ],
+        });
       },
       user: null,
       setUserOnLogin: async (user) => {

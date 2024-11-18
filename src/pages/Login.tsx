@@ -210,6 +210,8 @@ const FormData = () => {
       }
       await setUser(gameProfile);
     } else if (nonNFTGameProfiles.length > 0) {
+      console.log("upgrading existing profile with NFT", selectedOption);
+      if (selectedOption?.Id) await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id);
       await setUser(nonNFTGameProfiles[0]);
     } else {
       if (!name || name === "") return;
@@ -310,13 +312,9 @@ const FormData = () => {
 
       <div className="flex flex-col gap-2 justify-center items-center">
         {gameProfiles ? (
-          selectedOption ? (
-            selectedOption?.existingProfile ? (
-              <p>Using existing profile</p>
-            ) : (
-              <p>Registering new profile...</p>
-            )
-          ) : nonNFTGameProfiles.length > 0 ? (
+          nonNFTGameProfiles.length > 0 && selectedOption ? (
+            <p>Upgrading existing profile with NFT</p>
+          ) : nonNFTGameProfiles.length > 0 || selectedOption?.existingProfile ? (
             <p>Using existing profile</p>
           ) : (
             <p>Registering new profile...</p>
