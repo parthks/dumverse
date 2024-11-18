@@ -45,12 +45,96 @@ interface ChatProps {
   setLatestMessage: (message: ChatMessageType) => void;
   //   chatClient: ChatClient;
   //   newMessages: Array<ChatMessageType>;
-  //   onUserMessageSent?: () => void;
+  //   onUserMessageSent?: () => voi  d;
 }
 
 export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolean; setChatOpen: (chatOpen: boolean) => void }) {
   const [latestMessage, setLatestMessage] = useState<ChatMessageType | null>(null);
   //   const user = useGameStore((state) => state.user!);
+
+  // const [allMessages, setAllMessages] = useState<Array<ChatMessageType>>([]);
+  // const { GameStatePage, currentIslandLevel } = useGameStore((state) => state);
+
+  // const CHAT_ROOM = currentIslandLevel == 0 ? "Town" : "RestArea";
+  // // Add this line to create a unique key for the query
+  // const queryKey = `messageHistory-${CHAT_ROOM}-${GameStatePage}`;
+  // const chatClient = createChatClient(CHAT_ROOM);
+  
+  // const {
+  //   data: historyData,
+  //   isLoading: isLoadingHistory,
+  //   fetchPreviousPage,
+  //   hasPreviousPage,
+  //   isFetchingPreviousPage,
+  // } = useInfiniteQuery({
+  //   queryKey: [queryKey],
+  //   queryFn: async ({ pageParam }) => {
+  //     console.log("Fetching messages with pageParam:", pageParam);
+
+  //     const result = await chatClient.readHistory({
+  //       idBefore: pageParam ? pageParam + 1 : undefined,
+  //       limit: queryPageSize,
+  //     });
+  //     console.log("Ashu: +++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  //      setLatestMessage(result[0]);
+  //     console.log("Fetched messages:", result);
+  //     return result;
+  //   },
+  //   initialPageParam: 0,
+  //   getNextPageParam: () => undefined,
+  //   getPreviousPageParam: (firstPage) => {
+  //     if (!firstPage) return undefined;
+  //     //   if firstPage is not an array, return undefined
+  //     if (!Array.isArray(firstPage)) {
+  //       return undefined;
+  //     }
+  //     if (firstPage.length === 0) {
+  //       return undefined;
+  //     }
+  //     const lowestId = Math.min(...firstPage.map((m) => m.Id));
+  //     if (lowestId <= 1) {
+  //       return undefined;
+  //     }
+  //     return lowestId - 1;
+  //   },
+  //   enabled: false,
+  // });
+
+  // const { data: newMessages, refetch: refetchNewMessages } = useQuery({
+  //   queryKey: [`newMessages-${queryKey}`],
+  //   queryFn: async () => {
+  //     const latestId = allMessages?.[allMessages.length - 1]?.Id;
+  //     console.log("all message 2 Ashu: "+JSON.stringify(allMessages));
+  //     console.log("latestId Ashu: "+JSON.stringify(latestId));
+  //     if (latestId === undefined) return [];
+  //     console.log("5 second poll", latestId);
+  //     const result = await chatClient.readHistory({
+  //       idAfter: latestId,
+  //       limit: queryPageSize,
+  //     });
+  //     console.log("result useQuery Ashu: "+JSON.stringify(result));
+  //     if (!chatOpen) setLatestMessage(result[0]);
+
+  //     return result;
+  //   },
+  //   // enabled: !!historyData?.pages[0]?.length,
+  //   refetchInterval: 5000, // Poll every 5 seconds
+  // });
+  // function removeDuplicates(messages: Array<ChatMessageType>) {
+  //   const messagesMap = new Map();
+  //   messages.forEach((msg) => messagesMap.set(msg.Id, msg));
+  //   return Array.from(messagesMap.values()).sort((a, b) => a.Timestamp - b.Timestamp);
+  // }
+
+  // useEffect(() => {
+  //   if (historyData) {
+  //     const newMessages = historyData.pages.flatMap((page) => page);
+  //     console.log("newmessage 1 Ashu: "+JSON.stringify(newMessages));
+  //     setAllMessages((prev) => removeDuplicates([...prev, ...newMessages]));
+  //     console.log("all message 3 Ashu: "+JSON.stringify(allMessages));
+  //   }
+  // }, [historyData]);
+
   return (
     <>
       <LatestPreviewMessage latestMessage={latestMessage} />
@@ -62,30 +146,34 @@ export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolea
 function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageType | null }) {
   const [displayMessage, setDisplayMessage] = useState<ChatMessageType | null>(null);
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-
+  const { lastDisplayedMessageId, user } = useGameStore();
+  const setLastDisplayedMessageId = useGameStore((state) => state.setLastDisplayedMessageId);
+console.log("Ashu: "+JSON.stringify(latestMessage));
   useEffect(() => {
     if (latestMessage) {
+
       setDisplayMessage(latestMessage);
+      setLastDisplayedMessageId(latestMessage.Id);
 
-      // Clear any existing timer
-      if (timer) {
-        clearTimeout(timer);
-      }
+      // // Clear any existing timer
+      // if (timer) {
+      //   clearTimeout(timer);
+      // }
 
-      // Set a new timer
-      const newTimer = setTimeout(() => {
-        setDisplayMessage(null);
-      }, 3000);
+      // // Set a new timer to hide the message
+      // const newTimer = setTimeout(() => {
+      //   setDisplayMessage(null);
+      // }, 3000);
 
-      setTimer(newTimer);
+      // setTimer(newTimer);
     }
 
-    // Cleanup function
-    return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
+    // Cleanup function to clear the timer
+    // return () => {
+    //   if (timer) {
+    //     clearTimeout(timer);
+    //   }
+    // };
   }, [latestMessage]);
 
   if (!displayMessage) return null;
@@ -100,10 +188,14 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
         width: "408px",
         height: "99px",
       }}
-      className="absolute bottom-20 right-4 z-10 bg-red-600"
+      className="absolute bottom-20 right-4 z-10"
     >
       <div className="flex items-center space-x-4 p-4">
-        <img src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="w-16 h-16 object-contain" />
+        <img
+          src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM}
+          alt="User Avatar"
+          className="w-16 h-16 object-contain"
+        />
         <div className="flex flex-col">
           <span className="text-white text-xl line-clamp-2">
             {displayMessage.AuthorName}:{displayMessage.Content}
@@ -113,6 +205,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
     </div>
   );
 }
+
 
 function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   const { GameStatePage, currentIslandLevel } = useGameStore((state) => state);
@@ -155,7 +248,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idBefore: pageParam ? pageParam + 1 : undefined,
         limit: queryPageSize,
       });
-      //  setLatestMessage(result[0]);
+       setLatestMessage(result[0]);
       console.log("Fetched messages:", result);
       return result;
     },
@@ -176,7 +269,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
       }
       return lowestId - 1;
     },
-    enabled: chatOpen,
+    enabled: true,
   });
 
   const { data: newMessages, refetch: refetchNewMessages } = useQuery({
@@ -189,7 +282,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idAfter: latestId,
         limit: queryPageSize,
       });
-      if (!chatOpen) setLatestMessage(result[0]);
+      if (chatOpen) setLatestMessage(result[0]);
 
       return result;
     },

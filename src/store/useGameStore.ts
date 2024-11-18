@@ -71,6 +71,8 @@ interface GameState {
   acceptWeaponQuest: () => Promise<void>;
   acceptShopQuest: () => Promise<void>;
   acceptDenQuest: () => Promise<void>;
+  lastDisplayedMessageId: number | null;
+  setLastDisplayedMessageId: (state: number | null) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -430,6 +432,8 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
       },
+      lastDisplayedMessageId: null,
+      setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),
     }),
     {
       name: "Game Store",
