@@ -9,7 +9,7 @@ import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Fit } from "@rive-app/react-canvas";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
 // export const get = [
@@ -72,7 +72,8 @@ import { useEffect, useState } from "react";
 // ];
 
 const GameMap = () => {
-  const { goToTown, goToRestArea, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen } = useGameStore();
+  const { goToTown, goToRestArea, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen } =
+    useGameStore();
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
@@ -83,7 +84,7 @@ const GameMap = () => {
   const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on
   // tempCurrentIslandLevel controls the level that the lamma is currently on
-  const [tempCurrentIslandLevel, setTempCurrentIslandLevel] = useState(currentIslandLevel);
+  // const [tempCurrentIslandLevel, setTempCurrentIslandLevel] = useState(currentIslandLevel);
   const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -166,6 +167,8 @@ const GameMap = () => {
   };
 
   useBackgroundMusic(SOUNDS.ISLAND_AUDIO);
+
+  console.log("tempCurrentIslandLevel Ashu: " + tempCurrentIslandLevel, lamaPosition);
 
   return (
     <div
@@ -309,14 +312,8 @@ function SetSailPopup({
   setTempCurrentIslandLevel,
 }: {
   onClose: () => void;
-  setTempLamaPosition: React.Dispatch<
-    React.SetStateAction<{
-      x: number;
-      y: number;
-      src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT";
-    }>
-  >;
-  setTempCurrentIslandLevel: React.Dispatch<React.SetStateAction<number>>;
+  setTempLamaPosition: (position: { x: number; y: number; src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" }) => void;
+  setTempCurrentIslandLevel: (level: number) => void;
 }) {
   const user = useGameStore((state) => state.user);
   const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");

@@ -290,8 +290,8 @@ local function playerPerishedHandler(msg: Message)
 
     -- update Users table
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0 WHERE id = %f;
-    ]], user_id))
+        UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0, last_regenerate_time = %f WHERE id = %f;
+    ]], msg.Timestamp, user_id))
 
     removeUsedPotion(playerData)
 end

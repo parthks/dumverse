@@ -52,6 +52,8 @@ interface GameState {
   currentIslandLevel: number;
   setCurrentIslandLevel: (level: number) => void;
   // travelToLocation: (level: number) => Promise<void>;
+  tempCurrentIslandLevel: number;
+  setTempCurrentIslandLevel: (level: number) => void;
   lamaPosition: LamaPosition;
   setLamaPosition: (position: LamaPosition) => void;
   goDirectlyToTownPage: () => void;
@@ -285,6 +287,8 @@ export const useGameStore = create<GameState>()(
       //   });
       //   await get().refreshUserData();
       // },
+      tempCurrentIslandLevel: 0,
+      setTempCurrentIslandLevel: (level) => set({ tempCurrentIslandLevel: level }),
       lamaPosition: getInitialLamaPosition(),
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN, shop: null }),
