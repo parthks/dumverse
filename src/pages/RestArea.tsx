@@ -77,10 +77,10 @@ function RestAreaPlayerStatsDisplay() {
         </div>
       </div>
 
-      <div className="absolute inset-0 top-0 flex flex-col items-center justify-center pl-14">
-        <div className="flex gap-1">
+      <div className="absolute inset-0 top-0 flex flex-col gap-1 items-baseline justify-center pl-[69px]">
+        <div className={`flex w-[255px] flex-wrap mt-1`}>
           {Array.from({ length: totalStamina }).map((_, index) => (
-            <img className="h-10" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+            <img className={`${totalStamina > 9 ? "h-6" : "h-10"} mr-1`} key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
           ))}
         </div>
         {/* convert regenerateCountdown to minutes and seconds */}

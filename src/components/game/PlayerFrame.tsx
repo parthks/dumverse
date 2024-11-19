@@ -58,9 +58,9 @@ export function PlayerFrame() {
 
         {/* stamina */}
         <div className="flex flex-col gap-1">
-          <div className="flex gap-1">
+          <div className={`flex gap-1 max-w-[320px] flex-wrap ${totalStamina > 9 && "mb-2"}`}>
             {Array.from({ length: totalStamina }).map((_, index) => (
-              <img className="h-10" key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+              <img className={totalStamina > 9 ? "h-6" : "h-10"} key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
             ))}
           </div>
           {/* convert regenerateCountdown to minutes and seconds */}
