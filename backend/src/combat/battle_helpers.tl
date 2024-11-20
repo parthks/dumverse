@@ -200,8 +200,8 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
         if npc.id == "PEACOCK" then
             Battles[battle_id].players[attacker_id].special_item_heart = (Battles[battle_id].players[attacker_id].special_item_heart or 0) + 1
         end
-        if npc.id == "BLACK_SWAN" then
-            Battles[battle_id].players[attacker_id].special_item_kitten = (Battles[battle_id].players[attacker_id].special_item_kitten or 0) + 1
+        if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
+            Battles[battle_id].players[attacker_id].special_item_kitten = 1
         end
     end
     BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)

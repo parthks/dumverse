@@ -291,7 +291,7 @@ export const useGameStore = create<GameState>()(
       setTempCurrentIslandLevel: (level) => set({ tempCurrentIslandLevel: level }),
       lamaPosition: getInitialLamaPosition(),
       setLamaPosition: (position) => set({ lamaPosition: position }),
-      goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN, shop: null }),
+      goDirectlyToTownPage: () => set({ GameStatePage: GameStatePages.TOWN, shop: null, tempCurrentIslandLevel: 0 }),
       goToTown: async (playerDead = false) => {
         // hardRefresh is true when going to town from combat (in case on spot one)
         if (get().user?.current_spot !== 0 || playerDead) {
@@ -304,15 +304,15 @@ export const useGameStore = create<GameState>()(
           if (resultData.status === "Success") {
             await get().refreshUserData();
             if (playerDead) {
-              set({ GameStatePage: GameStatePages.INFIRMARY });
+              set({ GameStatePage: GameStatePages.INFIRMARY, tempCurrentIslandLevel: 0 });
             } else {
-              set({ GameStatePage: GameStatePages.TOWN });
+              set({ GameStatePage: GameStatePages.TOWN, tempCurrentIslandLevel: 0 });
             }
             get().resetRegenerateCountdown();
           }
         } else {
           // TODO: show error toast and retry?
-          set({ GameStatePage: GameStatePages.TOWN });
+          set({ GameStatePage: GameStatePages.TOWN, tempCurrentIslandLevel: 0 });
         }
       },
       goToRestArea: async () => {

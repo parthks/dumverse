@@ -274,8 +274,8 @@ export default function Combat() {
   // );
 }
 
-function MainBattlePage({currentBattle}: {currentBattle: Battle}) {
-  useBackgroundMusic(SOUNDS.BATTLE_AUDIO)
+function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
+  useBackgroundMusic(SOUNDS.BATTLE_AUDIO);
   return (
     <div
       className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
@@ -496,8 +496,8 @@ function UserIsAttackedAnimation({ currentBattle }: { currentBattle: Battle }) {
   useEffect(() => {
     if (isAttacked) {
       // if (attackAudioRef.current) {
-        // attackAudioRef.current.currentTime = 0; // Reset audio to start
-        // attackAudioRef.current.play();
+      // attackAudioRef.current.currentTime = 0; // Reset audio to start
+      // attackAudioRef.current.play();
       audioManager.playSFX(SOUNDS.IS_ATTACKED_AUDIO);
       // }
       setTimeout(() => {
@@ -531,8 +531,8 @@ function AttackAnimation() {
   useEffect(() => {
     audioManager.playSFX(SOUNDS.ATTACK_AUDIO);
     // if (attackAudioRef.current) {
-      // attackAudioRef.current.currentTime = 0; // Reset audio to start
-      // attackAudioRef.current.play();
+    // attackAudioRef.current.currentTime = 0; // Reset audio to start
+    // attackAudioRef.current.play();
     // }
   }, []);
   return (
@@ -560,7 +560,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   return (
     <div
       className="w-[250px] relative flex flex-col bg-[url('https://arweave.net/sX67q1nQcG8fOyyJqTOcIc2CfmAsZCocplOXJIWFN0Y')] bg-no-repeat bg-contain bg-center px-3 py-1"
-      style={{ aspectRatio: "302/421", textShadow: "-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000" }}
+      style={{ aspectRatio: "302/421", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
     >
       {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
       <h2 className="text-white text-2xl font-bold text-center">{player.name} (P)</h2>
@@ -670,11 +670,14 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
       </div>
       {enemy.id == "PEACOCK" && (
         <div className={`absolute w-[215px] left-[20px] bottom-[5%]`}>
-          {special_item_hearts <= 0 && (<img  src="https://arweave.net/h5GrIKLk1Q4Mv0xAF82ZS2Nwh1ESa1kTy5P_9dpirCo" alt="Special Item Heart Top Left" className="w-8 h-8 mx-auto" />)}
-          {special_item_hearts == 1 && (<img  src="https://arweave.net/ogpB0YYqkb7isSQ-J-r62GpcyiColpPqEGMhSh1Wn1g" alt="Special Item Heart Top Right" className="w-8 h-8 mx-auto" />)}
-          {special_item_hearts == 2 && (<img  src="https://arweave.net/GyghY_YYyptw3Nrx3g-CG248YSaBrwa5l2fJbkYuzjI" alt="Special Item Heart Bottom Right" className="w-8 h-8 mx-auto" />)}
-          {special_item_hearts >= 3 && (<img  src="https://arweave.net/dqMWqLwe9ABVOez_1FJqTVebASXNU8lXvYDJ3LJSoak" alt="Special Item Heart Bottom Left" className="w-8 h-8 mx-auto" />)}
-
+          {special_item_hearts <= 0 && <img src="https://arweave.net/h5GrIKLk1Q4Mv0xAF82ZS2Nwh1ESa1kTy5P_9dpirCo" alt="Special Item Heart Top Left" className="w-8 h-8 mx-auto" />}
+          {special_item_hearts == 1 && <img src="https://arweave.net/ogpB0YYqkb7isSQ-J-r62GpcyiColpPqEGMhSh1Wn1g" alt="Special Item Heart Top Right" className="w-8 h-8 mx-auto" />}
+          {special_item_hearts == 2 && (
+            <img src="https://arweave.net/GyghY_YYyptw3Nrx3g-CG248YSaBrwa5l2fJbkYuzjI" alt="Special Item Heart Bottom Right" className="w-8 h-8 mx-auto" />
+          )}
+          {special_item_hearts >= 3 && (
+            <img src="https://arweave.net/dqMWqLwe9ABVOez_1FJqTVebASXNU8lXvYDJ3LJSoak" alt="Special Item Heart Bottom Left" className="w-8 h-8 mx-auto" />
+          )}
         </div>
       )}
       {totalGold != 0 && (

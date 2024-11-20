@@ -629,9 +629,9 @@ export default function BankPage() {
               <div
                 className=" absolute"
                 style={{
-                  maxWidth: "18vw",
+                  maxWidth: "15vw",
                   width: "100%",
-                  top: "8%",
+                  top: "18.5%",
                   left: "17%",
                   aspectRatio: 1,
                 }}
@@ -640,7 +640,7 @@ export default function BankPage() {
               </div>
               {user.special_item_key > -1 && (
                 <GifComponent
-                  className=" absolute h-[20vh] translate-x-[24vw] translate-y-[2vh]"
+                  className=" absolute h-[20vh] translate-x-[22vw] translate-y-[2vh]"
                   buttonClassName=""
                   onClickFunction={async () => {
                     setAcceptQuestLoading(true);
@@ -678,7 +678,7 @@ export default function BankPage() {
                   src="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
                   item-type="general-vault"
                   className="relative w-full grow-image item cursor-pointer"
-                  style={{ height: "auto", top: "0%", left: "-111%" }}
+                  style={{ height: "auto", top: "0%", left: "-125%" }}
                   onClick={handleClick}
                 />
               </div>
@@ -688,7 +688,7 @@ export default function BankPage() {
                   src="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
                   item-type="nft-vault"
                   className="relative w-full grow-image item cursor-pointer"
-                  style={{ height: "auto", top: "0%", right: "-111%" }}
+                  style={{ height: "auto", top: "0%", right: "-125%" }}
                   onClick={handleClick}
                 />
               </div>

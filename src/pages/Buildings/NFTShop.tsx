@@ -12,13 +12,15 @@ import { useState } from "react";
 import audioManager from "@/utils/audioManager";
 
 export default function NFTShop() {
-  const { shop, getShop, buyItem, buyItemLoading, inventory, acceptNFTShopQuest } = useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading, inventory, acceptNFTShopQuest, user } = useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("SPECIAL_ITEMS") });
 
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   //   if (!shop) return <div>Loading...</div>;
+  const hasThreads = user?.special_item_thread == 8;
+  const hasWood = user?.special_item_bark == 6;
 
   //   sort shop.items on gold_price
   shop?.items.sort((a, b) => (a.gold_price || 0) - (b.gold_price || 0));
@@ -72,8 +74,8 @@ export default function NFTShop() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "-69%",
-                  left:"22%",
+                  top: "-65%",
+                  left: "22%",
                   aspectRatio: 1,
                   zIndex: 1,
                   // Keeps the shopkeeper square
@@ -82,14 +84,15 @@ export default function NFTShop() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.NFT_SHOP_DUMDUM} />
               </div>
-              <GifComponent className="absolute h-[20vh] translate-x-[6vw] translate-y-[-25vh]" onClickFunction={async () => {
-       setAcceptQuestLoading(true);
-       await acceptNFTShopQuest();
-       setAcceptQuestLoading(false);
-        
-         
-        }} buttonDisable={acceptQuestLoading}
-       />
+              <GifComponent
+                className="absolute h-[20vh] translate-x-[6vw] translate-y-[-25vh]"
+                onClickFunction={async () => {
+                  setAcceptQuestLoading(true);
+                  await acceptNFTShopQuest();
+                  setAcceptQuestLoading(false);
+                }}
+                buttonDisable={acceptQuestLoading}
+              />
 
               {/* Shop Table */}
               <img src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
@@ -115,7 +118,9 @@ export default function NFTShop() {
                 />
                 <ImgButton
                   disabled={
-                    buyItemLoading || (inventory.some((i) => i.item_id === shop?.items[2].id) && (shop?.items[2].type ? ["WEAPON", "ARMOR"].includes(shop.items[2].type) : false))
+                    !hasWood ||
+                    buyItemLoading ||
+                    (inventory.some((i) => i.item_id === shop?.items[2].id) && (shop?.items[2].type ? ["WEAPON", "ARMOR"].includes(shop.items[2].type) : false))
                   }
                   src="https://arweave.net/SyQA7SYryT_kycFIuBKCIEBlDSLLkF_4BLmOkI0RCBk"
                   alt={`Buy ${shop?.items[2].name}`}
@@ -139,6 +144,7 @@ export default function NFTShop() {
                   <div className="relative" style={{ height: "auto", top: "-37%", left: "-65%" }}>
                     <ImgButton
                       disabled={
+                        !hasWood ||
                         buyItemLoading ||
                         (inventory.some((i) => i.item_id === shop?.items[1].id) && (shop?.items[1].type ? ["WEAPON", "ARMOR"].includes(shop.items[1].type) : false))
                       }

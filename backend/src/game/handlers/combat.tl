@@ -152,35 +152,35 @@ local function enterNewCombatHandler(msg: Message)
         return enemy_index
     end
 
-    local function getRandomSpecialEnemy(user: UserData): EnemyData | nil
+    local function getRandomSpecialEnemy(user: UserData, level: integer): EnemyData | nil
         -- 10% chance to get a Leperchaun enemy
-        if math.random(1, 10) == 1 then
+        if ((level > 18 and level < 28) or (level > 45 and level < 55)) and math.random(1, 10) == 1 then
             return constants.SPECIAL_ENEMIES["LEPERCHAUN"]
         end
         -- 5% chance to get a dumz maxi
-        if math.random(1, 20) == 1 then
+        if (level > 72 and level < 82) and math.random(1, 20) == 1 then
             return constants.SPECIAL_ENEMIES["DUMZ"]
         end
         
-        if user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
+        if ((level > 18 and level < 28) or (level > 45 and level < 55)) and user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
             -- 20% chance to get a shiba enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["SHIBA"]
             end
         end
-        if user.nft_address and user.special_item_thread > -1 and user.special_item_thread < 8 then
+        if (level > 45 and level < 55) and user.nft_address and user.special_item_thread > -1 and user.special_item_thread < 8 then
             -- 20% chance to get a mouse enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["MOUSE"]
             end
         end
-        if user.nft_address and user.special_item_bark > -1 and user.special_item_bark < 6 then
+        if (level > 45 and level < 55) and user.nft_address and user.special_item_bark > -1 and user.special_item_bark < 6 then
             -- 20% chance to get a heart enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["TREE"]
             end
         end
-        if user.nft_address and user.special_item_heart > -1 and user.special_item_heart < 4 then
+        if (level > 63 and level < 82) and user.nft_address and user.special_item_heart > -1 and user.special_item_heart < 4 then
             -- 20% chance to get a heart enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["PEACOCK"]
@@ -188,7 +188,7 @@ local function enterNewCombatHandler(msg: Message)
         end
 
         -- 1% chance to get a black swan enemy
-        if math.random(1, 100) == 1 and user.special_item_kitten > -1 and user.special_item_kitten < 1 then
+        if (level > 72 and level < 82) and math.random(1, 100) == 1 then
             return constants.SPECIAL_ENEMIES["BLACK_SWAN"]
         end
         return nil
@@ -197,7 +197,7 @@ local function enterNewCombatHandler(msg: Message)
     local enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
     -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
     -- add special enemies
-    local special_enemy = getRandomSpecialEnemy(userData)
+    local special_enemy = getRandomSpecialEnemy(userData, combat_level)
     if special_enemy then
         table.insert(enemies, special_enemy)
 

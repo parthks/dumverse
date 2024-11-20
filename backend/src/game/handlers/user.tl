@@ -315,7 +315,7 @@ local function userLoginHandler(msg: Message)
 
     local time_since_last_regenerate = timestamp - last_regenerate_time
     -- regenerate 1 energy per 2 minutes
-    local energy_to_regenerate = math.floor(time_since_last_regenerate / 120)
+    local energy_to_regenerate = math.floor(time_since_last_regenerate / (120*1000))
 
     if energy_to_regenerate > 0 and userData.stamina < userData.total_stamina then
         local new_stamina = math.min(userData.stamina + energy_to_regenerate, userData.total_stamina)

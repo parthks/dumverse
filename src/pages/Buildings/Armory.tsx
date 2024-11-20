@@ -12,7 +12,7 @@ import Rive from "@rive-app/react-canvas";
 
 export default function Armory() {
   const { shop, getShop, buyItem } = useGameStore();
-  
+
   useBuildingMusic({ getBuildingData: () => getShop("ARMOR") });
 
   // if (!shop) return <div>Loading...</div>;
@@ -44,7 +44,7 @@ export default function Armory() {
             src="https://arweave.net/cOMnBf2OdYiEw4mP6YdW3itRyodIgMNf_IT2f-7SL7E"
             alt="Fireplace"
             className="absolute"
-            style={{ ...calculatePositionAndSize(20, 86, 15), transform: "translate(-50%, -50%)" }}
+            style={{ ...calculatePositionAndSize(20, 90, 15), transform: "translate(-50%, -50%)" }}
           />
 
           {/* Group the shop table, sign, and shopkeeper */}
@@ -57,15 +57,16 @@ export default function Armory() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "20px",
-                  left:"-6%",
+                  top: "23px",
+                  left: "-9%",
+                  zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
                 <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
-              <GifComponent className="absolute h-[20vh] translate-x-[9.5vw] translate-y-[-1vh] z-50"/>
+              <GifComponent className="absolute h-[20vh] translate-x-[9vw] translate-y-[-1vh] z-50" />
 
               {/* Shop Table */}
               <img src="https://arweave.net/C6LU2xgJ9oMwH8Ah7C-KdMGxJs6g6w76nXMpovYv7Ms" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
@@ -104,7 +105,7 @@ export default function Armory() {
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
-                x: 75,
+                x: 78,
                 y: 30,
               }}
               item={shop.items[2]}
@@ -117,7 +118,7 @@ export default function Armory() {
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
-                x: 75,
+                x: 78,
                 y: 60,
               }}
               item={shop.items[3]}
