@@ -1,6 +1,6 @@
 import { LamaPosition } from "@/types/game";
 
-export const REST_SPOTS = [0, 9, 18, 27];
+export const REST_SPOTS = [0, 9, 18, 27,36,45,54,63,72,81];
 
 export const BUILDING_IMAGES = {
   ARMOR_WEAPON_DUMDUM: "https://arweave.net/lpK2ZqY1jFk2TagQOD8wlzSmWAPXjrdRG926H5MOl8E",
