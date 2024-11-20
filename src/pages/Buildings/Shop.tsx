@@ -163,8 +163,7 @@ import audioManager from "@/utils/audioManager";
 // }
 
 export default function Shop() {
-  const { shop, getShop, buyItem, buyItemLoading, acceptShopQuest } =
-    useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading, acceptShopQuest } = useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
@@ -183,13 +182,7 @@ export default function Shop() {
 
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img
-            src={
-              "https://arweave.net/8kiel2lmr7r9HppfIDFbHaio2o-IGASvIKe8igZGDxM"
-            }
-            alt="Shop Map"
-            className="w-full h-full object-contain"
-          />
+          <img src={"https://arweave.net/8kiel2lmr7r9HppfIDFbHaio2o-IGASvIKe8igZGDxM"} alt="Shop Map" className="w-full h-full object-contain" />
         </div>
         <div className="absolute inset-0">
           <img
@@ -215,8 +208,9 @@ export default function Shop() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "17px",
+                  top: "18px",
                   left: "7%",
+                  zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
@@ -249,12 +243,7 @@ export default function Shop() {
                   }}
                 />
                 {/* Shop Table */}
-                <img
-                  src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4"
-                  alt="Shop Table"
-                  className="relative w-full"
-                  style={{ height: "auto" }}
-                />
+                <img src="https://arweave.net/EGns8f3XSoIYfDuzPomOSI1CYnSTuHFf5UkHs7yoWn4" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
               </div>
             </div>
           </div>
@@ -262,10 +251,7 @@ export default function Shop() {
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(
-                  shop.items[0],
-                  shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
-                );
+                await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
@@ -279,10 +265,7 @@ export default function Shop() {
           {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(
-                  shop.items[1],
-                  shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
-                );
+                await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{

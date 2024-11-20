@@ -59,7 +59,7 @@ export default function ChatWindow({ chatOpen, setChatOpen }: { chatOpen: boolea
   // // Add this line to create a unique key for the query
   // const queryKey = `messageHistory-${CHAT_ROOM}-${GameStatePage}`;
   // const chatClient = createChatClient(CHAT_ROOM);
-  
+
   // const {
   //   data: historyData,
   //   isLoading: isLoadingHistory,
@@ -149,7 +149,6 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
 
   useEffect(() => {
     if (latestMessage) {
-
       setDisplayMessage(latestMessage);
       // // Clear any existing timer
       // if (timer) {
@@ -187,11 +186,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
       className="absolute bottom-20 right-4 z-10"
     >
       <div className="flex items-center space-x-4 p-4">
-        <img
-          src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM}
-          alt="User Avatar"
-          className="w-16 h-16 object-contain"
-        />
+        <img src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="w-16 h-16 object-contain" />
         <div className="flex flex-col">
           <span className="text-white text-xl line-clamp-2">
             {displayMessage.AuthorName}:{displayMessage.Content}
@@ -201,7 +196,6 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
     </div>
   );
 }
-
 
 function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   const { GameStatePage, currentIslandLevel } = useGameStore((state) => state);
@@ -244,7 +238,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idBefore: pageParam ? pageParam + 1 : undefined,
         limit: queryPageSize,
       });
-       setLatestMessage(result[0]);
+      setLatestMessage(result[0]);
       console.log("Fetched messages:", result);
       return result;
     },
@@ -397,8 +391,8 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
           //   backgroundRepeat: "no-repeat",
           backgroundColor: "rgba(0, 0, 0, 0.7)",
           borderRadius: "30px",
-          width: "881px",
-          height: "881px",
+          width: "800px",
+          height: "800px",
           maxHeight: "90vh",
         }}
       >

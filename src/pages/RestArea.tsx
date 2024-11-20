@@ -71,7 +71,10 @@ function RestAreaPlayerStatsDisplay() {
       <div className="absolute inset-0 top-[-24px] left-[-12px] flex items-center justify-start">
         <div className="relative">
           <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
-          <p className="absolute inset-0 flex items-center mb-5 justify-center text-white text-xl font-bold">
+          <p
+            style={{ textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+            className="absolute inset-0 flex items-center mb-5 justify-center text-white text-xl font-bold"
+          >
             {user.health}/{user.total_health}
           </p>
         </div>

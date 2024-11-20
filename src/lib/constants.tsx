@@ -31,7 +31,7 @@ export const ITEM_ICONS = {
   WEAPON_1: "https://arweave.net/HeVvlqtkbqR_7uYrAwLG7MiSEwQw5pC4C5ZK8nJ502c",
   ARMOR_1: "https://arweave.net/rrqGSfzfbcG_k0gLqr0VbBc2nO2-KG_gCTKvCI3leFY",
   POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",
-  ENERGY_1: "https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y",
+  ENERGY_1: "https://arweave.net/9Brag6Pwu1j9dmEtGbnKxfjSa7o_hC4PlOdb5IlGHlM",
   FOOD_1: "https://arweave.net/-tUyiDZQCbIytBSEKfsSdLh13utGP4SKUD72eS-QrH4",
 };
 
@@ -45,7 +45,7 @@ export const ITEM_IMAGES = {
   ARMOR_3: "https://arweave.net/OaEB7uVq4xT7FhAdwF8dMux1lHX_3wCSRizkrpYrieU",
   ARMOR_4: "https://arweave.net/pWQ1UST8bnw5DAoVvtb-9vQaDLcFuHLijycsjL2jiW0",
   POTION_1: "https://arweave.net/xyThnEuAAAz5wriPEVwEQ_bAfwHCaOSZAdfp3P0Nmqk",
-  ENERGY_1: "https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y",
+  ENERGY_1: "https://arweave.net/eZaUfyVYLJI8cIResvIWAnbdsu48UhIvNd2LETABg1I",
   FOOD_1: "https://arweave.net/QWs_k5A7_cLpuIjNZSthBbzaeAP6cTTTxL_n3zn3MxI",
   FOOD_2: "https://arweave.net/DVQPPsCUA9P0ZPoqAZsft1XRHJSAWjnQjosBw5UElp0",
   WAND: "https://arweave.net/W_Q7IE-AQTvkew2g3SXz8eSmyX3CjSrz2AMSHYOedVI",
@@ -102,69 +102,68 @@ export const LAMA_IMAGE = {
 
 export const DIALOGUES = {
   BANK: {
-    dialogue_quest: "https://arweave.net/OeQKQOi4B6VG4IG9xPYrHgrJooWyvazHl9KvY5a1KO0", 
-    dialogue1: "https://arweave.net/z07WbL9aqJMfR3FN4vgGfezkUfxjf4sfWFD909vboro", 
-    dialogue2: "https://arweave.net/Jt3KS0FeaNbtRnOYiEhuhuPujNoOeukbnpp_-dbKuwA", 
+    dialogue_quest: "https://arweave.net/OeQKQOi4B6VG4IG9xPYrHgrJooWyvazHl9KvY5a1KO0",
+    dialogue1: "https://arweave.net/z07WbL9aqJMfR3FN4vgGfezkUfxjf4sfWFD909vboro",
+    dialogue2: "https://arweave.net/Jt3KS0FeaNbtRnOYiEhuhuPujNoOeukbnpp_-dbKuwA",
     dialogue3: "https://arweave.net/32bGcZNUBiL8yOfOF7zWibV9c1nQs-MsD-vBqZCs9aY",
-    dialogue4: "https://arweave.net/3TmhZdvYqiJ9B0rGv22cvWT42SPj-as6eFLeNaYgNAE"
+    dialogue4: "https://arweave.net/3TmhZdvYqiJ9B0rGv22cvWT42SPj-as6eFLeNaYgNAE",
   },
   DEN: {
-    dialogue_quest: "https://arweave.net/8hzvJlhd9pUt4VnsqTAOJa0NnDfMmM7_g6ySmuAdr8A", 
-    dialogue1: "https://arweave.net/CLvj6RGxjGqsc36IWTO2OGJgOm8BUaqUla7HQ7Vr1y4", 
-    dialogue2: "https://arweave.net/YhOY4NykvJsSl8PlwDph1lYcW-QSZG3DxEJnUaxr0NQ", 
+    dialogue_quest: "https://arweave.net/8hzvJlhd9pUt4VnsqTAOJa0NnDfMmM7_g6ySmuAdr8A",
+    dialogue1: "https://arweave.net/CLvj6RGxjGqsc36IWTO2OGJgOm8BUaqUla7HQ7Vr1y4",
+    dialogue2: "https://arweave.net/YhOY4NykvJsSl8PlwDph1lYcW-QSZG3DxEJnUaxr0NQ",
     dialogue3: "https://arweave.net/7R1IX9jZa5ob9UWpjHGMTm8-pYQE4zGk4vuTQ8NViig",
-    dialogue4: "https://arweave.net/qUJWJdW4bHBd7wwHwSgBgkIgOfkyXxs2PKXrb8HgPNE"
+    dialogue4: "https://arweave.net/qUJWJdW4bHBd7wwHwSgBgkIgOfkyXxs2PKXrb8HgPNE",
   },
   SHOP: {
-    dialogue_quest: "https://arweave.net/7zLwzlAohhjNhn-Cwe93oFWbSMXX5mWxRSyLR_x4rQA", 
-    dialogue1: "https://arweave.net/wV-ly7iiA_lzSY1DK8MG6oC2TvOPAC1V96e27vuGrw4", 
-    dialogue2: "https://arweave.net/xedMWI4cj51IztRLv8oLBoV-Yr5lsV1wIhrtkx75uxs", 
+    dialogue_quest: "https://arweave.net/7zLwzlAohhjNhn-Cwe93oFWbSMXX5mWxRSyLR_x4rQA",
+    dialogue1: "https://arweave.net/wV-ly7iiA_lzSY1DK8MG6oC2TvOPAC1V96e27vuGrw4",
+    dialogue2: "https://arweave.net/xedMWI4cj51IztRLv8oLBoV-Yr5lsV1wIhrtkx75uxs",
     dialogue3: "https://arweave.net/jEOKxhuVYyorImvdoBDDiwocSP0UVWv3xeIxbuQMa-M",
-    dialogue4: "https://arweave.net/5JUWuWeZ6ZDH0r20nkluGgJwe3ouN9WvmYI-0J4Dmd8"
+    dialogue4: "https://arweave.net/5JUWuWeZ6ZDH0r20nkluGgJwe3ouN9WvmYI-0J4Dmd8",
   },
   NFT_SHOP: {
-    dialogue_quest: "https://arweave.net/0NjPck0obcXL13-tCwLftVTdYJpBikltkNgFkKbPxzY", 
-    dialogue1: "https://arweave.net/k_vNZaNdwkcLDcMpKQcRdHuLdpYRdygtDjW87ykYAHU", 
-    dialogue2: "https://arweave.net/76A-7UQTjCTG22sGjAB8zp2jrL6YBjxBsIaQNWSV_MY", 
+    dialogue_quest: "https://arweave.net/0NjPck0obcXL13-tCwLftVTdYJpBikltkNgFkKbPxzY",
+    dialogue1: "https://arweave.net/k_vNZaNdwkcLDcMpKQcRdHuLdpYRdygtDjW87ykYAHU",
+    dialogue2: "https://arweave.net/76A-7UQTjCTG22sGjAB8zp2jrL6YBjxBsIaQNWSV_MY",
     dialogue3: "https://arweave.net/Hy-vzZrupb-6rMOZhkM2sbZLjw5z32dGwGhSd40hmO0",
-    dialogue4: "https://arweave.net/D6Z_bvhPKZt29eUFB9kl0D-T-rk_uOPnQ71BrUt4hJc"
+    dialogue4: "https://arweave.net/D6Z_bvhPKZt29eUFB9kl0D-T-rk_uOPnQ71BrUt4hJc",
   },
   WEAPON_SHOP: {
-    dialogue_quest: "https://arweave.net/_KB6DqbGSTjdpq1DX8_QVLUvrRFI3ahXAZKAokC60FE", 
-    dialogue1: "https://arweave.net/3kmTLB75St9uVGv9TpTXAJBCurhcRNPwzkbx__1BDCI", 
-    dialogue2: "https://arweave.net/Iq2_w62eMzAdUl_T7t_r5UAQfteImka3qN9Zf6-gZAo", 
+    dialogue_quest: "https://arweave.net/_KB6DqbGSTjdpq1DX8_QVLUvrRFI3ahXAZKAokC60FE",
+    dialogue1: "https://arweave.net/3kmTLB75St9uVGv9TpTXAJBCurhcRNPwzkbx__1BDCI",
+    dialogue2: "https://arweave.net/Iq2_w62eMzAdUl_T7t_r5UAQfteImka3qN9Zf6-gZAo",
     dialogue3: "https://arweave.net/Hnfx33fbfddR-cXGuoXA9OingoJRdHir7OQicNFhM0I",
-    dialogue4: "https://arweave.net/EZ8wCea-I2uHfEA8n_sq9JAl5Rw4BVgbOgNt_H1HZsI"
+    dialogue4: "https://arweave.net/EZ8wCea-I2uHfEA8n_sq9JAl5Rw4BVgbOgNt_H1HZsI",
   },
   HALL_OF_FAME: {
-    dialogue1: "https://arweave.net/4MH6eUmv_TzFGJvvz-FILr0xRXxjt_Gm4lk2ivxHBU4", 
-    dialogue2: "https://arweave.net/MdztgMiMQ3GtFMmX6cMHo46Beeu-YHf0HTeB-esFM54", 
+    dialogue1: "https://arweave.net/4MH6eUmv_TzFGJvvz-FILr0xRXxjt_Gm4lk2ivxHBU4",
+    dialogue2: "https://arweave.net/MdztgMiMQ3GtFMmX6cMHo46Beeu-YHf0HTeB-esFM54",
     dialogue3: "https://arweave.net/7YI8o0Og56LGtPeiEGiGp_Vo_Bw4bCtjxMtQYjYvcMY",
-    dialogue4: "https://arweave.net/wgYrs_1IUJDTVLOJOIQi2vk3QbUbn0A-iCSFpdoHGgM"
+    dialogue4: "https://arweave.net/wgYrs_1IUJDTVLOJOIQi2vk3QbUbn0A-iCSFpdoHGgM",
   },
   INFIRMARY: {
-    dialogue1: "https://arweave.net/tKhsS5u_CwLwxx9gVOIaePmdyhxQGCDPNRIYvp7YbZM", 
-    dialogue2: "https://arweave.net/L6VIJZsAjGHDYXomrcZeL0DHmA5K2_vvCcS8xGh8rjE", 
+    dialogue1: "https://arweave.net/tKhsS5u_CwLwxx9gVOIaePmdyhxQGCDPNRIYvp7YbZM",
+    dialogue2: "https://arweave.net/L6VIJZsAjGHDYXomrcZeL0DHmA5K2_vvCcS8xGh8rjE",
     dialogue3: "https://arweave.net/FBLOn6f6E1W4Wbuo-51GS9qwk5UpjdJNwE-eAcO5KGU",
-    dialogue4: "https://arweave.net/Kg7Um-xINedxNTSYKKIUyNYeEyNuCpgXh0ClZdj7tiQ"
+    dialogue4: "https://arweave.net/Kg7Um-xINedxNTSYKKIUyNYeEyNuCpgXh0ClZdj7tiQ",
   },
   ARMORY: {
-    dialogue1: "https://arweave.net/P4dbRuCalcPDS5pVgHkaPo4xT9MUXqqbzscO9brNpQ4", 
-    dialogue2: "https://arweave.net/Hw2hRhoW4FMMs_s60pECyISWaCLLleYNoGZLUReco5c", 
+    dialogue1: "https://arweave.net/P4dbRuCalcPDS5pVgHkaPo4xT9MUXqqbzscO9brNpQ4",
+    dialogue2: "https://arweave.net/Hw2hRhoW4FMMs_s60pECyISWaCLLleYNoGZLUReco5c",
     dialogue3: "https://arweave.net/8e4fM0KD9l37u84f9iRc6anovtgo0iliQ4VBEmBB7LU",
-    dialogue4: "https://arweave.net/4j1UEOstKu6eu7Zt7UOebWnsDiEe8JkRBJAaGffElxs"
+    dialogue4: "https://arweave.net/4j1UEOstKu6eu7Zt7UOebWnsDiEe8JkRBJAaGffElxs",
   },
   BAKERY: {
-    dialogue1: "https://arweave.net/muI_HdXzDFUZP4HmiYOw2VXBQtg_B_Hydh9_pcfaYoo", 
-    dialogue2: "https://arweave.net/CH0Xid_mLruSEGQ3ppyzK8KCBj1OMqZO4EhL3RW2dRs", 
+    dialogue1: "https://arweave.net/muI_HdXzDFUZP4HmiYOw2VXBQtg_B_Hydh9_pcfaYoo",
+    dialogue2: "https://arweave.net/CH0Xid_mLruSEGQ3ppyzK8KCBj1OMqZO4EhL3RW2dRs",
     dialogue3: "https://arweave.net/goFknOSogQrnGPtUUpunvbV5r2ARZdDQG5oorCl_Vro",
-    dialogue4: "https://arweave.net/FLXELL2yF2WJr_VKE7Zr5iFZYy-hXO6Mm234nbrymlo"
+    dialogue4: "https://arweave.net/FLXELL2yF2WJr_VKE7Zr5iFZYy-hXO6Mm234nbrymlo",
   },
   VISITOR_CENTER: {
-    dialogue1: "https://arweave.net/W16XNZy9H0buSSp4tn-pXy1Gbhy_mdQPIlhiFjcXF00", 
+    dialogue1: "https://arweave.net/W16XNZy9H0buSSp4tn-pXy1Gbhy_mdQPIlhiFjcXF00",
   },
-};  
-
+};
 
 export const lammaWidth = 4; //5
 export const lammaHeight = 8.2;

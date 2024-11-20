@@ -33,13 +33,7 @@ export default function Weapon() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img
-            src={
-              "https://arweave.net/8LmZ0u-eK5Ir3bUrF-iSne58cmgPelPcQHWTlMd7f58"
-            }
-            alt="Weapon Shop Background"
-            className="w-full h-full object-cover"
-          />
+          <img src={"https://arweave.net/8LmZ0u-eK5Ir3bUrF-iSne58cmgPelPcQHWTlMd7f58"} alt="Weapon Shop Background" className="w-full h-full object-cover" />
         </div>
         <div className="absolute inset-0">
           <div
@@ -59,9 +53,7 @@ export default function Weapon() {
               }}
             />
             <img
-              src={
-                "https://arweave.net/yu4aXRJJyfe0VuwVn6nz2y3mQZE2X0XzVYHr9ujuXlo"
-              }
+              src={"https://arweave.net/yu4aXRJJyfe0VuwVn6nz2y3mQZE2X0XzVYHr9ujuXlo"}
               alt="Tool"
               className="absolute"
               style={{
@@ -70,9 +62,7 @@ export default function Weapon() {
               }}
             />
             <img
-              src={
-                "https://arweave.net/fzYzWusAIwQxrtTLVYV_jtGUlNu9LXACcn7wNseUIuw"
-              }
+              src={"https://arweave.net/fzYzWusAIwQxrtTLVYV_jtGUlNu9LXACcn7wNseUIuw"}
               alt="Saw"
               className="absolute"
               style={{
@@ -97,7 +87,8 @@ export default function Weapon() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "0",
+                  top: "3px",
+                  zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
@@ -105,7 +96,7 @@ export default function Weapon() {
                 <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
               <GifComponent
-                className="absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh]"
+                className="absolute h-[20vh] translate-x-[13vw] translate-y-[-5vh]"
                 onClickFunction={async () => {
                   setAcceptQuestLoading(true);
                   await acceptWeaponQuest();
@@ -114,12 +105,7 @@ export default function Weapon() {
                 buttonDisable={acceptQuestLoading}
               />
               {/* Shop Table */}
-              <img
-                src="https://arweave.net/wlkWadmmnZ5YLvSauURaPMTzmK4fTjbxoc4CH9Q8IH8"
-                alt="Shop Table"
-                className="relative w-full"
-                style={{ height: "auto" }}
-              />
+              <img src="https://arweave.net/wlkWadmmnZ5YLvSauURaPMTzmK4fTjbxoc4CH9Q8IH8" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
             </div>
           </div>
           {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 57), transform: "translate(-50%, -100%)" }}>
@@ -135,44 +121,35 @@ export default function Weapon() {
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(
-                  shop.items[0],
-                  shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
-                );
+                await buyItem(shop.items[0], shop.items[0]?.gold_price ? "GOLD" : "DUMZ");
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
-                x: 12,
+                x: 16,
                 y: 35,
               }}
               item={shop.items[0]}
-              itemSize={100}
+              itemSize={75}
             />
           )}
           {shop?.items[1] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(
-                  shop.items[1],
-                  shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
-                );
+                await buyItem(shop.items[1], shop.items[1]?.gold_price ? "GOLD" : "DUMZ");
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
-                x: 37,
+                x: 39,
                 y: 35,
               }}
               item={shop.items[1]}
-              itemSize={100}
+              itemSize={75}
             />
           )}
           {shop?.items[2] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(
-                  shop.items[2],
-                  shop.items[2]?.gold_price ? "GOLD" : "DUMZ"
-                );
+                await buyItem(shop.items[2], shop.items[2]?.gold_price ? "GOLD" : "DUMZ");
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
@@ -180,24 +157,21 @@ export default function Weapon() {
                 y: 35,
               }}
               item={shop.items[2]}
-              itemSize={100}
+              itemSize={75}
             />
           )}
           {shop?.items[3] && (
             <ShopItem
               handleClick={async () => {
-                await buyItem(
-                  shop.items[3],
-                  shop.items[3]?.gold_price ? "GOLD" : "DUMZ"
-                );
+                await buyItem(shop.items[3], shop.items[3]?.gold_price ? "GOLD" : "DUMZ");
                 audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
               }}
               position={{
-                x: 87,
+                x: 85,
                 y: 35,
               }}
               item={shop.items[3]}
-              itemSize={100}
+              itemSize={75}
             />
           )}
         </div>

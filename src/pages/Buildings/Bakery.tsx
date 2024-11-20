@@ -54,14 +54,16 @@ export default function Bakery() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "116px",
+                  top: "131px",
+                  left: "-80px",
+                  zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
                   // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
                 }}
               >
                 <RiveAnimation url={BUILDING_IMAGES.INFIRMARY_CAKESHOP_DUMDUM} />
               </div>
-              <GifComponent className="absolute h-[20vh] translate-x-[12vw] translate-y-[8vh]"/>
+              <GifComponent className="absolute h-[20vh] translate-x-[8.5vw] translate-y-[8vh]" />
 
               {/* Shop Table */}
               <img src="https://arweave.net/TH9bwqkcXxXUvTUuMPSANB8KgWskr8m255Pb0u3Iz6w" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
