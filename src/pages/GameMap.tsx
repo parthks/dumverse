@@ -8,6 +8,7 @@ import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, 
 import { getInteractivePoints } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
+import { LamaPosition } from "@/types/game";
 import { Fit } from "@rive-app/react-canvas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
@@ -272,7 +273,7 @@ const GameMap = () => {
         ) : (
           <></>
         )}
-        {isPopupOpen && <SetSailPopup onClose={() => setIsPopupOpen(false)} setTempLamaPosition={setTempLamaPosition} setTempCurrentIslandLevel={setTempCurrentIslandLevel} />}
+        {isPopupOpen && <SetSailPopup onClose={() => setIsPopupOpen(false)} setTempLamaPosition={setTempLamaPosition} setLamaPosition={setLamaPosition} setTempCurrentIslandLevel={setTempCurrentIslandLevel} />}
       </div>
       {/* {tempCurrentIslandLevel <= 27 ? (
         <div
@@ -309,10 +310,12 @@ export default GameMap;
 function SetSailPopup({
   onClose,
   setTempLamaPosition,
+  setLamaPosition,
   setTempCurrentIslandLevel,
 }: {
   onClose: () => void;
   setTempLamaPosition: (position: { x: number; y: number; src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" }) => void;
+  setLamaPosition:(position:LamaPosition)=>void;
   setTempCurrentIslandLevel: (level: number) => void;
 }) {
   const user = useGameStore((state) => state.user);
@@ -356,6 +359,11 @@ function SetSailPopup({
             onClick={async () => {
               // await travelToLocation(28);
               setTempCurrentIslandLevel(28);
+              setLamaPosition({
+                x: interactivePointsMap2[0].x - lammaWidth / 2,
+                y: interactivePointsMap2[0].y - lammaHeight,
+                src: "STAND_LEFT",
+              });
               setTempLamaPosition({
                 x: interactivePointsMap2[0].x - lammaWidth / 2,
                 y: interactivePointsMap2[0].y - lammaHeight,
@@ -374,6 +382,11 @@ function SetSailPopup({
             onClick={async () => {
               // await travelToLocation(55);
               setTempCurrentIslandLevel(55);
+              setLamaPosition({
+                x: interactivePointsMap3[0].x - lammaWidth / 2,
+                y: interactivePointsMap3[0].y - lammaHeight,
+                src: "STAND_LEFT",
+              });
               setTempLamaPosition({
                 x: interactivePointsMap3[0].x - lammaWidth / 2,
                 y: interactivePointsMap3[0].y - lammaHeight,
