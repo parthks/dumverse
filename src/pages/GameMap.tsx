@@ -141,25 +141,19 @@ const GameMap = () => {
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
     const interactivePoints = getInteractivePoints(currentIslandLevel);
-    console.log("interactivePoints Ashu: " + JSON.stringify(interactivePoints));
-    console.log("currentIslandLevel Ashu: " + currentIslandLevel);
 
     const currentIndex = fromStart || currentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === currentIslandLevel);
-    console.log("currentIndex Ashu: " + currentIndex);
 
     const targetIndex = interactivePoints.findIndex((point) => point.level === level);
-    console.log("targetIndex Ashu: " + targetIndex);
 
     // if (currentIndex !== -1 && targetIndex !== -1) {
     let newPath;
     if (currentIndex < targetIndex) {
       // Moving forward
       newPath = interactivePoints.slice(currentIndex, targetIndex + 1);
-      console.log("newPath Forward Ashu: " + JSON.stringify(newPath));
     } else {
       // Moving backward
       newPath = interactivePoints.slice(targetIndex, currentIndex + 1).reverse();
-      console.log("newPath Backward Ashu: " + JSON.stringify(newPath));
     }
 
     setPath(newPath.map((point) => ({ x: point.x, y: point.y })));
@@ -168,8 +162,6 @@ const GameMap = () => {
   };
 
   useBackgroundMusic(SOUNDS.ISLAND_AUDIO);
-
-  console.log("tempCurrentIslandLevel Ashu: " + tempCurrentIslandLevel, lamaPosition);
 
   return (
     <div

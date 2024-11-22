@@ -71,13 +71,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("interactive-point")) {
-      let level = event.target.getAttribute("data-level");
+      const level = event.target.getAttribute("data-level");
       // const buttonType = event.target.getAttribute("button-type");
       if (level) {
-        if (isValidSpotToMoveTo(currentIslandLevel, parseInt(level))) {
-          
+        if (isValidSpotToMoveTo(currentIslandLevel, parseInt(level))) {      
           onLevelSelect(parseInt(level));
-          console.log("Level Ashu: " + level);
         }
       }
     }
