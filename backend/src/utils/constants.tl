@@ -3,7 +3,7 @@ local COMBAT_PROCESS_ID = "B3OVMP1sY_wA_nh7YGhRtsXsHP2NB9zacYAGlix6Ink"
 local DUMZ_TOKEN_PROCESS_ID = "mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk"
 local TRUNK_TOKEN_PROCESS_ID = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ"
 
-local REST_SPOTS = { 0, 9, 18, 27 }
+local REST_SPOTS = { 0, 9, 18, 27, 36,45,54,63,72,81 }
 
 require "utils.globals"
 
