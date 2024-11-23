@@ -563,7 +563,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
       style={{ aspectRatio: "302/421", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
     >
       {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
-      <h2 className="text-white text-2xl font-bold text-center">{player.name} (P)</h2>
+      <h2 className="text-white text-2xl font-bold text-center translate-y-[0.625rem]">{player.name} (P)</h2>
       <img
         src={player.nft_address ? `https://arweave.net/${player.nft_address}` : IMAGES.DEFAULT_DUMDUM}
         alt={player.name}

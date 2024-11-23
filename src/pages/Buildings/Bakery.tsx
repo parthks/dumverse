@@ -33,7 +33,7 @@ export default function Bakery() {
         <img
           src="https://arweave.net/9RVWczCj2AjG6XAf5ZNF88x8lWaotD5hN7HpaQbB4B0"
           alt="Bakery Table"
-          className="absolute bottom-[16%] left-0 right-0 w-full"
+          className="absolute bottom-[12.4%] left-0 right-0 w-full"
           style={{ height: "auto", objectFit: "contain" }}
         />
         <div className="absolute inset-0">
@@ -41,7 +41,7 @@ export default function Bakery() {
             src="https://arweave.net/SKW3ovBgOtAP4K8WrnP3tARXnpZRVgguzxSvb6FznHI"
             alt="Bakery Sign"
             className="absolute"
-            style={{ ...calculatePositionAndSize(50, 30, 25), transform: "translate(-50%, -100%)" }}
+            style={{ ...calculatePositionAndSize(50, 24, 20), transform: "translate(-50%, -100%)" }}
           />
 
           {/* Group the shop table, sign, and shopkeeper */}
@@ -54,7 +54,7 @@ export default function Bakery() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "131px",
+                  top: "152px",
                   left: "-80px",
                   zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
@@ -63,10 +63,10 @@ export default function Bakery() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.INFIRMARY_CAKESHOP_DUMDUM} />
               </div>
-              <GifComponent className="absolute h-[20vh] translate-x-[8.5vw] translate-y-[8vh]" />
+              <GifComponent className="absolute h-[20vh] translate-x-[7.5vw] translate-y-[8.5vh]" />
 
               {/* Shop Table */}
-              <img src="https://arweave.net/TH9bwqkcXxXUvTUuMPSANB8KgWskr8m255Pb0u3Iz6w" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+              <img src="https://arweave.net/TH9bwqkcXxXUvTUuMPSANB8KgWskr8m255Pb0u3Iz6w" alt="Shop Table" className="relative w-full z-10" style={{ height: "auto" }} />
             </div>
           </div>
           {/* <div className="absolute" style={{ ...calculatePositionAndSize(50, 100, 80), transform: "translate(-50%, -100%)" }}>

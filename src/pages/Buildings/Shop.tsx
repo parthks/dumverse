@@ -208,7 +208,7 @@ export default function Shop() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "18px",
+                  top: "21px",
                   left: "7%",
                   zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
@@ -228,7 +228,7 @@ export default function Shop() {
                 />
               </div>
 
-              <div className="relative">
+              <div className="relative z-10">
                 {/* shop sign */}
                 <img
                   src="https://arweave.net/EtD1v-e4LaLsRP_hwSqFl2-uxDKj3cz6mhGwU4BESlY"

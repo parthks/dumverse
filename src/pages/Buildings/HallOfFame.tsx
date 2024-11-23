@@ -37,7 +37,7 @@ export default function HallOfFame() {
             style={{
               maxWidth: "15vw", // Responsive size, adjust as needed
               width: "100%",
-              top: "3px",
+              top: "5px",
               zIndex: 1,
               aspectRatio: 1, // Keeps the shopkeeper square
               // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
@@ -48,7 +48,7 @@ export default function HallOfFame() {
           <GifComponent className=" absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh]" />
 
           {/* Shop Table */}
-          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full z-10" style={{ height: "auto" }} />
         </div>
       </div>
 

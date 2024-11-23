@@ -678,7 +678,7 @@ export default function BankPage() {
                   src="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
                   item-type="general-vault"
                   className="relative w-full grow-image item cursor-pointer"
-                  style={{ height: "auto", top: "0%", left: "-125%" }}
+                  style={{ height: "auto", top: "0%", left: "-110%" }}
                   onClick={handleClick}
                 />
               </div>
@@ -688,7 +688,7 @@ export default function BankPage() {
                   src="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
                   item-type="nft-vault"
                   className="relative w-full grow-image item cursor-pointer"
-                  style={{ height: "auto", top: "0%", right: "-125%" }}
+                  style={{ height: "auto", top: "0%", right: "-113%" }}
                   onClick={handleClick}
                 />
               </div>

@@ -27,6 +27,8 @@ export default function NFTShop() {
 
   // const alreadyOwned = inventory.some((i) => i.item_id === item.id);
 
+  // console.log("Ashu: haswood, buyloading, dmdm: "+ hasWood + " " +buyItemLoading + " "+JSON.stringify(shop) );
+
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
@@ -74,7 +76,7 @@ export default function NFTShop() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "-65%",
+                  top: "-68%",
                   left: "22%",
                   aspectRatio: 1,
                   zIndex: 1,
@@ -95,7 +97,7 @@ export default function NFTShop() {
               />
 
               {/* Shop Table */}
-              <img src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
+              <img src="https://arweave.net/qfTKWVpHru4GihzJNGDL2datew4zgrQ-WTMPalkeEvo" alt="Shop Table" className="relative w-full z-10" style={{ height: "auto" }} />
             </div>
           </div>
 
@@ -144,7 +146,7 @@ export default function NFTShop() {
                   <div className="relative" style={{ height: "auto", top: "-37%", left: "-65%" }}>
                     <ImgButton
                       disabled={
-                        !hasWood ||
+                        !hasThreads ||
                         buyItemLoading ||
                         (inventory.some((i) => i.item_id === shop?.items[1].id) && (shop?.items[1].type ? ["WEAPON", "ARMOR"].includes(shop.items[1].type) : false))
                       }

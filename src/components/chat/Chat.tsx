@@ -188,9 +188,14 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
       <div className="flex items-center space-x-4 p-4">
         <img src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="w-16 h-16 object-contain" />
         <div className="flex flex-col">
-          <span className="text-white text-xl line-clamp-2">
+          {/* <span className="text-white text-xl line-clamp-2">
             {displayMessage.AuthorName}:{displayMessage.Content}
-          </span>
+          </span> */}
+          <span className="text-white text-xl line-clamp-2">
+  <span className="font-bold mr-2">{displayMessage.AuthorName}:</span>
+  <span>{displayMessage.Content}</span>
+</span>
+
         </div>
       </div>
     </div>
