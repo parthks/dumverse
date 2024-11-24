@@ -52,6 +52,7 @@ require("game.handlers.inventory")
 require("game.handlers.shop")
 require("game.handlers.bank")
 require("game.handlers.quest")
+require("game.handlers.visitorcenter")
 
 
 
