@@ -80,7 +80,7 @@ function Frame({ index }: { index: number }) {
   return (
     <div className={`absolute top-[${topPosition}] w-full max-w-[400px]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
       {/* Frame background */}
-      <img src="https://arweave.net/HII5ti7_t6Z21zfkfp6GyeOn0KBMGfZnayQ78BR9KJU" alt="Frame" className="absolute inset-0 w-full h-full object-cover" />
+      <img src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ" alt="Frame" className="absolute inset-0 w-full h-full object-cover" />
 
       {/* Container for the image inside the frame */}
       <div className="absolute top-[17%] left-[26%] w-[53%] h-[50%]">
