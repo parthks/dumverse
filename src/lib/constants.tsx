@@ -89,6 +89,7 @@ export const SOUNDS = {
   DRINK_POTION_AUDIO: "https://arweave.net/wBwQoEtG5_cz6CFtw3y6qCFPmZUpjhmgwB1s-AXriLg",
   DRINK_JOOSE_AUDIO: "https://arweave.net/0okk9yn9v-DQ0OHdYyiuMzDvpJOGiasho1eJxhtXn_s",
   EAT_CAKE_AUDIO: "https://arweave.net/iZ4lOyJPKy6E1YYQRokL9uzbZhtQs4bj8ItJUFfRP4A",
+  REPAIR_AUDIO: "https://arweave.net/TFcs-MhnZrOuv4MbBXFXy7A_e-cXhYrTy0vb51tiRUk",
 };
 
 export const LOGIN_VIDEO = "https://arweave.net/1jm4BEW5n1OLg6xtE97_hrjD_wS70jmmG_jh2mSFxzQ";

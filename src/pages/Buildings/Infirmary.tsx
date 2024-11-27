@@ -26,7 +26,7 @@ export default function Infirmary() {
       </div> */}
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/Dpj9_8qSRnJQG77U_YLd0aTYJeI8xYydxRRvLES641A"} alt="Infirmary Background" className="w-full h-full object-cover" />
+          <img src={"https://arweave.net/stQ9Q3zjvRxj9idFG_iQzRBCFqRw8_xeUTJTcUyw0wU"} alt="Infirmary Background" className="w-full h-full object-cover" />
         </div>
 
         <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 100), transform: "translate(-50%, -100%)" }}>

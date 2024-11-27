@@ -1,9 +1,11 @@
-import { ITEM_ICONS, IMAGES, ITEM_IMAGES } from "@/lib/constants";
+import { ITEM_ICONS, IMAGES, ITEM_IMAGES,SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { GameUser, Inventory } from "@/types/game";
 import ImgButton from "../ui/imgButton";
 import { useState } from "react";
+import audioManager from "@/utils/audioManager";
+
 
 const GREEN_BACKGROUND_IMAGE = "https://arweave.net/O-OZtrbU4HPCUpTVK89Qac9Olnhr2zTA1Cdt6-cq1hs";
 const YELLOW_BACKGROUND_IMAGE = "https://arweave.net/zGg61zm00agq-bzVbsQ6fGwTuIjf9ZXx8C_i42trCx8";
@@ -288,6 +290,7 @@ export function UserWeaponItem({
             onClick={async () => {
               setLoading(true);
               try {
+                audioManager.playSFX(SOUNDS.REPAIR_AUDIO);
                 await repairItem(item.id);
               } catch (error) {
                 console.error(error);

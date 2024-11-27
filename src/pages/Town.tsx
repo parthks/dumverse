@@ -7,7 +7,7 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
-import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
+import { Fit } from "@rive-app/react-canvas";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
