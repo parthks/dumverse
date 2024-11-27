@@ -44,8 +44,8 @@ local function CalculateUserBaseStats(userData: UserData): BaseStats
     defense = 0,
     health = 2,
     total_health = 2,
-    stamina = 8,
-    total_stamina = 8,
+    stamina = 4,
+    total_stamina = 4,
   }
   if userData.nft_address then
     baseStats.damage = 2
