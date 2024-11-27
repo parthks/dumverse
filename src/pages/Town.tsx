@@ -5,6 +5,9 @@ import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { SOUNDS } from "@/lib/constants";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
+import { calculatePositionAndSize } from "@/lib/utils";
+import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
+import { useRive, Layout, Fit, Alignment } from "@rive-app/react-canvas";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -21,8 +24,60 @@ export default function Town() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
+      <div  className="absolute z-10 top-0 left-0 w-full"
+        style={{maxHeight:"22vh", height:"100%"}}>
+          <div className="w-full h-full relative">
+          <img
+        src="https://arweave.net/08G6JU-Bk6qGns_uPELsWdtMLUfmGX6PsGNSjyK0isg"
+        alt="Town Sky"
+        className="w-full h-full object-cover absolute"
+      />
+      <img
+        src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
+        alt="Town Cloud"
+        className="absolute"
+        style={{
+          ...calculatePositionAndSize(30,50,15)
+        }}
+      />
+       <img
+        src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
+        alt="Town Cloud"
+        className="absolute"
+        style={{
+          ...calculatePositionAndSize(90,50,12)
+        }}
+      />
+       <img
+        src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
+        alt="Town Cloud"
+        className="absolute"
+        style={{
+          ...calculatePositionAndSize(70,30,12)
+        }}
+      />
+          </div>
+     
+      </div>
+    
+      <div
+        className="absolute inset-0"
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <RiveAnimation
+          url="https://arweave.net/ZS6qAGG5J72dbZCsqnTCnk63R8sfYMpJV0MdcHpFtHs"
+          fit={Fit.Cover}
+        />
+      </div>
       {/* Background image */}
-      <img src="https://arweave.net/kr9vAhgWOI_OfA7LBGNuQxW1zAg9Eq_3vZaSebHN5HQ" alt="Background Placeholder" className="absolute top-0 left-0 w-full h-full object-cover" />
+      <img
+        src="https://arweave.net/rwkHG-PGdJH25cTH6zXiuxzuO0Tl3i4yacUKkdjXZog"
+        alt="Background Placeholder"
+        className="absolute top-0 left-0 w-full h-full object-cover mt-[3%]"
+      />
       {/* <audio src={SOUNDS.TOWN_AUDIO} autoPlay loop /> */}
 
       <div className="z-10 absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5">
@@ -35,10 +90,18 @@ export default function Town() {
       {!chatOpen && (
         <div className="z-10 absolute bottom-0 w-full p-4">
           <div className="flex justify-between items-center relative">
-            <ImgButton src={"https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"} onClick={() => goToGameMap(true)} alt={"Return to Town"} />
+            <ImgButton
+              src={
+                "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
+              }
+              onClick={() => goToGameMap(true)}
+              alt={"Return to Town"}
+            />
             <div className="absolute left-[43%] translate-x-[0%]">
               <ImgButton
-                src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
+                src={
+                  "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
+                }
                 onClick={() => {
                   handleBuildingSelect(GameStatePages.REST_AREA);
                 }}
@@ -47,13 +110,21 @@ export default function Town() {
             </div>
             <div className="flex gap-4 items-center justify-end">
               <ImgButton
-                src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
+                src={
+                  "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
+                }
                 onClick={() => {
                   setChatOpen(true);
                 }}
                 alt={"Chat"}
               />
-              <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
+              <ImgButton
+                src={
+                  "https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"
+                }
+                onClick={() => setIsSettingsOpen(true)}
+                alt={"Open Settings"}
+              />
             </div>
           </div>
         </div>
@@ -73,7 +144,7 @@ export default function Town() {
             <img
               src="https://arweave.net/jcrjRLjmbifAPy0nas_hHobjDIdKyMaRNmQjSD0UVvA"
               alt="Building 7"
-              className="absolute top-[10%] left-[5.5%] w-[18%] h-auto 
+              className="absolute top-[10%] left-[5.5%] w-[18%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
@@ -84,7 +155,7 @@ export default function Town() {
             <img
               src="https://arweave.net/mYFkdK6YrZdl4x6gi8BP2ZtfK1BArRCrw9_yDG3YhqE"
               alt="Building center"
-              className="absolute top-[10%] left-[51%] w-[18%] h-auto 
+              className="absolute top-[10%] left-[51%] w-[18%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
@@ -95,7 +166,7 @@ export default function Town() {
             <img
               src="https://arweave.net/SfNO5z6YsT6GEtyZw-y9vEpA082ziHsmROkUew73JuM"
               alt="Building 8 red"
-              className="absolute top-[14%] left-[37%] w-[15%] h-auto 
+              className="absolute top-[14%] left-[37%] w-[15%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
@@ -106,7 +177,7 @@ export default function Town() {
             <img
               src="https://arweave.net/x6Q-Gw9rs8R6aDpG9UdwxxzrJf-Rymorpg3msQQUQMw"
               alt="Building Bank"
-              className="absolute top-[13%] left-[65%] w-[18%] h-auto 
+              className="absolute top-[13%] left-[65%] w-[18%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {
@@ -117,7 +188,7 @@ export default function Town() {
             <img
               src="https://arweave.net/uY3tPwvtedJbYBr6IZSobePo3DN9gVAa9FS5Hr27GU8"
               alt="Building yellow"
-              className="absolute top-[15%] left-[83%] w-[15%] h-auto 
+              className="absolute top-[15%] left-[83%] w-[15%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105"
               onClick={() => {

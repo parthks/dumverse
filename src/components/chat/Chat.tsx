@@ -386,7 +386,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   if (!chatOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-10">
+    <div className="fixed inset-0 flex items-center justify-center z-20">
       <div
         className="relative flex flex-col"
         style={{
@@ -398,7 +398,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
           borderRadius: "30px",
           width: "800px",
           height: "800px",
-          maxHeight: "90vh",
+          maxHeight: "80vh",
         }}
       >
         <ImgButton

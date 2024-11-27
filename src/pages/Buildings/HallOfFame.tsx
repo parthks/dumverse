@@ -80,15 +80,15 @@ function Frame({ index }: { index: number }) {
   return (
     <div className={`absolute top-[${topPosition}] w-full max-w-[400px]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
       {/* Frame background */}
-      <img src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ" alt="Frame" className="absolute inset-0 w-full h-full object-cover" />
+      <img src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ" alt="Frame" className="absolute inset-0 w-full h-full z-10 object-cover" />
 
       {/* Container for the image inside the frame */}
       <div className="absolute top-[17%] left-[26%] w-[53%] h-[50%]">
-        <img src={user?.nft_address ? `https://arweave.net/${user.nft_address}` : ""} alt="Content Image" className="w-full h-full object-cover" />
+        <img src={user?.nft_address ? `https://arweave.net/${user.nft_address}` : ""} alt="Content Image" className="w-full h-[120%] object-cover" />
       </div>
 
       {/* Container for the text in the bottom box */}
-      <div className="absolute bottom-[12%] left-[52%] w-[40%] h-[12%] flex flex-col text-center items-center justify-start transform -translate-x-1/2">
+      <div className="absolute bottom-[12%] left-[52%] w-[40%] h-[12%] z-10 flex flex-col text-center items-center justify-start transform -translate-x-1/2">
         <p className="text-white text-center text-xl font-bold">Username</p>
         <p className="text-white text-center text-xl font-bold">1st in _______</p>
       </div>
