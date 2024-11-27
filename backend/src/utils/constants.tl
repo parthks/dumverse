@@ -139,7 +139,7 @@ local POTIONS = {
     POTION_1 = {
         id = "POTION_1",
         name = "Health Potion",
-        gold_price = 1000,
+        gold_price = 50,
         health = 1,
         type = "POTION",
     },
