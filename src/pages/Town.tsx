@@ -24,6 +24,8 @@ export default function Town() {
 
   return (
     <div className="relative h-screen w-screen overflow-hidden">
+
+      {/* Town Sky and 3 Clouds */}
       <div  className="absolute z-10 top-0 left-0 w-full"
         style={{maxHeight:"22vh", height:"100%"}}>
           <div className="w-full h-full relative">
@@ -60,6 +62,7 @@ export default function Town() {
      
       </div>
     
+    {/* Animated Sea in Town */}
       <div
         className="absolute inset-0"
         style={{
@@ -137,9 +140,23 @@ export default function Town() {
           <div
             className="absolute inset-0 bg-center bg-no-repeat bg-contain"
             style={{
-              backgroundImage: `url(https://arweave.net/JuWhXSF9_XkPJplzF5sX4ppKX2pGkbvrdQR6Skbz1JE)`,
+              backgroundImage: `url(https://arweave.net/gFbTgE71cSq3B0maUbkAEXUiLDBF92Dvm148QL67YtA)`,
             }}
           >
+
+<div
+        className="absolute inset-0"
+        style={{
+          aspectRatio: 1, 
+          ...calculatePositionAndSize(53,70,27)
+        }}
+      >
+        <RiveAnimation
+          url="https://arweave.net/7E9e7d3cx7eHObPOnuC2WJac7CqMgohsyjO9gnL4Qfs"
+        />
+      </div>
+
+
             {/* Armory on the hill */}
             <img
               src="https://arweave.net/jcrjRLjmbifAPy0nas_hHobjDIdKyMaRNmQjSD0UVvA"
