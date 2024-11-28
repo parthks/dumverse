@@ -28,12 +28,12 @@ export default function Bakery() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/MbOnj-2PBp9wZ2V4GAalLQuNhxoornEzQMR5OJMvlxc"} alt="Bakery Map" className="w-full h-full object-cover" />
+          <img src={"https://arweave.net/MbOnj-2PBp9wZ2V4GAalLQuNhxoornEzQMR5OJMvlxc"} alt="Bakery Map" className="w-full h-full object-fill" />
         </div>
         <img
           src="https://arweave.net/9RVWczCj2AjG6XAf5ZNF88x8lWaotD5hN7HpaQbB4B0"
           alt="Bakery Table"
-          className="absolute bottom-[12.4%] left-0 right-0 w-full"
+          className="absolute bottom-[15.4%] left-0 right-0 w-full"
           style={{ height: "auto", objectFit: "contain" }}
         />
         <div className="absolute inset-0">

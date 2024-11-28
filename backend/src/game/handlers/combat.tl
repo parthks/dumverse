@@ -110,12 +110,13 @@ local function enterNewCombatHandler(msg: Message)
     combatUserData.damage = baseStats.damage
 
     -- if armor or weapon is equipped, decrement item_health by 1
-    if combatUserData.inventory_armor_id then
+    if combatUserData.inventory_armor_id and combatUserData.inventory_armor_id ~= "MAGIC_ROBE" then
         dbAdmin:exec(string.format([[
             UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
         ]], combatUserData.inventory_armor_id))
     end
-    if combatUserData.inventory_weapon_id then
+    
+    if combatUserData.inventory_weapon_id and combatUserData.inventory_weapon_id ~= "WAND" then
         dbAdmin:exec(string.format([[
             UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
         ]], combatUserData.inventory_weapon_id))
@@ -139,15 +140,15 @@ local function enterNewCombatHandler(msg: Message)
         if level <= 27 then
             -- Easy: enemies 1-5
             enemy_index = math.random(1, 5)
-        elseif level <= 55 then
+        elseif level <= 54 then
             -- Medium: enemies 6-9
             enemy_index = math.random(6, 9)
-        elseif level <= 80 then
+        elseif level <= 63 then
             -- Hard: enemies 10-12
             enemy_index = math.random(10, 12)
         else
-            -- Boss: enemy 13 (for level 80+)
-            enemy_index = 13
+            -- Hard enemies including the Boss (enemy 13)
+            enemy_index = math.random(10, 13)
         end
         return enemy_index
     end
@@ -202,9 +203,9 @@ local function enterNewCombatHandler(msg: Message)
         table.insert(enemies, special_enemy)
 
     -- if utils.includes(combat_level, doubleEnemies) then
-    if combat_level > 5 then
+    elseif (combat_level >= 18 and combat_level <= 27) or (combat_level >= 45 and combat_level <= 54) or (combat_level >= 72) then
         -- double the enemies randomly, if no special enemy
-        elseif #enemies ~= 2 and math.random(1, 2) == 1 then
+        if #enemies ~= 2 and math.random(1, 2) == 1 then
             table.insert(enemies, constants.ENEMIES[getRandomEnemyIndex(combat_level)])
         end
     end

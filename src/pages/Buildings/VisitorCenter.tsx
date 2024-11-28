@@ -21,7 +21,7 @@ export default function VisitorCenter() {
       setTotalUsers(users);
     };
 
-    fetchUsers(); 
+    fetchUsers();
     intervalId = setInterval(fetchUsers, 6000);
 
     return () => clearInterval(intervalId);
@@ -36,28 +36,19 @@ export default function VisitorCenter() {
         <InventoryBag />
       </div> */}
       <div className="absolute inset-0">
-        <img
-          src={
-            "https://arweave.net/feD7pI2mLW1GlbkklXV3gmypekkFFxaBRzWsjPYRlSU"
-          }
-          alt="Visitor Center Background"
-          className="w-full h-full object-cover"
-        />
+        <img src={"https://arweave.net/feD7pI2mLW1GlbkklXV3gmypekkFFxaBRzWsjPYRlSU"} alt="Visitor Center Background" className="w-full h-full object-cover" />
       </div>
       {/* White Board */}
       <div
         className="relative bg-contain bg-center bg-no-repeat w-full max-w-xl ml-4 p-8"
         style={{
-          backgroundImage:
-            "url('https://arweave.net/ZWcNIcAHxcHc6pFhaelZh8kSbtbF3mPDK6sI3y_95vM')",
+          backgroundImage: "url('https://arweave.net/ZWcNIcAHxcHc6pFhaelZh8kSbtbF3mPDK6sI3y_95vM')",
           aspectRatio: "1784/1035",
         }}
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center m-4">
           {/* <h1 className="text-2xl md:text-3xl font-bold text-center">Welcome to</h1> */}
-          <h2 className="text-lg md:text-xl text-center mt-9 underline">
-            Welcome to Dumverse!
-          </h2>
+          <h2 className="text-lg md:text-xl text-center mt-9 underline">Welcome to Dumverse!</h2>
           {/* <p className="text-base md:text-lg text-center mt-1 underline">Enjoy your stay!</p> */}
           {/* w-max mx-auto */}
           <div className="w-full text-sm flex flex-row items-center px-3 space-x-4">
@@ -74,27 +65,21 @@ export default function VisitorCenter() {
                 </div>
 
                 <div className="text-left w-fit">
-                  <h3 className="font-semibold text-md mt-2 underline ml-6">
-                    Q2
-                  </h3>
+                  <h3 className="font-semibold text-md mt-2 underline ml-6">Q2</h3>
                   <p className="mt-2">Cascade 4</p>
                   <p>Cascade 5</p>
                   <p>Cascade 6</p>
                 </div>
 
                 <div className="text-left w-fit">
-                  <h3 className="font-semibold text-md mt-2 underline ml-6">
-                    Q3
-                  </h3>
+                  <h3 className="font-semibold text-md mt-2 underline ml-6">Q3</h3>
                   <p className="mt-2">Cascade 7</p>
                   <p>Cascade 8</p>
                   <p>Cascade 9</p>
                 </div>
 
                 <div className="text-left w-fit">
-                  <h3 className="font-semibold text-md mt-2 underline ml-6">
-                    Q4
-                  </h3>
+                  <h3 className="font-semibold text-md mt-2 underline ml-6">Q4</h3>
                   <p className="mt-2">Cascade 10</p>
                   <p>Cascade 11</p>
                   <p>Cascade 12</p>
@@ -103,9 +88,7 @@ export default function VisitorCenter() {
             </div>
 
             <div className="w-[50%] bg-white p-1 rounded-3xl border-8 border-[#6e7275] text-lg md:text-xl flex flex-col items-center gap-3">
-              <h1 className="  text-center underline">
-                Dumverse Resident Count
-              </h1>
+              <h1 className="  text-center underline">Dumverse Resident Count</h1>
               <h1>{totalUsers} </h1>
             </div>
           </div>
@@ -118,21 +101,14 @@ export default function VisitorCenter() {
           className="relative bottom-[0px] left-[0px] bg-contain bg-center bg-no-repeat w-[400px] max-w-xl ml-4 p-8"
           style={{
             zIndex: 2,
-            backgroundImage:
-              "url('https://arweave.net/iGgg4X_Mb9xWoropvHjqaplkmT1SXwFUE6ejSuhE2eM')",
+            backgroundImage: "url('https://arweave.net/iGgg4X_Mb9xWoropvHjqaplkmT1SXwFUE6ejSuhE2eM')",
             aspectRatio: "918/1080",
           }}
         >
           <div className="absolute w-[200px] m-auto inset-0 flex flex-col items-center justify-center text-white">
-            <h2 className="text-lg md:text-lg text-center mt-40 underline">
-              Entry Fees:
-            </h2>
-            <p className="text-base md:text-lg text-center mt-1 underline">
-              .1984 wAR for Dumz
-            </p>
-            <p className="text-base md:text-lg text-center mt-1 underline">
-              .3968 wAR for non residents
-            </p>
+            <h2 className="text-lg md:text-lg text-center mt-40 underline">Entry Fees:</h2>
+            <p className="text-base md:text-lg text-center mt-1 underline">.1984 wAR for Dumz</p>
+            <p className="text-base md:text-lg text-center mt-1 underline">.3968 wAR for non residents</p>
           </div>
         </div>
 
@@ -148,11 +124,9 @@ export default function VisitorCenter() {
             zIndex: 1, // This ensures the shopkeeper is behind the table
           }}
         >
-          <RiveAnimation
-            url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM}
-          />
+          <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
         </div>
-        <GifComponent className="absolute h-[20vh] translate-x-[15vw] translate-y-[-56vh]" />
+        <GifComponent className="absolute h-[20vh] translate-x-[400px] translate-y-[-520px]" />
       </div>
 
       {/* sign */}
@@ -173,33 +147,25 @@ export default function VisitorCenter() {
       <div className="absolute left-[550px] inset-0 flex items-center justify-center">
         <div className="relative w-full h-full">
           <img
-            src={
-              "https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"
-            }
+            src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[0%] w-[25%] h-auto"
           />
           <img
-            src={
-              "https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"
-            }
+            src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[25%] w-[25%] h-auto"
           />
           <img
-            src={
-              "https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"
-            }
+            src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[50%] w-[25%] h-auto"
           />
           <img
-            src={
-              "https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"
-            }
+            src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[75%] w-[25%] h-auto"

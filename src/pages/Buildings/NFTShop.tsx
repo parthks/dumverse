@@ -76,7 +76,7 @@ export default function NFTShop() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "-68%",
+                  top: "-67%",
                   left: "22%",
                   aspectRatio: 1,
                   zIndex: 1,

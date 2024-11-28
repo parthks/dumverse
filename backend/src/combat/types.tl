@@ -15,6 +15,7 @@ global record Battle
     players: {string: CombatUserData}
     npcs: {string: CombatEnemyData}
     log: {BattleLogEntry}
+    internal_logs: {BattleLogEntry}
     last_player_attack_timestamp: {string: integer}
     last_npc_attack_timestamp: {string: integer}
     ended: boolean
@@ -30,6 +31,8 @@ global record BattleHelpersType
     addPlayer: function(battle_id: integer, player: CombatUserData)
     log: function(battle_id: integer, timestamp: integer, from: string, message: string)
     addLogs: function(battle_id: integer, logs: {BattleLogEntry})
+    internalLog: function(battle_id: integer, timestamp: integer, from: string, message: string)
+    addInternalLogs:function(battle_id: integer, logs: {BattleLogEntry})
     new: function(timestamp: integer): Battle
     get: function(id: integer): Battle
     update: function(id: integer, battle: Battle)
