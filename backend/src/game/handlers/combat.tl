@@ -110,12 +110,13 @@ local function enterNewCombatHandler(msg: Message)
     combatUserData.damage = baseStats.damage
 
     -- if armor or weapon is equipped, decrement item_health by 1
-    if combatUserData.inventory_armor_id then
+    if combatUserData.inventory_armor_id and combatUserData.inventory_armor_id ~= "MAGIC_ROBE" then
         dbAdmin:exec(string.format([[
             UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
         ]], combatUserData.inventory_armor_id))
     end
-    if combatUserData.inventory_weapon_id then
+    
+    if combatUserData.inventory_weapon_id and combatUserData.inventory_weapon_id ~= "WAND" then
         dbAdmin:exec(string.format([[
             UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
         ]], combatUserData.inventory_weapon_id))

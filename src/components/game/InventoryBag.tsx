@@ -1,11 +1,10 @@
-import { ITEM_ICONS, IMAGES, ITEM_IMAGES,SOUNDS } from "@/lib/constants";
+import { ITEM_ICONS, IMAGES, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { GameUser, Inventory } from "@/types/game";
 import ImgButton from "../ui/imgButton";
 import { useState } from "react";
 import audioManager from "@/utils/audioManager";
-
 
 const GREEN_BACKGROUND_IMAGE = "https://arweave.net/O-OZtrbU4HPCUpTVK89Qac9Olnhr2zTA1Cdt6-cq1hs";
 const YELLOW_BACKGROUND_IMAGE = "https://arweave.net/zGg61zm00agq-bzVbsQ6fGwTuIjf9ZXx8C_i42trCx8";
@@ -251,7 +250,7 @@ export function UserWeaponItem({
   const healthPercentage = item ? Math.round((item.item_health / item.total_item_health) * 100) : undefined;
 
   const noItemSize = size === "bigger" ? "w-12 h-12" : size === "medium" ? "w-10 h-10" : "w-8 h-8";
-  const withItemSize = size === "bigger" ? "h-14" : size === "medium" ? "h-12" : "h-9";
+  const withItemSize = size === "bigger" ? "min-h-14" : size === "medium" ? "min-h-12" : "min-h-9";
   const itemSize = size === "bigger" ? "w-16 h-[70px]" : size === "medium" ? "w-10 h-12" : "w-10 h-12";
 
   const item_id = item?.item_id;
@@ -272,9 +271,11 @@ export function UserWeaponItem({
             />
             <div className="absolute inset-0 flex flex-col items-center">
               <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`${withItemSize}`} />
-              <p className="text-white text-sm">
-                {item.item_health}/{item.total_item_health}
-              </p>
+              {!["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
+                <p className="text-white text-sm">
+                  {item.item_health}/{item.total_item_health}
+                </p>
+              )}
             </div>
           </>
         ) : (
@@ -283,7 +284,7 @@ export function UserWeaponItem({
           </div>
         )}
       </div>
-      {item && repair && (
+      {item && repair && !["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
         <>
           <ImgButton
             disabled={loading || user.dumz_balance < repairCost || (item && item.item_health === item.total_item_health)}

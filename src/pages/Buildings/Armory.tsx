@@ -44,7 +44,7 @@ export default function Armory() {
             src="https://arweave.net/cOMnBf2OdYiEw4mP6YdW3itRyodIgMNf_IT2f-7SL7E"
             alt="Fireplace"
             className="absolute"
-            style={{ ...calculatePositionAndSize(20, 90, 15), transform: "translate(-50%, -50%)" }}
+            style={{ ...calculatePositionAndSize(23, 100, 13), transform: "translate(-50%, -100%)" }}
           />
 
           {/* Group the shop table, sign, and shopkeeper */}

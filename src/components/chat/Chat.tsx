@@ -192,10 +192,9 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
             {displayMessage.AuthorName}:{displayMessage.Content}
           </span> */}
           <span className="text-white text-xl line-clamp-2">
-  <span className="font-bold mr-2">{displayMessage.AuthorName}:</span>
-  <span>{displayMessage.Content}</span>
-</span>
-
+            <span className="font-bold mr-2">{displayMessage.AuthorName}:</span>
+            <span>{displayMessage.Content}</span>
+          </span>
         </div>
       </div>
     </div>
@@ -386,7 +385,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   if (!chatOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-20">
+    <div className="fixed inset-0 flex items-center justify-center z-20 top-[100px] bottom-[10vh]">
       <div
         className="relative flex flex-col"
         style={{
@@ -397,8 +396,8 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
           backgroundColor: "rgba(0, 0, 0, 0.7)",
           borderRadius: "30px",
           width: "800px",
-          height: "800px",
-          maxHeight: "80vh",
+          height: "100%",
+          // maxHeight: "80vh",
         }}
       >
         <ImgButton
