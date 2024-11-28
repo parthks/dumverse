@@ -386,7 +386,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   if (!chatOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-20">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
         className="relative flex flex-col"
         style={{

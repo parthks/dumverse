@@ -141,12 +141,12 @@ export default function RestArea() {
 
       {!chatOpen && (
         <>
-          <div className="z-20 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
+          <div className="z-30 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
             <InventoryBag />
             <ImgButton className="h-[65px]" src={"https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
           </div>
 
-          <div className="z-20 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
+          <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
             <ImgButton
               src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
               onClick={() => {
@@ -160,115 +160,15 @@ export default function RestArea() {
       )}
 
       {openBag && (
-        <div className="absolute z-20 top-0 left-0 w-full h-full bg-black bg-opacity-50">
+        <div className="absolute z-30 top-0 left-0 w-full h-full bg-black bg-opacity-50">
           <RestAreaBag onClose={() => setOpenBag(false)} />
         </div>
       )}
 
       <div className="relative w-full h-full">
         <div className={`absolute inset-0`}>
-{/* {  current_spot == 0 ?  (<div className="relative h-screen w-screen overflow-hidden">
-
-  <div  className="absolute z-10 top-0 left-0 w-full"
-        style={{maxHeight:"26.5vh", height:"100%"}}>
-          <div className="w-full h-full relative">
-          <img
-        src="https://arweave.net/08G6JU-Bk6qGns_uPELsWdtMLUfmGX6PsGNSjyK0isg"
-        alt="Town Sky"
-        className="w-full h-full object-cover absolute"
-      />
-      <img
-        src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
-        alt="Town Cloud"
-        className="absolute"
-        style={{
-          ...calculatePositionAndSize(30,50,15)
-        }}
-      />
-       <img
-        src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
-        alt="Town Cloud"
-        className="absolute"
-        style={{
-          ...calculatePositionAndSize(90,50,12)
-        }}
-      />
-       <img
-        src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
-        alt="Town Cloud"
-        className="absolute"
-        style={{
-          ...calculatePositionAndSize(70,30,12)
-        }}
-      />
-          </div>
-     
-      </div>
-  <div
-        className="absolute inset-0"
-        style={{
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <RiveAnimation
-          url="https://arweave.net/IE-dEphdGW5ipTcyvKbrO7aa5Ub1xVhx_dTi_9t9KOg"
-          fit={Fit.Cover}
-        />
-      </div>
-
-      <img
-        src="https://arweave.net/FdV6gZmdcWf8k-6RIW1PWNjf7IqA4uQNftjaQeSiNnc"
-        alt="Background Placeholder"
-        className="absolute top-0 left-0 w-full h-full object-cover "
-      />
-
-<img
-        src="https://arweave.net/MU0vR-zJKvi5oVPgCBPDukp9vMb9JUEvlWys6QtXxfw"
-        alt="Dirt Road"
-        className="absolute object-cover z-10 w-full top-[15%]"
-        style={{
-          
-        }}
-      />
-
-<img
-        src="https://arweave.net/_g5O3cjj56K7xtCmO9WDYYovTrl88zZyALEjqSjJAVg"
-        alt="Weapon Shop"
-        className="absolute object-cover h-auto z-10"
-        style={{
-          ...calculatePositionAndSize(6,20,30)
-        }}
-      />
-      <img
-        src="https://arweave.net/0Re9EaNZ33_nlERxv6lrG7YLL9MAUnG9pEdehatEa0w"
-        alt="Dumz Hall of Fame"
-        className="absolute object-cover h-auto z-10"
-        style={{
-          ...calculatePositionAndSize(59,1,35)
-        }}
-      />
-       <img
-        src="https://arweave.net/J-iCcqONbJzGGvULWzi8-lujVTNMSuyCYkDnAQMme-k"
-        alt="Bank"
-        className="absolute object-cover h-auto z-10"
-        style={{
-          ...calculatePositionAndSize(105,30,30)
-        }}
-      />
-      {/* <img
-        src="https://arweave.net/o95nmyTOa5irftkjrfb6DDwivxIHJaNHof7AKvUa7Hc"
-        alt="Bakery"
-        className="absolute object-cover h-auto z-10"
-        style={{
-          ...calculatePositionAndSize(108,30,30)
-        }}
-      /> */}
-
-  
-{/* </div>) :          <img src={RestAreaImages[current_spot as keyof typeof RestAreaImages]} alt="Rest Area Background" className="w-full h-full object-cover" />
-}         */} 
- <img src={RestAreaImages[current_spot as keyof typeof RestAreaImages]} alt="Rest Area Background" className="w-full h-full object-cover" />
+{  current_spot == 0 ?  (<TownRestArea/>) :          <img src={RestAreaImages[current_spot as keyof typeof RestAreaImages]} alt="Rest Area Background" className="w-full h-full object-cover" />
+}        
 
   {current_spot != 0 && (
             <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>
@@ -295,6 +195,117 @@ export default function RestArea() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function TownRestArea() {
+  return (
+    <div className="relative h-screen w-screen overflow-hidden">
+      <div
+        className="absolute z-10 top-0 left-0 w-full"
+        style={{ maxHeight: "26.5vh", height: "100%" }}
+      >
+        <div className="w-full h-full relative">
+          <img
+            src="https://arweave.net/08G6JU-Bk6qGns_uPELsWdtMLUfmGX6PsGNSjyK0isg"
+            alt="Town Sky"
+            className="w-full h-full object-cover absolute"
+          />
+          <img
+            src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
+            alt="Town Cloud"
+            className="absolute"
+            style={{
+              ...calculatePositionAndSize(30, 50, 15),
+            }}
+          />
+          <img
+            src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
+            alt="Town Cloud"
+            className="absolute"
+            style={{
+              ...calculatePositionAndSize(90, 50, 12),
+            }}
+          />
+          <img
+            src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
+            alt="Town Cloud"
+            className="absolute"
+            style={{
+              ...calculatePositionAndSize(70, 30, 12),
+            }}
+          />
+        </div>
+      </div>
+      <div
+        className="absolute inset-0"
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <RiveAnimation
+          url="https://arweave.net/IE-dEphdGW5ipTcyvKbrO7aa5Ub1xVhx_dTi_9t9KOg"
+          fit={Fit.Cover}
+        />
+      </div>
+
+      <img
+        src="https://arweave.net/FdV6gZmdcWf8k-6RIW1PWNjf7IqA4uQNftjaQeSiNnc"
+        alt="Background Placeholder"
+        className="absolute top-0 left-0 w-full h-full object-cover "
+      />
+
+      <img
+        src="https://arweave.net/DE_Zc9BgwWB3aH9mltKROQIZWvVQGPtrZJvtmkqyu2s"
+        alt="Dirt Road"
+        className="absolute object-cover min-w-[250%] top-[12%] left-[-93%]"
+        style={{}}
+      />
+
+      <img
+        src="https://arweave.net/_g5O3cjj56K7xtCmO9WDYYovTrl88zZyALEjqSjJAVg"
+        alt="Weapon Shop"
+        className="absolute object-cover h-auto z-10"
+        style={{
+          ...calculatePositionAndSize(17, 12, 30),
+        }}
+      />
+      <img
+        src="https://arweave.net/0Re9EaNZ33_nlERxv6lrG7YLL9MAUnG9pEdehatEa0w"
+        alt="Dumz Hall of Fame"
+        className="absolute object-cover h-auto z-10"
+        style={{
+          ...calculatePositionAndSize(59, 1, 35),
+        }}
+      />
+      <img
+        src="https://arweave.net/J-iCcqONbJzGGvULWzi8-lujVTNMSuyCYkDnAQMme-k"
+        alt="Bank"
+        className="absolute object-cover h-auto z-10"
+        style={{
+          ...calculatePositionAndSize(88, 18, 30),
+        }}
+      />
+      <img
+        src="https://arweave.net/o95nmyTOa5irftkjrfb6DDwivxIHJaNHof7AKvUa7Hc"
+        alt="Bakery"
+        className="absolute object-cover h-auto z-10"
+        style={{
+          ...calculatePositionAndSize(108, 30, 30),
+        }}
+      />
+
+      <div
+        className="absolute inset-0 z-20"
+        style={{
+          aspectRatio: 1,
+          ...calculatePositionAndSize(42, 68, 52),
+        }}
+      >
+        <RiveAnimation url="https://arweave.net/7vwsUfbEdh3CXwbD763IpDjmlkE1rZkSRI-VOgXmtV0" />
       </div>
     </div>
   );
