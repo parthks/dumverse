@@ -57,6 +57,7 @@ end
 local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer, player_id_tried_running: string | nil)
     -- local battle = BattleHelpers.get(battle_id)
     Battles[battle_id].last_npc_attack_timestamp[npc_id] = timestamp
+    BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack", "Started NPCAttack. Updated NPC ".. npc_id .. " last attack time to "..timestamp)
 
     -- filter out attacking npc_id from npcs_alive
     local npcs_alive = utils.filter(function(val: string): boolean
@@ -76,31 +77,45 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     -- 15 % chance to attack a random npc
     local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 1 and player_id_tried_running == nil
 
+    -- Log random target selection
+    BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - target selection", 
+        "Random NPC target: " .. (random_npc_id or "none") .. 
+        ", Player target: " .. player_id .. 
+        ", NPC should attack NPC: " .. tostring(npcShouldAttackNPC))
+
     if (npcShouldAttackNPC) then
         print("NPC " .. npc_id .. " attacking NPC " .. random_npc_id)
+        BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - attacking", "NPC " .. npc_id .. " attacking NPC " .. random_npc_id..". Defending NPC health is: ".. Battles[battle_id].npcs[random_npc_id].health)
         local log, defender_health, _ = NPCAttacksNPC(Battles[battle_id].npcs[npc_id], Battles[battle_id].npcs[random_npc_id], timestamp)
+        BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - attacking finished", "Defending NPC " .. random_npc_id .. " health reduced from ".. Battles[battle_id].npcs[random_npc_id].health .." to "..defender_health)
         Battles[battle_id].npcs[random_npc_id].health = defender_health
+
         -- battle.npcs[random_npc_id].health = defender_health
         BattleHelpers.addLogs(Battles[battle_id].id, log)
         if defender_health <= 0 then
             -- remove npc from battle
+            BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack", "NPC ".. random_npc_id .. " died.")
             BattleHelpers.killNPC(battle_id, random_npc_id, npc_id, timestamp)
         end
     else 
-        print("NPC " .. npc_id .. " attacking player " .. player_id)
+        -- print("NPC " .. npc_id .. " attacking player " .. player_id)
+        BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - attacking", "NPC " .. npc_id .. " attacking Player " .. player_id..". Defending player health is: ".. Battles[battle_id].players[player_id].health ..", with defense: ".. Battles[battle_id].players[player_id].defense)
         local log, defender_health, defender_defense = NPCAttacksPlayer(Battles[battle_id].npcs[npc_id], Battles[battle_id].players[player_id], timestamp, player_id_tried_running ~= nil)
+        BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - attacking finished", "Defending Player " .. player_id.." health reduced from ".. Battles[battle_id].players[player_id].health .." to ".. defender_health .." and defense reduced from ".. Battles[battle_id].players[player_id].defense .. " to ".. defender_defense)
         Battles[battle_id].players[player_id].defense = defender_defense
         Battles[battle_id].players[player_id].health = defender_health
         
         BattleHelpers.addLogs(battle_id, log)
         if defender_health <= 0 then
             -- remove player from battle
+            BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack", "Player ".. player_id .. " died.")
             BattleHelpers.killPlayer(battle_id, player_id, npc_id, timestamp)
         end
     end
     
     -- battle.players_attacked = {} -- reset player attacked list, so that all players can attack again
     Battles[battle_id].players_attacked = {}
+    BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack", "Have Reset Players Attacked Table")
 
     BattleHelpers.checkIfBattleShouldEnd(battle_id, npc_id, timestamp)
 end
@@ -122,6 +137,7 @@ local function CronTick(msg: Message, npcTimer: integer)
                 if (battle.last_npc_attack_timestamp[npc_id] or 0) + (npcTimer * 1000) < msg.Timestamp then
                     -- if player has not attacked in the last 10 seconds, the NPC will attack
                     print("battle " .. battle.id .. " - AUTO ATTACK: NPC " .. npc_id .. " attacking player")
+                    BattleHelpers.internalLog(battle.id, msg.Timestamp, "CronTick - NPCAttack", "Last NPC Attack Timestamp: ".. battle.last_npc_attack_timestamp[npc_id]..". Seconds after last attack: ".. npcTimer..".")
                     NPCAttack(npc_id, battle.id, msg.Timestamp, nil)
                 end
             end
@@ -196,11 +212,11 @@ local function newUserJoinHandler(msg: Message)
                 battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
                 NPCS_EXTRA_GOLD[npc.id] = nil
             end
-            -- BattleHelpers.update(battle.id, battle)
             Battles[battle.id] = battle
         end
         player.added_at_timestamp = msg.Timestamp
         BattleHelpers.addPlayer(battle.id, player)
+        BattleHelpers.internalLog(battle.id, msg.Timestamp, "newUserJoinHandler", "Player "..player.id .. " added to battle")
          -- send message to game process to confirm user has been added to a new battle
         local user_address = player.address
         print("adding user " .. user_address .. " to battle " .. battle.id .. "of level " .. battle.level)
@@ -258,10 +274,14 @@ end
 local function userAttackHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
+    local attackEntityId = msg.Tags.AttackEntityId
+    
+    BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - started", 
+        "Attacking User: " .. user_id .. ", Target: " .. attackEntityId)
+
     VerifyUserInBattle(user_id, battle_id)
     VerifyBattleIsOnGoing(battle_id)
 
-    local attackEntityId = msg.Tags.AttackEntityId
     assert(attackEntityId, "AttackEntityId is required")
 
     local playerUserIds = Battles[battle_id].players_alive
@@ -279,7 +299,10 @@ local function userAttackHandler(msg: Message)
     if (utils.includes(attackEntityId, npcIds)) then
         print("Player " .. user_id .. " attacking NPC " .. attackEntityId)
         -- Player attacking NPC
+        BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - attacking", "Player " .. user_id .. " attacking NPC " .. attackEntityId..". Defending NPC health is: ".. Battles[battle_id].npcs[attackEntityId].health)
         local log, defender_health, _ = PlayerAttacksNPC(Battles[battle_id].players[user_id], Battles[battle_id].npcs[attackEntityId], msg.Timestamp)
+        BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - attacking finished", "Defending NPC " .. attackEntityId.." health reduced from ".. Battles[battle_id].npcs[attackEntityId].health .." to ".. defender_health)
+        
         BattleHelpers.addLogs(battle_id, log)
         Battles[battle_id].npcs[attackEntityId].health = defender_health
         if defender_health <= 0 then
@@ -289,7 +312,9 @@ local function userAttackHandler(msg: Message)
     elseif (utils.includes(attackEntityId, playerUserIds)) then
         print("Player " .. user_id .. " attacking Player " .. attackEntityId)
         -- Player attacking Player
+        BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - attacking", "Player " .. user_id .. " attacking Player " .. attackEntityId..". Defending player health is: ".. Battles[battle_id].players[attackEntityId].health ..", with defense: ".. Battles[battle_id].players[attackEntityId].defense)
         local log, defender_health, defender_defense = PlayerAttacksPlayer(Battles[battle_id].players[user_id], Battles[battle_id].players[attackEntityId], msg.Timestamp)
+        BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - attacking finished", "Defending Player " .. attackEntityId.." health reduced from ".. Battles[battle_id].players[attackEntityId].health .." to ".. defender_health .." and defense reduced from ".. Battles[battle_id].players[attackEntityId].defense .. " to ".. defender_defense)
         Battles[battle_id].players[attackEntityId].defense = defender_defense
         Battles[battle_id].players[attackEntityId].health = defender_health
         
@@ -311,9 +336,11 @@ local function userAttackHandler(msg: Message)
     if #Battles[battle_id].players_attacked >= #Battles[battle_id].players_alive then -- greater than or equal to in case a player has died
         -- all players have attacked, so NPC should attack
         print("All players have attacked. NPC should attack")
+        BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler", "All players have attacked. NPCs should attack")
         -- battle = BattleHelpers.get(battle_id)
         -- loop through all npcs and attack
         for _, npc_id in ipairs(Battles[battle_id].npcs_alive) do
+            BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler", "Initiating NPC "..npc_id .." attack")
             NPCAttack(npc_id, battle_id, msg.Timestamp, nil)
         end
         -- reset players attacked, in case there are no npcs alive and all players have attacked

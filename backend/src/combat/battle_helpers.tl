@@ -100,10 +100,12 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
     local winning_message = "has won the battle"
     local shouldEnd = false
 
+    -- Add more detailed logging for each end condition
     if not attacker_id and #battle.players_alive == 0 then
         -- player ran away
         winning_message = "Battle ended. No players left in battle"
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        BattleHelpers.internalLog(battle_id, timestamp, "checkIfBattleShouldEnd", winning_message)
         shouldEnd = true
 
     -- player ran away, only one player left
@@ -112,6 +114,7 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         winning_message = "Battle ended. Only player left"
         attacker_id = battle.players_alive[1]
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        BattleHelpers.internalLog(battle_id, timestamp, "checkIfBattleShouldEnd", winning_message)
         shouldEnd = true
 
     -- NPC wins if no players are alive
@@ -123,6 +126,7 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
             attacker_id = battle.npcs_alive[1]
         end
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        BattleHelpers.internalLog(battle_id, timestamp, "checkIfBattleShouldEnd", winning_message)
         shouldEnd = true
 
     -- NPCs are all dead and only 1 player is alive
@@ -130,12 +134,14 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         assert(battle.players_alive[1] == attacker_id)
         playerWon(attacker_id)
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        BattleHelpers.internalLog(battle_id, timestamp, "checkIfBattleShouldEnd", winning_message)
         shouldEnd = true
 
     elseif (#battle.players_alive == 0 and #battle.npcs_alive == 0) then
         -- both players and npcs are dead
         winning_message = "Battle ended. Both players and npcs perished"
         BattleHelpers.log(battle_id, timestamp, nil, winning_message)
+        BattleHelpers.internalLog(battle_id, timestamp, "checkIfBattleShouldEnd", winning_message)
         shouldEnd = true
     end
 
@@ -251,14 +257,14 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
 end
 
 BattleHelpers.playerRanAway = function(battle_id: integer, player_id: string, timestamp: integer)
-    local battle = BattleHelpers.get(battle_id)
-    BattleHelpers.log(battle_id, timestamp, player_id,
-        "runs away successfully")
-    battle.players_alive = utils.filter(function(val: string): boolean
+    -- local battle = BattleHelpers.get(battle_id)
+    BattleHelpers.log(battle_id, timestamp, player_id, "runs away successfully")
+    BattleHelpers.internalLog(battle_id, timestamp, "playerRanAway", "Player".. player_id .. "runs away successfully")
+    Battles[battle_id].players_alive = utils.filter(function(val: string): boolean
         return val ~= player_id
-    end, battle.players_alive)
-    BattleHelpers.update(battle_id, battle)
-    local player = battle.players[player_id]
+    end, Battles[battle_id].players_alive)
+    -- BattleHelpers.update(battle_id, battle)
+    local player = Battles[battle_id].players[player_id]
     ao.send({
         Target = GAME_PROCESS_ID,
         UserId = tostring(player.id),
@@ -275,21 +281,42 @@ BattleHelpers.addPlayer = function(battle_id: integer, player: CombatUserData)
 end
 
 BattleHelpers.log = function(battle_id: integer, timestamp: integer, from: string, message: string)
-    local battle = BattleHelpers.get(battle_id)
-    table.insert(battle.log, {
+    -- local battle = BattleHelpers.get(battle_id)
+    Battles[battle_id].log = Battles[battle_id].log or {}
+    table.insert(Battles[battle_id].log, {
         from = from,
         message = message,
         timestamp = timestamp
     })
-    BattleHelpers.update(battle_id, battle)
+    -- BattleHelpers.update(battle_id, battle)
 end
 
 BattleHelpers.addLogs = function(battle_id: integer, logs: {BattleLogEntry})
-    local battle = BattleHelpers.get(battle_id)
+    -- local battle = BattleHelpers.get(battle_id)
+    Battles[battle_id].log = Battles[battle_id].log or {}
     for _, log in ipairs(logs) do
-        table.insert(battle.log, log)
+        table.insert(Battles[battle_id].log, log)
     end
-    BattleHelpers.update(battle_id, battle)
+    -- BattleHelpers.update(battle_id, battle)
+end
+
+BattleHelpers.internalLog = function(battle_id: integer, timestamp: integer, from: string, message: string)
+    -- local battle = BattleHelpers.get(battle_id)
+    Battles[battle_id].internal_logs = Battles[battle_id].internal_logs or {}
+    table.insert(Battles[battle_id].internal_logs, {
+        from = from,
+        message = message,
+        timestamp = timestamp
+    })
+    -- BattleHelpers.update(battle_id, battle)
+end
+BattleHelpers.addInternalLogs = function(battle_id: integer, logs: {BattleLogEntry})
+    -- local battle = BattleHelpers.get(battle_id)
+    Battles[battle_id].internal_logs = Battles[battle_id].internal_logs or {}
+    for _, log in ipairs(logs) do
+        table.insert(Battles[battle_id].internal_logs, log)
+    end
+    -- BattleHelpers.update(battle_id, battle)
 end
 
 BattleHelpers.new = function(timestamp: integer): Battle
@@ -307,6 +334,7 @@ BattleHelpers.new = function(timestamp: integer): Battle
         players = {},                   -- dictionary of users from the user db directly, key is user_id
         npcs = {},                      -- dictionary of npc enemy data from constants.lua. key is npc_id
         log = {},                       -- list of battle logs
+        internal_logs = {},              -- list of battle logs for internal use only
         last_npc_attack_timestamp = {}, -- key is npc_id, value is timestamp
         last_player_attack_timestamp = {}, -- key is player_id, value is timestamp
         ended = false,
