@@ -266,7 +266,7 @@ const GifComponent: React.FC<GifComponentProps> = ({
           <img
             src={gifSrc}
             alt="Dialogue Quest GIF"
-            className="relative max-w-full"
+            className="relative max-w-full object-cover"
           />
         )}
         {showButton && !questAccepted && (
@@ -282,7 +282,20 @@ const GifComponent: React.FC<GifComponentProps> = ({
             alt={"Accept Quest"}
            disabled={buttonDisable}
             onClick={handleQuestAcceptance}
-            className={`absolute bottom-[23%] right-[20%] ${buttonClassName}`}
+            className={`absolute bottom-[20%] 
+              right-[15%] 
+              sm:bottom-[22%] 
+              sm:right-[18%] 
+              md:bottom-[23%] 
+              md:right-[20%] 
+              lg:bottom-[24%] 
+              lg:right-[22%] 
+              xl:bottom-[23%] 
+              xl:right-[19%]
+              w-[100px] 
+              sm:w-[120px] 
+              md:w-[140px] 
+              lg:w-[160px] ${buttonClassName}`}
           />
         )}
       </div>
