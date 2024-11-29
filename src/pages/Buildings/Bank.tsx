@@ -614,16 +614,19 @@ export default function BankPage() {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/v-SSxfaVV5sID-uCyEvH-0BA7eNgmK2_rmEaif6godQ"} alt="Bank Map" className="w-full h-full object-contain" />
+          <img src={"https://arweave.net/-1jE6wxXzcUcwt_f1Jx3O3aAsdViTEorWXV5BG1fAR8"} alt="Bank Map" className="w-full h-full object-contain" />
           {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
           {/* bg-[#f0ecd3]       */}
           <div
-            className="absolute w-full h-full flex flex-col bg-[#f0ecd3] items-center justify-end"
+            className="absolute w-full h-full flex flex-col bg-[#f0ecd3] items-center justify-end gap-24"
             style={{
               ...calculatePositionAndSize(50, 100, 47.6),
               transform: "translate(-50%, -100%)",
             }}
           >
+            <div className="relative w-[80%]">
+              <img src="https://arweave.net/zA4CeoP9KBggcsYcGx5LWPSQXCTmnsp6g5BtFTw-WoU" />
+            </div>
             <div className="relative w-full  h-full flex flex-col">
               {/* <div className="absolute h-full flex items-center " style={{top:"-8%",left:"17%"}}> */}
               <div
@@ -666,32 +669,34 @@ export default function BankPage() {
 
           {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
           <div
-            className="absolute w-full h-full flex bg-green- flex-col items-center justify-end"
+            className="absolute w-full h-full flex flex-row items-center justify-between px-20"
             style={{
-              ...calculatePositionAndSize(50, 58, 41),
+              ...calculatePositionAndSize(50, 62, 100),
               transform: "translate(-50%, -100%)",
             }}
           >
-            <div className="relative w-full  h-full flex flex-row">
-              <div className="relative">
-                <img
-                  src="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
-                  item-type="general-vault"
-                  className="relative w-full grow-image item cursor-pointer"
-                  style={{ height: "auto", top: "0%", left: "-110%" }}
-                  onClick={handleClick}
-                />
-              </div>
+            {/* Left Vault */}
+            <div className="relative flex flex-col w-1/4">
+              <img style={{ width: "75%", margin: "auto" }} src="https://arweave.net/fteI4wzrjFS8ruWnIE-QLB7a4ErQvNXgPyN35MsogMg" />
+              <img
+                src="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
+                item-type="general-vault"
+                className="relative w-full grow-image item cursor-pointer"
+                style={{ height: "auto", top: "0%" }}
+                onClick={handleClick}
+              />
+            </div>
 
-              <div className="relative">
-                <img
-                  src="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
-                  item-type="nft-vault"
-                  className="relative w-full grow-image item cursor-pointer"
-                  style={{ height: "auto", top: "0%", right: "-113%" }}
-                  onClick={handleClick}
-                />
-              </div>
+            {/* Right Vault */}
+            <div className="relative flex flex-col w-1/4">
+              <img style={{ width: "75%", margin: "auto" }} src="https://arweave.net/lCXQvkVSePAyZIMfJmBLOFPvrOeZ6wNeh-csB-PhdoY" />
+              <img
+                src="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
+                item-type="nft-vault"
+                className="relative w-full grow-image item cursor-pointer"
+                style={{ height: "auto", top: "0%" }}
+                onClick={handleClick}
+              />
             </div>
           </div>
           {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}

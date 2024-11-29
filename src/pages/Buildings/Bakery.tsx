@@ -30,12 +30,26 @@ export default function Bakery() {
         <div className="absolute inset-0">
           <img src={"https://arweave.net/MbOnj-2PBp9wZ2V4GAalLQuNhxoornEzQMR5OJMvlxc"} alt="Bakery Map" className="w-full h-full object-fill" />
         </div>
-        <img
-          src="https://arweave.net/9RVWczCj2AjG6XAf5ZNF88x8lWaotD5hN7HpaQbB4B0"
-          alt="Bakery Table"
-          className="absolute bottom-[15.4%] left-0 right-0 w-full"
-          style={{ height: "auto", objectFit: "contain" }}
-        />
+        {/* Table and Puppy Group */}
+        <div className="relative w-full h-full">
+          <div className="absolute bottom-[15.4%] left-0 right-0 w-full">
+            <img src="https://arweave.net/yiWAC1FxowBACoNa2udcMdqDaQXgKc9B_FKURHidRC8" alt="Bakery Table" className="w-full" style={{ height: "auto", objectFit: "contain" }} />
+            <img
+              src="https://arweave.net/-6yFMOOf0CKNl8kvXQ1Qr7lgCM_HHEllovD4-TN3YNA"
+              alt="Puppy in Basket"
+              className="absolute w-auto h-[120px]"
+              style={{ bottom: "92%", left: "85%" }}
+            />
+            <img src="https://arweave.net/WeMKq3YsD4K-iMi_kNut7kxmSIr4xiaezu9FAewwlek" alt="Whisk" className="absolute w-auto h-[60px]" style={{ bottom: "89%", left: "75%" }} />
+            <img
+              src="https://arweave.net/b9DSRgPZ3emyeVNdCtC1uye_i-dM-VZxB9YUJWtuwCk"
+              alt="Rolling Pin"
+              className="absolute w-auto h-[80px]"
+              style={{ bottom: "88%", left: "10%" }}
+            />
+          </div>
+        </div>
+
         <div className="absolute inset-0">
           <img
             src="https://arweave.net/SKW3ovBgOtAP4K8WrnP3tARXnpZRVgguzxSvb6FznHI"
@@ -54,7 +68,8 @@ export default function Bakery() {
                 style={{
                   maxWidth: "15vw", // Responsive size, adjust as needed
                   width: "100%",
-                  top: "152px",
+                  top: "10px",
+                  transform: "translate(0, 50%)",
                   left: "-80px",
                   zIndex: 1,
                   aspectRatio: 1, // Keeps the shopkeeper square
@@ -63,7 +78,7 @@ export default function Bakery() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.INFIRMARY_CAKESHOP_DUMDUM} />
               </div>
-              <GifComponent className="absolute h-[20vh] translate-x-[7.5vw] translate-y-[8.5vh]" />
+              <GifComponent className="absolute h-[20vh] translate-x-[8.5vw] translate-y-[9vh]" />
 
               {/* Shop Table */}
               <img src="https://arweave.net/TH9bwqkcXxXUvTUuMPSANB8KgWskr8m255Pb0u3Iz6w" alt="Shop Table" className="relative w-full z-10" style={{ height: "auto" }} />
