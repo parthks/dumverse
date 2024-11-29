@@ -291,11 +291,8 @@ const GifComponent: React.FC<GifComponentProps> = ({
               lg:bottom-[24%] 
               lg:right-[22%] 
               xl:bottom-[23%] 
-              xl:right-[19%]
-              w-[100px] 
-              sm:w-[120px] 
-              md:w-[140px] 
-              lg:w-[160px] ${buttonClassName}`}
+              xl:right-[21%]
+              ${buttonClassName}`}
           />
         )}
       </div>
