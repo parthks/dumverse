@@ -85,10 +85,10 @@ local function addNewUserHandler(msg: Message)
 
     local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
     
-    local starting_gold = 10000
-    local starting_dumz = 50
-    local bank_gold_amount = 10000
-    local bank_dumz_amount = 50
+    local starting_gold = 0
+    local starting_dumz = 0
+    local bank_gold_amount = 0
+    local bank_dumz_amount = 0
 
     -- Insert new user
     local tempUserData = {
