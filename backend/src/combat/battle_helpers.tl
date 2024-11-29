@@ -205,6 +205,9 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
         end
         if npc.id == "PEACOCK" then
             Battles[battle_id].players[attacker_id].special_item_heart = (Battles[battle_id].players[attacker_id].special_item_heart or 0) + 1
+            if Battles[battle_id].players[attacker_id].special_item_heart == 4 then
+                Battles[battle_id].players[attacker_id].total_health = Battles[battle_id].players[attacker_id].total_health + 1
+            end
         end
         if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
             Battles[battle_id].players[attacker_id].special_item_kitten = 1
