@@ -215,7 +215,7 @@ function TownRestArea() {
           />
           <img
             src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
-            alt="Town Cloud"
+            alt="Town Cloud 1"
             className="absolute"
             style={{
               ...calculatePositionAndSize(30, 50, 15),
@@ -223,7 +223,7 @@ function TownRestArea() {
           />
           <img
             src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
-            alt="Town Cloud"
+            alt="Town Cloud 2"
             className="absolute"
             style={{
               ...calculatePositionAndSize(90, 50, 12),
@@ -231,7 +231,7 @@ function TownRestArea() {
           />
           <img
             src="https://arweave.net/gRhLOEWYoinvbSwYqp-MIx3U9ac8Rd_0bLySUlPg_Vg"
-            alt="Town Cloud"
+            alt="Town Cloud 3"
             className="absolute"
             style={{
               ...calculatePositionAndSize(70, 30, 12),
@@ -239,7 +239,7 @@ function TownRestArea() {
           />
         </div>
       </div>
-      <div
+      {/* <div
         className="absolute inset-0"
         style={{
           width: "100%",
@@ -250,7 +250,12 @@ function TownRestArea() {
           url="https://arweave.net/IE-dEphdGW5ipTcyvKbrO7aa5Ub1xVhx_dTi_9t9KOg"
           fit={Fit.Cover}
         />
-      </div>
+      </div> */}
+       <img
+        src="https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ"
+        alt="Town Sea"
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      />
 
       <img
         src="https://arweave.net/FdV6gZmdcWf8k-6RIW1PWNjf7IqA4uQNftjaQeSiNnc"

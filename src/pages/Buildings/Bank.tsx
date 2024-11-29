@@ -624,7 +624,7 @@ export default function BankPage() {
               transform: "translate(-50%, -100%)",
             }}
           >
-            <div className="relative w-[80%]">
+            <div className="relative w-[50%]">
               <img src="https://arweave.net/zA4CeoP9KBggcsYcGx5LWPSQXCTmnsp6g5BtFTw-WoU" />
             </div>
             <div className="relative w-full  h-full flex flex-col">
@@ -677,7 +677,7 @@ export default function BankPage() {
           >
             {/* Left Vault */}
             <div className="relative flex flex-col w-1/4">
-              <img style={{ width: "75%", margin: "auto" }} src="https://arweave.net/fteI4wzrjFS8ruWnIE-QLB7a4ErQvNXgPyN35MsogMg" />
+              <img style={{ width: "50%", margin: "auto" }} src="https://arweave.net/fteI4wzrjFS8ruWnIE-QLB7a4ErQvNXgPyN35MsogMg" />
               <img
                 src="https://arweave.net/iO1T9cKWz8eRDQt1lKUZAutT7SIWjGnO0begAdUL5FY"
                 item-type="general-vault"
@@ -689,7 +689,7 @@ export default function BankPage() {
 
             {/* Right Vault */}
             <div className="relative flex flex-col w-1/4">
-              <img style={{ width: "75%", margin: "auto" }} src="https://arweave.net/lCXQvkVSePAyZIMfJmBLOFPvrOeZ6wNeh-csB-PhdoY" />
+              <img style={{ width: "50%", margin: "auto" }} src="https://arweave.net/lCXQvkVSePAyZIMfJmBLOFPvrOeZ6wNeh-csB-PhdoY" />
               <img
                 src="https://arweave.net/6yZh_88An3lv0mV9BnDipb3zTbPYU96Ond0tnHmWYFw"
                 item-type="nft-vault"
