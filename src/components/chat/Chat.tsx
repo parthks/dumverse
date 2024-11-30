@@ -276,7 +276,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idAfter: latestId,
         limit: queryPageSize,
       });
-      if (chatOpen) setLatestMessage(result[0]);
+      // if (chatOpen) setLatestMessage(result[0]);
       setLatestMessage(result[0]);
       return result;
     },

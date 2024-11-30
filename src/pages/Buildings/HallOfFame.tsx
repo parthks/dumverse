@@ -33,22 +33,21 @@ export default function HallOfFame() {
         <div className="relative w-full flex flex-col items-center">
           {/* Shopkeeper */}
           <div
-            className="relative"
+            className="relative z-20"
             style={{
               maxWidth: "15vw", // Responsive size, adjust as needed
               width: "100%",
               top: "5px",
-              zIndex: 1,
               aspectRatio: 1, // Keeps the shopkeeper square
               // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
             }}
           >
             <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
           </div>
-          <GifComponent className=" absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh]" />
+          <GifComponent className=" absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh] z-20" />
 
           {/* Shop Table */}
-          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full z-10" style={{ height: "auto" }} />
+          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full z-30" style={{ height: "auto" }} />
         </div>
       </div>
 
@@ -78,7 +77,7 @@ function Frame({ index }: { index: number }) {
   const translateX = index === 1 ? "0" : index === 2 ? "-50%" : "-100%";
 
   return (
-    <div className={`absolute top-[${topPosition}] w-full max-w-[400px]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
+    <div className={`absolute top-[${topPosition}] w-full max-w-[22%]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
       {/* Frame background */}
       <img src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ" alt="Frame" className="absolute inset-0 w-full h-full z-10 object-cover" />
 
