@@ -277,7 +277,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         limit: queryPageSize,
       });
       if (chatOpen) setLatestMessage(result[0]);
-
+      setLatestMessage(result[0]);
       return result;
     },
     // enabled: !!historyData?.pages[0]?.length,
@@ -444,6 +444,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
                     <Input
                       type="text"
                       placeholder="Chat Message"
+                      autoComplete="off"
                       className="text-white p-8 text-2xl bg-no-repeat bg-left border-none ring-0 ring-offset-transparent focus-visible:ring-0"
                       style={{
                         // width: "calc(487px * 1)",
