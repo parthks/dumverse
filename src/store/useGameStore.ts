@@ -140,16 +140,16 @@ export const useGameStore = create<GameState>()(
               { name: "UserId", value: user.id.toString() },
             ],
           });
-          if (user.current_spot) {
-            // user is in a spot
-            set({
-              GameStatePage: GameStatePages.GAME_MAP,
-              ...getCurrentLamaPosition(user),
-            });
-          } else {
+          // if (user.current_spot) {
+          //   // user is in a spot
+          //   set({
+          //     GameStatePage: GameStatePages.GAME_MAP,
+          //     ...getCurrentLamaPosition(user),
+          //   });
+          // } else {
             // user is in town
             set({ GameStatePage: GameStatePages.TOWN });
-          }
+          // }
           get().refreshUserData(user.id);
         }
       },
