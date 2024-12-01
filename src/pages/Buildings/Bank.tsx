@@ -69,6 +69,7 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
     title = "Depositing how much Trunk?";
     max = user?.trunk_balance ?? 0;
   }
+  
   return (
     <div
       className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -83,6 +84,8 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
       </div>
       <div className="flex flex-col items-center w-full gap-4 p-16">
         <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
+        <div className="relative">
+
         <Input
           placeholder={`Max allowed: ${max}`}
           aria-label="Amount"
@@ -104,6 +107,13 @@ function QuantityInput({ actionType, onClose }: { actionType: BankActionType; on
             backgroundSize: "100% 100%",
           }}
         />
+         <button
+        onClick={()=>setInputValue(max)}
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-500 text-white text-sm px-2 py-1 rounded-md"
+      >
+        Max
+      </button>
+    </div>
         <ImgButton src={"https://arweave.net/y8jNH5_eXoEWAnt-bvaf9ueaNIUVtTCY09C9XjuYDTw"} onClick={handleSubmit} alt={"Confirm Action"} />
       </div>
     </div>
