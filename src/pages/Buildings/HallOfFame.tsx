@@ -9,10 +9,12 @@ import { useGameStore } from "@/store/useGameStore";
 export default function HallOfFame() {
   useBuildingMusic({});
 
+// -----------------------------------------------------------------
+
   return (
     <div className="h-screen relative">
-      <div className="z-10 absolute bottom-4 left-4">
-        <ExistToTownButton />
+      <div className="absolute bottom-[4vh] left-[4vw] z-10">
+      <ExistToTownButton />
       </div>
       {/* <div className="z-10 absolute bottom-4 right-4">
         <InventoryBag />
@@ -28,26 +30,31 @@ export default function HallOfFame() {
         style={{ ...calculatePositionAndSize(50, 70, 85), transform: "translate(-50%, -50%)" }}
       />
 
-      <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 30), transform: "translate(-50%, -100%)" }}>
+      <div className="absolute w-full z-10 flex flex-col items-center justify-end" style={{
+          width: "35vw",
+          height: "30vh",
+          bottom: "0vh",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}>
         {/* Shopkeeper and Table Group */}
         <div className="relative w-full flex flex-col items-center">
           {/* Shopkeeper */}
           <div
-            className="relative z-20"
+            className="relative "
             style={{
-              maxWidth: "15vw", // Responsive size, adjust as needed
-              width: "100%",
-              top: "5px",
-              aspectRatio: 1, // Keeps the shopkeeper square
-              // transform: "translateY(-50%)", // Moves the shopkeeper up relative to the table
+              maxWidth: "15vw",
+              width: "15vw",
+              aspectRatio: "1", // Ensures square dimensions
+              top: "2vh",
             }}
           >
             <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
           </div>
-          <GifComponent className=" absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh] z-20" />
+          <GifComponent className=" absolute h-[20vh] translate-x-[12vw] translate-y-[-5vh] " />
 
           {/* Shop Table */}
-          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className="relative w-full z-30" style={{ height: "auto" }} />
+          <img src="https://arweave.net/TO0hx4HWRPaDyGyxaXbEsMAuyHlxo_cHQxO_rByNhQ4" alt="Shop Table" className=" w-full relative " style={{ height: "auto" }} />
         </div>
       </div>
 
@@ -77,7 +84,7 @@ function Frame({ index }: { index: number }) {
   const translateX = index === 1 ? "0" : index === 2 ? "-50%" : "-100%";
 
   return (
-    <div className={`absolute top-[${topPosition}] w-full max-w-[22%]`} style={{ aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
+    <div className={`absolute top-[${topPosition}] `} style={{  width: "22vw",aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
       {/* Frame background */}
       <img src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ" alt="Frame" className="absolute inset-0 w-full h-full z-10 object-cover" />
 
@@ -87,9 +94,18 @@ function Frame({ index }: { index: number }) {
       </div>
 
       {/* Container for the text in the bottom box */}
-      <div className="absolute bottom-[12%] left-[52%] w-[40%] h-[12%] z-10 flex flex-col text-center items-center justify-start transform -translate-x-1/2">
-        <p className="text-white text-center text-xl font-bold">Username</p>
-        <p className="text-white text-center text-xl font-bold">1st in _______</p>
+      <div
+        className="absolute z-10 flex flex-col items-center justify-start text-center"
+        style={{
+          bottom: "12%",
+          left: "50%",
+          width: "40%",
+          height: "12%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <p className="text-white text-xl font-bold">Username</p>
+        <p className="text-white text-xl font-bold">1st in _______</p>
       </div>
     </div>
   );
