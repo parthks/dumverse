@@ -1,22 +1,8 @@
 // import { interactivePoints } from "@/components/InteractiveMap";
 import { REST_SPOTS } from "@/lib/constants";
-import {
-  getCurrentLamaPosition,
-  getInitialLamaPosition,
-  getInteractivePoints,
-} from "@/lib/utils";
+import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import {
-  Bank,
-  BankTransaction,
-  GameUser,
-  Inventory,
-  Item,
-  ItemType,
-  LamaPosition,
-  Shop,
-  TokenType,
-} from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -140,16 +126,25 @@ export const useGameStore = create<GameState>()(
               { name: "UserId", value: user.id.toString() },
             ],
           });
-          // if (user.current_spot) {
-          //   // user is in a spot
-          //   set({
-          //     GameStatePage: GameStatePages.GAME_MAP,
-          //     ...getCurrentLamaPosition(user),
-          //   });
-          // } else {
-            // user is in town
+          // if user is not in a spot, only then go to town. Else need to go to game map
+          if (user.current_spot) {
+            // user is in a spot
+            const position = getCurrentLamaPosition(user);
+            set({
+              currentIslandLevel: position.currentIslandLevel,
+              tempCurrentIslandLevel: position.currentIslandLevel,
+              lamaPosition: position.lamaPosition,
+            });
+            if (position.currentIslandLevel % 9 === 0) {
+              // user is in a rest area
+              set({ GameStatePage: GameStatePages.REST_AREA });
+            } else {
+              set({ GameStatePage: GameStatePages.GAME_MAP });
+            }
+          } else {
+            // current spot = 0, user is in town
             set({ GameStatePage: GameStatePages.TOWN });
-          // }
+          }
           get().refreshUserData(user.id);
         }
       },
@@ -176,9 +171,7 @@ export const useGameStore = create<GameState>()(
         }
         return null;
       },
-      getAllPlayersAtLocation: async (
-        currentSpot: number
-      ): Promise<GameUser[]> => {
+      getAllPlayersAtLocation: async (currentSpot: number): Promise<GameUser[]> => {
         // this also updates last_updated_at for current user
         const resultData = await sendAndReceiveGameMessage({
           tags: [
@@ -298,9 +291,7 @@ export const useGameStore = create<GameState>()(
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {
-        const point =
-          getInteractivePoints(level).find((point) => point.level == level) ||
-          getInitialLamaPosition();
+        const point = getInteractivePoints(level).find((point) => point.level == level) || getInitialLamaPosition();
         set({
           currentIslandLevel: level,
           lamaPosition: {
@@ -320,8 +311,7 @@ export const useGameStore = create<GameState>()(
       //   await get().refreshUserData();
       // },
       tempCurrentIslandLevel: 0,
-      setTempCurrentIslandLevel: (level) =>
-        set({ tempCurrentIslandLevel: level }),
+      setTempCurrentIslandLevel: (level) => set({ tempCurrentIslandLevel: level }),
       lamaPosition: getInitialLamaPosition(),
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () =>
@@ -401,8 +391,7 @@ export const useGameStore = create<GameState>()(
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
         const currentSpot = get().user?.current_spot;
-        const inTownOrRestArea =
-          currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
+        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
         console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
         // if in town or rest area, set the countdown to 2 minutes
         if (inTownOrRestArea) {
@@ -499,8 +488,7 @@ export const useGameStore = create<GameState>()(
         await get().refreshUserData();
       },
       lastDisplayedMessageId: null,
-      setLastDisplayedMessageId: (state) =>
-        set({ lastDisplayedMessageId: state }),
+      setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),
       isSettingsOpen: false,
       setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
       getTotalUsers: async () => {

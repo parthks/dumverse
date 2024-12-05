@@ -265,7 +265,14 @@ const GameMap = () => {
         ) : (
           <></>
         )}
-        {isPopupOpen && <SetSailPopup onClose={() => setIsPopupOpen(false)} setTempLamaPosition={setTempLamaPosition} setLamaPosition={setLamaPosition} setTempCurrentIslandLevel={setTempCurrentIslandLevel} />}
+        {isPopupOpen && (
+          <SetSailPopup
+            onClose={() => setIsPopupOpen(false)}
+            setTempLamaPosition={setTempLamaPosition}
+            setLamaPosition={setLamaPosition}
+            setTempCurrentIslandLevel={setTempCurrentIslandLevel}
+          />
+        )}
       </div>
       {/* {tempCurrentIslandLevel <= 27 ? (
         <div
@@ -307,7 +314,7 @@ function SetSailPopup({
 }: {
   onClose: () => void;
   setTempLamaPosition: (position: { x: number; y: number; src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" }) => void;
-  setLamaPosition:(position:LamaPosition)=>void;
+  setLamaPosition: (position: LamaPosition) => void;
   setTempCurrentIslandLevel: (level: number) => void;
 }) {
   const user = useGameStore((state) => state.user);
