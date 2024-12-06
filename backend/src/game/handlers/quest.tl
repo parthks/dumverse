@@ -65,30 +65,30 @@ local function denAcceptQuestHandler(msg: Message)
 end
 
 
-local function shopQuestHeartInfo(msg: Message)
-    assert(msg.From=="iB636YMO3EvqdZ5FWSjSw_oqVIQSO9f9XrGYY8u-Vc4","You can't call this handler")
-    local user_id = tonumber(msg.Tags.UserId)
-    local user_address=msg.Tags.UserAddress
-    local total_heart=tonumber(msg.Tags.TotalHeart)
-    helpers.CheckUserExists(user_id, user_address)
+-- local function shopQuestHeartInfo(msg: Message)
+--     assert(msg.From=="iB636YMO3EvqdZ5FWSjSw_oqVIQSO9f9XrGYY8u-Vc4","You can't call this handler")
+--     local user_id = tonumber(msg.Tags.UserId)
+--     local user_address=msg.Tags.UserAddress
+--     local total_heart=tonumber(msg.Tags.TotalHeart)
+--     helpers.CheckUserExists(user_id, user_address)
 
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET special_item_heart = %d WHERE address = %s
-    ]],total_heart, user_address))
+--     dbAdmin:exec(string.format([[
+--         UPDATE Users SET special_item_heart = %d WHERE address = %s
+--     ]],total_heart, user_address))
 
-    if total_heart==4 then
-        local results = dbAdmin:exec(string.format([[
-            SELECT * FROM Users WHERE address = %s ;
-        ]], user_address))
-        local users_info = results[1] as UserData
-        local new_health = users_info.total_health + 1
-        dbAdmin:exec(string.format([[
-            UPDATE Users SET special_item_heart = %d WHERE address = %s;
-        ]],new_health, user_address))
-    end
+--     if total_heart==4 then
+--         local results = dbAdmin:exec(string.format([[
+--             SELECT * FROM Users WHERE address = %s ;
+--         ]], user_address))
+--         local users_info = results[1] as UserData
+--         local new_health = users_info.total_health + 1
+--         dbAdmin:exec(string.format([[
+--             UPDATE Users SET total_health = %d WHERE address = %s;
+--         ]],new_health, user_address))
+--     end
 
-    ao.send({ Target = msg.From, Status = "Success" })
-end
+--     ao.send({ Target = msg.From, Status = "Success" })
+-- end
 
 
 
@@ -97,6 +97,6 @@ Handlers.add("Quest.NFTShopQuestAccept", Handlers.utils.hasMatchingTag('Action',
 Handlers.add("Quest.WeaponQuestAccept", Handlers.utils.hasMatchingTag('Action', 'Quest.WeaponQuestAccept'), weaponAcceptQuestHandler)
 Handlers.add("Quest.ShopQuestAccept", Handlers.utils.hasMatchingTag('Action', 'Quest.ShopQuestAccept'), shopAcceptQuestHandler)
 Handlers.add("Quest.DenQuestAccept", Handlers.utils.hasMatchingTag('Action', 'Quest.DenQuestAccept'), denAcceptQuestHandler)
-Handlers.add("Quest.ShopHeartQuest", Handlers.utils.hasMatchingTag('Action', 'Quest.ShopHeartQuest'), shopQuestHeartInfo)
+-- Handlers.add("Quest.ShopHeartQuest", Handlers.utils.hasMatchingTag('Action', 'Quest.ShopHeartQuest'), shopQuestHeartInfo)
 
 return {}

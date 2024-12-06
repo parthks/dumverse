@@ -205,9 +205,10 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
         end
         if npc.id == "PEACOCK" then
             Battles[battle_id].players[attacker_id].special_item_heart = (Battles[battle_id].players[attacker_id].special_item_heart or 0) + 1
-            if Battles[battle_id].players[attacker_id].special_item_heart <= 4 then
-                ao.send({Target="_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA",Action="Quest.ShopHeartQuest",UserId=tostring(Battles[battle_id].players[attacker_id].id),UserAddress=Battles[battle_id].players[attacker_id].address,TotalHeart=tostring(Battles[battle_id].players[attacker_id].special_item_heart)})
+            if Battles[battle_id].players[attacker_id].special_item_heart == 4 and Battles[battle_id].players[attacker_id].has_collected_all_hearts == nil then
+                Battles[battle_id].players[attacker_id].has_collected_all_hearts = true
             end
+            
         end
         if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
             Battles[battle_id].players[attacker_id].special_item_kitten = 1

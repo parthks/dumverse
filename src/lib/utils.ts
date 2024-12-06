@@ -67,21 +67,37 @@ export function getCurrentLamaPosition(player: GameUser) {
 }
 
 // equivalent function is also in backend/game/handlers/combat.lua
+// export function isValidSpotToMoveTo(currentSpot: number, targetSpot: number) {
+//   if (currentSpot === targetSpot) return true;
+//   if (currentSpot == 0 && targetSpot == 28) return true;
+//   if (currentSpot == 0 && targetSpot == 55) return true;
+
+//   const nextSpot = currentSpot + 1;
+//   const previousSpot = currentSpot - 1;
+//   const nextNextSpot = currentSpot + 2;
+//   const previousPreviousSpot = currentSpot - 2;
+
+//   const isNextSpotRest = nextSpot % 9 == 0;
+//   const isPreviousSpotRest = previousSpot % 9 == 0;
+
+//   return [nextSpot, previousSpot].includes(targetSpot) || (isNextSpotRest && targetSpot === nextNextSpot) || (isPreviousSpotRest && targetSpot === previousPreviousSpot);
+// }
 export function isValidSpotToMoveTo(currentSpot: number, targetSpot: number) {
-  if (currentSpot === targetSpot) return true;
-  if (currentSpot == 0 && targetSpot == 28) return true;
-  if (currentSpot == 0 && targetSpot == 55) return true;
+  if (currentSpot === targetSpot) return true; // Allow staying in the current spot
+  if (currentSpot == 0 && targetSpot == 28) return true; // Special forward case
+  if (currentSpot == 0 && targetSpot == 55) return true; // Special forward case
 
   const nextSpot = currentSpot + 1;
-  const previousSpot = currentSpot - 1;
   const nextNextSpot = currentSpot + 2;
-  const previousPreviousSpot = currentSpot - 2;
 
-  const isNextSpotRest = nextSpot % 9 == 0;
-  const isPreviousSpotRest = previousSpot % 9 == 0;
+  const isNextSpotRest = nextSpot % 9 == 0; // Check if the next spot is a rest spot
 
-  return [nextSpot, previousSpot].includes(targetSpot) || (isNextSpotRest && targetSpot === nextNextSpot) || (isPreviousSpotRest && targetSpot === previousPreviousSpot);
+  return (
+    targetSpot === nextSpot || // Allow moving to the next spot
+    (isNextSpotRest && targetSpot === nextNextSpot) // Allow moving two spots ahead if the next spot is a rest
+  );
 }
+
 
 // Helper functions
 const calculatePosition = (x: number, y: number) => ({

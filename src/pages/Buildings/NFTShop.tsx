@@ -27,7 +27,7 @@ export default function NFTShop() {
 
   // const alreadyOwned = inventory.some((i) => i.item_id === item.id);
 
-  // console.log("Ashu: haswood, buyloading, dmdm: "+ hasWood + " " +buyItemLoading + " "+JSON.stringify(shop) );
+  console.log("Ashu: haswood, buyloading, dmdm: "+ hasWood + " " +buyItemLoading + " "+JSON.stringify(shop) );
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>

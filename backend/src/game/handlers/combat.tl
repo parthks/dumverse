@@ -5,7 +5,17 @@ local utils = require("utils.utils.tl-utils")
 local constants = require("utils.constants")
 
 
-local function removeUsedPotion(playerData: CombatUserData)
+local function removeUsedPotion(playerData: CombatUserData, userId: string)
+
+    if playerData.special_item_heart == 4  and playerData.has_collected_all_hearts == true then
+        playerData.total_health = playerData.total_health + 1
+        -- ao.send({Target="_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA",Action="Quest.ShopHeartQuest",UserId=tostring(Battles[battle_id].players[attacker_id].id),UserAddress=Battles[battle_id].players[attacker_id].address,TotalHeart=tostring(Battles[battle_id].players[attacker_id].special_item_heart)})
+       
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET total_health = %f WHERE id = %f;
+        ]], playerData.total_health, userId))
+    end
+
     if playerData.potion_used and playerData.potion then
         local potion = playerData.potion as CombatPotionData
         local potion_id = potion.id
@@ -83,6 +93,9 @@ local function enterNewCombatHandler(msg: Message)
     -- recalculate stats for damage and defense, in case item has 0 health
     local baseStats = helpers.CalculateUserBaseStats(userData)
 
+    local weapon_item_id = ""
+    local armor_item_id = ""
+
     for _, item in ipairs(inventoryItems as {InventoryItem}) do
         -- print("item.item_type " .. item.item_type.. " " .. item.item_id .. " " .. tostring(item.equipped))
 
@@ -97,10 +110,12 @@ local function enterNewCombatHandler(msg: Message)
         
         elseif item.item_type == 'ARMOR' and tostring(item.equipped) == "1" and item.item_health > 0 then
             combatUserData.inventory_armor_id = tostring(item.id)
+            armor_item_id=item.item_id
             local armorData = constants.ARMORS[item.item_id as ArmorIds]
             baseStats.defense = baseStats.defense + armorData.defense
         elseif item.item_type == 'WEAPON' and tostring(item.equipped) == "1" and item.item_health > 0 then
             combatUserData.inventory_weapon_id = tostring(item.id)
+            weapon_item_id=item.item_id
             local weaponData = constants.WEAPONS[item.item_id as WeaponIds]
             baseStats.damage = baseStats.damage + weaponData.damage
         end
@@ -110,13 +125,13 @@ local function enterNewCombatHandler(msg: Message)
     combatUserData.damage = baseStats.damage
 
     -- if armor or weapon is equipped, decrement item_health by 1
-    if combatUserData.inventory_armor_id and combatUserData.inventory_armor_id ~= "MAGIC_ROBE" then
+    if combatUserData.inventory_armor_id and combatUserData.inventory_armor_id ~= "MAGIC_ROBE" and armor_item_id ~= "MAGIC_ROBE"  then
         dbAdmin:exec(string.format([[
             UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
         ]], combatUserData.inventory_armor_id))
     end
     
-    if combatUserData.inventory_weapon_id and combatUserData.inventory_weapon_id ~= "WAND" then
+    if combatUserData.inventory_weapon_id and combatUserData.inventory_weapon_id ~= "WAND" and weapon_item_id ~= "WAND" then
         dbAdmin:exec(string.format([[
             UPDATE Inventory SET item_health = item_health - 1 WHERE id = %s;
         ]], combatUserData.inventory_weapon_id))
@@ -258,14 +273,14 @@ local function playerWonHandler(msg: Message)
     playerData.special_item_heart,
     user_id))
 
-    removeUsedPotion(playerData)
+    removeUsedPotion(playerData,user_id)
 end
 
 local function playerRanAwayHandler(msg: Message)
     assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
     local user_id = msg.Tags.UserId
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
-   
+
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, 
@@ -281,7 +296,7 @@ local function playerRanAwayHandler(msg: Message)
     playerData.special_item_heart,
     user_id))
 
-    removeUsedPotion(playerData)
+    removeUsedPotion(playerData,user_id)
 end
 
 local function playerPerishedHandler(msg: Message)
@@ -294,7 +309,7 @@ local function playerPerishedHandler(msg: Message)
         UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0, last_regenerate_time = %f WHERE id = %f;
     ]], msg.Timestamp, user_id))
 
-    removeUsedPotion(playerData)
+    removeUsedPotion(playerData,user_id)
 end
 
 -- Add handlers

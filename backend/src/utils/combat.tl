@@ -37,4 +37,7 @@ global type CombatUserData = record
     added_at_timestamp: integer
     inventory_weapon_id: string | nil
     inventory_armor_id: string | nil
+
+    -- User Quest's Completion Data
+    has_collected_all_hearts : boolean | nil
 end
