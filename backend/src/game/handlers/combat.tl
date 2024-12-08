@@ -63,6 +63,7 @@ local function enterNewCombatHandler(msg: Message)
 
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
+    assert(combat_level ~= current_spot, "Battle is complete for this spot")
 
     assert(userData.health > 0, "User must have health")
     assert(userData.stamina > 0, "User must have stamina")

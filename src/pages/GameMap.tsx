@@ -199,7 +199,7 @@ const GameMap = () => {
             src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
           />
         ) : (
-          tempCurrentIslandLevel != 0 && (
+          tempCurrentIslandLevel != 0 && tempCurrentIslandLevel!=user?.current_spot && (
             <ImgButton
               disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
               src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
