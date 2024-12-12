@@ -3,7 +3,6 @@ require('utils.globals')
 
 
 
-
 local function bankAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
     helpers.CheckUserExists(user_id, msg.From)
@@ -65,8 +64,9 @@ local function denAcceptQuestHandler(msg: Message)
 end
 
 
+-- local constants = require("utils.constants")
 -- local function shopQuestHeartInfo(msg: Message)
---     assert(msg.From=="iB636YMO3EvqdZ5FWSjSw_oqVIQSO9f9XrGYY8u-Vc4","You can't call this handler")
+--     assert(msg.From== constants.COMBAT_PROCESS_ID,"You can't call this handler")
 --     local user_id = tonumber(msg.Tags.UserId)
 --     local user_address=msg.Tags.UserAddress
 --     local total_heart=tonumber(msg.Tags.TotalHeart)
