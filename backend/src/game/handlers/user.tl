@@ -103,6 +103,11 @@ local function addNewUserHandler(msg: Message)
         starting_dumz, baseStats.damage, baseStats.defense, baseStats.health, baseStats.stamina,
         baseStats.total_health, baseStats.total_stamina))
 
+        -- dbAdmin:exec(string.format([[
+        --     INSERT INTO Leaderboard (address, name, nft_address, gold_earned, gold_lost, enemy_killed, player_death, death_streak, pvp)
+        --     VALUES ('%s', '%s', %s, %d, %d, %d, %d, %d, %d);
+        -- ]], user_address, name, "NULL",0,0,0,0,0,0))
+
     -- Get the last inserted ID
     local insert_user_result = dbAdmin:exec(getUserQuery)
 

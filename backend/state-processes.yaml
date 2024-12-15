@@ -3,13 +3,16 @@ my-process:
   hash: d29d576ab93b687df1b4e3c954cc6f2d7d1d1482951cd957357b751c3d30ca8e
 test-dumz-token:
   processId: mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk
-  hash: e2b1c8b850537ecaa4766cebb86cc133d151e00870ec873a6d723a39c991dec1
+  hash: a1c5d3d9a09447f25128b16aeb3682863d4a8b0f19d96bc76aaae02ab41713f6
 chat:
   processId: uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI
-  hash: 949a1baabb04b9412a226cff56dcc0bea1eaaf1fbbe782cc812a2f866358b4cd
+  hash: 0935fa748f9098b6207388d35a6b21c7e302ff72785481bd7314688b52ea34f6
 game:
   processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
-  hash: e3f5820f5fd53dbdcf233d8c6009bfd22e04cd2322a13c19104311eecc8a5f20
+  hash: 98510a08a6cda97939122aa34d0c5b5dbceb6a0acf381d1f6fe893cb6fc207fd
+cron:
+  processId: W213NPgMq9nwN8FU2IQi-wZHyOceeLMf7B3shGwh_4Y
+  hash: f3dbfea42094f4618337fcd77c898e15c5691642c7b6439968b0fed356026680
 combat:
-  processId: 8zkx7rgZ6q9SBf1aM5uJ9A_4j6twWSEM2YpsWUhAjqA
-  hash: ee
+  processId: 6jy_Ai9mInmMg1t6HPlSWKLcxYBFUe81DEpeuq5fP9k
+  hash: 50185ed1f9659bd3d100678e9a050a1cfa32e9f21d16319528da775ae4fbfaa5

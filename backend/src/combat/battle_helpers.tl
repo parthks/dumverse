@@ -192,6 +192,10 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
             Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + (npc.dumz_reward or 0)
             Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + (npc.gold_reward or 0) +
             (npc.extra_gold or 0)
+
+            -- Battles[battle_id].players[attacker_id].gold_earned = (battle.players[attacker_id].gold_earned or 0) + (npc.gold_reward or 0) +
+            -- (npc.extra_gold or 0)
+
         -- intentionally not updating the npc gold reward and extra gold, to keep the histroy. ok since npc has been removed from npcs_alive
         -- give player special items if npc is special enemy
         if npc.id == "SHIBA" then

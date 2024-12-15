@@ -127,7 +127,7 @@ export const useGameStore = create<GameState>()(
             ],
           });
           // if user is not in a spot, only then go to town. Else need to go to game map
-          if (user.current_spot % 9 === 0 ) {
+          if (user.current_spot % 9 === 0 && user.current_spot!=0) {
             // user is in a spot
             const position = getCurrentLamaPosition(user);
             set({

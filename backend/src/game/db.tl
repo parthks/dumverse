@@ -31,6 +31,21 @@ global USERS_TABLE: string = [[
     );
 ]]
 
+-- global LEADERBOARD_TABLE: string = [[
+--     CREATE TABLE IF NOT EXISTS Leaderboard (
+--         id INTEGER PRIMARY KEY AUTOINCREMENT,
+--         name TEXT NOT NULL,
+--         address TEXT NOT NULL,
+--         nft_address TEXT,
+--         gold_earned INTEGER DEFAULT 0,
+--         gold_lost INTEGER DEFAULT 0,
+--         enemy_killed INTEGER DEFAULT 0,
+--         player_death INTEGER DEFAULT 0,
+--         death_streak INTEGER DEFAULT 0,
+--         pvp INTEGER DEFAULT 0
+--     );
+-- ]]
+
 global INVENTORY_TABLE: string = [[
     CREATE TABLE IF NOT EXISTS Inventory (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,6 +91,8 @@ Handlers.add("Admin.ClearDB",
         assert(msg.From == ao.id, "You are not authorized to perform")
         dbAdmin.db:exec("DROP TABLE IF EXISTS Users;")
         dbAdmin.db:exec(USERS_TABLE)
+        -- dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
+        -- dbAdmin.db:exec(LEADERBOARD_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Inventory;")
         dbAdmin.db:exec(INVENTORY_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
