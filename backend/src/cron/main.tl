@@ -2,9 +2,8 @@
 local function sendCronCombat()
 
     ao.send({
-            Target = "6jy_Ai9mInmMg1t6HPlSWKLcxYBFUe81DEpeuq5fP9k",
-            Action = "Battle.CronTick",
-            npcTimer="30"
+            Target = "Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0",
+            Action = "Cron"
      })
 
 end    

@@ -121,7 +121,7 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
 end
 
 
-local function CronTick(msg: Message)
+local function CronTick(msg: Message,npcTimer:integer)
     CRON_TICK_COUNT = CRON_TICK_COUNT + 1
     -- need to check all ongoing battles to see if a player has not attacked in the last 10 seconds
     for _, battle in pairs(Battles) do
@@ -134,10 +134,10 @@ local function CronTick(msg: Message)
                 -- print("NPC " .. npc_id .. " alive")
                 -- print("NPC " .. npc_id .. " last attack timestamp " .. battle.last_npc_attack_timestamp[npc_id])
                 battle = BattleHelpers.get(battle.id)
-                if (battle.last_npc_attack_timestamp[npc_id] or 0) + (tonumber(msg.Tags.npcTimer) * 1000) < msg.Timestamp then
+                if (battle.last_npc_attack_timestamp[npc_id] or 0) + (npcTimer * 1000) < msg.Timestamp then
                     -- if player has not attacked in the last 10 seconds, the NPC will attack
                     print("battle " .. battle.id .. " - AUTO ATTACK: NPC " .. npc_id .. " attacking player")
-                    BattleHelpers.internalLog(battle.id, msg.Timestamp, "CronTick - NPCAttack", "Last NPC Attack Timestamp: ".. battle.last_npc_attack_timestamp[npc_id]..". Seconds after last attack: ".. tonumber(msg.Tags.npcTimer)..".")
+                    BattleHelpers.internalLog(battle.id, msg.Timestamp, "CronTick - NPCAttack", "Last NPC Attack Timestamp: ".. battle.last_npc_attack_timestamp[npc_id]..". Seconds after last attack: ".. npcTimer..".")
                     NPCAttack(npc_id, battle.id, msg.Timestamp, nil)
                 end
             end
@@ -397,7 +397,7 @@ Handlers.add("Battle.Info", Handlers.utils.hasMatchingTag("Action", "Battle.Info
 Handlers.add("Battle.DrinkPotion", Handlers.utils.hasMatchingTag("Action", "Battle.DrinkPotion"), drinkPotionHandler)
 Handlers.add("Battle.UserAttack", Handlers.utils.hasMatchingTag("Action", "Battle.UserAttack"), userAttackHandler)
 Handlers.add("Battle.UserRun", Handlers.utils.hasMatchingTag("Action", "Battle.UserRun"), userRunHandler)
-Handlers.add("Battle.CronTick", Handlers.utils.hasMatchingTag("Action", "Battle.CronTick"), CronTick)
+-- Handlers.add("Battle.CronTick", Handlers.utils.hasMatchingTag("Action", "Battle.CronTick"), CronTick)
 
 
 -- CronTick handler will get called every 10 seconds
@@ -405,21 +405,21 @@ Handlers.add("Battle.CronTick", Handlers.utils.hasMatchingTag("Action", "Battle.
 
 -- only in case frontend is not open and no other messages are sent
 -- TODO: change cron on process to like x minutes
--- Handlers.add("CronTick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg: Message)
---     CronTick(msg, 30)
--- end)
+Handlers.add("CronTick", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg: Message)
+    CronTick(msg, 30)
+end)
 
 -- frontend calls Battle.Info every 2 seconds, so NPC will attack on time
 Handlers.prepend("CheckNPCAttacks", 
 function(): string
     return "continue"
 end, function(msg: Message)
-    -- CronTick(msg, 10)
-    ao.send({
-        Target = ao.id,
-        Action = "Battle.CronTick",
-        npcTimer="30"
- })
+CronTick(msg, 10)
+--     ao.send({
+--         Target = ao.id,
+--         Action = "Battle.CronTick",
+--         npcTimer="30"
+--  })
 end)
 
 return {}
