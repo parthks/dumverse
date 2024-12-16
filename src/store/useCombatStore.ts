@@ -115,7 +115,7 @@ export const useCombatStore = create<CombatState>()(
             },
           ],
         });
-        console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
+        // console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
         set({ subProcess: resultData.data.subprocess });
         return resultData;
       },
@@ -234,12 +234,12 @@ export const useCombatStore = create<CombatState>()(
 );
 
 function findBattleDataMessage(messages: MyMessageResult): Battle | null {
-  console.log("Ashu : 22 "+JSON.stringify(messages));
+  // console.log("Ashu : 22 "+JSON.stringify(messages));
 
   const battleData = messages.Messages.find((message) => {
     const tags = message.Tags as { name: string; value: string }[];
     return tags.find((tag) => tag.name === "Action" && tag.value === "Battle.Data");
   });
-  console.log("Ashu : "+JSON.stringify(battleData));
+  // console.log("Ashu : "+JSON.stringify(battleData));
   return battleData ? (JSON.parse(battleData.Data as string) as Battle) : null;
 }
