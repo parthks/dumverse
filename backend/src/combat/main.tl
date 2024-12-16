@@ -415,11 +415,7 @@ function(): string
     return "continue"
 end, function(msg: Message)
 CronTick(msg, 10)
---     ao.send({
---         Target = ao.id,
---         Action = "Battle.CronTick",
---         npcTimer="30"
---  })
+
 end)
 
 return {}

@@ -5,11 +5,14 @@ import { devtools } from "zustand/middleware";
 import { GameStatePages, useGameStore } from "./useGameStore";
 import { result } from "@permaweb/aoconnect/browser";
 import { GAME_PROCESS_ID } from "@/lib/utils";
+import { json } from "stream/consumers";
 
 interface CombatState {
   actionLoading: boolean;
   loading: boolean;
   enteringNewBattle: boolean;
+  subProcess: string;
+  setsubProcess: (state: string) => void;
   setEnteringNewBattle: (enteringNewBattle: boolean) => void;
   currentBattle: Battle | null;
   setCurrentBattle: (battle_id?: number) => Promise<Battle | null>;
@@ -31,6 +34,8 @@ export const useCombatStore = create<CombatState>()(
       loading: false,
       actionLoading: false,
       currentBattle: null,
+      subProcess: "",
+      setsubProcess: (state) => set({ subProcess: state }),
       getOpenBattles: async () => {
         if (get().currentBattle?.id) {
           return null;
@@ -43,7 +48,7 @@ export const useCombatStore = create<CombatState>()(
               value: "Battle.GetOpenBattles",
             },
           ],
-          process: "combat",
+          process: get().subProcess,
         });
         const battles = resultData.data as Battle[];
         if (battles && battles.length > 0) {
@@ -76,7 +81,7 @@ export const useCombatStore = create<CombatState>()(
               value: user_id.toString(),
             },
           ],
-          process: "combat",
+          process: get().subProcess,
         });
         const battleMessage = resultData.Messages.find((message) => {
           const tags = message.Tags;
@@ -110,6 +115,8 @@ export const useCombatStore = create<CombatState>()(
             },
           ],
         });
+        console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
+        set({ subProcess: resultData.data.subprocess });
         return resultData;
       },
       userAttack: async (npc_id: string) => {
@@ -136,7 +143,7 @@ export const useCombatStore = create<CombatState>()(
               value: npc_id,
             },
           ],
-          process: "combat",
+          process: get().subProcess,
         });
         const battle = findBattleDataMessage(resultData);
         if (battle) {
@@ -165,7 +172,7 @@ export const useCombatStore = create<CombatState>()(
               value: battle_id.toString(),
             },
           ],
-          process: "combat",
+          process: get().subProcess,
         });
         const battle = findBattleDataMessage(resultData);
         if (battle) {
@@ -193,7 +200,7 @@ export const useCombatStore = create<CombatState>()(
               value: battle_id.toString(),
             },
           ],
-          process: "combat",
+          process: get().subProcess,
         });
         const battle = findBattleDataMessage(resultData);
         if (battle) {
@@ -227,9 +234,12 @@ export const useCombatStore = create<CombatState>()(
 );
 
 function findBattleDataMessage(messages: MyMessageResult): Battle | null {
+  console.log("Ashu : 22 "+JSON.stringify(messages));
+
   const battleData = messages.Messages.find((message) => {
     const tags = message.Tags as { name: string; value: string }[];
     return tags.find((tag) => tag.name === "Action" && tag.value === "Battle.Data");
   });
+  console.log("Ashu : "+JSON.stringify(battleData));
   return battleData ? (JSON.parse(battleData.Data as string) as Battle) : null;
 }

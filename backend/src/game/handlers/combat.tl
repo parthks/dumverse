@@ -5,6 +5,48 @@ local utils = require("utils.utils.tl-utils")
 local constants = require("utils.constants")
 
 
+global subProcesses: {string:number}
+if not subProcesses then
+    subProcesses = {
+        ["Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0"]=0,
+        ["vwt2bVY2BDRx0iRJJuiMtuNw0VBQGv89Slc0ujrHn2M"]=0,
+        ["YkbnJiWYXQ_tGo3K7q1Z47eLaL2ZZLwG3jd0qWNoWNo"]=0,
+        ["ravxEPMzNUwYxWmwltsAuIkYKVVgBMCvwGSPKnt6s6M"]=0,
+        ["HhstPUN2wt0htPqHWIG4ckZ38uAQZ2kCesyg_blrrPI"]=0,
+    }
+end
+
+global subProcessAssignToUsers: {number:string}
+if not subProcessAssignToUsers then
+    subProcessAssignToUsers = {}
+end
+
+local function assignSubProcessToUser(user_id:number) : string
+
+    if subProcessAssignToUsers[user_id] ~= nil then
+        return subProcessAssignToUsers[user_id]
+    end
+    local minValue = math.huge  -- Set initial minimum to a large value
+    local minKey : string | nil = nil  -- Variable to store the key with the smallest value
+
+    -- Loop through the subProcesses table to find the key with the smallest value
+    for key, value in pairs(subProcesses) do
+        if value < minValue then
+            minValue = value
+            minKey = key
+        end
+    end
+
+    -- Assign the user to the subprocess with the smallest value
+    if minKey then
+        subProcessAssignToUsers[user_id] = minKey
+        -- Optionally, increment the value for the assigned subprocess
+        subProcesses[minKey] = subProcesses[minKey] + 1
+    end
+  return subProcessAssignToUsers[user_id]
+end
+
+
 local function removeUsedPotion(playerData: CombatUserData, userId: string)
 
     if playerData.special_item_heart == 4  and playerData.has_collected_all_hearts == true then
@@ -228,8 +270,20 @@ local function enterNewCombatHandler(msg: Message)
 
     assert(enemies, "No enemies found for combat level: " .. combat_level)
 
+     local subProcess = assignSubProcessToUser(user_id) 
+     local userAddress = dbAdmin:exec(string.format([[
+        SELECT address FROM Users WHERE id = %f;
+    ]], user_id))
+
+    print("Ashu2MIt-" .. tostring(userAddress[1].address))
+    
+    if type(userAddress[1].address) == "string" then
+        local data=json.encode({subprocess=subProcess})
+    ao.send({Target=tostring(userAddress[1].address), Data=data})
+    end
+
     ao.send({
-        Target = constants.COMBAT_PROCESS_ID,
+        Target = subProcess,
         Action = "Battle.NewUserJoin",
         UserId = tostring(user_id),
         Level = tostring(combat_level),
@@ -242,7 +296,19 @@ local function enterNewCombatHandler(msg: Message)
 end
 
 local function enteredNewCombatHandler(msg: Message)
-    assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+    -- assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+  local found = false
+    for key, _ in pairs(subProcesses) do
+        if key == msg.From then
+            found = true
+            break 
+        end
+    end
+
+    if not found then
+        assert(found == true, "Only Combat process can send this message")
+    end
+
     local user_id = msg.Tags.UserId
     local battle_id = tonumber(msg.Tags.BattleId)
     local level = tonumber(msg.Tags.Level)
@@ -253,10 +319,33 @@ local function enteredNewCombatHandler(msg: Message)
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = %d, stamina = stamina - 1, last_regenerate_time = %f WHERE id = %f;
     ]], battle_id, msg.Timestamp, user_id))
+    
+    -- local userAddress = dbAdmin:exec(string.format([[
+    --     SELECT address FROM Users WHERE id = %f;
+    -- ]], user_id))
+
+    -- print("Ashu" .. tostring(userAddress[1].address))
+    
+    -- if type(userAddress[1].address) == "string" then
+    --     local data=json.encode({subprocess=msg.From})
+    -- ao.send({Target=tostring(userAddress[1].address), Data=data})
+    -- end
 end
 
 local function playerWonHandler(msg: Message)
-    assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+    -- assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+  local found = false
+    for key, _ in pairs(subProcesses) do
+        if key == msg.From then
+            found = true
+            break 
+        end
+    end
+
+    if not found then
+        assert(found == true, "Only Combat process can send this message")
+    end
+
     local user_id = msg.Tags.UserId
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
@@ -275,10 +364,26 @@ local function playerWonHandler(msg: Message)
     user_id))
 
     removeUsedPotion(playerData,user_id)
+    local USER_ID = tonumber(user_id)
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    subProcessAssignToUsers[USER_ID]=nil
 end
 
 local function playerRanAwayHandler(msg: Message)
-    assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+   -- assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+  local found = false
+    for key, _ in pairs(subProcesses) do
+        if key == msg.From then
+            found = true
+            break 
+        end
+    end
+
+    if not found then
+        assert(found == true, "Only Combat process can send this message")
+    end
+
     local user_id = msg.Tags.UserId
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
@@ -298,10 +403,26 @@ local function playerRanAwayHandler(msg: Message)
     user_id))
 
     removeUsedPotion(playerData,user_id)
+    local USER_ID = tonumber(user_id)
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    subProcessAssignToUsers[USER_ID]=nil
 end
 
 local function playerPerishedHandler(msg: Message)
-    assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+  --  assert(msg.From == constants.COMBAT_PROCESS_ID, "Only Combat process can send this message")
+  local found = false
+    for key, _ in pairs(subProcesses) do
+        if key == msg.From then
+            found = true
+            break 
+        end
+    end
+
+    if not found then
+        assert(found == true, "Only Combat process can send this message")
+    end
+
     local user_id = msg.Tags.UserId
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
@@ -311,6 +432,10 @@ local function playerPerishedHandler(msg: Message)
     ]], msg.Timestamp, user_id))
 
     removeUsedPotion(playerData,user_id)
+    local USER_ID = tonumber(user_id)
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    subProcessAssignToUsers[USER_ID]=nil
 end
 
 -- Add handlers

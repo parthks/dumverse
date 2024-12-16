@@ -30,6 +30,78 @@
     - name: Cron-Tag-Action
       value: Cron
 
+- name: combat2
+  file: build/combat2.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Combat2
+    - name: GameProcessId
+      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+    - name: Authority
+      value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
+    - name: Cron-Interval
+      value: 60-seconds
+    - name: Cron-Tag-Action
+      value: Cron
+
+- name: combat3
+  file: build/combat3.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Combat3
+    - name: GameProcessId
+      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+    - name: Authority
+      value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
+    - name: Cron-Interval
+      value: 60-seconds
+    - name: Cron-Tag-Action
+      value: Cron
+
+- name: combat4
+  file: build/combat4.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Combat4
+    - name: GameProcessId
+      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+    - name: Authority
+      value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
+    - name: Cron-Interval
+      value: 60-seconds
+    - name: Cron-Tag-Action
+      value: Cron
+
+- name: combat5
+  file: build/combat5.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Combat5
+    - name: GameProcessId
+      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+    - name: Authority
+      value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
+    - name: Cron-Interval
+      value: 60-seconds
+    - name: Cron-Tag-Action
+      value: Cron
+
 - name: test-dumz-token
   file: build/dumz.lua
   scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
@@ -56,4 +128,6 @@
     - name: App-Name
       value: Dumverse
     - name: Name
-      value: Cron      
+      value: Cron    
+
+

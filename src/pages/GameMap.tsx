@@ -11,6 +11,7 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
 import { Fit } from "@rive-app/react-canvas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { string } from "zod";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
 // export const get = [
@@ -206,7 +207,7 @@ const GameMap = () => {
               onClick={async () => {
                 setEnterNewAreaLoading(true);
                 const resultData = await enterNewBattle(tempCurrentIslandLevel);
-                if (resultData.status == "Success") {
+                if (typeof(resultData.data.subprocess) === "string") {
                   setGameStatePage(GameStatePages.COMBAT);
                 }
                 setEnterNewAreaLoading(false);

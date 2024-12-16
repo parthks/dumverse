@@ -7,7 +7,7 @@ export type MyMessageResult = MessageResult & {
   status?: "Success" | "Error";
 };
 
-type Process = "game" | "combat" | "chat" | "dumz_token" | "trunk_token";
+type Process = "game" | "combat" | "chat" | "dumz_token" | "trunk_token" | string;
 
 function getProcessId(process: Process) {
   return process === "chat"
@@ -17,8 +17,10 @@ function getProcessId(process: Process) {
     : process === "dumz_token"
     ? DUMZ_TOKEN_PROCESS_ID
     : process === "trunk_token"
-    ? TRUNK_TOKEN_PROCESS_ID
-    : GAME_PROCESS_ID;
+    ? TRUNK_TOKEN_PROCESS_ID 
+    : process === "game"
+    ? GAME_PROCESS_ID
+    : process;
 }
 
 export async function sendAndReceiveGameMessage({ tags, data, process = "game" }: { tags: { name: string; value: string }[]; data?: string; process?: Process }) {
