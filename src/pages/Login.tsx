@@ -57,6 +57,7 @@ export default function App() {
           alt="Background Placeholder"
           className={`absolute top-0 left-0 min-w-full min-h-full object-cover`}
         />
+
         {/* old video with sound */}
         <video ref={videoRef} onLoadedData={() => setVideoLoaded(true)} loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
           <source src={LOGIN_VIDEO} type="video/mp4" />
@@ -70,13 +71,16 @@ export default function App() {
         <source src={"https://arweave.net/otFqOkTc9okUBD1ZZBO1kc45fYY0m_KjrkzXzKnVVTA"} type="audio/mpeg" />
       </audio> */}
       <div className="relative z-10 h-full w-full">
+        
         {!playing && (
-          <div className="absolute top-[450px] left-1/2 transform -translate-x-1/2">
+          <div className="absolute scale-75 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:mt-48 md:mt-24 sm:mt-20">
             <ImgButton
               src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
               onClick={() => {
                 if (videoRef.current) {
-                  videoRef.current.volume = localStorage.getItem("music-volume") ? parseFloat(localStorage.getItem("music-volume")!) : 1;
+                  videoRef.current.volume = localStorage.getItem("music-volume")
+                    ? parseFloat(localStorage.getItem("music-volume")!)
+                    : 1;
                   videoRef.current.play();
                 }
                 setPlaying(true);
@@ -87,7 +91,7 @@ export default function App() {
         )}
 
         {!walletAddressID && playing && (
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 md:scale-75 sm:scale-50">
             <ConnectButton
             // onClickAction={() => {
             //   playAudio();
@@ -121,7 +125,7 @@ function Tutorial({ onClose }: { onClose: () => void }) {
     <div className="z-10 absolute top-0 left-0 w-full h-full bg-black">
       {/* close button */}
       <ImgButton
-        className="z-10 absolute top-0 right-0"
+        className="z-10 absolute top-0 right-0 md:scale-75 sm:scale-50"
         src="https://arweave.net/d-XLB6fqEQsopfIvBAY_eeU5fu9dLhbWh2cipzJqqFM"
         alt="Close Tutorial Video"
         onClick={() => {
@@ -154,7 +158,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
       {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
-      <div className="absolute bottom-4 right-4 flex gap-4 items-center justify-end">
+      <div className="absolute bottom-4 right-4 flex gap-4 items-center justify-end md:scale-75 sm:scale-50">
         <ImgButton
           src="https://arweave.net/F5cG9iaRzliwIizUPBJ8UXWT6y5HUkFvB87NYLOs5tU"
           alt="Open Tutorial Video"
@@ -165,11 +169,11 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
         <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
       </div>
       {profileLoading ? (
-        <p className="text-white absolute top-[450px] text-2xl font-bold">Loading...</p>
+        <p className="text-white absolute top-1/2 text-2xl font-bold">Loading...</p>
       ) : (
         <div
-          className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"
-          style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
+          className="w-[70%] h-[90%] lg:h-[80%] flex justify-center items-center rounded-[20px] bg-white"
+          // style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
         >
           <FormData />
         </div>
@@ -250,9 +254,11 @@ const FormData = () => {
   }, [profileLoading, dumdumAssets]);
 
   return (
-    <form className="space-y-4 w-full m-16 flex flex-col gap-4 items-center">
-      <div>
-        <div className="relative flex gap-2 items-center">
+    <form className="space-y-4 w-full m-4 flex flex-row lg:flex-col gap-8 items-center justify-center mb-20">
+      
+      <div className="flex flex-col gap-4 w-1/2 md:w-full lg:items-center lg:justify-center">
+        
+        <div className="relative flex gap-2 items-center justify-center">
           <label htmlFor="username" className="text-black font-semibold w-16 text-right">
             Name:{" "}
           </label>
@@ -261,17 +267,15 @@ const FormData = () => {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="h-[37px] w-[153px] bg-no-repeat bg-left border-none focus-visible:ring-0"
+            className="h-[48px] w-full bg-no-repeat bg-left border-none focus-visible:ring-0"
             style={{
-              width: "calc(153px * 1.3)",
-              height: "calc(37px * 1.3)",
               backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
               backgroundSize: "100% 100%",
             }}
           />
         </div>
-        <br className="m-8" />
-        <div className="relative flex gap-2 items-center">
+
+        <div className="relative flex gap-2 items-center justify-center">
           <label htmlFor="select-option" className="text-black font-semibold w-16 text-right">
             NFT:
           </label>
@@ -283,16 +287,18 @@ const FormData = () => {
                   value={selectedOption?.edition ? "#" + selectedOption.edition : ""}
                   placeholder="Select an option"
                   readOnly
-                  className="h-[37px] w-[153px] bg-no-repeat bg-left border-none focus-visible:ring-0 cursor-pointer"
+                  className="h-[48px] w-full bg-no-repeat bg-left border-none focus-visible:ring-0 cursor-pointer"
                   style={{
-                    width: "calc(153px * 1.3)",
-                    height: "calc(37px * 1.3)",
                     backgroundImage: "url('https://arweave.net/kvrXn-DDzS5kypnpyPP_0OcbRv1I1UeZsZfRjWzDAgY')",
                     backgroundSize: "100% 100%",
                   }}
                 />
                 <button type="button" className="">
-                  <img src="https://arweave.net/tzswubwQVSKwp6L5BZwhjdEnMk_ECBqiWCFOFvKxSuY" alt="Arrow" className="w-4 h-4" />
+                  <img
+                    src="https://arweave.net/tzswubwQVSKwp6L5BZwhjdEnMk_ECBqiWCFOFvKxSuY"
+                    alt="Arrow"
+                    className="w-4 h-4"
+                  />
                 </button>
               </div>
             </PopoverTrigger>
@@ -300,8 +306,16 @@ const FormData = () => {
               <div className="py-1 max-h-[300px] overflow-y-auto">
                 <div className="grid grid-cols-5 gap-4 p-4">
                   {dumdumAssets.map((option) => (
-                    <div key={option.Id} className="flex flex-col items-center p-2 hover:bg-gray-100 cursor-pointer rounded" onClick={() => handleOptionSelect(option)}>
-                      <img src={`https://arweave.net/${option.Id}`} alt="NFT Preview" className="w-12 h-12 object-contain" />
+                    <div
+                      key={option.Id}
+                      className="flex flex-col items-center p-2 hover:bg-gray-100 cursor-pointer rounded"
+                      onClick={() => handleOptionSelect(option)}
+                    >
+                      <img
+                        src={`https://arweave.net/${option.Id}`}
+                        alt="NFT Preview"
+                        className="w-12 h-12 object-contain"
+                      />
                       <span className="text-sm mt-1">#{option.edition}</span>
                     </div>
                   ))}
@@ -311,36 +325,19 @@ const FormData = () => {
           </Popover>
         </div>
       </div>
-      <img
-        src={selectedOption?.Id ? `https://arweave.net/${selectedOption.Id}` : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"}
-        alt="NFT Preview"
-        className="w-32 h-32 object-contain"
-      />
 
-      <div className="flex flex-col gap-2 justify-center items-center">
-        {gameProfiles ? (
-          nonNFTGameProfiles.length > 0 && selectedOption ? (
-            <p>Upgrading existing profile with NFT</p>
-          ) : nonNFTGameProfiles.length > 0 || selectedOption?.existingProfile ? (
-            <p>Using existing profile</p>
-          ) : (
-            <p>Registering new profile...</p>
-          )
-        ) : (
-          "loading..."
-        )}
-        <ImgButton
-          disabled={loading}
-          src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
-          alt="Enter Dumverse"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Enter Dumverse");
-            handleRegister();
-          }}
+      <div className="w-32 h-32 flex items-center justify-center md:w-1/2 lg:w-full">
+        <img
+          src={
+            selectedOption?.Id
+              ? `https://arweave.net/${selectedOption.Id}`
+              : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"
+          }
+          alt="NFT Preview"
+          className="w-full h-full object-contain"
         />
       </div>
     </form>
+
   );
 };
