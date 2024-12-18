@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0"]=0,
-        ["vwt2bVY2BDRx0iRJJuiMtuNw0VBQGv89Slc0ujrHn2M"]=0,
-        ["YkbnJiWYXQ_tGo3K7q1Z47eLaL2ZZLwG3jd0qWNoWNo"]=0,
-        ["ravxEPMzNUwYxWmwltsAuIkYKVVgBMCvwGSPKnt6s6M"]=0,
-        ["HhstPUN2wt0htPqHWIG4ckZ38uAQZ2kCesyg_blrrPI"]=0,
+        ["C5Mew98EcDDAw_PuPR3A2YrTbEdAKIi2tWQjhca85co"]=0,
+        ["crigtRqaGl05C5rEHWpBzMlB83CGz0PpNOsEZYMkIms"]=0,
+        ["c4my8yA8JTpydKTZ6KZ-UQ0z1HvacJO_vnTMI_VGXx8"]=0,
+        ["PdTfjViGZh2jbmN3-72X3Q1S_Q6zu7Pr_uvOiB5b7s0"]=0,
+        ["MoW74fDXI1IwvZ_YndSDY1G7WUs5QrYgtcYuttU6Izg"]=0,
     }
 end
 
@@ -275,7 +275,7 @@ local function enterNewCombatHandler(msg: Message)
         SELECT address FROM Users WHERE id = %f;
     ]], user_id))
 
-    print("Ashu2MIt-" .. tostring(userAddress[1].address))
+    -- print("Ashu2MIt-" .. tostring(userAddress[1].address))
     
     if type(userAddress[1].address) == "string" then
         local data=json.encode({subprocess=subProcess})
@@ -438,11 +438,36 @@ local function playerPerishedHandler(msg: Message)
     subProcessAssignToUsers[USER_ID]=nil
 end
 
+-- local function removePlayerFromBattleHandler(msg: Message)
+--     local found = false
+--     for key, _ in pairs(subProcesses) do
+--         if key == msg.From then
+--             found = true
+--             break 
+--         end
+--     end
+
+--     if not found then
+--         assert(found == true, "Only Combat process can send this message")
+--     end
+
+--     local user_id = msg.Tags.UserId
+--     -- local userAddress = dbAdmin:exec(string.format([[
+--     --     SELECT address FROM Users WHERE id = %f;
+--     -- ]], user_id))
+
+--     dbAdmin:exec(string.format([[
+--         SELECT address FROM Users WHERE id = %f;
+--     ]], user_id))
+
+-- end
+
 -- Add handlers
 Handlers.add("Combat.EnterNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnterNewCombat'), enterNewCombatHandler)
 Handlers.add("Combat.EnteredNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnteredNewCombat'), enteredNewCombatHandler)
 Handlers.add("Combat.PlayerWon", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerWon'), playerWonHandler)
 Handlers.add("Combat.PlayerRanAway", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerRanAway'), playerRanAwayHandler)
 Handlers.add("Combat.PlayerPerished", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerPerished'), playerPerishedHandler)
+-- Handlers.add("Combat.RemovePlayerFromBattle", Handlers.utils.hasMatchingTag('Action', 'Combat.RemovePlayerFromBattle'), removePlayerFromBattleHandler)
 
 return {}

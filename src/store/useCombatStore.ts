@@ -115,7 +115,7 @@ export const useCombatStore = create<CombatState>()(
             },
           ],
         });
-        // console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
+        console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
         set({ subProcess: resultData.data.subprocess });
         return resultData;
       },
