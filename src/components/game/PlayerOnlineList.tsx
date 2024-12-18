@@ -38,7 +38,7 @@ export default function PlayerOnlineList({ currentSpot }: { currentSpot: number 
   if (!playersAtLocation) return <></>;
 
   return (
-    <div className="bg-black bg-opacity-50 p-2 rounded-lg">
+    <div className="fixed -top-4 left-0 right-0 bg-black bg-opacity-50 p-2 rounded-b-lg scale-100 lg:scale-75 lg:-top-4 md:scale-75 md:-top-4 sm:scale-50 sm:-top-6">
       <div className="flex items-center justify-between">
         {/* Left arrow */}
         <img src="https://arweave.net/IGYyjGQMAGEKgiG_jHjTL4mNPKpV5Gp2bimVH3bCtT4" alt="Left Arrow" className="w-8 h-8 cursor-pointer" onClick={() => scroll("left")} />

@@ -175,15 +175,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
 
   return (
     <div
-      style={{
-        backgroundImage: "url('https://arweave.net/bMyFoyl8AwtVa9-pMLRv3N_SPPD0vLBC1XBbvodDp74')",
-        backgroundSize: "contain",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        width: "408px",
-        height: "99px",
-      }}
-      className="absolute bottom-20 right-4 z-10"
+      className="absolute bottom-20 right-4 z-10 w-[408px] h-auto bg-black bg-opacity-30 rounded-lg scale-100 mb-2 lg:scale-100 lg:mb-2 md:scale-75 md:mb-0 sm:scale-50 sm:-mb-8"
     >
       <div className="flex items-center space-x-4 p-4">
         <img src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="w-16 h-16 object-contain" />

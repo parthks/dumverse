@@ -95,49 +95,42 @@ export default function Town() {
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
-      {/* bottom buttons bar */}
+      {/* Bottom Buttons Bar */}
       {!chatOpen && (
-        <div className="z-10 absolute bottom-0 w-full p-4">
-          <div className="flex justify-between items-center relative">
+        <div className="z-10 absolute bottom-0 w-full h-auto p-4">
+          <div className="flex justify-around items-center w-full">
+            
             <ImgButton
-              src={
-                "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
-              }
+              src="https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
               onClick={() => goToGameMap(true)}
-              alt={"Return to Town"}
+              alt="Return to Town"
+              className="scale-100 lg:scale-100 md:scale-75 sm:scale-75"
             />
-            <div className="absolute left-[43%] translate-x-[0%]">
-              <ImgButton
-                src={
-                  "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
-                }
-                onClick={() => {
-                  handleBuildingSelect(GameStatePages.REST_AREA);
-                }}
-                alt={"Enter Rest Area"}
-              />
-            </div>
-            <div className="flex gap-4 items-center justify-end">
-              <ImgButton
-                src={
-                  "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
-                }
-                onClick={() => {
-                  setChatOpen(true);
-                }}
-                alt={"Chat"}
-              />
-              <ImgButton
-                src={
-                  "https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"
-                }
-                onClick={() => setIsSettingsOpen(true)}
-                alt={"Open Settings"}
-              />
-            </div>
+
+            <ImgButton
+              src="https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
+              onClick={() => handleBuildingSelect(GameStatePages.REST_AREA)}
+              alt="Enter Rest Area"
+              className="scale-100 lg:scale-100 md:scale-75 sm:scale-75"
+            />
+
+            <ImgButton
+              src="https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
+              onClick={() => setChatOpen(true)}
+              alt="Chat"
+              className="scale-100 lg:scale-100 md:scale-75 sm:scale-75"
+            />
+
+            <ImgButton
+              src="https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"
+              onClick={() => setIsSettingsOpen(true)}
+              alt="Open Settings"
+              className="scale-100 lg:scale-100 md:scale-75 sm:scale-50"
+            />
           </div>
         </div>
       )}
+
 
       {/* Town map container */}
       <div className="absolute inset-0 flex items-center justify-center">

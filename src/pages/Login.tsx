@@ -160,6 +160,9 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
 
       <div className="absolute bottom-4 right-4 flex gap-4 items-center justify-end md:scale-75 sm:scale-50">
         <ImgButton
+          // className="w-16 h-auto"
+          // src="https://arweave.net/Xv7MnzfLybXBAj9vukhzz7uogBIJF6Wyb50L8G5cWCE" // Smaller btn
+          className="w-54 h-12"
           src="https://arweave.net/F5cG9iaRzliwIizUPBJ8UXWT6y5HUkFvB87NYLOs5tU"
           alt="Open Tutorial Video"
           onClick={() => {
@@ -173,7 +176,6 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
       ) : (
         <div
           className="w-[70%] h-[90%] lg:h-[80%] flex justify-center items-center rounded-[20px] bg-white"
-          // style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
         >
           <FormData />
         </div>
@@ -302,7 +304,7 @@ const FormData = () => {
                 </button>
               </div>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
+            <PopoverContent className="w-full sm:transform sm:-translate-y-2/3">
               <div className="py-1 max-h-[300px] overflow-y-auto">
                 <div className="grid grid-cols-5 gap-4 p-4">
                   {dumdumAssets.map((option) => (
@@ -326,7 +328,7 @@ const FormData = () => {
         </div>
       </div>
 
-      <div className="w-32 h-32 flex items-center justify-center md:w-1/2 lg:w-full">
+      <div className="w-32 h-32 flex-col items-center justify-center md:w-1/2 lg:w-1/2">
         <img
           src={
             selectedOption?.Id
@@ -336,7 +338,36 @@ const FormData = () => {
           alt="NFT Preview"
           className="w-full h-full object-contain"
         />
+
+        <div className="flex flex-col gap-2 justify-center items-center">
+          {gameProfiles ? (
+            nonNFTGameProfiles.length > 0 && selectedOption ? (
+              <p>Upgrading existing profile with NFT</p>
+            ) : nonNFTGameProfiles.length > 0 || selectedOption?.existingProfile ? (
+              <p>Using existing profile</p>
+            ) : (
+              <p>Registering new profile...</p>
+            )
+          ) : (
+            "loading..."
+          )}
+          <ImgButton
+            disabled={loading}
+            src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
+            alt="Enter Dumverse"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Enter Dumverse");
+              handleRegister();
+            }}
+          />
+        </div>
+              
       </div>
+
+      
+
     </form>
 
   );
