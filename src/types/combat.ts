@@ -47,6 +47,7 @@ export type Battle = {
   >;
   npcs: Record<string, NPC>;
   log: BattleLog[];
+  started: boolean;
   ended: boolean;
   winner: string | null;
   created_at: number;

@@ -438,29 +438,33 @@ local function playerPerishedHandler(msg: Message)
     subProcessAssignToUsers[USER_ID]=nil
 end
 
--- local function removePlayerFromBattleHandler(msg: Message)
---     local found = false
---     for key, _ in pairs(subProcesses) do
---         if key == msg.From then
---             found = true
---             break 
---         end
---     end
+local function removePlayerFromBattleHandler(msg: Message)
+    local found = false
+    for key, _ in pairs(subProcesses) do
+        if key == msg.From then
+            found = true
+            break 
+        end
+    end
 
---     if not found then
---         assert(found == true, "Only Combat process can send this message")
---     end
+    if not found then
+        assert(found == true, "Only Combat process can send this message")
+    end
 
---     local user_id = msg.Tags.UserId
---     -- local userAddress = dbAdmin:exec(string.format([[
---     --     SELECT address FROM Users WHERE id = %f;
---     -- ]], user_id))
+    local user_id = msg.Tags.UserId
+    -- local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
---     dbAdmin:exec(string.format([[
---         SELECT address FROM Users WHERE id = %f;
---     ]], user_id))
 
--- end
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET current_battle_id = NULL WHERE id = %f;
+    ]], user_id))
+
+    local USER_ID = tonumber(user_id)
+    -- local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    -- subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    subProcessAssignToUsers[USER_ID]=nil
+
+end
 
 -- Add handlers
 Handlers.add("Combat.EnterNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnterNewCombat'), enterNewCombatHandler)
@@ -468,6 +472,6 @@ Handlers.add("Combat.EnteredNewCombat", Handlers.utils.hasMatchingTag('Action', 
 Handlers.add("Combat.PlayerWon", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerWon'), playerWonHandler)
 Handlers.add("Combat.PlayerRanAway", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerRanAway'), playerRanAwayHandler)
 Handlers.add("Combat.PlayerPerished", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerPerished'), playerPerishedHandler)
--- Handlers.add("Combat.RemovePlayerFromBattle", Handlers.utils.hasMatchingTag('Action', 'Combat.RemovePlayerFromBattle'), removePlayerFromBattleHandler)
+Handlers.add("Combat.RemovePlayerFromBattle", Handlers.utils.hasMatchingTag('Action', 'Combat.RemovePlayerFromBattle'), removePlayerFromBattleHandler)
 
 return {}

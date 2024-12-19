@@ -345,6 +345,7 @@ BattleHelpers.new = function(timestamp: integer): Battle
         internal_logs = {},              -- list of battle logs for internal use only
         last_npc_attack_timestamp = {}, -- key is npc_id, value is timestamp
         last_player_attack_timestamp = {}, -- key is player_id, value is timestamp
+        started=false,
         ended = false,
         winner = nil,                   -- npc_id, or a user_id
         created_at = timestamp,

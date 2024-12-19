@@ -329,10 +329,29 @@ local function userLoginHandler(msg: Message)
         ]], new_stamina, timestamp, user_id))
     end
 
-    -- update last_updated_at
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f WHERE id = %f;
-    ]], msg.Timestamp, msg.Timestamp, user_id))
+    local user_current_spot= dbAdmin:exec(string.format([[
+        SELECT current_spot FROM Users WHERE ID = %d;
+    ]],user_id))[1]
+
+    local is_Rest_Spot = false
+
+    for _ , value in ipairs(REST_SPOTS) do
+           if user_current_spot.current_spot == value then
+                -- update last_updated_at
+            dbAdmin:exec(string.format([[
+                   UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = %f WHERE id = %f;
+             ]], msg.Timestamp, msg.Timestamp, user_current_spot.current_spot, user_id))
+             
+             is_Rest_Spot=true
+             break
+           end
+    end   
+
+   if not is_Rest_Spot then
+          dbAdmin:exec(string.format([[
+                 UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = 0 WHERE id = %f;
+          ]], msg.Timestamp, msg.Timestamp, user_id))
+   end
 
     ao.send({
         Target = msg.From,

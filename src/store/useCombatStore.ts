@@ -22,6 +22,8 @@ interface CombatState {
   userRun: () => void;
   userDrinkPotion: () => void;
   goToMapFromBattle: () => void;
+  hasBattleReady: boolean;
+  sendBattleReadyRequest:() => void;
 }
 
 export const useCombatStore = create<CombatState>()(
@@ -56,6 +58,10 @@ export const useCombatStore = create<CombatState>()(
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
             useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);
           }
+          if (get().currentBattle && !get().currentBattle?.started){
+            get().sendBattleReadyRequest();
+          }
+          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           return battles?.[0];
         }
         set({ loading: false });
@@ -91,6 +97,9 @@ export const useCombatStore = create<CombatState>()(
         set({ loading: false });
         if (battle) {
           set({ currentBattle: battle });
+          // if (battle && battle.started){
+          //   get().sendBattleReadyRequest();
+          // }
           return battle;
         }
         return null;
@@ -115,8 +124,9 @@ export const useCombatStore = create<CombatState>()(
             },
           ],
         });
-        console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
+        // console.log("Ashu : Entercombat:: "+JSON.stringify(resultData));
         set({ subProcess: resultData.data.subprocess });
+        set({ hasBattleReady: false });
         return resultData;
       },
       userAttack: async (npc_id: string) => {
@@ -218,13 +228,33 @@ export const useCombatStore = create<CombatState>()(
         const isAlive = get().currentBattle?.players?.[user_id]?.health ?? 0 > 0;
         if (isAlive) {
           await useGameStore.getState().refreshUserData();
-          set({ currentBattle: null, loading: false });
+          set({ currentBattle: null, loading: false, hasBattleReady:false });
           useGameStore.getState().goToGameMap();
         } else {
           await useGameStore.getState().goToTown(true);
-          set({ currentBattle: null, loading: false });
+          set({ currentBattle: null, loading: false, hasBattleReady:false });
         }
       },
+      hasBattleReady:false,
+      sendBattleReadyRequest: async() => {
+        const battle_id = get().currentBattle?.id;
+        if (!battle_id) return;
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            {
+              name: "Action",
+              value: "Battle.UserIsReady",
+            },
+            {
+              name: "BattleId",
+              value: battle_id.toString(),
+            },
+          ],
+          process: get().subProcess,
+        }); 
+        console.log("Ashu : BatteReady=> "+JSON.stringify(resultData));
+        set({ hasBattleReady: resultData.data.hasBattleBegun });
+      }
     }),
     {
       name: "Combat Store",
