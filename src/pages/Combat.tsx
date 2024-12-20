@@ -285,9 +285,9 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
       <div className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}>
       <div className="fixed inset-0 flex items-center justify-center text-white z-50">
-        <div className="w-[30vw] h-[30vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="w-[30vw] h-[30vh] rounded-lg p-4 relative shadow-lg flex justify-center items-center">
           <div className="flex flex-col items-center justify-center w-full h-full">
-            <h2 className="text-4xl font-semibold underline underline-offset-2">Loading ...</h2>
+            <h2 className="text-6xl font-semibold ">Loading ...</h2>
           </div>
         </div>
       </div>
