@@ -118,6 +118,11 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack", "Have Reset Players Attacked Table")
 
     BattleHelpers.checkIfBattleShouldEnd(battle_id, npc_id, timestamp)
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
+    -- Battles[battle_id] = nil
+    end
 end
 
 
@@ -181,12 +186,13 @@ local function CronTick(msg: Message,npcTimer:integer)
                         UserId = tostring(key),
                         Action = "Combat.RemovePlayerFromBattle",
                     })
+                    local battle_data = BattleHelpers.get(battle.id)
+                    sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
                 end
             end
         end
     end
 end
-
 
     
 local function newUserJoinHandler(msg: Message)
@@ -356,6 +362,7 @@ local function userAttackHandler(msg: Message)
         -- assert(false, "AttackEntityId is not in playerUserIds or npcIds")
         -- race condition from the UI, do nothing
         ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+
         return
     end
 
@@ -380,8 +387,12 @@ local function userAttackHandler(msg: Message)
     end
 
     BattleHelpers.checkIfBattleShouldEnd(battle_id, user_id, msg.Timestamp)
-
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
+    -- Battles[battle_id] = nil
+    end
 end
 
 
@@ -419,6 +430,11 @@ local function userRunHandler(msg: Message)
 
     -- player runs unsuccessfully
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
+    -- Battles[battle_id] = nil
+    end
 end
 
 local function userIsReadyHandler(msg: Message)

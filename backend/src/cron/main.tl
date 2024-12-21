@@ -6,3 +6,5 @@ local function sendCronCombat()
 end    
 
 Handlers.add("ForwardCron", Handlers.utils.hasMatchingTag("Action", "Cron"), sendCronCombat);
+
+return {}

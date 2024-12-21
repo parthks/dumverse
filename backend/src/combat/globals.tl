@@ -1,4 +1,5 @@
-
+local json = require("json")
+-- local constants = require("utils.constants")
 require("combat.types")
 global MAX_PLAYERS_IN_BATTLE = 2
 global GAME_PROCESS_ID = ao.env.Process.Tags.GameProcessId
@@ -29,5 +30,16 @@ global ONE_OF_ONE_ASSET_IDS: {string} = {
 }
 
 global CRON_TICK_COUNT = 0
+
+global function sendBatteDataToHistoryProcess(battle_Id:integer,battle_data: Battle, battle_error_status: string)
+    ao.send({
+        Target = "QRxo_20Grok3jWppfpeSV3WgwFyViIg33W_OHpYRj7U",
+        Action = "History.SavedToHistory",
+        Data = json.encode(battle_data),
+        SubProcess = tostring(ao.id),
+        ErrorStatus = battle_error_status,
+        BattleId = tostring(battle_Id)
+    })
+end    
 
 
