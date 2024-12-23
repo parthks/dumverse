@@ -95,6 +95,7 @@ export default function Bakery() {
             />
           </div> */}
 
+          <div className="absolute w-full h-full -top-1/3 flex items-center justify-center gap-4 scale-100 lg:scale-100 md:scale-75 sm:scale-75">
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
@@ -122,6 +123,7 @@ export default function Bakery() {
               item={shop.items[1]}
             />
           )}
+          </div>
         </div>
       </div>
     </div>

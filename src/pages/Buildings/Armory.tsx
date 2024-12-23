@@ -66,12 +66,13 @@ export default function Armory() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
-              <GifComponent className="absolute h-[20vh] translate-x-[9vw] translate-y-[-1vh] z-50" />
+              <GifComponent className="absolute h-[20vh] translate-x-[9vw] translate-y-[-1vh] z-50 scale-50" />
 
               {/* Shop Table */}
               <img src="https://arweave.net/C6LU2xgJ9oMwH8Ah7C-KdMGxJs6g6w76nXMpovYv7Ms" alt="Shop Table" className="relative w-full" style={{ height: "auto" }} />
             </div>
           </div>
+          <div className="absolute w-full h-full -top-1/3 mt-8 flex items-center justify-center gap-4 scale-100 lg:scale-75 md:scale-75 sm:scale-75">
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
@@ -124,6 +125,7 @@ export default function Armory() {
               item={shop.items[3]}
             />
           )}
+          </div>
         </div>
       </div>
     </div>

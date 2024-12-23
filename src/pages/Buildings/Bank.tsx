@@ -610,6 +610,7 @@ export default function BankPage() {
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton
+          className="scale-100 lg:scale-100 md:scale-75 sm:scale-75 xs:scale-50"
           src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"}
           onClick={async () => {
             audioManager.playSFX(SOUNDS.BUILDING_ENTER);

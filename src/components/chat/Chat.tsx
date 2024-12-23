@@ -377,20 +377,9 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   if (!chatOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 top-[100px] bottom-[10vh]">
+    <div className="fixed w-full inset-0 flex items-center justify-center z-50 top-[100px] bottom-[10vh] lg:top-[100px] lg:bottom-[10vh] md:top-0 md:bottom-0 sm:top-0 sm:bottom-0">
       <div
-        className="relative flex flex-col"
-        style={{
-          //   backgroundImage: "url('https://arweave.net/VuvTMQrwAs5Pai_xzwuzl_1gnz3bCFyJ6a0OXJEW_ow')",
-          //   backgroundSize: "contain",
-          //   backgroundPosition: "center",
-          //   backgroundRepeat: "no-repeat",
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
-          borderRadius: "30px",
-          width: "800px",
-          height: "100%",
-          // maxHeight: "80vh",
-        }}
+        className="relative flex flex-col bg-black bg-opacity-70 rounded-[30px] w-[800px] h-full"
       >
         <ImgButton
           className="absolute top-2 right-4"

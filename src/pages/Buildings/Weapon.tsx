@@ -118,6 +118,7 @@ export default function Weapon() {
               style={{ left: "50%", width: "55%", height: "auto", transform: "translate(-50%, -141%)" }}
             />
           </div> */}
+          <div className="absolute w-full h-full -top-1/3 mt-8 flex items-center justify-center gap-4 scale-100 lg:scale-100 md:scale-75 sm:scale-75">
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
@@ -174,6 +175,7 @@ export default function Weapon() {
               itemSize={75}
             />
           )}
+          </div>
         </div>
       </div>
     </div>

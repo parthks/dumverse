@@ -131,8 +131,9 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
 
   return (
     <div
-      className="w-[250px] relative flex flex-col gap-2 bg-[url('https://arweave.net/uX_S6BJXzoBFTJ7_HgNocqf-ryhAuIZk12RMII6t8Ac')] bg-no-repeat bg-contain bg-center p-4"
-      style={{ aspectRatio: "392/425", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+      // className="w-[250px] relative flex flex-col gap-2 bg-[url('https://arweave.net/uX_S6BJXzoBFTJ7_HgNocqf-ryhAuIZk12RMII6t8Ac')] bg-no-repeat bg-contain bg-center p-4"
+      // style={{ aspectRatio: "392/425", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+      className="w-[250px] relative flex flex-col gap-2 bg-[url('https://arweave.net/uX_S6BJXzoBFTJ7_HgNocqf-ryhAuIZk12RMII6t8Ac')] bg-no-repeat bg-contain bg-center p-4 [aspect-ratio:392/425] [text-shadow:-2px_-2px_0_#000,2px_-2px_0_#000,-2px_2px_0_#000,2px_2px_0_#000] lg:w-[250px] md:w-[200px] sm:w-[180px]"
     >
       <div
         className="flex justify-center"
@@ -157,14 +158,14 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
         className="flex items-center justify-end"
         style={{
           position: "absolute",
-          top: "46%",
+          top: "48%",
           right: "24%",
           transform: "translateY(-50%)",
         }}
       >
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{data?.gold_balance.toLocaleString()}</label>
-          <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-5" />
+          <label className="text-sm mr-1 text-white lg:text-sm md:text-xs sm:text-xs">{data?.gold_balance.toLocaleString()}</label>
+          <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-5 lg:w-5 md:w-3.5 sm:w-3" />
         </div>
       </div>
 
@@ -172,14 +173,14 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
         className="flex items-center justify-end"
         style={{
           position: "absolute",
-          top: "55%",
+          top: "57%",
           right: "24%",
           transform: "translateY(-50%)",
         }}
       >
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{data?.dumz_balance.toLocaleString()}</label>
-          <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5" />
+          <label className="text-sm mr-1 text-white lg:text-sm md:text-xs sm:text-xs">{data?.dumz_balance.toLocaleString()}</label>
+          <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-5 lg:w-5 md:w-3.5 sm:w-3" />
         </div>
       </div>
 
@@ -187,14 +188,14 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
         className="flex items-center justify-end"
         style={{
           position: "absolute",
-          top: "64%",
+          top: "66%",
           right: "24%",
           transform: "translateY(-50%)",
         }}
       >
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{0}</label>
-          <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-5" />
+          <label className="text-sm mr-1 text-white lg:text-sm md:text-xs sm:text-xs">{0}</label>
+          <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-5 lg:w-5 md:w-3.5 sm:w-3" />
         </div>
       </div>
 
@@ -213,7 +214,7 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
           <>
             <div className="flex flex-col items-center mr-5 gap-1">
               <img src={"https://arweave.net/9Brag6Pwu1j9dmEtGbnKxfjSa7o_hC4PlOdb5IlGHlM"} alt="Energy" className="w-5 " />
-              <label className="text-sm text-white">{energy1}</label>
+              <label className="text-sm text-white lg:text-sm md:text-sm sm:text-xs">{energy1}</label>
             </div>
 
             <div className="flex flex-col items-center mr-5 gap-1">
@@ -272,7 +273,7 @@ export function UserWeaponItem({
             <div className="absolute inset-0 flex flex-col items-center">
               <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`${withItemSize}`} />
               {!["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
-                <p className="text-white text-sm">
+                <p className="text-white text-sm lg:text-sm md:text-xs sm:text-xs">
                   {item.item_health}/{item.total_item_health}
                 </p>
               )}

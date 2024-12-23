@@ -28,6 +28,7 @@ const ITEM_POSITIONS = {
     y: 34,
   },
 };
+
 function ShopItem({ item, position }: { item: Item; position: number }) {
   const { buyItemLoading } = useGameStore();
   const baseX = ITEM_POSITIONS[position as keyof typeof ITEM_POSITIONS].x;
@@ -102,6 +103,7 @@ function ShopItem({ item, position }: { item: Item; position: number }) {
     </g>
   );
 }
+
 
 function ShopTableItem({ item }: { item: Item }) {
   const { buyItemLoading } = useGameStore();

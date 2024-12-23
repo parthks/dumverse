@@ -248,6 +248,39 @@ export default function Shop() {
             </div>
           </div>
 
+          <div className="absolute w-full h-full -top-1/3 mt-8 flex items-center justify-center gap-4 scale-100 lg:scale-75 md:scale-75 sm:scale-75">
+            {shop?.items[0] && (
+              <ShopItem
+                handleClick={async () => {
+                  await buyItem(
+                    shop.items[0],
+                    shop.items[0]?.gold_price ? "GOLD" : "DUMZ"
+                  );
+                  audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
+                }}
+                position={{ x: 35, y: 40 }}
+                itemSize={65}
+                item={shop.items[0]}
+              />
+            )}
+            {shop?.items[1] && (
+              <ShopItem
+                handleClick={async () => {
+                  await buyItem(
+                    shop.items[1],
+                    shop.items[1]?.gold_price ? "GOLD" : "DUMZ"
+                  );
+                  audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
+                }}
+                position={{ x: 65, y: 40 }}
+                itemSize={60}
+                item={shop.items[1]}
+              />
+            )}
+          </div>
+
+
+        {/* <div className="absolute w-full h-full flex items-center justify-center scale-50">
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
@@ -276,6 +309,7 @@ export default function Shop() {
               item={shop.items[1]}
             />
           )}
+          </div> */}
 
           {/* <ShopItem position={2} item={shop.items[2]} /> */}
           {/* <ShopItem position={3} item={shop.items[3]} /> */}
