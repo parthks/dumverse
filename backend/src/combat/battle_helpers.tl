@@ -89,7 +89,7 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         })
         -- ao.send({
         --     Target = constants.HISTORY_PROCESS_ID,
-        --     Action = "History.SavedToHistory",
+        --     Action = "Record.SavedToHistory",
         --     Data = json.encode(BattleHelpers.get(battle_Id)),
         --     SubProcess = tostring(ao.id),
         --     ErrorStatus = "no",
@@ -275,7 +275,7 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
     })
     -- ao.send({
     --     Target = constants.HISTORY_PROCESS_ID,
-    --     Action = "History.SavedToHistory",
+    --     Action = "Record.SavedToHistory",
     --     Data = json.encode(BattleHelpers.get(battle_id)),
     --     SubProcess = tostring(ao.id),
     --     ErrorStatus = "no",
@@ -303,7 +303,7 @@ BattleHelpers.playerRanAway = function(battle_id: integer, player_id: string, ti
 
     -- ao.send({
     --     Target = constants.HISTORY_PROCESS_ID,
-    --     Action = "History.SavedToHistory",
+    --     Action = "Record.SavedToHistory",
     --     Data = json.encode(BattleHelpers.get(battle_id)),
     --     SubProcess = tostring(ao.id),
     --     ErrorStatus = "no",

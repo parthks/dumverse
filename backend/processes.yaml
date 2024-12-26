@@ -130,13 +130,13 @@
     - name: Name
       value: Cron    
 
-- name: history
-  file: build/history.lua
+- name: record
+  file: build/record.lua
   scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
   module: GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0
   tags:
     - name: App-Name
       value: Dumverse
     - name: Name
-      value: History   
+      value: Record   
 

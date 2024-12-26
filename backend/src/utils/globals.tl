@@ -141,4 +141,20 @@ global type BankTransaction = record
     created_at: integer
 end
 
+global type Leaderboard = record
+    address: string
+    name: string
+    gold_earned: number
+    -- token_earned: number
+    gold_lost: number
+    -- token_lost: number
+    battle_win: number
+    battle_lost: number
+    enemy_killed: number
+    player_death: number
+    death_streak: number
+    death_streak_ended: boolean
+    -- player_with_nft: number
+end
+
 return {}

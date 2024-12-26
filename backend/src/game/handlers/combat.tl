@@ -1,7 +1,7 @@
+require('utils.globals')
 local helpers = require("game.helpers")
 local json = require("json")
 local utils = require("utils.utils.tl-utils")
-
 local constants = require("utils.constants")
 
 
@@ -44,6 +44,67 @@ local function assignSubProcessToUser(user_id:number) : string
         subProcesses[minKey] = subProcesses[minKey] + 1
     end
   return subProcessAssignToUsers[user_id]
+end
+
+-- local function isNestedTableNotEmpty(nestedTable: {any}): boolean
+--     for _, innerTable in pairs(nestedTable as {any: any}) do
+--         if type(innerTable) == "table" then
+--             for _, _ in pairs(innerTable as {any: any}) do
+--                 return true
+--             end
+--         end
+--     end
+--     return false
+-- end
+
+local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean): Leaderboard
+
+    local playerOriginalData = dbAdmin:exec(string.format([[
+        SELECT * from Users WHERE id = %f;
+     ]], user_id))[1] as UserData
+
+    local leaderboard: Leaderboard = {
+        address = "",
+        name = "",
+        gold_earned = 0,
+        gold_lost = 0,
+        battle_win = 0,
+        battle_lost = 0,
+        enemy_killed = 0,
+        player_death = 0,
+        death_streak = 0,
+        death_streak_ended = false,
+    }
+
+    if isWin then
+        -- Winning scenario
+        leaderboard.address = playerData.address
+        leaderboard.name = playerData.name
+        leaderboard.gold_earned = playerData.gold_balance 
+        -- leaderboard.token_earned = playerData.dumz_balance 
+        leaderboard.battle_win = 1
+        leaderboard.enemy_killed = 1
+        leaderboard.death_streak = 1
+    else
+        -- Losing scenario
+        leaderboard.address = playerData.address
+        leaderboard.name = playerData.name
+        leaderboard.gold_lost = playerOriginalData.gold_balance 
+        -- leaderboard.token_lost = playerOriginalData.dumz_balance as integer
+        leaderboard.battle_lost = 1
+        leaderboard.player_death = 1
+        leaderboard.death_streak_ended = true
+    end
+
+    -- Check for NFTs associated with the player
+    -- local numberOfNFTsID = dbAdmin:exec(string.format([[
+    --     SELECT * from Users WHERE address = %s;
+    --  ]], playerOriginalData.address))
+    -- if isNestedTableNotEmpty(numberOfNFTsID) then
+    --     leaderboard.player_with_nft = #numberOfNFTsID
+    -- end
+
+    return leaderboard
 end
 
 
@@ -350,6 +411,40 @@ local function playerWonHandler(msg: Message)
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
+--     local playerOrginalData = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE id = %f;
+--      ]], user_id))[1]
+
+--      local leaderboard = {
+--         gold_earned: integer = (playerData.gold_balance - (playerOrginalData.gold_balance as integer)) + (playerOrginalData.gold_balance as integer),
+--         token_earned: integer = (playerData.dumz_balance - (playerOrginalData.dumz_balance as integer)) + (playerOrginalData.dumz_balance as integer),
+-- -- gold_lost: integer = ,
+-- battle_win: integer = 1,
+-- -- battle_lost
+-- enemy_killed: integer = 1 ,
+-- -- player_death
+-- -- pvp
+-- -- number_of_token_burn
+-- death_streak: integer = 1,
+-- death_streak_ende: boolean= false,
+-- player_with_nft: integer= 0,
+-- -- player_without nft 
+--     }
+ 
+--      local numberOfNFTsID = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE address = %s;
+--      ]], playerOrginalData.address))
+
+--      local hasNFT = isNestedTableNotEmpty(numberOfNFTsID)
+
+--      if hasNFT then
+--         leaderboard.player_with_nft = #numberOfNFTsID 
+--      end
+ 
+    local leaderboard = processPlayerData(tonumber(user_id), playerData, true) as Leaderboard
+
+    ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
+
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f,
@@ -362,7 +457,7 @@ local function playerWonHandler(msg: Message)
     playerData.special_item_bark,
     playerData.special_item_heart,
     user_id))
-
+    
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
@@ -425,6 +520,43 @@ local function playerPerishedHandler(msg: Message)
 
     local user_id = msg.Tags.UserId
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
+
+--     local playerOrginalData = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE id = %f;
+--      ]], user_id))[1]
+
+--      local leaderboard = {
+--         gold_lost: integer = (playerOrginalData.gold_balance as integer),
+--         token_lost: integer = (playerOrginalData.dumz_balance as integer),
+-- battle_lost: integer = 1,
+-- player_death: integer = 1 ,
+-- -- pvp
+-- -- number_of_token_burn
+-- death_streak: integer = 0,
+-- death_streak_ende: boolean= true,
+-- player_with_nft: integer= 0,
+-- -- player_without nft 
+--     }
+ 
+--      local numberOfNFTsID = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE address = %s;
+--      ]], playerOrginalData.address))
+
+--      local hasNFT = isNestedTableNotEmpty(numberOfNFTsID)
+
+--      if hasNFT then
+--         leaderboard.player_with_nft = #numberOfNFTsID 
+--      end
+    
+    -- local leaderboard = processPlayerData(tonumber(user_id), playerData, true)
+
+    -- local leaderboardJson = json.encode(leaderboard)
+
+    -- ao.send({Target = constants.RECORD_PROCESS_ID, Action = "Record.insertOrUpdateDataInLeaderBorad", UserId = tostring(user_id), Data = leaderboardJson})
+
+    local leaderboard = processPlayerData(tonumber(user_id), playerData, false) as Leaderboard
+
+    ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
 
     -- update Users table
     dbAdmin:exec(string.format([[
