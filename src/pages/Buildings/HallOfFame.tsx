@@ -210,7 +210,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
       case "battle_lost":
         return "Battles Lost";
       case "enemy_killed":
-        return "Enemy Killed";
+        return "Enemies Killed";
       case "player_death":
         return "Player Death";
       case "death_streak":
