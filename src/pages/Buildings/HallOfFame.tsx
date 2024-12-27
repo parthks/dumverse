@@ -164,28 +164,29 @@ function Frame({ index, nft_address, name, category }: { index: number, nft_addr
               : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"
           }
           alt="Content Image"
-          className="w-full h-[120%]"
+          className="w-full h-[120%]" // Adjusted size to fit content properly
           style={imageStyle}
         />
       </div>
 
       {/* Container for the text in the bottom box */}
       <div
-        className="absolute z-10 flex flex-col items-center justify-start text-center"
+        className="absolute z-10 flex flex-col items-center justify-center text-center"
         style={{
-          bottom: "12%",
-          left: "50%",
+          bottom: "8.5%",
+          left: "51.9%",
           width: "40%",
-          height: "12%",
+          height: "20%", // Increased height to center text better
           transform: "translateX(-50%)",
         }}
       >
-        <p className="text-white text-lg font-bold">{name}</p> {/* Reduced font size */}
-        <p className="text-white text-sm font-bold underline underline-offset-0">1st in {category}</p> {/* Reduced font size */}
+        <p className="text-white text-lg font-bold underline">{name}</p> {/* Font size adjusted */}
+        <p className="text-white text-sm font-bold">1st in {category}</p> {/* Font size adjusted */}
       </div>
     </div>
   );
 }
+
 
 
 const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
