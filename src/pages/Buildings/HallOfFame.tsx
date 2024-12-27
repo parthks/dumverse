@@ -19,25 +19,26 @@ export default function HallOfFame() {
     (state) => state.getParticularLeaderboardData
   );
 
-  // const { data: fetchedData = [], isFetching } = useQuery({
-  //   queryKey: ["leaderboardData"],
-  //   queryFn: async () => {
-  //     try {
-  //       const leaderboardMetrics = ["battle_win", "gold_earned", "enemy_killed"];
+  const { data: fetchedData = [], isFetching } = useQuery({
+    queryKey: ["leaderboardData"],
+    queryFn: async () => {
+      try {
+        const leaderboardMetrics = ["battle_win", "gold_earned", "enemy_killed"];
   
-  //       const results = await Promise.all(
-  //         leaderboardMetrics.map((metric) => getParticularLeaderboardData(metric))
-  //       );
+        const results = await Promise.all(
+          leaderboardMetrics.map((metric) => getParticularLeaderboardData(metric))
+        );
   
-  //       return results.filter(Boolean); 
-  //     } catch (error) {
-  //       console.error("Error fetching leaderboard data:", error);
-  //       return [];
-  //     }
-  //   },
-  //   refetchInterval: 1000, 
-  //   staleTime: 1000,
-  // });
+        return results.filter(Boolean); 
+      } catch (error) {
+        console.error("Error fetching leaderboard data:", error);
+        return [];
+      }
+    },
+    refetchInterval: 1000, 
+    staleTime: 1000,
+    enabled: !isLeaderboardOpen,
+  });
   
 // -----------------------------------------------------------------
 
@@ -107,9 +108,9 @@ export default function HallOfFame() {
         />
       </div> */}
 
-      <Frame index={1} />
-      <Frame index={2} />
-      <Frame index={3} />
+      <Frame index={1} nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address} name={HallOfFameLeaderboardData.gold_earned?.name} category="Gold Earned"/>
+      <Frame index={2} nft_address={HallOfFameLeaderboardData.battle_win?.nft_address} name={HallOfFameLeaderboardData.battle_win?.name} category="Gold Earned"/>
+      <Frame index={3} nft_address={HallOfFameLeaderboardData.enemy_killed?.nft_address} name={HallOfFameLeaderboardData.enemy_killed?.name} category="Gold Earned"/>
 
 
       {
@@ -123,7 +124,7 @@ export default function HallOfFame() {
   );
 }
 
-function Frame({ index, nft_address, name, category }: { index: number, nft_address?: string, name?: string, category?: string }) {
+function Frame({ index, nft_address, name, category }: { index: number, nft_address?: string | null, name?: string, category?: string }) {
   const user = useGameStore((state) => state.user);
 
   // Calculate position based on index
@@ -138,7 +139,7 @@ function Frame({ index, nft_address, name, category }: { index: number, nft_addr
 
       {/* Container for the image inside the frame */}
       <div className="absolute top-[17%] left-[26%] w-[53%] h-[50%]">
-        <img src={user?.nft_address ? `https://arweave.net/${user.nft_address}` : ""} alt="Content Image" className="w-full h-[120%] object-cover" />
+        <img src={nft_address!=="NULL" ? `https://arweave.net/${nft_address}`:"https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"} alt="Content Image" className="w-full h-[120%] object-cover" />
       </div>
 
       {/* Container for the text in the bottom box */}
@@ -152,8 +153,9 @@ function Frame({ index, nft_address, name, category }: { index: number, nft_addr
           transform: "translateX(-50%)",
         }}
       >
-        <p className="text-white text-xl font-bold">Username</p>
-        <p className="text-white text-xl font-bold">1st in _______</p>
+        <p className="text-white text-xl font-bold">{name}</p>
+        {/* <p className="text-white text-xl font-bold">1st in _______</p> */}
+        <p className="text-white text-xl font-bold">1st in {category}</p>
       </div>
     </div>
   );

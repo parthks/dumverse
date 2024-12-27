@@ -205,7 +205,7 @@ end
 
 local function getLeaderboardDataHandler(msg: Message) 
     local metrices = msg.Tags.metrices
-    local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, %s FROM Leaderboard ORDER BY %s DESC;]], metrices, metrices)) 
+    local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, nft_address, %s FROM Leaderboard ORDER BY %s DESC;]], metrices, metrices)) 
     ao.send({Target= msg.From, Data=json.encode(result)})
 end
 
