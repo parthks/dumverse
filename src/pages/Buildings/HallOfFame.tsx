@@ -14,7 +14,31 @@ export default function HallOfFame() {
   useBuildingMusic({});
 
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
+  const HallOfFameLeaderboardData = useLeaderboardStore((state) => state.HallOfFameLeaderboardData);
+  const getParticularLeaderboardData = useLeaderboardStore(
+    (state) => state.getParticularLeaderboardData
+  );
 
+  // const { data: fetchedData = [], isFetching } = useQuery({
+  //   queryKey: ["leaderboardData"],
+  //   queryFn: async () => {
+  //     try {
+  //       const leaderboardMetrics = ["battle_win", "gold_earned", "enemy_killed"];
+  
+  //       const results = await Promise.all(
+  //         leaderboardMetrics.map((metric) => getParticularLeaderboardData(metric))
+  //       );
+  
+  //       return results.filter(Boolean); 
+  //     } catch (error) {
+  //       console.error("Error fetching leaderboard data:", error);
+  //       return [];
+  //     }
+  //   },
+  //   refetchInterval: 1000, 
+  //   staleTime: 1000,
+  // });
+  
 // -----------------------------------------------------------------
 
   return (
@@ -92,9 +116,6 @@ export default function HallOfFame() {
          isLeaderboardOpen && (
           <LeaderboardPopup
             onClose={() => setIsLeaderboardOpen(false)}
-            // setTempLamaPosition={setTempLamaPosition}
-            // setLamaPosition={setLamaPosition}
-            // setTempCurrentIslandLevel={setTempCurrentIslandLevel}
           />
         )
       }
@@ -102,7 +123,7 @@ export default function HallOfFame() {
   );
 }
 
-function Frame({ index }: { index: number }) {
+function Frame({ index, nft_address, name, category }: { index: number, nft_address?: string, name?: string, category?: string }) {
   const user = useGameStore((state) => state.user);
 
   // Calculate position based on index

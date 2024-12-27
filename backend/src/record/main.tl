@@ -49,6 +49,7 @@ DROP TABLE IF EXISTS Leaderboard;
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         name TEXT NOT NULL,
+        nft_address TEXT,
         address TEXT NOT NULL,
         gold_earned INTEGER DEFAULT 0,
         gold_lost INTEGER DEFAULT 0,
@@ -129,11 +130,10 @@ global function gettingBattleDataOfPlayer(BattleId: integer, UserAddress: string
     return matched_battles
 end
 
-local function getLeaderboardByMetric(metric: string):{{any:any}}
-    local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, %s FROM Leaderboard ORDER BY %s DESC;]], metric, metric))
-    return result
-end
-
+-- local function getLeaderboardByMetric(metric: string):{{any:any}}
+--     local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, %s FROM Leaderboard ORDER BY %s DESC;]], metric, metric))
+--     return result
+-- end
 
 local function savedToHistoryHandler(msg: Message)
     local found = false
@@ -175,18 +175,22 @@ local function insertOrUpdateDataInLeaderBoradHandler(msg: Message)
            ]], user_id))
            print("Data user_exist")
 
+      if leaderboarda_data.nft_address == nil then
+        leaderboarda_data.nft_address = "NULL"   
+      end
+
       if #user_exist == 0 then
         dbAdmin:exec(string.format([[
-        INSERT INTO Leaderboard (user_id, name, address, gold_earned, gold_lost, battle_win, battle_lost, enemy_killed, player_death, death_streak, pvp)
-        VALUES (%d, '%s', '%s', 0, 0, 0, 0, 0, 0, 0, 0);
-    ]], user_id, leaderboarda_data.name, leaderboarda_data.address))
+        INSERT INTO Leaderboard (user_id, name, address, nft_address, gold_earned, gold_lost, battle_win, battle_lost, enemy_killed, player_death, death_streak, pvp)
+        VALUES (%d, '%s', '%s', '%s', 0, 0, 0, 0, 0, 0, 0, 0);
+    ]], user_id, leaderboarda_data.name, leaderboarda_data.address, leaderboarda_data.nft_address))
     print("Data INSERT")
       end
 
         if leaderboarda_data.death_streak_ended then
             dbAdmin:exec(string.format([[
         UPDATE Leaderboard SET gold_lost = gold_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
-    ]], leaderboarda_data.gold_lost, user_id))
+    ]],  leaderboarda_data.gold_lost, user_id))
     print("Data UPDATE loss")
 
         else
@@ -201,8 +205,8 @@ end
 
 local function getLeaderboardDataHandler(msg: Message) 
     local metrices = msg.Tags.metrices
-    local dataFromLeaderboard = getLeaderboardByMetric(metrices) 
-    ao.send({Target= msg.From, Data=json.encode(dataFromLeaderboard)})
+    local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, %s FROM Leaderboard ORDER BY %s DESC;]], metrices, metrices)) 
+    ao.send({Target= msg.From, Data=json.encode(result)})
 end
 
 Handlers.add("Record.SavedToHistory", Handlers.utils.hasMatchingTag("Action", "Record.SavedToHistory"), savedToHistoryHandler)

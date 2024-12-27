@@ -66,6 +66,7 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
     local leaderboard: Leaderboard = {
         address = "",
         name = "",
+        nft_address = nil,
         gold_earned = 0,
         gold_lost = 0,
         battle_win = 0,
@@ -80,6 +81,7 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
         -- Winning scenario
         leaderboard.address = playerData.address
         leaderboard.name = playerData.name
+        leaderboard.nft_address = playerData.nft_address 
         leaderboard.gold_earned = playerData.gold_balance 
         -- leaderboard.token_earned = playerData.dumz_balance 
         leaderboard.battle_win = 1
@@ -89,6 +91,7 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
         -- Losing scenario
         leaderboard.address = playerData.address
         leaderboard.name = playerData.name
+        leaderboard.nft_address = playerData.nft_address
         leaderboard.gold_lost = playerOriginalData.gold_balance 
         -- leaderboard.token_lost = playerOriginalData.dumz_balance as integer
         leaderboard.battle_lost = 1

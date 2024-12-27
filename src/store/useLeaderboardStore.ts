@@ -19,18 +19,33 @@ interface LeaderboardDataType {
     pvp: number | null;
 }
 
+interface HallOfFameLeaderboardType {
+    gold_earned: {name:string, address:string, user_id: number, id: number, gold_earned: number} | null;
+    battle_win: {name:string, address:string, user_id: number, id: number, battle_win: number} | null;
+    enemy_killed: {name:string, address:string, user_id: number, id: number, enemy_killed: number} | null;
+}
+
 interface LeaderboardState {
   LeaderboardData: LeaderboardDataType[] | null;
+  HallOfFameLeaderboardData: HallOfFameLeaderboardType | null ;
   getParticularLeaderboardData: (metric:string) => Promise<void>;
 }
 export const useLeaderboardStore = create<LeaderboardState>()(
   devtools(
     (set) => ({
         LeaderboardData: null,
-    
+        HallOfFameLeaderboardData: null,
         getParticularLeaderboardData: async (metric: string) => {
         const resultData = await sendAndReceiveGameMessage({ tags: [{ name: "Action", value: "Record.getLeaderboardData" },{ name: "metrices", value: metric } ],
-            process: RECORD_TOKEN_PROCESS_ID });
+            process: RECORD_TOKEN_PROCESS_ID });    
+            // if (metric === "gold_earned" || metric === "battle_win" || metric === "enemy_killed") {
+            //     set((state) => ({
+            //       HallOfFameLeaderboardData: {
+            //         ...state.HallOfFameLeaderboardData,
+            //         [metric]: JSON.parse(resultData.Messages[0].Data),
+            //       },
+            //     }));
+            //   }
             console.log("Ashu : leaddddd: ");
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) set({ LeaderboardData: JSON.parse(resultData.Messages[0].Data) });
         else set({ LeaderboardData: null });

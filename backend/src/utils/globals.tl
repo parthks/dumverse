@@ -144,6 +144,7 @@ end
 global type Leaderboard = record
     address: string
     name: string
+    nft_address: string | nil
     gold_earned: number
     -- token_earned: number
     gold_lost: number
