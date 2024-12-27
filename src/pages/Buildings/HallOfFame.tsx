@@ -108,9 +108,9 @@ export default function HallOfFame() {
         />
       </div> */}
 
-      <Frame index={1} nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address} name={HallOfFameLeaderboardData.gold_earned?.name} category="Gold Earned"/>
-      <Frame index={2} nft_address={HallOfFameLeaderboardData.battle_win?.nft_address} name={HallOfFameLeaderboardData.battle_win?.name} category="Gold Earned"/>
-      <Frame index={3} nft_address={HallOfFameLeaderboardData.enemy_killed?.nft_address} name={HallOfFameLeaderboardData.enemy_killed?.name} category="Gold Earned"/>
+      <Frame index={1} nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address} name={HallOfFameLeaderboardData.gold_earned?.name} category="Gold"/>
+      <Frame index={2} nft_address={HallOfFameLeaderboardData.battle_win?.nft_address} name={HallOfFameLeaderboardData.battle_win?.name} category="Battle"/>
+      <Frame index={3} nft_address={HallOfFameLeaderboardData.enemy_killed?.nft_address} name={HallOfFameLeaderboardData.enemy_killed?.name} category="Enemy"/>
 
 
       {
