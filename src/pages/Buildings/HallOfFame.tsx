@@ -23,7 +23,7 @@ export default function HallOfFame() {
     queryKey: ["leaderboardData"],
     queryFn: async () => {
       try {
-        const leaderboardMetrics = ["battle_win", "gold_earned", "enemy_killed"];
+        const leaderboardMetrics = ["battle_win", "gold_earned", "player_death"];
   
         const results = await Promise.all(
           leaderboardMetrics.map((metric) => getParticularLeaderboardData(metric))
@@ -108,9 +108,9 @@ export default function HallOfFame() {
         />
       </div> */}
 
-      <Frame index={1} nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address} name={HallOfFameLeaderboardData.gold_earned?.name} category="Gold"/>
-      <Frame index={2} nft_address={HallOfFameLeaderboardData.battle_win?.nft_address} name={HallOfFameLeaderboardData.battle_win?.name} category="Battle"/>
-      <Frame index={3} nft_address={HallOfFameLeaderboardData.enemy_killed?.nft_address} name={HallOfFameLeaderboardData.enemy_killed?.name} category="Enemy"/>
+      <Frame index={1} nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address} name={HallOfFameLeaderboardData.gold_earned?.name} category="Gold Earned"/>
+      <Frame index={2} nft_address={HallOfFameLeaderboardData.battle_win?.nft_address} name={HallOfFameLeaderboardData.battle_win?.name} category="Battles Won"/>
+      <Frame index={3} nft_address={HallOfFameLeaderboardData.player_death?.nft_address} name={HallOfFameLeaderboardData.player_death?.name} category="Deaths"/>
 
 
       {
@@ -132,14 +132,41 @@ function Frame({ index, nft_address, name, category }: { index: number, nft_addr
   const leftPosition = index === 1 ? "2%" : index === 2 ? "50%" : "98%";
   const translateX = index === 1 ? "0" : index === 2 ? "-50%" : "-100%";
 
+  // Determine size adjustments for NULL addresses
+  const isNullAddress = nft_address === "NULL";
+  const imageStyle: React.CSSProperties = isNullAddress
+    ? { objectFit: "contain" } // Add padding to avoid cropping
+    : { objectFit: "cover" }; // Normal styling for non-NULL addresses
+
   return (
-    <div className={`absolute top-[${topPosition}] `} style={{  width: "22vw",aspectRatio: "768 / 899", transform: `translateX(${translateX})`, left: leftPosition }}>
+    <div
+      className={`absolute top-[${topPosition}]`}
+      style={{
+        width: "20vw", // Reduced frame size
+        aspectRatio: "768 / 899",
+        transform: `translateX(${translateX})`,
+        left: leftPosition,
+      }}
+    >
       {/* Frame background */}
-      <img src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ" alt="Frame" className="absolute inset-0 w-full h-full z-10 object-cover" />
+      <img
+        src="https://arweave.net/6swKthAqLMd_BmWScSz7Tm6en5IyKnJRa4bvQhlIMEQ"
+        alt="Frame"
+        className="absolute inset-0 w-full h-full z-10 object-cover"
+      />
 
       {/* Container for the image inside the frame */}
       <div className="absolute top-[17%] left-[26%] w-[53%] h-[50%]">
-        <img src={nft_address!=="NULL" ? `https://arweave.net/${nft_address}`:"https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"} alt="Content Image" className="w-full h-[120%] object-cover" />
+        <img
+          src={
+            nft_address !== "NULL"
+              ? `https://arweave.net/${nft_address}`
+              : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"
+          }
+          alt="Content Image"
+          className="w-full h-[120%]"
+          style={imageStyle}
+        />
       </div>
 
       {/* Container for the text in the bottom box */}
@@ -153,9 +180,8 @@ function Frame({ index, nft_address, name, category }: { index: number, nft_addr
           transform: "translateX(-50%)",
         }}
       >
-        <p className="text-white text-xl font-bold">{name}</p>
-        {/* <p className="text-white text-xl font-bold">1st in _______</p> */}
-        <p className="text-white text-xl font-bold">1st in {category}</p>
+        <p className="text-white text-lg font-bold">{name}</p> {/* Reduced font size */}
+        <p className="text-white text-sm font-bold underline underline-offset-0">1st in {category}</p> {/* Reduced font size */}
       </div>
     </div>
   );

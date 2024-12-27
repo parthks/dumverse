@@ -37,13 +37,13 @@ interface HallOfFameLeaderboardType {
       id: number;
       battle_win: number;
     } | null;
-    enemy_killed: {
+    player_death: {
       name: string;
       address: string;
       nft_address: string | null;
       user_id: number;
       id: number;
-      enemy_killed: number;
+      player_death: number;
     } | null;
   }
 
@@ -59,7 +59,7 @@ export const useLeaderboardStore = create<LeaderboardState>()(
         HallOfFameLeaderboardData: {
             gold_earned: null,
             battle_win: null,
-            enemy_killed: null,
+            player_death: null,
           },
           getParticularLeaderboardData: async (metric: string) => {
             const resultData = await sendAndReceiveGameMessage({
