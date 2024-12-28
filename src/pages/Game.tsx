@@ -26,31 +26,27 @@ export default function Game() {
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
+  
     if (GameStatePage === GameStatePages.COMBAT) {
-      if (interval) {
-        clearInterval(interval);
-        setRegenerateCountdown(null);
-      }
+      if (interval) clearInterval(interval);
+      setRegenerateCountdown(null);
       return;
     }
-
-    // TODO: check this logic if timer resets when in town or rest area
-    // const inTownOrRestArea = user?.current_spot && REST_SPOTS.includes(user?.current_spot);
-
+  
     if (user?.id && user?.stamina < user?.total_stamina) {
-      // console.log("Regenerating energy interval started");
-      interval = setInterval(async () => {
-        // console.log("Regenerating energy");
+      interval = setInterval(() => {
         regenerateCountdownTickDown();
       }, 1000);
     }
-
+  
     return () => {
       if (interval) {
         clearInterval(interval);
       }
     };
-  }, [user?.stamina, user?.total_stamina, GameStatePage, user?.current_spot]);
+  }, [user?.id, user?.stamina, user?.total_stamina, GameStatePage]);
+  
+
 
   let page = <div>Game</div>;
   if (GameStatePage === GameStatePages.BANK) page = <Bank />;

@@ -441,10 +441,10 @@ local function userIsReadyHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     
     local battle=Battles[battle_id]
-    -- local npcs = battle.npcs as {CombatEnemyData}
-    -- for _, npc in ipairs(npcs) do
-    --     battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
-    -- end
+    local npcs = battle.npcs as {CombatEnemyData}
+    for _, npc in ipairs(npcs) do
+        battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
+    end
     battle.started=true
     ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
 end    

@@ -404,19 +404,19 @@ export const useGameStore = create<GameState>()(
         }
       },
       regenerateCountdownTickDown: async () => {
-        // console.log("new regenerateCountdownTickDown", get().regenerateCountdown);
-        if (get().regenerateCountdown !== null) {
-          const currentCount = get().regenerateCountdown!;
-          set({ regenerateCountdown: currentCount - 1 });
-          if (currentCount === 0) {
+        const countdown = get().regenerateCountdown;
+      
+        if (countdown !== null) {
+          set({ regenerateCountdown: countdown - 1 });
+      
+          if (countdown - 1 === 0) {
             await get().regenerateEnergy();
-            set({ regenerateCountdown: null });
+            get().resetRegenerateCountdown();
           }
         } else {
-          console.log("resetting regenerateCountdown since it's null");
           get().resetRegenerateCountdown();
         }
-      },
+      },      
       setRegenerateCountdown: (countdown) => {
         set({ regenerateCountdown: countdown });
       },
