@@ -240,14 +240,14 @@ const FormData = () => {
     if (profile) setName(profile?.UserName || "");
   }, [profile]);
 
-  useEffect(() => {
-    if (profileLoading) return;
-    if (dumdumAssets.length > 0) {
-      // find the first asset that has an existing profile
-      const existingAsset = dumdumAssets.find((asset) => asset.existingProfile);
-      setSelectedOption(existingAsset ?? (dumdumAssets[0] as any));
-    }
-  }, [profileLoading, dumdumAssets]);
+    useEffect(() => {
+      if (profileLoading) return;
+      if (dumdumAssets.length > 0) {
+        // find the first asset that has an existing profile
+        const existingAsset = dumdumAssets.find((asset) => asset.existingProfile);
+        setSelectedOption(existingAsset ?? (dumdumAssets[0] as any));
+      }
+    }, [profileLoading, dumdumAssets]);
 
   return (
     <form className="space-y-4 w-full m-16 flex flex-col gap-4 items-center">
