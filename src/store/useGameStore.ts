@@ -408,8 +408,8 @@ export const useGameStore = create<GameState>()(
       
         if (countdown !== null) {
           set({ regenerateCountdown: countdown - 1 });
-      
-          if (countdown - 1 === 0) {
+          
+          if (countdown < 1) {
             await get().regenerateEnergy();
             get().resetRegenerateCountdown();
           }
