@@ -24,6 +24,8 @@ export const useProfile = () => {
           CoverImage: data.Profile.CoverImage === "None" ? null : `https://arweave.net/$${data.Profile.CoverImage}`,
           ProfileImage: data.Profile.ProfileImage === "None" ? null : `https://arweave.net/${data.Profile.ProfileImage}`,
         };
+        // console.log("Ashu : getProfileInfo: Profile: " + JSON.stringify(profile));
+
         setProfile(profile);
         setAssets(data.Assets);
       } catch (error) {

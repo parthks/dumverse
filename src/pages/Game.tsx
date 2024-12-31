@@ -1,5 +1,5 @@
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Combat from "./Combat";
 import GameMap from "./GameMap";
 import RestArea from "./RestArea";
@@ -18,35 +18,61 @@ import Den from "./Buildings/Den";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/canvas";
 import Settings from "@/components/game/Settings";
+import { REST_SPOTS } from "@/lib/constants";
 
 const queryClient = new QueryClient();
 
 export default function Game() {
-  const { GameStatePage, setGameStatePage, isSettingsOpen, setIsSettingsOpen, user, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
+  const { GameStatePage, setGameStatePage, isSettingsOpen, setIsSettingsOpen, user, regenerateEnergy,regenerateCountdown,resetRegenerateCountdown, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
+
+  
+  const workerRef = useRef<Worker | null>(null);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
-  
-    if (GameStatePage === GameStatePages.COMBAT) {
-      if (interval) clearInterval(interval);
-      setRegenerateCountdown(null);
-      return;
+    if (!workerRef.current) {
+      workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url));
     }
-  
-    if (user?.id && user?.stamina < user?.total_stamina) {
-      interval = setInterval(() => {
-        regenerateCountdownTickDown();
-      }, 1000);
-    }
-  
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    };
-  }, [user?.id, user?.stamina, user?.total_stamina, GameStatePage]);
-  
 
+    const worker = workerRef.current;
+
+    // Handle messages from the worker
+    worker.onmessage = (event) => {
+      const { countdown: newCountdown, complete } = event.data;
+
+      if (newCountdown !== undefined || newCountdown == null) {
+        // console.log("Ashu : newCountdown: "+newCountdown);
+        // console.log("Ashu : regenerateCountdown: "+regenerateCountdown);
+
+        // Instead of directly updating, call regenerateCountdownTickDown
+        regenerateCountdownTickDown();
+      }
+
+      // if (complete) {
+      //   console.log("Countdown complete. Regenerating energy...");
+      //   regenerateEnergy();
+      //   resetRegenerateCountdown(); // Reset the countdown
+      // }
+    };
+
+    // Start the worker if conditions are met
+    if (user?.id && user?.stamina < user?.total_stamina) {
+      // console.log("Ashu : Dammmm WORKERSSSS");
+      const initialCountdown = regenerateCountdown != null? regenerateCountdown : (user?.current_spot!== undefined && REST_SPOTS.includes( user?.current_spot)) ? 120 : 240; // Use the store value
+      worker.postMessage({
+        type: "start",
+        data: {
+          interval: 1000, // 1 second interval
+          initialCountdown,
+        },
+      });
+    }
+
+    return () => {
+      worker.postMessage({ type: "stop" });
+      worker.terminate();
+      workerRef.current = null;
+    };
+  }, [user?.current_spot, user?.stamina, user?.total_stamina, GameStatePage, regenerateCountdown]);
 
   let page = <div>Game</div>;
   if (GameStatePage === GameStatePages.BANK) page = <Bank />;

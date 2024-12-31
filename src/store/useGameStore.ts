@@ -390,8 +390,8 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
-        const currentSpot = get().user?.current_spot;
-        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
+        const currentSpot = get().user?.current_spot;  
+        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot) ;
         console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
         // if in town or rest area, set the countdown to 2 minutes
         if (inTownOrRestArea) {
@@ -408,15 +408,16 @@ export const useGameStore = create<GameState>()(
       
         if (countdown !== null) {
           set({ regenerateCountdown: countdown - 1 });
-          
-          if (countdown - 1 === 0 ) {
+      
+          if (countdown - 1 === 0) {
             await get().regenerateEnergy();
             get().resetRegenerateCountdown();
+            get().refreshUserData();
           }
         } else {
           get().resetRegenerateCountdown();
         }
-      },      
+      },
       setRegenerateCountdown: (countdown) => {
         set({ regenerateCountdown: countdown });
       },
