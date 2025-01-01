@@ -31,7 +31,7 @@ interface GameState {
   registerNewUser: (name: string, nft?: string) => Promise<void>;
   upgradeExistingProfile: (nftAddress: string) => Promise<void>;
   user: GameUser | null;
-  setUserOnLogin: (user: GameUser | null) => void;
+  setUserOnLogin: (user: GameUser | null, nftAddress: string) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
   getAllPlayersAtLocation: (currentSpot: number) => Promise<GameUser[]>;
   inventory: Inventory[];
@@ -99,7 +99,7 @@ export const useGameStore = create<GameState>()(
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const data = JSON.parse(resultData.Messages[0].Data);
           if (data.status === "Success") {
-            get().setUserOnLogin(data.data);
+            get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
           }
         }
       },
@@ -112,7 +112,7 @@ export const useGameStore = create<GameState>()(
         });
       },
       user: null,
-      setUserOnLogin: async (user) => {
+      setUserOnLogin: async (user, nftAddress) => {
         if (user) {
           // if (user.current_battle_id) {
           //   // user is in a battle
@@ -124,6 +124,7 @@ export const useGameStore = create<GameState>()(
             tags: [
               { name: "Action", value: "User.Login" },
               { name: "UserId", value: user.id.toString() },
+              { name: "NFT_Address", value: nftAddress },
             ],
           });
           // if user is not in a spot, only then go to town. Else need to go to game map

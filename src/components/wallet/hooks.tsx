@@ -16,6 +16,7 @@ export const useProfile = () => {
         });
 
         const data = JSON.parse(result.Messages[0].Data);
+        // console.log("Ashu : profileId: " + profileId);
         // console.log("Ashu : getProfileInfo: " + JSON.stringify(data));
         const profile = {
           ...data.Profile,

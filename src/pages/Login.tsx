@@ -213,11 +213,16 @@ const FormData = () => {
         alert("Game profile not found");
         return;
       }
-      await setUser(gameProfile);
+      // console.log("Ashu : ASHUUUUUUUUUUU selectedOption: "+JSON.stringify(selectedOption));
+      // console.log("Ashu : ASHUUUUUUUUUUU gameProfile: "+JSON.stringify(gameProfile));
+
+      await setUser(gameProfile, selectedOption.Id ? selectedOption.Id : "NULL" );
     } else if (nonNFTGameProfiles.length > 0) {
       console.log("upgrading existing profile with NFT", selectedOption);
       if (selectedOption?.Id) await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id);
-      await setUser(nonNFTGameProfiles[0]);
+      // console.log("Ashu : selectedOption: "+JSON.stringify(selectedOption));
+      // console.log("Ashu : MITTTTTTTTTTALLLLL: "+JSON.stringify(nonNFTGameProfiles[0]));
+      await setUser(nonNFTGameProfiles[0], selectedOption ? selectedOption.Id : "NULL");
     } else {
       if (!name || name === "") return;
       await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
