@@ -30,7 +30,7 @@ export default function Game() {
 
   useEffect(() => {
     if (!workerRef.current) {
-      workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url));
+      workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url), { type: 'module' });
     }
 
     const worker = workerRef.current;

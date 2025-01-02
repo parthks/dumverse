@@ -34,3 +34,5 @@ self.onmessage = (event) => {
     self.postMessage({ stopped: true });
   }
 };
+
+export {};

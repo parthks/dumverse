@@ -27,5 +27,10 @@ export default defineConfig({
   },
   build: {
     cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        format: 'es', // Ensure workers are bundled as ES modules
+      },
+    },
   },
 });
