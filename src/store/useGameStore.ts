@@ -30,8 +30,9 @@ interface GameState {
   setGameStatePage: (state: GameStatePages | null) => void;
   registerNewUser: (name: string, nft?: string) => Promise<void>;
   upgradeExistingProfile: (nftAddress: string) => Promise<void>;
+  deletingUsersAccount: (nftAddress: string) => Promise<void>;
   user: GameUser | null;
-  setUserOnLogin: (user: GameUser | null, nftAddress: string) => void;
+  setUserOnLogin: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
   getAllPlayersAtLocation: (currentSpot: number) => Promise<GameUser[]>;
   inventory: Inventory[];
@@ -99,7 +100,9 @@ export const useGameStore = create<GameState>()(
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const data = JSON.parse(resultData.Messages[0].Data);
           if (data.status === "Success") {
-            get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
+            // get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
+            get().setUserOnLogin(data.data);
+
           }
         }
       },
@@ -111,8 +114,16 @@ export const useGameStore = create<GameState>()(
           ],
         });
       },
+      deletingUsersAccount: async (nftAddress) => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "User.DeletingUsersAccount" },
+            { name: "NFT_Address", value: nftAddress },
+          ],
+        });
+      },
       user: null,
-      setUserOnLogin: async (user, nftAddress) => {
+      setUserOnLogin: async (user) => {
         if (user) {
           // if (user.current_battle_id) {
           //   // user is in a battle
@@ -120,11 +131,12 @@ export const useGameStore = create<GameState>()(
           //   set({ GameStatePage: GameStatePages.COMBAT });
           // }
           // else
+                        // { name: "NFT_Address", value: nftAddress },
+
           const resultData = await sendAndReceiveGameMessage({
             tags: [
               { name: "Action", value: "User.Login" },
               { name: "UserId", value: user.id.toString() },
-              { name: "NFT_Address", value: nftAddress },
             ],
           });
           // if user is not in a spot, only then go to town. Else need to go to game map

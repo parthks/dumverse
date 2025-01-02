@@ -166,6 +166,8 @@ local function upgradeExistingProfileHandler(msg: Message)
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
     assert(nft_address, "NFT_Address is required")
+
+
     local userData = dbAdmin:exec(string.format([[
         SELECT * FROM Users WHERE address = "%s" and nft_address is NULL;
     ]], user_address))
@@ -181,31 +183,35 @@ local function upgradeExistingProfileHandler(msg: Message)
         end
     end
 
+    -- update nft_address
+    local tempUserData = {
+        nft_address = nft_address,
+    }
+    local baseStats = helpers.CalculateUserBaseStats(tempUserData)
+    -- update, total_stamina, total_health, health stamina, nft_address
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET nft_address = "%s", total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
+    ]], nft_address, baseStats.total_stamina, baseStats.total_health, baseStats.health, baseStats.stamina, user_id))
+
     if not nft_already_claimed then
-       
         table.insert(ClaimedNFTs, nft_address)
-        -- update nft_address
-        local tempUserData = {
-            nft_address = nft_address,
-        }
-        local baseStats = helpers.CalculateUserBaseStats(tempUserData)
-        -- update, total_stamina, total_health, health stamina, nft_address
-        dbAdmin:exec(string.format([[
-            UPDATE Users SET nft_address = "%s", total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
-        ]], nft_address, baseStats.total_stamina, baseStats.total_health, baseStats.health, baseStats.stamina, user_id))
-    
         local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
         -- update bank
         dbAdmin:exec(string.format([[
             UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
         ]], nft_dumz_amount, nft_gold_amount, user_id))
-
-        OneOfOnesSpecialItemsHandler(nft_address, user_id as number)
-
-        -- Debug print
-        print("user upgraded with ID: " .. tostring(user_id))
-
+    else
+        local nft_dumz_amount, nft_gold_amount = 0,0
+         dbAdmin:exec(string.format([[
+            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        ]], nft_dumz_amount, nft_gold_amount, user_id))
     end
+
+    OneOfOnesSpecialItemsHandler(nft_address, user_id as number)
+
+    -- Debug print
+    print("user upgraded with ID: " .. tostring(user_id))
+
 
      ao.send({
          Target = msg.From,
@@ -355,25 +361,47 @@ end
 
 local function userLoginHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    local nft_address = msg.Tags.NFT_Address
+    -- local nft_address = msg.Tags.NFT_Address
     local timestamp = msg.Timestamp
     local userData = helpers.CheckUserExists(user_id, msg.From)
 
-    if userData.nft_address and userData.nft_address ~= nft_address then
-        userData.total_stamina = 4
-        userData.stamina = 4 
-        userData.total_health = 2
-        userData.health = 2
-        dbAdmin:exec(string.format([[
-            UPDATE Users SET nft_address = "%s", total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
-        ]], nil, userData.total_stamina, userData.total_health, userData.health, userData.stamina, user_id))
+    -- print(nft_address)
+    -- if userData.nft_address and userData.nft_address ~= nft_address then
+    --     userData.total_stamina = 4
+    --     userData.stamina = 4 
+    --     userData.total_health = 2
+    --     userData.health = 2
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Users SET nft_address = NULL, total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
+    --     ]], userData.total_stamina, userData.total_health, userData.health, userData.stamina, user_id))
 
-        local nft_dumz_amount = 0
-        local nft_gold_amount = 0
-        dbAdmin:exec(string.format([[
-            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
-        ]], nft_dumz_amount, nft_gold_amount, user_id))
-    end
+    --     local nft_dumz_amount = 0
+    --     local nft_gold_amount = 0
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+    --     ]], nft_dumz_amount, nft_gold_amount, user_id))
+    -- end
+
+    -- local nft_already_claimed: boolean = false
+
+    -- for _, value in ipairs(ClaimedNFTs) do
+    --     if nft_address == value then
+    --         nft_already_claimed = true
+    --         break
+    --     end
+    -- end
+
+    -- if not nft_already_claimed and nft_address ~= "NULL" then
+    --     table.insert(ClaimedNFTs, nft_address)
+    -- end
+
+    -- if nft_already_claimed and nft_address ~= "NULL" then
+    --     local nft_dumz_amount = 0
+    --     local nft_gold_amount = 0
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+    --     ]], nft_dumz_amount, nft_gold_amount, user_id))
+    -- end
 
     local last_regenerate_time = userData.last_regenerate_time or 0
 
@@ -418,6 +446,16 @@ local function userLoginHandler(msg: Message)
     })
 end
 
+local function deletingUsersAccountHandler(msg:Message) 
+    local user_address = msg.From
+    local nft_address = msg.Tags.NFT_Address
+    assert(nft_address, "NFT_Address is required")
+    if nft_address == "NULL" then
+    dbAdmin:exec(string.format([[
+        DELETE FROM Users WHERE address = "%s" ;
+    ]], user_address))
+   end
+end
 
 
 -- Add handlers
@@ -433,4 +471,5 @@ Handlers.add("User.RegenerateEnergy", Handlers.utils.hasMatchingTag('Action', 'U
 Handlers.add("User.Revive", Handlers.utils.hasMatchingTag('Action', 'User.Revive'), reviveUserHandler)
 Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Action', 'User.GetAllPlayersAtLocation'), getAllPlayersAtLocationHandler)
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
+Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
 return {}

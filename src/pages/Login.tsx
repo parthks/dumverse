@@ -190,6 +190,7 @@ const FormData = () => {
   const setUser = useGameStore((state) => state.setUserOnLogin);
 
   const nonNFTGameProfiles = gameProfiles ? gameProfiles.filter((profile) => !profile.nft_address) : [];
+  const NFTGameProfiles = gameProfiles ? gameProfiles.filter((profile) => profile.nft_address) : [];
 
   const [loading, setLoading] = useState(false);
 
@@ -216,14 +217,23 @@ const FormData = () => {
       // console.log("Ashu : ASHUUUUUUUUUUU selectedOption: "+JSON.stringify(selectedOption));
       // console.log("Ashu : ASHUUUUUUUUUUU gameProfile: "+JSON.stringify(gameProfile));
 
-      await setUser(gameProfile, selectedOption.Id ? selectedOption.Id : "NULL" );
+      // await setUser(gameProfile, selectedOption.Id ? selectedOption.Id : "NULL" );
+      await setUser(gameProfile);
     } else if (nonNFTGameProfiles.length > 0) {
       console.log("upgrading existing profile with NFT", selectedOption);
+      // await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id ? selectedOption?.Id : "NULL")
       if (selectedOption?.Id) await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id);
       // console.log("Ashu : selectedOption: "+JSON.stringify(selectedOption));
       // console.log("Ashu : MITTTTTTTTTTALLLLL: "+JSON.stringify(nonNFTGameProfiles[0]));
-      await setUser(nonNFTGameProfiles[0], selectedOption ? selectedOption.Id : "NULL");
-    } else {
+      // await setUser(nonNFTGameProfiles[0], selectedOption ? selectedOption.Id : "NULL");
+      await setUser(nonNFTGameProfiles[0]);
+
+    } else if (selectedOption == null && NFTGameProfiles.length > 0){
+      console.log("Downgrading the account");
+     await useGameStore.getState().deletingUsersAccount("NULL");
+      await useGameStore.getState().registerNewUser(name);
+    }
+    else {
       if (!name || name === "") return;
       await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
     }
