@@ -207,6 +207,7 @@ const FormData = () => {
 
   async function handleRegister() {
     setLoading(true);
+    console.log("NFT Account: "+JSON.stringify(NFTGameProfiles));
     if (selectedOption?.existingProfile && gameProfiles) {
       const gameProfile = gameProfiles.find((profile) => profile.nft_address === selectedOption.Id);
       if (!gameProfile) {
@@ -228,10 +229,7 @@ const FormData = () => {
       // await setUser(nonNFTGameProfiles[0], selectedOption ? selectedOption.Id : "NULL");
       await setUser(nonNFTGameProfiles[0]);
 
-    } else if  (
-      (!selectedOption || !dumdumAssets.some((asset) => asset.Id === selectedOption.Id)) && 
-      NFTGameProfiles.length > 0
-    ){
+    } else if (!selectedOption?.Id && NFTGameProfiles.length > 0){
       console.log("Downgrading the account");
      await useGameStore.getState().deletingUsersAccount("NULL");
       await useGameStore.getState().registerNewUser(name);
