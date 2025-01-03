@@ -7,9 +7,6 @@ test-dumz-token:
 chat:
   processId: uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI
   hash: a1966d681baf852926e1d3b8ecc0c42e938a64a6a7701b8e3fefe3cf1147fa80
-game:
-  processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
-  hash: d4bf08d8652e8279bf443268c1652cb2aa55a81546c949297b1d4574ffbf4a34
 cron:
   processId: W213NPgMq9nwN8FU2IQi-wZHyOceeLMf7B3shGwh_4Y
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
@@ -30,4 +27,7 @@ combat5:
   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
 record:
   processId: 6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8
-  hash: bb5075f32cac3544e8ea788df1fed2e44daaaaac224fee99ea86a20a41f57f2d
+  hash: 61372d52db8ffd771f48653d4704aca38fbdfeb27c9779bd3155fcb044324a52
+game:
+  processId: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
+  hash: ba000f975ac106ab412061fd15ab9fa8a5afb7bf008eddf5dce51201ef2466ff

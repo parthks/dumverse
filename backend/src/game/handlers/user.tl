@@ -473,3 +473,9 @@ Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Acti
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
 return {}
+
+
+
+-- game:
+--   processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+--   hash: d4bf08d8652e8279bf443268c1652cb2aa55a81546c949297b1d4574ffbf4a34

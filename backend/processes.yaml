@@ -22,7 +22,7 @@
     - name: Name
       value: Combat
     - name: GameProcessId
-      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+      value: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
     - name: Authority
       value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
     - name: Cron-Interval
@@ -40,7 +40,7 @@
     - name: Name
       value: Combat2
     - name: GameProcessId
-      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+      value: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
     - name: Authority
       value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
     - name: Cron-Interval
@@ -58,7 +58,7 @@
     - name: Name
       value: Combat3
     - name: GameProcessId
-      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+      value: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
     - name: Authority
       value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
     - name: Cron-Interval
@@ -76,7 +76,7 @@
     - name: Name
       value: Combat4
     - name: GameProcessId
-      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+      value: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
     - name: Authority
       value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
     - name: Cron-Interval
@@ -94,7 +94,7 @@
     - name: Name
       value: Combat5
     - name: GameProcessId
-      value: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+      value: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
     - name: Authority
       value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
     - name: Cron-Interval
