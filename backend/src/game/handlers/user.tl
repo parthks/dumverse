@@ -479,3 +479,40 @@ return {}
 -- game:
 --   processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
 --   hash: d4bf08d8652e8279bf443268c1652cb2aa55a81546c949297b1d4574ffbf4a34
+
+-- combat:
+--   processId: C5Mew98EcDDAw_PuPR3A2YrTbEdAKIi2tWQjhca85co
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat2:
+--   processId: crigtRqaGl05C5rEHWpBzMlB83CGz0PpNOsEZYMkIms
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat3:
+--   processId: c4my8yA8JTpydKTZ6KZ-UQ0z1HvacJO_vnTMI_VGXx8
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat4:
+--   processId: PdTfjViGZh2jbmN3-72X3Q1S_Q6zu7Pr_uvOiB5b7s0
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat5:
+--   processId: MoW74fDXI1IwvZ_YndSDY1G7WUs5QrYgtcYuttU6Izg
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+
+
+
+
+-----------------------------------
+
+-- combat:
+--   processId: mb78FFDuv9COl9kwXsaf3rOyZU6AFdq9dGU1xdNPUhs
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat2:
+--   processId: htjj556bms7MCh896xPkX7T25QCYwoi9ehiGE7LGyWI
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat3:
+--   processId: 3q26WFMjTp0XCDSXFh3NUmvzs3cIXmbJQkrtMWypP-Y
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat4:
+--   processId: 1qv-rdDxC_KHJXElX-yDPVaju9P8NfniWOrUFOZyT_s
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat5:
+--   processId: z6GPRSiSH5Zezqhpy9DTNdBH0UnSTigibRV1863h0jo
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238

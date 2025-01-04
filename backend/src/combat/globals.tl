@@ -2,7 +2,8 @@ local json = require("json")
 -- local constants = require("utils.constants")
 require("combat.types")
 global MAX_PLAYERS_IN_BATTLE = 2
-global GAME_PROCESS_ID = ao.env.Process.Tags.GameProcessId
+-- global GAME_PROCESS_ID = ao.env.Process.Tags.GameProcessId
+global GAME_PROCESS_ID = "Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI"
 
 global BATTLE_COUNT: integer
 if not BATTLE_COUNT then

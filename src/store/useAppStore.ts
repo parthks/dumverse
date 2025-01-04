@@ -46,7 +46,7 @@ export const useAppStore = create<AppState>()(
       gameProfiles: null,
       getGameProfiles: async () => {
         const resultData = await sendAndReceiveGameMessage({ tags: [{ name: "Action", value: "User.UserProfiles" }] });
-        console.log("Ashu : getGameProfiles: "+ JSON.stringify(resultData));
+        // console.log("Ashu : getGameProfiles: "+ JSON.stringify(resultData));
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) set({ gameProfiles: JSON.parse(resultData.Messages[0].Data) });
         else set({ gameProfiles: [] });
       },

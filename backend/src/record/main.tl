@@ -94,11 +94,11 @@ end
 global SubProcesses: {string}
 if not SubProcesses then
     SubProcesses = {
-        "C5Mew98EcDDAw_PuPR3A2YrTbEdAKIi2tWQjhca85co",
-        "crigtRqaGl05C5rEHWpBzMlB83CGz0PpNOsEZYMkIms",
-        "c4my8yA8JTpydKTZ6KZ-UQ0z1HvacJO_vnTMI_VGXx8",
-        "PdTfjViGZh2jbmN3-72X3Q1S_Q6zu7Pr_uvOiB5b7s0",
-        "MoW74fDXI1IwvZ_YndSDY1G7WUs5QrYgtcYuttU6Izg",
+        "trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg",
+        "78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4",
+        "olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI",
+        "ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs",
+        "j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM",
     }
 end
 
@@ -209,9 +209,21 @@ local function getLeaderboardDataHandler(msg: Message)
     ao.send({Target= msg.From, Data=json.encode(result)})
 end
 
+local function resetRecordSubprocessesHandler(msg:Message)
+    assert(msg.From==ao.id,"You can not call this handler")
+    SubProcesses = {
+        "trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg",
+        "78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4",
+        "olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI",
+        "ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs",
+        "j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM",
+    }
+end
+
 Handlers.add("Record.SavedToHistory", Handlers.utils.hasMatchingTag("Action", "Record.SavedToHistory"), savedToHistoryHandler)
 Handlers.add("Record.insertOrUpdateDataInLeaderBorad", Handlers.utils.hasMatchingTag("Action", "Record.insertOrUpdateDataInLeaderBorad"), insertOrUpdateDataInLeaderBoradHandler)
 Handlers.add("Record.getLeaderboardData", Handlers.utils.hasMatchingTag("Action", "Record.getLeaderboardData"), getLeaderboardDataHandler)
+Handlers.add("Record.ResetRecordSubprocesses", Handlers.utils.hasMatchingTag('Action', 'Record.ResetRecordSubprocesses'), resetRecordSubprocessesHandler)
 
 -- return {}
 

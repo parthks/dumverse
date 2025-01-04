@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["C5Mew98EcDDAw_PuPR3A2YrTbEdAKIi2tWQjhca85co"]=0,
-        ["crigtRqaGl05C5rEHWpBzMlB83CGz0PpNOsEZYMkIms"]=0,
-        ["c4my8yA8JTpydKTZ6KZ-UQ0z1HvacJO_vnTMI_VGXx8"]=0,
-        ["PdTfjViGZh2jbmN3-72X3Q1S_Q6zu7Pr_uvOiB5b7s0"]=0,
-        ["MoW74fDXI1IwvZ_YndSDY1G7WUs5QrYgtcYuttU6Izg"]=0,
+        ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
+        ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
+        ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
+        ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
+        ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
     }
 end
 
@@ -601,6 +601,17 @@ local function removePlayerFromBattleHandler(msg: Message)
 
 end
 
+local function resetSubprocessesHandler(msg:Message)
+   assert(msg.From==ao.id,"You can not call this handler")
+   subProcesses = {
+    ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
+    ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
+    ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
+    ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
+    ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
+   }
+end
+
 -- Add handlers
 Handlers.add("Combat.EnterNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnterNewCombat'), enterNewCombatHandler)
 Handlers.add("Combat.EnteredNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnteredNewCombat'), enteredNewCombatHandler)
@@ -608,5 +619,6 @@ Handlers.add("Combat.PlayerWon", Handlers.utils.hasMatchingTag('Action', 'Combat
 Handlers.add("Combat.PlayerRanAway", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerRanAway'), playerRanAwayHandler)
 Handlers.add("Combat.PlayerPerished", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerPerished'), playerPerishedHandler)
 Handlers.add("Combat.RemovePlayerFromBattle", Handlers.utils.hasMatchingTag('Action', 'Combat.RemovePlayerFromBattle'), removePlayerFromBattleHandler)
+Handlers.add("Combat.ResetSubprocesses", Handlers.utils.hasMatchingTag('Action', 'Combat.ResetSubprocesses'), resetSubprocessesHandler)
 
 return {}

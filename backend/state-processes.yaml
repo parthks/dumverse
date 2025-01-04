@@ -10,24 +10,24 @@ chat:
 cron:
   processId: W213NPgMq9nwN8FU2IQi-wZHyOceeLMf7B3shGwh_4Y
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
-combat:
-  processId: C5Mew98EcDDAw_PuPR3A2YrTbEdAKIi2tWQjhca85co
-  hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
-combat2:
-  processId: crigtRqaGl05C5rEHWpBzMlB83CGz0PpNOsEZYMkIms
-  hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
-combat3:
-  processId: c4my8yA8JTpydKTZ6KZ-UQ0z1HvacJO_vnTMI_VGXx8
-  hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
-combat4:
-  processId: PdTfjViGZh2jbmN3-72X3Q1S_Q6zu7Pr_uvOiB5b7s0
-  hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
-combat5:
-  processId: MoW74fDXI1IwvZ_YndSDY1G7WUs5QrYgtcYuttU6Izg
-  hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
 record:
   processId: 6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8
-  hash: 61372d52db8ffd771f48653d4704aca38fbdfeb27c9779bd3155fcb044324a52
+  hash: 9208385269f941a7db022d4f101acbdfc8f4a804b808f6a6ac2df6c37b0f787b
 game:
   processId: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
-  hash: ba000f975ac106ab412061fd15ab9fa8a5afb7bf008eddf5dce51201ef2466ff
+  hash: c9df538bbc5076eae79e795d1dcb12210b672da210849d9f441e14bf028d88e5
+combat:
+  processId: trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
+combat2:
+  processId: 78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
+combat3:
+  processId: olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
+combat4:
+  processId: ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
+combat5:
+  processId: j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
