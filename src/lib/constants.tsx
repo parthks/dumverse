@@ -166,6 +166,16 @@ export const DIALOGUES = {
   },
 };
 
+export const COMBAT_LOADING_SCREEN={
+  scene1:"vEaj8G-m-XiDFQsTkzLkibfRY0OxFKb6wFk2Synzwa0",
+  scene2:"3IvuwLVNrqKjZTXDt1P7CO3wlAgdMJm4qmnU7MEJEX0",
+  scene3:"AYJLF5Gegx3o-Sk-2mFHWxNdaOFCP7URQzTyWZGw-OU",
+  scene4:"byGysdqjupXSVWdeFi9l6j2z7Ft1iBRIllPppKY3XSY",
+  scene5:"bbThLOEusuvUViX5xuohpfhb2oqMRKAziertou09T3o",
+  scene6:"gixtdD68RO40eRRaICZXOtP91PsCbOIOAJj7rupJKHY",
+  scene7:"xI4MJF_eBKTksWB_qpkY9B90jswgUHe2TX9Lwr3gN1U",
+}
+
 export const lammaWidth = 4; //5
 export const lammaHeight = 8.2;
 

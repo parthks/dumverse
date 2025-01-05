@@ -1,14 +1,14 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
-import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
+import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, COMBAT_LOADING_SCREEN } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
 import audioManager from "@/utils/audioManager";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 
 // const currentBattle = {
 //   npcs: {

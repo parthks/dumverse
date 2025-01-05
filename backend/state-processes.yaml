@@ -12,10 +12,10 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: 6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8
-  hash: 9208385269f941a7db022d4f101acbdfc8f4a804b808f6a6ac2df6c37b0f787b
+  hash: b8961e8b9c62c5a047db852f8ebcf417ea302be56359eae45461207e2e5634eb
 game:
   processId: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
-  hash: c9df538bbc5076eae79e795d1dcb12210b672da210849d9f441e14bf028d88e5
+  hash: 84c76b6dbe6107ff2e49786fe5ecef5ff77b2b49ed2590afd8ebb2726aa1bcda
 combat:
   processId: trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg
   hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8

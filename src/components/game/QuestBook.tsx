@@ -87,12 +87,12 @@ export default function QuestBook() {
             Whispers of the woods
           </h2>
           <p style={{ fontSize: `${24 * scale}px` }}>
-            The Dum at the Weapon shop told us the whereabouts of a special type of wood to make the wand of resilience. We must find teh sacred tree that holds these pieces.
+            The Dum at the Weapon shop told us the whereabouts of a special type of wood to make the wand of resilience. We must find the sacred tree that holds these pieces.
           </p>
         </div>
         <div className="self-start flex items-center justify-center gap-2 text-center mx-auto">
           <img src="https://arweave.net/oOEo5x6rkk4CZeres-uW0pGpv0HTR8_O0Jjax49dfVM" alt="Wood" className="w-6" />{" "}
-          <span style={{ fontSize: `${28 * scale}px` }}>Wood Core {user.special_item_bark}/8</span>
+          <span style={{ fontSize: `${28 * scale}px` }}>Wood Core {user.special_item_bark}/6</span>
         </div>
         <div className="self-start">
           <h3 style={{ fontSize: `${28 * scale}px`, color: "#E19A4C" }}>Reward:</h3>
