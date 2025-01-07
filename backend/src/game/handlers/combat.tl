@@ -16,16 +16,36 @@ if not subProcesses then
     }
 end
 
-global subProcessAssignToUsers: {number:string}
+local record DataRelatingSubProcessAssignToUser
+    user_id: number
+    level: number
+    subProcess: string
+end
+
+global subProcessAssignToUsers: {number:DataRelatingSubProcessAssignToUser}
 if not subProcessAssignToUsers then
     subProcessAssignToUsers = {}
 end
 
-local function assignSubProcessToUser(user_id:number) : string
+local function assignSubProcessToUser(user_id:number, level: number) : string
 
     if subProcessAssignToUsers[user_id] ~= nil then
-        return subProcessAssignToUsers[user_id]
+        return subProcessAssignToUsers[user_id].subProcess
     end
+
+    if subProcessAssignToUsers then
+        for _, assignProcessData in pairs(subProcessAssignToUsers) do
+            if assignProcessData.level == level then
+                subProcessAssignToUsers[user_id]={
+                    user_id = user_id,
+                    level = level,
+                    subProcess = assignProcessData.subProcess,
+                }            
+                return assignProcessData.subProcess
+            end
+        end 
+    end
+
     local minValue = math.huge  -- Set initial minimum to a large value
     local minKey : string | nil = nil  -- Variable to store the key with the smallest value
 
@@ -39,11 +59,16 @@ local function assignSubProcessToUser(user_id:number) : string
 
     -- Assign the user to the subprocess with the smallest value
     if minKey then
-        subProcessAssignToUsers[user_id] = minKey
+        -- subProcessAssignToUsers[user_id].subProcess = minKey
+        subProcessAssignToUsers[user_id]={
+            user_id = user_id,
+            level = level,
+            subProcess = minKey,
+        }            
         -- Optionally, increment the value for the assigned subprocess
         subProcesses[minKey] = subProcesses[minKey] + 1
     end
-  return subProcessAssignToUsers[user_id]
+  return subProcessAssignToUsers[user_id].subProcess
 end
 
 -- local function isNestedTableNotEmpty(nestedTable: {any}): boolean
@@ -334,7 +359,7 @@ local function enterNewCombatHandler(msg: Message)
 
     assert(enemies, "No enemies found for combat level: " .. combat_level)
 
-     local subProcess = assignSubProcessToUser(user_id) 
+     local subProcess = assignSubProcessToUser(user_id, combat_level) 
      local userAddress = dbAdmin:exec(string.format([[
         SELECT address FROM Users WHERE id = %f;
     ]], user_id))
@@ -463,7 +488,7 @@ local function playerWonHandler(msg: Message)
     
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 end
@@ -502,7 +527,7 @@ local function playerRanAwayHandler(msg: Message)
 
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 end
@@ -568,7 +593,7 @@ local function playerPerishedHandler(msg: Message)
 
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 end

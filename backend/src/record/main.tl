@@ -157,23 +157,25 @@ local function savedToHistoryHandler(msg: Message)
 
     if not PlayerBattleData[battle_id] then
         PlayerBattleData[battle_id] = { _battle_data }
+        print("New Battle Data Entry: " .. battle_id)
     else
         table.insert(PlayerBattleData[battle_id], _battle_data)
+        print("Battle data entered in registered Battle Id: " .. battle_id)
     end
 end    
 -- ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
 
 local function insertOrUpdateDataInLeaderBoradHandler(msg: Message)
-    print("Data assert")
+    -- print("Data assert")
 
     assert(msg.From == constants.GAME_PROCESS_ID,"You cant call this handler")
      local user_id = tonumber(msg.Tags.UserId)
      local leaderboarda_data = json.decode(msg.Data) as Leaderboard
-    print("Data coming")
+    -- print("Data coming")
      local user_exist= dbAdmin:exec(string.format([[
              SELECT * from Leaderboard WHERE user_id = %d;
            ]], user_id))
-           print("Data user_exist")
+        --    print("Data user_exist")
 
       if leaderboarda_data.nft_address == nil then
         leaderboarda_data.nft_address = "NULL"   
@@ -184,22 +186,22 @@ local function insertOrUpdateDataInLeaderBoradHandler(msg: Message)
         INSERT INTO Leaderboard (user_id, name, address, nft_address, gold_earned, gold_lost, battle_win, battle_lost, enemy_killed, player_death, death_streak, pvp)
         VALUES (%d, '%s', '%s', '%s', 0, 0, 0, 0, 0, 0, 0, 0);
     ]], user_id, leaderboarda_data.name, leaderboarda_data.address, leaderboarda_data.nft_address))
-    print("Data INSERT")
+    -- print("Data INSERT")
       end
 
         if leaderboarda_data.death_streak_ended then
             dbAdmin:exec(string.format([[
         UPDATE Leaderboard SET gold_lost = gold_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
     ]],  leaderboarda_data.gold_lost, user_id))
-    print("Data UPDATE loss")
+    -- print("Data UPDATE loss")
 
         else
             dbAdmin:exec(string.format([[
                 UPDATE Leaderboard SET gold_earned = %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + 1, death_streak = death_streak + 1 WHERE user_id = %d ;
             ]], leaderboarda_data.gold_earned,user_id))
-            print("Data UPDATE win")
+            -- print("Data UPDATE win")
         end
-        print("Data UPDATE end")
+        print("New Leaderboard Entry: " .. user_id)
 
 end  
 

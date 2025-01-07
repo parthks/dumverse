@@ -194,7 +194,8 @@ export const useCombatStore = create<CombatState>()(
         const user_id = useGameStore.getState().user?.id;
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id) return;
-        set({ loading: true, actionLoading: true });
+        // set({ loading: true, actionLoading: true });
+        set({ loading: true, actionLoading: false });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
