@@ -16,6 +16,8 @@ export const useProfile = () => {
         });
 
         const data = JSON.parse(result.Messages[0].Data);
+        // console.log("Ashu : profileId: " + profileId);
+        // console.log("Ashu : getProfileInfo: " + JSON.stringify(data));
         const profile = {
           ...data.Profile,
           DateUpdated: new Date(data.Profile.DateUpdated),
@@ -23,6 +25,8 @@ export const useProfile = () => {
           CoverImage: data.Profile.CoverImage === "None" ? null : `https://arweave.net/$${data.Profile.CoverImage}`,
           ProfileImage: data.Profile.ProfileImage === "None" ? null : `https://arweave.net/${data.Profile.ProfileImage}`,
         };
+        // console.log("Ashu : getProfileInfo: Profile: " + JSON.stringify(profile));
+
         setProfile(profile);
         setAssets(data.Assets);
       } catch (error) {

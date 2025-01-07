@@ -196,6 +196,7 @@ const FormData = () => {
   const setUser = useGameStore((state) => state.setUserOnLogin);
 
   const nonNFTGameProfiles = gameProfiles ? gameProfiles.filter((profile) => !profile.nft_address) : [];
+  const NFTGameProfiles = gameProfiles ? gameProfiles.filter((profile) => profile.nft_address) : [];
 
   const [loading, setLoading] = useState(false);
 
@@ -212,6 +213,7 @@ const FormData = () => {
 
   async function handleRegister() {
     setLoading(true);
+    console.log("NFT Account: "+JSON.stringify(NFTGameProfiles));
     if (selectedOption?.existingProfile && gameProfiles) {
       const gameProfile = gameProfiles.find((profile) => profile.nft_address === selectedOption.Id);
       if (!gameProfile) {
@@ -219,12 +221,26 @@ const FormData = () => {
         alert("Game profile not found");
         return;
       }
+      // console.log("Ashu : ASHUUUUUUUUUUU selectedOption: "+JSON.stringify(selectedOption));
+      // console.log("Ashu : ASHUUUUUUUUUUU gameProfile: "+JSON.stringify(gameProfile));
+
+      // await setUser(gameProfile, selectedOption.Id ? selectedOption.Id : "NULL" );
       await setUser(gameProfile);
     } else if (nonNFTGameProfiles.length > 0) {
       console.log("upgrading existing profile with NFT", selectedOption);
+      // await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id ? selectedOption?.Id : "NULL")
       if (selectedOption?.Id) await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id);
+      // console.log("Ashu : selectedOption: "+JSON.stringify(selectedOption));
+      // console.log("Ashu : MITTTTTTTTTTALLLLL: "+JSON.stringify(nonNFTGameProfiles[0]));
+      // await setUser(nonNFTGameProfiles[0], selectedOption ? selectedOption.Id : "NULL");
       await setUser(nonNFTGameProfiles[0]);
-    } else {
+
+    } else if (!selectedOption?.Id && NFTGameProfiles.length > 0){
+      console.log("Downgrading the account");
+     await useGameStore.getState().deletingUsersAccount("NULL");
+      await useGameStore.getState().registerNewUser(name);
+    }
+    else {
       if (!name || name === "") return;
       await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
     }
@@ -246,14 +262,14 @@ const FormData = () => {
     if (profile) setName(profile?.UserName || "");
   }, [profile]);
 
-  useEffect(() => {
-    if (profileLoading) return;
-    if (dumdumAssets.length > 0) {
-      // find the first asset that has an existing profile
-      const existingAsset = dumdumAssets.find((asset) => asset.existingProfile);
-      setSelectedOption(existingAsset ?? (dumdumAssets[0] as any));
-    }
-  }, [profileLoading, dumdumAssets]);
+    useEffect(() => {
+      if (profileLoading) return;
+      if (dumdumAssets.length > 0) {
+        // find the first asset that has an existing profile
+        const existingAsset = dumdumAssets.find((asset) => asset.existingProfile);
+        setSelectedOption(existingAsset ?? (dumdumAssets[0] as any));
+      }
+    }, [profileLoading, dumdumAssets]);
 
   return (
     <form className="space-y-4 w-full m-4 flex flex-row lg:flex-col gap-8 items-center justify-center mb-20">

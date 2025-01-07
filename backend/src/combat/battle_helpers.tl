@@ -1,6 +1,7 @@
 require("combat.types")
 require("combat.globals")
 require("utils.combat")
+-- local constants = require("utils.constants")
 
 local utils = require("utils.utils.tl-utils")
 local json = require("json")
@@ -86,6 +87,16 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
             Action = "Combat.PlayerWon",
             Data = json.encode(battle.players[player_id])
         })
+        -- ao.send({
+        --     Target = constants.HISTORY_PROCESS_ID,
+        --     Action = "Record.SavedToHistory",
+        --     Data = json.encode(BattleHelpers.get(battle_Id)),
+        --     SubProcess = tostring(ao.id),
+        --     ErrorStatus = "no",
+        --     BattleId = tostring(battle_Id)
+        -- })
+        -- local battle_data = BattleHelpers.get(battle_Id)
+        -- sendBatteDataToHistoryProcess(battle_Id,battle_data,"no")
     end 
 
     local function npcsWon(npcs_alive: {string})
@@ -262,6 +273,16 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
         Action = "Combat.PlayerPerished",
         Data = json.encode(player)
     })
+    -- ao.send({
+    --     Target = constants.HISTORY_PROCESS_ID,
+    --     Action = "Record.SavedToHistory",
+    --     Data = json.encode(BattleHelpers.get(battle_id)),
+    --     SubProcess = tostring(ao.id),
+    --     ErrorStatus = "no",
+    --     BattleId = tostring(battle_id)
+    -- })
+    -- local battle_data = BattleHelpers.get(battle_id)
+    -- sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
 end
 
 BattleHelpers.playerRanAway = function(battle_id: integer, player_id: string, timestamp: integer)
@@ -279,6 +300,17 @@ BattleHelpers.playerRanAway = function(battle_id: integer, player_id: string, ti
         Action = "Combat.PlayerRanAway",
         Data = json.encode(player)
     })
+
+    -- ao.send({
+    --     Target = constants.HISTORY_PROCESS_ID,
+    --     Action = "Record.SavedToHistory",
+    --     Data = json.encode(BattleHelpers.get(battle_id)),
+    --     SubProcess = tostring(ao.id),
+    --     ErrorStatus = "no",
+    --     BattleId = tostring(battle_id)
+    -- })
+    -- local battle_data = BattleHelpers.get(battle_id)
+    -- sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
 end
 
 BattleHelpers.addPlayer = function(battle_id: integer, player: CombatUserData)
@@ -345,6 +377,7 @@ BattleHelpers.new = function(timestamp: integer): Battle
         internal_logs = {},              -- list of battle logs for internal use only
         last_npc_attack_timestamp = {}, -- key is npc_id, value is timestamp
         last_player_attack_timestamp = {}, -- key is player_id, value is timestamp
+        started=false,
         ended = false,
         winner = nil,                   -- npc_id, or a user_id
         created_at = timestamp,

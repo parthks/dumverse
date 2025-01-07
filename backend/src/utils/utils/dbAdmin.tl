@@ -8,6 +8,7 @@ global record dbAdminType
   exec: function(self: dbAdminType, sql: string): {table}
   apply: function(self: dbAdminType, sql: string, values: {any})
   select: function(self: dbAdminType, sql: string, values: {any}): {table}
+  nrows: function(self: dbAdminType, sql: string): function(): table
 end
 
 function dbAdminType.new(newdb: db): dbAdminType
@@ -74,6 +75,20 @@ function dbAdminType:select(sql: string, values: {any}): {table}
 
   stmt:finalize()
   return results
+end
+
+function dbAdminType:nrows(sql: string): function(): table
+  local stmt = self.db:prepare(sql)
+  local function iterator(): table
+    local success, row = stmt:step()
+    if success then
+      return row as table
+    else
+      stmt:finalize()
+      return {} as table
+    end
+  end
+  return iterator
 end
 
 return dbAdminType

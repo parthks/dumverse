@@ -6,25 +6,28 @@ test-dumz-token:
   hash: a1c5d3d9a09447f25128b16aeb3682863d4a8b0f19d96bc76aaae02ab41713f6
 chat:
   processId: uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI
-  hash: 0935fa748f9098b6207388d35a6b21c7e302ff72785481bd7314688b52ea34f6
-game:
-  processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
-  hash: e697c70b385aa09c3c3b33ba30b53aadf8b90978fd412b573d8ae81e57a5de87
+  hash: a1966d681baf852926e1d3b8ecc0c42e938a64a6a7701b8e3fefe3cf1147fa80
 cron:
   processId: W213NPgMq9nwN8FU2IQi-wZHyOceeLMf7B3shGwh_4Y
-  hash: 6a871fdfe35236e3f59b3966c3b6778a8089e9a417f08e0f7c591c0250a83989
+  hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
+record:
+  processId: 6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8
+  hash: 109b08b6a52bea9cfed5a569c3f21743bb66ed12a4895201eff093e9b0903029
+game:
+  processId: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
+  hash: 1bc06e47945a5a85f36075e9150fceca4bc3190795161b192aaa1f8d12641210
 combat:
-  processId: Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0
-  hash: 90aaaf86383dcbf0ea27b5b26858fd1ea67c03f288a9ac26cc7ae2fbe3736179
+  processId: trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
 combat2:
-  processId: vwt2bVY2BDRx0iRJJuiMtuNw0VBQGv89Slc0ujrHn2M
-  hash: 90aaaf86383dcbf0ea27b5b26858fd1ea67c03f288a9ac26cc7ae2fbe3736179
+  processId: 78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
 combat3:
-  processId: YkbnJiWYXQ_tGo3K7q1Z47eLaL2ZZLwG3jd0qWNoWNo
-  hash: 90aaaf86383dcbf0ea27b5b26858fd1ea67c03f288a9ac26cc7ae2fbe3736179
+  processId: olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
 combat4:
-  processId: ravxEPMzNUwYxWmwltsAuIkYKVVgBMCvwGSPKnt6s6M
-  hash: 90aaaf86383dcbf0ea27b5b26858fd1ea67c03f288a9ac26cc7ae2fbe3736179
+  processId: ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8
 combat5:
-  processId: HhstPUN2wt0htPqHWIG4ckZ38uAQZ2kCesyg_blrrPI
-  hash: 90aaaf86383dcbf0ea27b5b26858fd1ea67c03f288a9ac26cc7ae2fbe3736179
+  processId: j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM
+  hash: 9cb1a97d5bed032c5ebdf119ca8ffd45dc21404c240276ead2f6862aed3506e8

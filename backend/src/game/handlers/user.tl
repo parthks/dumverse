@@ -6,6 +6,12 @@ local utils = require("utils.utils.tl-utils")
 
 local REST_SPOTS = constants.REST_SPOTS;
 
+global ClaimedNFTs: {string}
+if not ClaimedNFTs then
+    ClaimedNFTs = {}
+end
+
+
 
 local function setCurrentIslandHandler(msg: Message)
     local user_address = msg.From
@@ -68,9 +74,21 @@ local function addNewUserHandler(msg: Message)
     local nft_address = msg.Tags.NFT_Address
     local name = msg.Tags.Name
     assert(name and name ~= "", "Name is required")
-
+    
+    local nft_already_claimed: boolean = false
     local getUserQuery: string
     if nft_address then
+        for _, value in ipairs(ClaimedNFTs) do
+            if nft_address == value then
+                nft_already_claimed = true
+                break
+            end
+        end
+
+        if not nft_already_claimed then
+             table.insert(ClaimedNFTs, nft_address)
+        end
+        
         getUserQuery = string.format([[
             SELECT * FROM Users WHERE address = "%s" AND nft_address = "%s";
         ]], user_address, nft_address)
@@ -83,7 +101,15 @@ local function addNewUserHandler(msg: Message)
     local profiles = dbAdmin:exec(getUserQuery)
     assert(#profiles == 0, "User already exists")
 
-    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    local nft_dumz_amount: number
+    local nft_gold_amount: number
+
+    if not nft_already_claimed then
+     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    else
+         nft_dumz_amount = 0
+         nft_gold_amount = 0
+    end
     
     local starting_gold = 0
     local starting_dumz = 0
@@ -140,11 +166,23 @@ local function upgradeExistingProfileHandler(msg: Message)
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
     assert(nft_address, "NFT_Address is required")
+
+
     local userData = dbAdmin:exec(string.format([[
         SELECT * FROM Users WHERE address = "%s" and nft_address is NULL;
     ]], user_address))
     assert(#userData == 1, "User not found")
     local user_id = userData[1].id
+
+    local nft_already_claimed: boolean = false
+
+    for _, value in ipairs(ClaimedNFTs) do
+        if nft_address == value then
+            nft_already_claimed = true
+            break
+        end
+    end
+
     -- update nft_address
     local tempUserData = {
         nft_address = nft_address,
@@ -155,16 +193,25 @@ local function upgradeExistingProfileHandler(msg: Message)
         UPDATE Users SET nft_address = "%s", total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
     ]], nft_address, baseStats.total_stamina, baseStats.total_health, baseStats.health, baseStats.stamina, user_id))
 
-    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
-    -- update bank
-    dbAdmin:exec(string.format([[
-        UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
-    ]], nft_dumz_amount, nft_gold_amount, user_id))
+    if not nft_already_claimed then
+        table.insert(ClaimedNFTs, nft_address)
+        local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+        -- update bank
+        dbAdmin:exec(string.format([[
+            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        ]], nft_dumz_amount, nft_gold_amount, user_id))
+    else
+        local nft_dumz_amount, nft_gold_amount = 0,0
+         dbAdmin:exec(string.format([[
+            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        ]], nft_dumz_amount, nft_gold_amount, user_id))
+    end
 
     OneOfOnesSpecialItemsHandler(nft_address, user_id as number)
 
-     -- Debug print
-     print("user upgraded with ID: " .. tostring(user_id))
+    -- Debug print
+    print("user upgraded with ID: " .. tostring(user_id))
+
 
      ao.send({
          Target = msg.From,
@@ -314,8 +361,48 @@ end
 
 local function userLoginHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
+    -- local nft_address = msg.Tags.NFT_Address
     local timestamp = msg.Timestamp
     local userData = helpers.CheckUserExists(user_id, msg.From)
+
+    -- print(nft_address)
+    -- if userData.nft_address and userData.nft_address ~= nft_address then
+    --     userData.total_stamina = 4
+    --     userData.stamina = 4 
+    --     userData.total_health = 2
+    --     userData.health = 2
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Users SET nft_address = NULL, total_stamina = "%s", total_health = "%s", health = "%s", stamina = "%s" WHERE id = %f;
+    --     ]], userData.total_stamina, userData.total_health, userData.health, userData.stamina, user_id))
+
+    --     local nft_dumz_amount = 0
+    --     local nft_gold_amount = 0
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+    --     ]], nft_dumz_amount, nft_gold_amount, user_id))
+    -- end
+
+    -- local nft_already_claimed: boolean = false
+
+    -- for _, value in ipairs(ClaimedNFTs) do
+    --     if nft_address == value then
+    --         nft_already_claimed = true
+    --         break
+    --     end
+    -- end
+
+    -- if not nft_already_claimed and nft_address ~= "NULL" then
+    --     table.insert(ClaimedNFTs, nft_address)
+    -- end
+
+    -- if nft_already_claimed and nft_address ~= "NULL" then
+    --     local nft_dumz_amount = 0
+    --     local nft_gold_amount = 0
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+    --     ]], nft_dumz_amount, nft_gold_amount, user_id))
+    -- end
+
     local last_regenerate_time = userData.last_regenerate_time or 0
 
     local time_since_last_regenerate = timestamp - last_regenerate_time
@@ -329,10 +416,29 @@ local function userLoginHandler(msg: Message)
         ]], new_stamina, timestamp, user_id))
     end
 
-    -- update last_updated_at
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f WHERE id = %f;
-    ]], msg.Timestamp, msg.Timestamp, user_id))
+    local user_current_spot= dbAdmin:exec(string.format([[
+        SELECT current_spot FROM Users WHERE ID = %d;
+    ]],user_id))[1]
+
+    local is_Rest_Spot = false
+
+    for _ , value in ipairs(REST_SPOTS) do
+           if user_current_spot.current_spot == value then
+                -- update last_updated_at
+            dbAdmin:exec(string.format([[
+                   UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = %f WHERE id = %f;
+             ]], msg.Timestamp, msg.Timestamp, user_current_spot.current_spot, user_id))
+             
+             is_Rest_Spot=true
+             break
+           end
+    end   
+
+   if not is_Rest_Spot then
+          dbAdmin:exec(string.format([[
+                 UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = 0 WHERE id = %f;
+          ]], msg.Timestamp, msg.Timestamp, user_id))
+   end
 
     ao.send({
         Target = msg.From,
@@ -340,6 +446,16 @@ local function userLoginHandler(msg: Message)
     })
 end
 
+local function deletingUsersAccountHandler(msg:Message) 
+    local user_address = msg.From
+    local nft_address = msg.Tags.NFT_Address
+    assert(nft_address, "NFT_Address is required")
+    if nft_address == "NULL" then
+    dbAdmin:exec(string.format([[
+        DELETE FROM Users WHERE address = "%s" ;
+    ]], user_address))
+   end
+end
 
 
 -- Add handlers
@@ -355,4 +471,48 @@ Handlers.add("User.RegenerateEnergy", Handlers.utils.hasMatchingTag('Action', 'U
 Handlers.add("User.Revive", Handlers.utils.hasMatchingTag('Action', 'User.Revive'), reviveUserHandler)
 Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Action', 'User.GetAllPlayersAtLocation'), getAllPlayersAtLocationHandler)
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
+Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
 return {}
+
+
+
+-- game:
+--   processId: _-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA
+--   hash: d4bf08d8652e8279bf443268c1652cb2aa55a81546c949297b1d4574ffbf4a34
+
+-- combat:
+--   processId: C5Mew98EcDDAw_PuPR3A2YrTbEdAKIi2tWQjhca85co
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat2:
+--   processId: crigtRqaGl05C5rEHWpBzMlB83CGz0PpNOsEZYMkIms
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat3:
+--   processId: c4my8yA8JTpydKTZ6KZ-UQ0z1HvacJO_vnTMI_VGXx8
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat4:
+--   processId: PdTfjViGZh2jbmN3-72X3Q1S_Q6zu7Pr_uvOiB5b7s0
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+-- combat5:
+--   processId: MoW74fDXI1IwvZ_YndSDY1G7WUs5QrYgtcYuttU6Izg
+--   hash: 12a049dfba875049ced57626bb1477f3e705b01ce7e44a163dd4ae1f5c6ad9e3
+
+
+
+
+-----------------------------------
+
+-- combat:
+--   processId: mb78FFDuv9COl9kwXsaf3rOyZU6AFdq9dGU1xdNPUhs
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat2:
+--   processId: htjj556bms7MCh896xPkX7T25QCYwoi9ehiGE7LGyWI
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat3:
+--   processId: 3q26WFMjTp0XCDSXFh3NUmvzs3cIXmbJQkrtMWypP-Y
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat4:
+--   processId: 1qv-rdDxC_KHJXElX-yDPVaju9P8NfniWOrUFOZyT_s
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238
+-- combat5:
+--   processId: z6GPRSiSH5Zezqhpy9DTNdBH0UnSTigibRV1863h0jo
+--   hash: d7a0bae308c89cbc270a3f5e04303f72847c8382fa2d3bd27b46f92ae4a3a238

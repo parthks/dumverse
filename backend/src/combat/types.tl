@@ -18,6 +18,7 @@ global record Battle
     internal_logs: {BattleLogEntry}
     last_player_attack_timestamp: {string: integer}
     last_npc_attack_timestamp: {string: integer}
+    started: boolean
     ended: boolean
     winner: string | nil
     created_at: integer

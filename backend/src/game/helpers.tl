@@ -11,6 +11,7 @@ local type BaseStats = record
   total_stamina: number
 end
 
+
 local function GetItemDetails(itemId: string): BaseItem
 
   local itemDetails = constants.WEAPONS[itemId as WeaponIds] or
@@ -2109,9 +2110,10 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
 end
 
 return {
+  Leaderboard = Leaderboard,
   CheckUserExists = CheckUserExists,
   CalculateUserBaseStats = CalculateUserBaseStats,
   GetItemDetails = GetItemDetails,
   IsInRestSpot = IsInRestSpot,
-  getNFTBankAmountForNFT = getNFTBankAmountForNFT
+  getNFTBankAmountForNFT = getNFTBankAmountForNFT,
 }

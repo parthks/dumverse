@@ -83,14 +83,14 @@ local function shopBuyItemHandler(msg: Message)
         -- add 10 cake slices
         for _ = 1, 10 do
             dbAdmin:exec(string.format([[
-                INSERT INTO Inventory (user_id, item_id, item_type, equipped) VALUES (%d, "%s", "%s", TRUE);
-            ]], user_id, "FOOD_1", "FOOD"))
+                INSERT INTO Inventory (user_id, item_id, item_type, equipped, created_at) VALUES (%d, "%s", "%s", TRUE, "%s");
+            ]], user_id, "FOOD_1", "FOOD", msg.Timestamp))
         end
     else
         -- Add new item to inventory
         dbAdmin:exec(string.format([[
-            INSERT INTO Inventory (user_id, item_id, item_type, equipped) VALUES (%d, "%s", "%s", TRUE);
-        ]], user_id, item_id, item.type))
+            INSERT INTO Inventory (user_id, item_id, item_type, equipped, created_at) VALUES (%d, "%s", "%s", TRUE, "%s");
+        ]], user_id, item_id, item.type, msg.Timestamp))
     end
 
     -- Update user balance

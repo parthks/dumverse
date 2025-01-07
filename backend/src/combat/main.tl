@@ -118,6 +118,11 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack", "Have Reset Players Attacked Table")
 
     BattleHelpers.checkIfBattleShouldEnd(battle_id, npc_id, timestamp)
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
+    -- Battles[battle_id] = nil
+    end
 end
 
 
@@ -134,12 +139,17 @@ local function CronTick(msg: Message,npcTimer:integer)
                 -- print("NPC " .. npc_id .. " alive")
                 -- print("NPC " .. npc_id .. " last attack timestamp " .. battle.last_npc_attack_timestamp[npc_id])
                 battle = BattleHelpers.get(battle.id)
-                if (battle.last_npc_attack_timestamp[npc_id] or 0) + (npcTimer * 1000) < msg.Timestamp then
-                    -- if player has not attacked in the last 10 seconds, the NPC will attack
-                    print("battle " .. battle.id .. " - AUTO ATTACK: NPC " .. npc_id .. " attacking player")
-                    BattleHelpers.internalLog(battle.id, msg.Timestamp, "CronTick - NPCAttack", "Last NPC Attack Timestamp: ".. battle.last_npc_attack_timestamp[npc_id]..". Seconds after last attack: ".. npcTimer..".")
-                    NPCAttack(npc_id, battle.id, msg.Timestamp, nil)
-                end
+                -- if battle.started then
+                     if ((battle.last_npc_attack_timestamp[npc_id] or 0) + (npcTimer * 1000) < msg.Timestamp) and battle.started then
+                        -- if player has not attacked in the last 10 seconds, the NPC will attack
+                        print("battle " .. battle.id .. " - AUTO ATTACK: NPC " .. npc_id .. " attacking player")
+                        BattleHelpers.internalLog(battle.id, msg.Timestamp, "CronTick - NPCAttack", "Last NPC Attack Timestamp: ".. battle.last_npc_attack_timestamp[npc_id]..". Seconds after last attack: ".. npcTimer..".")
+                        NPCAttack(npc_id, battle.id, msg.Timestamp, nil)
+                     end
+                     if not battle.started then
+                         battle.last_npc_attack_timestamp[npc_id]=msg.Timestamp
+                     end
+                -- end
             end
 
             -- for pvp, if no npcs are alive, if a player has not attacked in the last 10 seconds, all players should attack
@@ -159,10 +169,30 @@ local function CronTick(msg: Message,npcTimer:integer)
                     BattleHelpers.checkIfBattleShouldEnd(battle.id,battle.players_alive[1], msg.Timestamp)  
                 end
             end
+
+            local INACTIVITY_LIMIT = 5 * 60 * 1000
+            if battle.created_at + INACTIVITY_LIMIT < msg.Timestamp then
+                print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY " )
+                BattleHelpers.internalLog(
+                    battle.id,
+                    msg.Timestamp,
+                    "CronTick - BattleEnded",
+                    "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
+                )
+                battle.ended = true
+                for key ,_ in pairs(battle.players) do
+                    ao.send({
+                        Target = GAME_PROCESS_ID,
+                        UserId = tostring(key),
+                        Action = "Combat.RemovePlayerFromBattle",
+                    })
+                    local battle_data = BattleHelpers.get(battle.id)
+                    sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
+                end
+            end
         end
     end
 end
-
 
     
 local function newUserJoinHandler(msg: Message)
@@ -171,6 +201,7 @@ local function newUserJoinHandler(msg: Message)
     local data = json.decode(msg.Data) as {string: string}
 
     print("Battle.NewUserJoin - user " .. user_id)
+    print(GAME_PROCESS_ID)
     assert(msg.From == GAME_PROCESS_ID, "Only Game process can send this message")
     assert(user_id, "UserId is required")
     assert(level_input, "Combat Level is required")
@@ -249,6 +280,9 @@ local function battleInfoHandler(msg: Message)
 local function drinkPotionHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
+
+    assert(Battles[battle_id].started==true,"Battle has not started yet")
+
     VerifyUserInBattle(user_id, battle_id)
     VerifyBattleIsOnGoing(battle_id)
 
@@ -275,7 +309,9 @@ local function userAttackHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
     local attackEntityId = msg.Tags.AttackEntityId
-    
+
+    assert(Battles[battle_id].started==true,"Battle has not started yet")
+
     BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - started", 
         "Attacking User: " .. user_id .. ", Target: " .. attackEntityId)
 
@@ -327,6 +363,7 @@ local function userAttackHandler(msg: Message)
         -- assert(false, "AttackEntityId is not in playerUserIds or npcIds")
         -- race condition from the UI, do nothing
         ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+
         return
     end
 
@@ -351,14 +388,21 @@ local function userAttackHandler(msg: Message)
     end
 
     BattleHelpers.checkIfBattleShouldEnd(battle_id, user_id, msg.Timestamp)
-
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
+    -- Battles[battle_id] = nil
+    end
 end
 
 
 local function userRunHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     local user_id = msg.Tags.UserId
+
+    assert(Battles[battle_id].started==true,"Battle has not started yet")
+
     local user = VerifyUserInBattle(user_id, battle_id)
     VerifyBattleIsOnGoing(battle_id)
 
@@ -387,8 +431,24 @@ local function userRunHandler(msg: Message)
 
     -- player runs unsuccessfully
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id,battle_data,"no")
+    -- Battles[battle_id] = nil
+    end
 end
 
+local function userIsReadyHandler(msg: Message)
+    local battle_id = tonumber(msg.Tags.BattleId) as integer
+    
+    local battle=Battles[battle_id]
+    local npcs = battle.npcs as {CombatEnemyData}
+    for _, npc in ipairs(npcs) do
+        battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
+    end
+    battle.started=true
+    ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
+end    
 
 -- Add handlers
 Handlers.add("Battle.NewUserJoin", Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), newUserJoinHandler)
@@ -397,7 +457,7 @@ Handlers.add("Battle.Info", Handlers.utils.hasMatchingTag("Action", "Battle.Info
 Handlers.add("Battle.DrinkPotion", Handlers.utils.hasMatchingTag("Action", "Battle.DrinkPotion"), drinkPotionHandler)
 Handlers.add("Battle.UserAttack", Handlers.utils.hasMatchingTag("Action", "Battle.UserAttack"), userAttackHandler)
 Handlers.add("Battle.UserRun", Handlers.utils.hasMatchingTag("Action", "Battle.UserRun"), userRunHandler)
--- Handlers.add("Battle.CronTick", Handlers.utils.hasMatchingTag("Action", "Battle.CronTick"), CronTick)
+Handlers.add("Battle.UserIsReady", Handlers.utils.hasMatchingTag("Action", "Battle.UserIsReady"), userIsReadyHandler)
 
 
 -- CronTick handler will get called every 10 seconds

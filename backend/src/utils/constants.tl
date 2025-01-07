@@ -2,6 +2,9 @@
 local COMBAT_PROCESS_ID = "Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0" --"6jy_Ai9mInmMg1t6HPlSWKLcxYBFUe81DEpeuq5fP9k" --"8zkx7rgZ6q9SBf1aM5uJ9A_4j6twWSEM2YpsWUhAjqA"--"iB636YMO3EvqdZ5FWSjSw_oqVIQSO9f9XrGYY8u-Vc4"--"B3OVMP1sY_wA_nh7YGhRtsXsHP2NB9zacYAGlix6Ink" 
 local DUMZ_TOKEN_PROCESS_ID = "mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk"
 local TRUNK_TOKEN_PROCESS_ID = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ"
+local HISTORY_PROCESS_ID = ""
+local GAME_PROCESS_ID =  "Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI"   -- "_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA"
+local RECORD_PROCESS_ID =  "6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
 
 local REST_SPOTS = { 0, 9, 18, 27, 36,45,54,63,72,81 }
 
@@ -152,7 +155,7 @@ local ENERGY = {
     ENERGY_1 = {
         id = "ENERGY_1",
         name = "Joose",
-        dumz_price = 40,
+        dumz_price = 15,
         energy = 2,
         type = "ENERGY",
     },
@@ -315,7 +318,7 @@ local ENEMIES: {EnemyData} = {
         name = "Mocking Llama",
         total_health = 2,
         health = 2,
-        damage = 3,
+        damage = 4,
         difficulty = "MEDIUM",
         gold_reward = 10,
         dumz_reward = 3
@@ -325,7 +328,7 @@ local ENEMIES: {EnemyData} = {
         name = "Always Down Bear",
         total_health = 4,
         health = 4,
-        damage = 2,
+        damage = 3,
         difficulty = "MEDIUM",
         gold_reward = 10,
         dumz_reward = 3
@@ -355,7 +358,7 @@ local ENEMIES: {EnemyData} = {
         name = "Angry Beaver",
         total_health = 5,
         health = 5,
-        damage = 4,
+        damage = 5,
         difficulty = "HARD",
         gold_reward = 20,
         dumz_reward = 5
@@ -472,6 +475,9 @@ return {
     COMBAT_PROCESS_ID = COMBAT_PROCESS_ID,
     DUMZ_TOKEN_PROCESS_ID = DUMZ_TOKEN_PROCESS_ID,
     TRUNK_TOKEN_PROCESS_ID = TRUNK_TOKEN_PROCESS_ID,
+    HISTORY_PROCESS_ID = HISTORY_PROCESS_ID,
+    GAME_PROCESS_ID = GAME_PROCESS_ID,
+    RECORD_PROCESS_ID = RECORD_PROCESS_ID,
     ONE_OF_ONE_ASSET_IDS = ONE_OF_ONE_ASSET_IDS,
     REST_SPOTS = REST_SPOTS,
     SPECIAL_ITEMS = SPECIAL_ITEMS,

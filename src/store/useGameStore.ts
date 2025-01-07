@@ -30,6 +30,7 @@ interface GameState {
   setGameStatePage: (state: GameStatePages | null) => void;
   registerNewUser: (name: string, nft?: string) => Promise<void>;
   upgradeExistingProfile: (nftAddress: string) => Promise<void>;
+  deletingUsersAccount: (nftAddress: string) => Promise<void>;
   user: GameUser | null;
   setUserOnLogin: (user: GameUser | null) => void;
   refreshUserData: (userId?: number) => Promise<GameUser | null>;
@@ -99,7 +100,9 @@ export const useGameStore = create<GameState>()(
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const data = JSON.parse(resultData.Messages[0].Data);
           if (data.status === "Success") {
+            // get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
             get().setUserOnLogin(data.data);
+
           }
         }
       },
@@ -107,6 +110,14 @@ export const useGameStore = create<GameState>()(
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             { name: "Action", value: "Users.UpgradeExistingProfile" },
+            { name: "NFT_Address", value: nftAddress },
+          ],
+        });
+      },
+      deletingUsersAccount: async (nftAddress) => {
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "User.DeletingUsersAccount" },
             { name: "NFT_Address", value: nftAddress },
           ],
         });
@@ -120,6 +131,8 @@ export const useGameStore = create<GameState>()(
           //   set({ GameStatePage: GameStatePages.COMBAT });
           // }
           // else
+                        // { name: "NFT_Address", value: nftAddress },
+
           const resultData = await sendAndReceiveGameMessage({
             tags: [
               { name: "Action", value: "User.Login" },
@@ -390,8 +403,8 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
-        const currentSpot = get().user?.current_spot;
-        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
+        const currentSpot = get().user?.current_spot;  
+        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot) ;
         console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
         // if in town or rest area, set the countdown to 2 minutes
         if (inTownOrRestArea) {
@@ -404,16 +417,17 @@ export const useGameStore = create<GameState>()(
         }
       },
       regenerateCountdownTickDown: async () => {
-        // console.log("new regenerateCountdownTickDown", get().regenerateCountdown);
-        if (get().regenerateCountdown !== null) {
-          const currentCount = get().regenerateCountdown!;
-          set({ regenerateCountdown: currentCount - 1 });
-          if (currentCount === 0) {
+        const countdown = get().regenerateCountdown;
+      
+        if (countdown !== null) {
+          set({ regenerateCountdown: countdown - 1 });
+      
+          if (countdown - 1 === 0) {
             await get().regenerateEnergy();
-            set({ regenerateCountdown: null });
+            get().resetRegenerateCountdown();
+            get().refreshUserData();
           }
         } else {
-          console.log("resetting regenerateCountdown since it's null");
           get().resetRegenerateCountdown();
         }
       },

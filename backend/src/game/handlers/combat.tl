@@ -1,31 +1,51 @@
+require('utils.globals')
 local helpers = require("game.helpers")
 local json = require("json")
 local utils = require("utils.utils.tl-utils")
-
 local constants = require("utils.constants")
 
 
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0"]=0,
-        ["vwt2bVY2BDRx0iRJJuiMtuNw0VBQGv89Slc0ujrHn2M"]=0,
-        ["YkbnJiWYXQ_tGo3K7q1Z47eLaL2ZZLwG3jd0qWNoWNo"]=0,
-        ["ravxEPMzNUwYxWmwltsAuIkYKVVgBMCvwGSPKnt6s6M"]=0,
-        ["HhstPUN2wt0htPqHWIG4ckZ38uAQZ2kCesyg_blrrPI"]=0,
+        ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
+        ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
+        ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
+        ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
+        ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
     }
 end
 
-global subProcessAssignToUsers: {number:string}
+local record DataRelatingSubProcessAssignToUser
+    user_id: number
+    level: number
+    subProcess: string
+end
+
+global subProcessAssignToUsers: {number:DataRelatingSubProcessAssignToUser}
 if not subProcessAssignToUsers then
     subProcessAssignToUsers = {}
 end
 
-local function assignSubProcessToUser(user_id:number) : string
+local function assignSubProcessToUser(user_id:number, level: number) : string
 
     if subProcessAssignToUsers[user_id] ~= nil then
-        return subProcessAssignToUsers[user_id]
+        return subProcessAssignToUsers[user_id].subProcess
     end
+
+    if subProcessAssignToUsers then
+        for _, assignProcessData in pairs(subProcessAssignToUsers) do
+            if assignProcessData.level == level then
+                subProcessAssignToUsers[user_id]={
+                    user_id = user_id,
+                    level = level,
+                    subProcess = assignProcessData.subProcess,
+                }            
+                return assignProcessData.subProcess
+            end
+        end 
+    end
+
     local minValue = math.huge  -- Set initial minimum to a large value
     local minKey : string | nil = nil  -- Variable to store the key with the smallest value
 
@@ -39,11 +59,80 @@ local function assignSubProcessToUser(user_id:number) : string
 
     -- Assign the user to the subprocess with the smallest value
     if minKey then
-        subProcessAssignToUsers[user_id] = minKey
+        -- subProcessAssignToUsers[user_id].subProcess = minKey
+        subProcessAssignToUsers[user_id]={
+            user_id = user_id,
+            level = level,
+            subProcess = minKey,
+        }            
         -- Optionally, increment the value for the assigned subprocess
         subProcesses[minKey] = subProcesses[minKey] + 1
     end
-  return subProcessAssignToUsers[user_id]
+  return subProcessAssignToUsers[user_id].subProcess
+end
+
+-- local function isNestedTableNotEmpty(nestedTable: {any}): boolean
+--     for _, innerTable in pairs(nestedTable as {any: any}) do
+--         if type(innerTable) == "table" then
+--             for _, _ in pairs(innerTable as {any: any}) do
+--                 return true
+--             end
+--         end
+--     end
+--     return false
+-- end
+
+local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean): Leaderboard
+
+    local playerOriginalData = dbAdmin:exec(string.format([[
+        SELECT * from Users WHERE id = %f;
+     ]], user_id))[1] as UserData
+
+    local leaderboard: Leaderboard = {
+        address = "",
+        name = "",
+        nft_address = nil,
+        gold_earned = 0,
+        gold_lost = 0,
+        battle_win = 0,
+        battle_lost = 0,
+        enemy_killed = 0,
+        player_death = 0,
+        death_streak = 0,
+        death_streak_ended = false,
+    }
+
+    if isWin then
+        -- Winning scenario
+        leaderboard.address = playerData.address
+        leaderboard.name = playerData.name
+        leaderboard.nft_address = playerData.nft_address 
+        leaderboard.gold_earned = playerData.gold_balance 
+        -- leaderboard.token_earned = playerData.dumz_balance 
+        leaderboard.battle_win = 1
+        leaderboard.enemy_killed = 1
+        leaderboard.death_streak = 1
+    else
+        -- Losing scenario
+        leaderboard.address = playerData.address
+        leaderboard.name = playerData.name
+        leaderboard.nft_address = playerData.nft_address
+        leaderboard.gold_lost = playerOriginalData.gold_balance 
+        -- leaderboard.token_lost = playerOriginalData.dumz_balance as integer
+        leaderboard.battle_lost = 1
+        leaderboard.player_death = 1
+        leaderboard.death_streak_ended = true
+    end
+
+    -- Check for NFTs associated with the player
+    -- local numberOfNFTsID = dbAdmin:exec(string.format([[
+    --     SELECT * from Users WHERE address = %s;
+    --  ]], playerOriginalData.address))
+    -- if isNestedTableNotEmpty(numberOfNFTsID) then
+    --     leaderboard.player_with_nft = #numberOfNFTsID
+    -- end
+
+    return leaderboard
 end
 
 
@@ -270,12 +359,12 @@ local function enterNewCombatHandler(msg: Message)
 
     assert(enemies, "No enemies found for combat level: " .. combat_level)
 
-     local subProcess = assignSubProcessToUser(user_id) 
+     local subProcess = assignSubProcessToUser(user_id, combat_level) 
      local userAddress = dbAdmin:exec(string.format([[
         SELECT address FROM Users WHERE id = %f;
     ]], user_id))
 
-    print("Ashu2MIt-" .. tostring(userAddress[1].address))
+    -- print("Ashu2MIt-" .. tostring(userAddress[1].address))
     
     if type(userAddress[1].address) == "string" then
         local data=json.encode({subprocess=subProcess})
@@ -350,6 +439,40 @@ local function playerWonHandler(msg: Message)
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
+--     local playerOrginalData = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE id = %f;
+--      ]], user_id))[1]
+
+--      local leaderboard = {
+--         gold_earned: integer = (playerData.gold_balance - (playerOrginalData.gold_balance as integer)) + (playerOrginalData.gold_balance as integer),
+--         token_earned: integer = (playerData.dumz_balance - (playerOrginalData.dumz_balance as integer)) + (playerOrginalData.dumz_balance as integer),
+-- -- gold_lost: integer = ,
+-- battle_win: integer = 1,
+-- -- battle_lost
+-- enemy_killed: integer = 1 ,
+-- -- player_death
+-- -- pvp
+-- -- number_of_token_burn
+-- death_streak: integer = 1,
+-- death_streak_ende: boolean= false,
+-- player_with_nft: integer= 0,
+-- -- player_without nft 
+--     }
+ 
+--      local numberOfNFTsID = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE address = %s;
+--      ]], playerOrginalData.address))
+
+--      local hasNFT = isNestedTableNotEmpty(numberOfNFTsID)
+
+--      if hasNFT then
+--         leaderboard.player_with_nft = #numberOfNFTsID 
+--      end
+ 
+    local leaderboard = processPlayerData(tonumber(user_id), playerData, true) as Leaderboard
+
+    ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
+
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f,
@@ -362,10 +485,10 @@ local function playerWonHandler(msg: Message)
     playerData.special_item_bark,
     playerData.special_item_heart,
     user_id))
-
+    
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 end
@@ -404,7 +527,7 @@ local function playerRanAwayHandler(msg: Message)
 
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 end
@@ -426,6 +549,43 @@ local function playerPerishedHandler(msg: Message)
     local user_id = msg.Tags.UserId
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
+--     local playerOrginalData = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE id = %f;
+--      ]], user_id))[1]
+
+--      local leaderboard = {
+--         gold_lost: integer = (playerOrginalData.gold_balance as integer),
+--         token_lost: integer = (playerOrginalData.dumz_balance as integer),
+-- battle_lost: integer = 1,
+-- player_death: integer = 1 ,
+-- -- pvp
+-- -- number_of_token_burn
+-- death_streak: integer = 0,
+-- death_streak_ende: boolean= true,
+-- player_with_nft: integer= 0,
+-- -- player_without nft 
+--     }
+ 
+--      local numberOfNFTsID = dbAdmin:exec(string.format([[
+--         SELECT * from Users WHERE address = %s;
+--      ]], playerOrginalData.address))
+
+--      local hasNFT = isNestedTableNotEmpty(numberOfNFTsID)
+
+--      if hasNFT then
+--         leaderboard.player_with_nft = #numberOfNFTsID 
+--      end
+    
+    -- local leaderboard = processPlayerData(tonumber(user_id), playerData, true)
+
+    -- local leaderboardJson = json.encode(leaderboard)
+
+    -- ao.send({Target = constants.RECORD_PROCESS_ID, Action = "Record.insertOrUpdateDataInLeaderBorad", UserId = tostring(user_id), Data = leaderboardJson})
+
+    local leaderboard = processPlayerData(tonumber(user_id), playerData, false) as Leaderboard
+
+    ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
+
     -- update Users table
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0, last_regenerate_time = %f WHERE id = %f;
@@ -433,9 +593,48 @@ local function playerPerishedHandler(msg: Message)
 
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
+end
+
+local function removePlayerFromBattleHandler(msg: Message)
+    local found = false
+    for key, _ in pairs(subProcesses) do
+        if key == msg.From then
+            found = true
+            break 
+        end
+    end
+
+    if not found then
+        assert(found == true, "Only Combat process can send this message")
+    end
+
+    local user_id = msg.Tags.UserId
+    -- local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
+
+
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET current_battle_id = NULL WHERE id = %f;
+    ]], user_id))
+
+    local USER_ID = tonumber(user_id)
+    -- local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
+    -- subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    subProcessAssignToUsers[USER_ID]=nil
+
+end
+
+local function resetSubprocessesHandler(msg:Message)
+   assert(msg.From==ao.id,"You can not call this handler")
+   subProcesses = {
+    ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
+    ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
+    ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
+    ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
+    ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
+   }
 end
 
 -- Add handlers
@@ -444,5 +643,7 @@ Handlers.add("Combat.EnteredNewCombat", Handlers.utils.hasMatchingTag('Action', 
 Handlers.add("Combat.PlayerWon", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerWon'), playerWonHandler)
 Handlers.add("Combat.PlayerRanAway", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerRanAway'), playerRanAwayHandler)
 Handlers.add("Combat.PlayerPerished", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerPerished'), playerPerishedHandler)
+Handlers.add("Combat.RemovePlayerFromBattle", Handlers.utils.hasMatchingTag('Action', 'Combat.RemovePlayerFromBattle'), removePlayerFromBattleHandler)
+Handlers.add("Combat.ResetSubprocesses", Handlers.utils.hasMatchingTag('Action', 'Combat.ResetSubprocesses'), resetSubprocessesHandler)
 
 return {}

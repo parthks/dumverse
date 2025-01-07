@@ -1,14 +1,14 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
-import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
+import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, COMBAT_LOADING_SCREEN } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { Battle, NPC } from "@/types/combat";
 import audioManager from "@/utils/audioManager";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 
 // const currentBattle = {
 //   npcs: {
@@ -172,6 +172,9 @@ export default function Combat() {
 
   const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
+  
+  const [comabatLoadingScreenImageURL,setComabatLoadingScreenImageURL] = useState<string | null>(null);
+  const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout | null = null;
@@ -216,6 +219,16 @@ export default function Combat() {
     };
   }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
+  useEffect(()=>{
+    if (comabatLoadingScreenImageURL === null){
+      let savedData: number = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0");
+      savedData = (savedData % Object.keys(COMBAT_LOADING_SCREEN).length) + 1;
+      const url = COMBAT_LOADING_SCREEN[`scene${savedData}` as keyof typeof COMBAT_LOADING_SCREEN];
+      setComabatLoadingScreenImageURL(url);
+      localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
+    }
+  },[])
+
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentBattle?.id}`],
     queryFn: async () => {
@@ -227,8 +240,18 @@ export default function Combat() {
     refetchInterval: 1000, // Poll every 1 second
   });
 
-  if (enteringNewBattle && !currentBattle?.id) {
-    return <div>Entering a new battle...</div>;
+  // if (enteringNewBattle && !currentBattle?.id) {
+  // return <div>Entering a new battle...</div>;
+  // }
+    if (!hasBattleReady || (enteringNewBattle && !currentBattle?.id)  ) {
+    
+    return( <div className="w-screen h-screen flex items-center justify-center bg-black">
+      <img
+        src={comabatLoadingScreenImageURL || ""}
+        alt="Entering a new battle..."
+        className="w-full h-full"
+      />
+    </div>);
   }
 
   if (failedToEnterBattle) {
@@ -275,7 +298,28 @@ export default function Combat() {
 }
 
 function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
+
+
   useBackgroundMusic(SOUNDS.BATTLE_AUDIO);
+
+  // const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
+
+  // if(!hasBattleReady){
+  //   return(
+  //     <div className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
+  //     style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}>
+  //     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
+  //       <div className="w-[30vw] h-[30vh] rounded-lg p-4 relative flex justify-center items-center">
+  //         <div className="flex flex-col items-center justify-center w-full h-full">
+  //           <h2 className="text-6xl font-semibold ">Loading ...</h2>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+    
+  //   )
+  // }
+
   return (
     <div
       className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
