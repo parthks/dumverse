@@ -96,7 +96,7 @@ export default function Weapon() {
                 <RiveAnimation url={BUILDING_IMAGES.ARMOR_WEAPON_DUMDUM} />
               </div>
               <GifComponent
-                className="absolute h-[20vh] translate-x-[13vw] translate-y-[-5vh]"
+                className="absolute h-[20vh] translate-x-[13vw] translate-y-[-5vh] -mt-6 scale-75 lg:scale-75 md:scale-50 sm:scale-50"
                 onClickFunction={async () => {
                   setAcceptQuestLoading(true);
                   await acceptWeaponQuest();
@@ -118,7 +118,7 @@ export default function Weapon() {
               style={{ left: "50%", width: "55%", height: "auto", transform: "translate(-50%, -141%)" }}
             />
           </div> */}
-          <div className="absolute w-full h-full -top-1/3 mt-8 flex items-center justify-center gap-4 scale-100 lg:scale-100 md:scale-75 sm:scale-75">
+        <div className="absolute w-full h-full -top-1/3 mt-8 flex items-center justify-center gap-4 scale-100 lg:scale-100 md:scale-75 sm:scale-75">
           {shop?.items[0] && (
             <ShopItem
               handleClick={async () => {
@@ -175,7 +175,8 @@ export default function Weapon() {
               itemSize={75}
             />
           )}
-          </div>
+        </div>
+
         </div>
       </div>
     </div>

@@ -261,42 +261,26 @@ const GifComponent: React.FC<GifComponentProps> = ({
 
   return (
     <div className={`${className}`}>
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-full flex flex-col items-center justify-center">
         {gifSrc && (
           <img
             src={gifSrc}
             alt="Dialogue Quest GIF"
-            className="relative max-w-full object-cover"
+            className="max-w-full object-cover scale-100 lg:scale-100 md:scale-75 sm:scale-75"
           />
         )}
         {showButton && !questAccepted && (
-          // <button
-          //   className={`absolute bottom-[23%] right-[20%] bg-gray-800 text-white px-4 py-2 rounded-md z-10 ${buttonClassName}`}
-          //   onClick={handleQuestAcceptance}
-          // >
-          //   Accept Quest
-          // </button>
-          // top-[55%] right-[35%]
           <ImgButton
             src={IMAGES.ACCEPT_QUEST_BUTTON}
-            alt={"Accept Quest"}
-           disabled={buttonDisable}
+            alt="Accept Quest"
+            disabled={buttonDisable}
             onClick={handleQuestAcceptance}
-            className={`absolute bottom-[20%] 
-              right-[15%] 
-              sm:bottom-[22%] 
-              sm:right-[18%] 
-              md:bottom-[23%] 
-              md:right-[20%] 
-              lg:bottom-[24%] 
-              lg:right-[22%] 
-              xl:bottom-[23%] 
-              xl:right-[21%]
-              ${buttonClassName}`}
+            className={`${buttonClassName}`}
           />
         )}
       </div>
     </div>
+
   );
 };
 

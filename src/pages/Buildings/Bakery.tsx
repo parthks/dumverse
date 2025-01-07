@@ -27,41 +27,47 @@ export default function Bakery() {
         <InventoryBag />
       </div>
       <div className="relative w-full h-full">
+
+        {/* New Combined Background */}
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/MbOnj-2PBp9wZ2V4GAalLQuNhxoornEzQMR5OJMvlxc"} alt="Bakery Map" className="w-full h-full object-fill" />
+          <img src={"https://arweave.net/afOND3ASQhFGxnjA1N-6kE3VrVsas2hxVFsnfqRIYQM"} alt="Bakery Map" className="w-full h-full object-cover" />
         </div>
+
+        {/* <div className="absolute inset-0">
+          <img src={"https://arweave.net/MbOnj-2PBp9wZ2V4GAalLQuNhxoornEzQMR5OJMvlxc"} alt="Bakery Map" className="w-full h-full object-fill" />
+        </div> */}
         {/* Table and Puppy Group */}
-        <div className="relative w-full h-full">
+        {/* <div className="relative w-full h-full">
           <div className="absolute bottom-[15.4%] left-0 right-0 w-full">
             <img src="https://arweave.net/yiWAC1FxowBACoNa2udcMdqDaQXgKc9B_FKURHidRC8" alt="Bakery Table" className="w-full" style={{ height: "auto", objectFit: "contain" }} />
             <img
               src="https://arweave.net/-6yFMOOf0CKNl8kvXQ1Qr7lgCM_HHEllovD4-TN3YNA"
               alt="Puppy in Basket"
-              className="absolute w-auto h-[120px]"
+              className="absolute w-auto h-[120px] scale-100 lg:scale-100 md:scale-75 sm:scale-50 xs:scale-50"
               style={{ bottom: "92%", left: "85%" }}
             />
-            <img src="https://arweave.net/WeMKq3YsD4K-iMi_kNut7kxmSIr4xiaezu9FAewwlek" alt="Whisk" className="absolute w-auto h-[60px]" style={{ bottom: "89%", left: "75%" }} />
+            <img src="https://arweave.net/WeMKq3YsD4K-iMi_kNut7kxmSIr4xiaezu9FAewwlek" alt="Whisk" className="absolute w-auto h-[60px] scale-100 lg:scale-100 md:scale-75 sm:scale-50 xs:scale-50" style={{ bottom: "89%", left: "75%" }} />
             <img
               src="https://arweave.net/b9DSRgPZ3emyeVNdCtC1uye_i-dM-VZxB9YUJWtuwCk"
               alt="Rolling Pin"
-              className="absolute w-auto h-[80px]"
+              className="absolute w-auto h-[80px] scale-100 lg:scale-100 md:scale-75 sm:scale-50 xs:scale-50"
               style={{ bottom: "88%", left: "10%" }}
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="absolute inset-0">
-          <img
+          {/* <img
             src="https://arweave.net/SKW3ovBgOtAP4K8WrnP3tARXnpZRVgguzxSvb6FznHI"
             alt="Bakery Sign"
             className="absolute"
             style={{ ...calculatePositionAndSize(50, 24, 20), transform: "translate(-50%, -100%)" }}
-          />
+          /> */}
 
           {/* Group the shop table, sign, and shopkeeper */}
           <div className="absolute w-full h-full flex flex-col items-center justify-end" style={{ ...calculatePositionAndSize(50, 100, 48), transform: "translate(-50%, -100%)" }}>
             {/* Shopkeeper and Table Group */}
-            <div className="relative w-full flex flex-col items-center">
+            <div className="relative w-full flex flex-col items-center top-8 overflow-hidden">
               {/* Shopkeeper */}
               <div
                 className="relative"

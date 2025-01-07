@@ -67,7 +67,7 @@ function RestAreaPlayerStatsDisplay() {
   const totalStamina = user.total_stamina;
   const filledStamina = user.stamina;
   return (
-    <div className="relative w-80 h-[80px]">
+    <div className="relative w-80 h-[80px] scale-100 lg:scale-100 md:scale-75 sm:scale-50 xs:scale-50">
       <img src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg" alt="Background" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
 
       <div className="absolute inset-0 top-[-24px] left-[-12px] flex items-center justify-start">
@@ -123,12 +123,12 @@ export default function RestArea() {
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
-      <div className="z-30 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%]">
+      <div className="z-30 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%] scale-100 lg:scale-75 md:scale-75 sm:scale-75 xs:scale-75">
         <PlayerOnlineList currentSpot={current_spot} />
       </div>
 
       {!chatOpen && (
-        <div className="z-30 absolute top-4 right-4">
+        <div className="z-30 absolute top-4 right-4 scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50">
           <ReturnToTown />
         </div>
       )}
@@ -146,7 +146,7 @@ export default function RestArea() {
             <ImgButton className="h-[65px]" src={"https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
           </div>
 
-          <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
+          <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50">
             <ImgButton
               src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
               onClick={() => {

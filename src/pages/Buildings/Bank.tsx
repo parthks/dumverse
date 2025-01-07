@@ -281,7 +281,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
       )}
       {actionType === "transfer-dumz" && <TransferTokens tokenType="dumz_token" onClose={() => setActionType(null)} />}
       {actionType === "transfer-trunk" && <TransferTokens tokenType="trunk_token" onClose={() => setActionType(null)} />}
-      <div className="z-10 absolute bottom-4 left-4">
+      <div className="z-10 absolute bottom-4 left-4 scale-100 lg:scale-75 md:scale-75 sm:scale-50">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
@@ -439,7 +439,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
           />{" "}
         </>
       )}
-      <div className="z-10 absolute bottom-4 left-4">
+      <div className="z-10 absolute bottom-4 left-4 scale-100 lg:scale-75 md:scale-75 sm:scale-50">
         <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
       </div>
       <div className="z-10 absolute top-4 right-4">
@@ -610,7 +610,7 @@ export default function BankPage() {
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
       <div className="z-10 absolute bottom-4 left-4">
         <ImgButton
-          className="scale-100 lg:scale-100 md:scale-75 sm:scale-75 xs:scale-50"
+          className="scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50"
           src={"https://arweave.net/hwy3FBe-uiAit-OKZmXtV35QqhRX2To-t4lakmRTEjI"}
           onClick={async () => {
             audioManager.playSFX(SOUNDS.BUILDING_ENTER);
