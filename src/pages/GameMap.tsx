@@ -179,63 +179,60 @@ const GameMap = () => {
       <div className="z-10 absolute top-4 right-4 scale-75 lg:scale-75 md:scale-50 sm:scale-50">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
-      <div className="bg-green-600 z-10 fixed bottom-2 left-2 flex items-end gap-2 scale-75 lg:scale-75 md:scale-50 sm:scale-50">
+      <div className="bg-green-600 z-10 fixed bottom-2 left-2 flex items-end gap-2 scale-75 lg:scale-75 md:scale-50 sm:scale-[40%]">
         <PlayerFrame />
       </div>
-      <div className="z-10 absolute bottom-4 left-[800px]">
-        {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 ? (
-          <ImgButton
-            disabled={enterNewAreaLoading}
-            onClick={async () => {
-              setEnterNewAreaLoading(true);
-              await goToRestArea();
-              setEnterNewAreaLoading(false);
-            }}
-            className="shrink-0 mb-8"
-            alt="Enter Rest Area"
-            src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
-          />
-        ) : (
-          tempCurrentIslandLevel != 0 && tempCurrentIslandLevel!=user?.current_spot && (
+      <div className="z-10 fixed bottom-4 right-4 flex flex-col items-end gap-4">
+
+        {/* Combat/Rest Area */}
+        <div className="scale-75 lg:scale-75 md:scale-75 sm:scale-50">
+          {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 ? (
             <ImgButton
-              disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
-              src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
+              disabled={enterNewAreaLoading}
               onClick={async () => {
                 setEnterNewAreaLoading(true);
-                const resultData = await enterNewBattle(tempCurrentIslandLevel);
-                // resultData.status == "Success"             
-                if (typeof(resultData.data.subprocess) === "string") {
-                  setGameStatePage(GameStatePages.COMBAT);
-                }
+                await goToRestArea();
                 setEnterNewAreaLoading(false);
               }}
-              className="shrink-0 mb-8"
-              alt={"Enter Combat"}
+              className="shrink-0"
+              alt="Enter Rest Area"
+              src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
             />
-          )
-        )}
-      </div>
-      <div className="z-10 absolute bottom-2 right-2 flex gap-2 scale-75 lg:scale-75 md:scale-50 sm:scale-50" >
-      {tempCurrentIslandLevel <= 27 && (
+          ) : (
+            tempCurrentIslandLevel != 0 && tempCurrentIslandLevel!=user?.current_spot && (
+              <ImgButton
+                disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
+                src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
+                onClick={async () => {
+                  setEnterNewAreaLoading(true);
+                  const resultData = await enterNewBattle(tempCurrentIslandLevel);
+                  if (typeof(resultData.data.subprocess) === "string") {
+                    setGameStatePage(GameStatePages.COMBAT);
+                  }
+                  setEnterNewAreaLoading(false);
+                }}
+                className="shrink-0"
+                alt={"Enter Combat"}
+              />
+            )
+          )}
+        </div>
+
+        {/* Set Sail and Settings */}
+        <div className="flex gap-2 scale-75 lg:scale-75 md:scale-50 sm:scale-50">
+          {tempCurrentIslandLevel <= 27 && (
+            <ImgButton 
+              src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} 
+              onClick={() => setIsPopupOpen(true)} 
+              alt={"Set Sail"} 
+            />
+          )}
           <ImgButton 
-            src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} 
-            onClick={() => setIsPopupOpen(true)} 
-            alt={"Set Sail"} 
+            src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} 
+            onClick={() => setIsSettingsOpen(true)} 
+            alt={"Open Settings"} 
           />
-        )}
-        {isPopupOpen && (
-          <SetSailPopup
-            onClose={() => setIsPopupOpen(false)}
-            setTempLamaPosition={setTempLamaPosition}
-            setLamaPosition={setLamaPosition}
-            setTempCurrentIslandLevel={setTempCurrentIslandLevel}
-          />
-        )}
-        <ImgButton 
-          src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} 
-          onClick={() => setIsSettingsOpen(true)} 
-          alt={"Open Settings"} 
-        />
+        </div>
       </div>
       {/* {tempCurrentIslandLevel <= 27 ? (
         <div
