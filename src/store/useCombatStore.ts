@@ -61,6 +61,10 @@ export const useCombatStore = create<CombatState>()(
           if (get().currentBattle && !get().currentBattle?.started){
             get().sendBattleReadyRequest();
           }
+          if (get().currentBattle && get().currentBattle?.started && get().currentBattle?.npcs){
+            console.log("Ashu : Combat screen stuck problem solved");
+            get().sendBattleReadyRequest();
+          }
           console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           return battles?.[0];
         }
