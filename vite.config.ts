@@ -16,8 +16,9 @@ export default defineConfig({
     },
   },
   server: {
+    host: true,
     hmr: {
-      overlay: true,
+      overlay: true
     },
   },
   resolve: {

@@ -15,7 +15,7 @@ export function PlayerFrame() {
 
   return (
     <div
-      className="w-[650px] bg-no-repeat bg-contain relative"
+      className="w-[650px] bg-no-repeat bg-contain absolute"
       style={{
         // transform: "scale(0.9)",
         transformOrigin: "top left",

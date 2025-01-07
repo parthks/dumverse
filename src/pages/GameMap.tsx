@@ -176,13 +176,10 @@ const GameMap = () => {
 
       {questBookOpen && <QuestBook />}
 
-      <div className="z-10 absolute top-4 right-4">
+      <div className="z-10 absolute top-4 right-4 scale-75 lg:scale-75 md:scale-50 sm:scale-50">
         <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
-      <div className="z-10 absolute bottom-4 right-4">
-        <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
-      </div>
-      <div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
+      <div className="bg-green-600 z-10 fixed bottom-2 left-2 flex items-end gap-2 scale-75 lg:scale-75 md:scale-50 sm:scale-50">
         <PlayerFrame />
       </div>
       <div className="z-10 absolute bottom-4 left-[800px]">
@@ -218,53 +215,13 @@ const GameMap = () => {
           )
         )}
       </div>
-      <div className="z-10 absolute bottom-2 right-36 flex gap-2">
-        {/* <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(0);
-            setTempCurrentIslandLevel(0);
-            setTempLamaPosition({
-              x: interactivePointsMap1[0].x - lammaWidth / 2,
-              y: interactivePointsMap1[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
-          Map 1
-        </button>
-        <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(28);
-            setTempCurrentIslandLevel(28);
-            setTempLamaPosition({
-              x: interactivePointsMap2[0].x - lammaWidth / 2,
-              y: interactivePointsMap2[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
-          Map 2
-        </button>
-        <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(55);
-            setTempCurrentIslandLevel(55);
-            setTempLamaPosition({
-              x: interactivePointsMap3[0].x - lammaWidth / 2,
-              y: interactivePointsMap3[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
-          Map 3
-        </button> */}
-        {tempCurrentIslandLevel <= 27 ? (
-          <ImgButton src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} onClick={() => setIsPopupOpen(true)} alt={"Set Sail"} />
-        ) : (
-          <></>
+      <div className="z-10 absolute bottom-2 right-2 flex gap-2 scale-75 lg:scale-75 md:scale-50 sm:scale-50" >
+      {tempCurrentIslandLevel <= 27 && (
+          <ImgButton 
+            src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} 
+            onClick={() => setIsPopupOpen(true)} 
+            alt={"Set Sail"} 
+          />
         )}
         {isPopupOpen && (
           <SetSailPopup
@@ -274,6 +231,11 @@ const GameMap = () => {
             setTempCurrentIslandLevel={setTempCurrentIslandLevel}
           />
         )}
+        <ImgButton 
+          src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} 
+          onClick={() => setIsSettingsOpen(true)} 
+          alt={"Open Settings"} 
+        />
       </div>
       {/* {tempCurrentIslandLevel <= 27 ? (
         <div
