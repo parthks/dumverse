@@ -432,8 +432,9 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
             buttonClassName=""
             onClickFunction={async () => {
               setAcceptQuestLoading(true);
-              await acceptBankQuest();
+              const isQuestAccepted = await acceptBankQuest();
               setAcceptQuestLoading(false);
+              return isQuestAccepted;
             }}
             buttonDisable={acceptQuestLoading}
           />{" "}
@@ -594,7 +595,11 @@ export default function BankPage() {
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     const itemType = event.currentTarget.getAttribute("item-type");
     if (itemType) {
-      setVaultSelected(itemType as "general-vault" | "nft-vault");
+            if ((itemType as "general-vault" | "nft-vault") !== "nft-vault"){
+            setVaultSelected(itemType as "general-vault");}
+      else{
+        if (user?.nft_address) setVaultSelected(itemType as "nft-vault");
+      }
       // buyItem(itemType);
     }
   };
@@ -657,8 +662,9 @@ export default function BankPage() {
                   buttonClassName=""
                   onClickFunction={async () => {
                     setAcceptQuestLoading(true);
-                    await acceptBankQuest();
+                    const isQuestAccepted = await acceptBankQuest();
                     setAcceptQuestLoading(false);
+                    return isQuestAccepted;
                   }}
                   buttonDisable={acceptQuestLoading}
                 />

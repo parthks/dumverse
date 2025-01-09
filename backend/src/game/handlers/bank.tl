@@ -139,6 +139,7 @@ end
 local function bankClaimAirdropHandler(msg: Message)
     local tokenType = msg.Tags.TokenType as TokenType
     local user_id = tonumber(msg.Tags.UserId)
+    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     assert(tokenType == "GOLD" or tokenType == "DUMZ", "Invalid token type")
 
     -- check user data
@@ -163,6 +164,8 @@ local function bankClaimAirdropHandler(msg: Message)
     if tokenType == "DUMZ" then
         amount = bankData.nft_dumz_amount
     end
+
+    assert(userData.nft_address,"You cant access the NFT Vault")
 
     -- update bank balance
     if tokenType == "GOLD" then

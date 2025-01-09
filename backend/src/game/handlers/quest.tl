@@ -5,7 +5,8 @@ require('utils.globals')
 
 local function bankAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    helpers.CheckUserExists(user_id, msg.From)
+    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+    assert(userData.nft_address,"You cant access this quest")
 
     -- update user quest data
     dbAdmin:exec(string.format([[
@@ -17,7 +18,8 @@ end
 
 local function nftShopAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    helpers.CheckUserExists(user_id, msg.From)
+    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+    assert(userData.nft_address,"You cant access this quest")
 
     -- update user quest data
     dbAdmin:exec(string.format([[
@@ -29,7 +31,8 @@ end
 
 local function weaponAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    helpers.CheckUserExists(user_id, msg.From)
+    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+    assert(userData.nft_address,"You cant access this quest")
 
     -- update user quest data
     dbAdmin:exec(string.format([[
@@ -53,7 +56,8 @@ end
 
 local function denAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    helpers.CheckUserExists(user_id, msg.From)
+    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+    assert(userData.nft_address,"You cant access this quest")
 
     -- update user quest data
     dbAdmin:exec(string.format([[

@@ -70,11 +70,11 @@ interface GameState {
   repairItem: (inventoryId: number) => Promise<void>;
   questBookOpen: boolean;
   setQuestBookOpen: (open: boolean) => void;
-  acceptBankQuest: () => Promise<void>;
-  acceptNFTShopQuest: () => Promise<void>;
-  acceptWeaponQuest: () => Promise<void>;
-  acceptShopQuest: () => Promise<void>;
-  acceptDenQuest: () => Promise<void>;
+  acceptBankQuest: () => Promise<boolean>;
+  acceptNFTShopQuest: () => Promise<boolean>;
+  acceptWeaponQuest: () => Promise<boolean>;
+  acceptShopQuest: () => Promise<boolean>;
+  acceptDenQuest: () => Promise<boolean>;
   lastDisplayedMessageId: number | null;
   setLastDisplayedMessageId: (state: number | null) => void;
   isSettingsOpen: boolean;
@@ -463,6 +463,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
+        return resultData.status == "Success"? true : false;
       },
       acceptNFTShopQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -472,6 +473,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
+        return resultData.status == "Success"? true : false;
       },
       acceptWeaponQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -481,6 +483,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
+        return resultData.status == "Success"? true : false;
       },
 
       acceptShopQuest: async () => {
@@ -490,7 +493,9 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
+        console.log("Ashu : "+JSON.stringify(resultData));
         await get().refreshUserData();
+        return resultData.status == "Success"? true : false;
       },
       acceptDenQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -500,6 +505,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
+        return resultData.status == "Success"? true : false;
       },
       lastDisplayedMessageId: null,
       setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),

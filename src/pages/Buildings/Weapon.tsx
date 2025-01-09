@@ -99,8 +99,9 @@ export default function Weapon() {
                 className="absolute h-[20vh] translate-x-[13vw] translate-y-[-5vh]"
                 onClickFunction={async () => {
                   setAcceptQuestLoading(true);
-                  await acceptWeaponQuest();
+                  const isQuestAccepted = await acceptWeaponQuest();
                   setAcceptQuestLoading(false);
+                  return isQuestAccepted;
                 }}
                 buttonDisable={acceptQuestLoading}
               />

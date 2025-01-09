@@ -7,7 +7,7 @@ interface GifComponentProps {
   className?: string;
   buttonClassName?: string;
   buttonAppearTime?: number;
-  onClickFunction?: ()=>Promise<void>;
+  onClickFunction?: ()=>Promise<boolean>;
   buttonDisable?: boolean;
 }
 
@@ -251,10 +251,10 @@ const GifComponent: React.FC<GifComponentProps> = ({
   const handleQuestAcceptance = async () => {
     console.log("Quest Accept clicked"); 
     if (onClickFunction) {
-      await onClickFunction();
-      setGifSrc(null);
-      setShowButton(false);
-      setQuestAccepted(true);
+      const questStatus: boolean = await onClickFunction();
+      if (questStatus) setGifSrc(null) ;
+      setShowButton(!questStatus);
+      setQuestAccepted(questStatus);
     }
   };
   

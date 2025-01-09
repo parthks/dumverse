@@ -221,8 +221,9 @@ export default function Shop() {
                   className="absolute h-[20vh] translate-x-[13vw] translate-y-[-35vh] z-10"
                   onClickFunction={async () => {
                     setAcceptQuestLoading(true);
-                    await acceptShopQuest();
+                    const isQuestAccepted = await acceptShopQuest();
                     setAcceptQuestLoading(false);
+                    return isQuestAccepted;
                   }}
                   buttonDisable={acceptQuestLoading}
                 />

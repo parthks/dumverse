@@ -13,11 +13,17 @@ export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const goToGameMap = useGameStore((state) => state.goToGameMap);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
+  const user = useGameStore((state) => state.user);
+  
 
   const [chatOpen, setChatOpen] = useState(false);
 
   const handleBuildingSelect = (building: GameStatePages) => {
-    setGameStatePage(building);
+    if (building !== GameStatePages.NFT_SHOP) {
+      setGameStatePage(building);
+    } else {
+      if (user?.nft_address) setGameStatePage(building);
+    }
   };
 
   useBackgroundMusic(SOUNDS.TOWN_AUDIO);

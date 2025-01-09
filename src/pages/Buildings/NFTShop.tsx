@@ -90,8 +90,9 @@ export default function NFTShop() {
                 className="absolute h-[20vh] translate-x-[6vw] translate-y-[-25vh]"
                 onClickFunction={async () => {
                   setAcceptQuestLoading(true);
-                  await acceptNFTShopQuest();
+                  const isQuestAccepted = await acceptNFTShopQuest();
                   setAcceptQuestLoading(false);
+                  return isQuestAccepted;
                 }}
                 buttonDisable={acceptQuestLoading}
               />
