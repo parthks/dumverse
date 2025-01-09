@@ -56,6 +56,9 @@ const GifComponent: React.FC<GifComponentProps> = ({
       if (user.special_item_key > -1) {
         setQuestAccepted(true);
         setDialogueIndex(retrievedData.BANK || 0);
+      }else if(!user.nft_address){
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.BANK || 0);
       } else {
         setQuestAccepted(false);
         setGifSrc(`${DIALOGUES.BANK.dialogue_quest}?${Date.now()}`);
@@ -71,6 +74,9 @@ const GifComponent: React.FC<GifComponentProps> = ({
       if (user.special_item_thread > -1) {
         setQuestAccepted(true);
         setDialogueIndex(retrievedData.NFT_SHOP || 0);
+      }else if(!user.nft_address){
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.NFT_SHOP || 0);
       } else {
         setQuestAccepted(false);
         setGifSrc(`${DIALOGUES.NFT_SHOP.dialogue_quest}?${Date.now()}`);
@@ -84,6 +90,9 @@ const GifComponent: React.FC<GifComponentProps> = ({
 
     if (GameStatePage === GameStatePages.WEAPON_SHOP && user) {
       if (user.special_item_bark > -1) {
+        setQuestAccepted(true);
+        setDialogueIndex(retrievedData.WEAPON_SHOP || 0);
+      }else if(!user.nft_address){
         setQuestAccepted(true);
         setDialogueIndex(retrievedData.WEAPON_SHOP || 0);
       } else {
