@@ -595,11 +595,8 @@ export default function BankPage() {
   const handleClick = (event: React.MouseEvent<HTMLImageElement>) => {
     const itemType = event.currentTarget.getAttribute("item-type");
     if (itemType) {
-            if ((itemType as "general-vault" | "nft-vault") !== "nft-vault"){
-            setVaultSelected(itemType as "general-vault");}
-      else{
-        if (user?.nft_address) setVaultSelected(itemType as "nft-vault");
-      }
+      if ((itemType as "general-vault" | "nft-vault") === "general-vault") setVaultSelected(itemType as "general-vault");
+      if ((itemType as "general-vault" | "nft-vault") === "nft-vault" && user?.nft_address) setVaultSelected(itemType as "nft-vault");
       // buyItem(itemType);
     }
   };
