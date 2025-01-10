@@ -11,6 +11,7 @@ import { ChatClient, createChatClient } from "./chatClient";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { IMAGES } from "@/lib/constants";
+import { gql, GraphQLClient } from "graphql-request";
 
 const queryPageSize = 10;
 
@@ -430,6 +431,28 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
                 AuthorNFT: user.nft_address,
                 AuthorName: user.name,
               });
+
+        const gqlQuery = gql`query {
+          transactions(
+              ids:["uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"]
+    }]
+          ) {
+            edges {
+              node {
+                id
+                tags {
+                  name
+                  value
+                }
+              }
+            }
+          }
+        }
+        `
+        const client = new GraphQLClient("https://arweave.net/graphql");
+
+              const check = await  client.request(gqlQuery);
+              console.log("Ashu : chat: "+JSON.stringify(check));
               refetchNewMessages();
               setSendingMessage(false);
             })}

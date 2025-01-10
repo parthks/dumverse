@@ -197,8 +197,8 @@ local function insertOrUpdateDataInLeaderBoradHandler(msg: Message)
 
         else
             dbAdmin:exec(string.format([[
-                UPDATE Leaderboard SET gold_earned = %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + 1, death_streak = death_streak + 1 WHERE user_id = %d ;
-            ]], leaderboarda_data.gold_earned,user_id))
+                UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
+            ]], leaderboarda_data.gold_earned, leaderboarda_data.enemy_killed ,user_id))
             -- print("Data UPDATE win")
         end
         print("New Leaderboard Entry: " .. user_id)
@@ -213,13 +213,10 @@ end
 
 local function resetRecordSubprocessesHandler(msg:Message)
     assert(msg.From==ao.id,"You can not call this handler")
-    SubProcesses = {
-        "trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg",
-        "78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4",
-        "olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI",
-        "ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs",
-        "j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM",
-    }
+    print("Initiate")
+    -- dbAdmin:exec(string.format([[TRUNCATE TABLE Leaderboard]]))
+    DBInit()
+    print("Done successfully")
 end
 
 Handlers.add("Record.SavedToHistory", Handlers.utils.hasMatchingTag("Action", "Record.SavedToHistory"), savedToHistoryHandler)

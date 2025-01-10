@@ -80,12 +80,19 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
     end
 
     local function playerWon(player_id: string)
+
+        local number_of_enemies = 0
+        for _ in pairs(battle.npcs) do
+            number_of_enemies = number_of_enemies + 1
+        end
+
         ao.send({
             Target = GAME_PROCESS_ID,
             UserId = player_id,
             Level = tostring(battle.level),
             Action = "Combat.PlayerWon",
-            Data = json.encode(battle.players[player_id])
+            Data = json.encode(battle.players[player_id]),
+            NumberOfEnemies = tostring(number_of_enemies)
         })
         -- ao.send({
         --     Target = constants.HISTORY_PROCESS_ID,

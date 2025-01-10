@@ -82,7 +82,7 @@ end
 --     return false
 -- end
 
-local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean): Leaderboard
+local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean, numberOfEnemies: number): Leaderboard
 
     local playerOriginalData = dbAdmin:exec(string.format([[
         SELECT * from Users WHERE id = %f;
@@ -107,10 +107,10 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
         leaderboard.address = playerData.address
         leaderboard.name = playerData.name
         leaderboard.nft_address = playerData.nft_address 
-        leaderboard.gold_earned = playerData.gold_balance 
-        -- leaderboard.token_earned = playerData.dumz_balance 
+        leaderboard.gold_earned = playerData.gold_balance - playerOriginalData.gold_balance
+        -- leaderboard.token_earned = playerData.dumz_balance    
         leaderboard.battle_win = 1
-        leaderboard.enemy_killed = 1
+        leaderboard.enemy_killed = numberOfEnemies
         leaderboard.death_streak = 1
     else
         -- Losing scenario
@@ -438,7 +438,7 @@ local function playerWonHandler(msg: Message)
     local user_id = msg.Tags.UserId
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
-
+    local number_of_enemies: number = tonumber(msg.Tags.NumberOfEnemies)
 --     local playerOrginalData = dbAdmin:exec(string.format([[
 --         SELECT * from Users WHERE id = %f;
 --      ]], user_id))[1]
@@ -469,7 +469,7 @@ local function playerWonHandler(msg: Message)
 --         leaderboard.player_with_nft = #numberOfNFTsID 
 --      end
  
-    local leaderboard = processPlayerData(tonumber(user_id), playerData, true) as Leaderboard
+    local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
 
     ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
 

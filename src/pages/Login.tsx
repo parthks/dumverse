@@ -117,6 +117,9 @@ export default function App() {
 }
 
 function Tutorial({ onClose }: { onClose: () => void }) {
+
+  const videoId = "HB6rXqTdF0M"; 
+  
   return (
     <div className="z-10 absolute top-0 left-0 w-full h-full bg-black">
       {/* close button */}
@@ -128,9 +131,17 @@ function Tutorial({ onClose }: { onClose: () => void }) {
           onClose();
         }}
       />
-      <video controls className="w-full h-full">
-        <source src={"https://arweave.net/VmYiI5hNF4oT4XBFGD8sZkmcnuF6qREGVlk4Ml-Z26o"} type="video/mp4" />
-      </video>
+      {/* <video controls className="w-full h-full"> */}
+        {/* <source src={"https://arweave.net/VmYiI5hNF4oT4XBFGD8sZkmcnuF6qREGVlk4Ml-Z26o"} type="video/mp4" /> */}
+        <iframe 
+        className="w-full h-full"
+        src={`https://www.youtube.com/embed/${videoId}`}
+        title="Tutorial Video"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+      {/* </video> */}
     </div>
   );
 }

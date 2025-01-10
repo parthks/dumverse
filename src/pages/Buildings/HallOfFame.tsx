@@ -307,28 +307,34 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
           <div className="p-6 overflow-y-auto h-[calc(100%-64px)] bg-[#3C3012] rounded-b-lg scrollbar-thin scrollbar-thumb-[#B8860B]/80 scrollbar-track-[#3C3012]">
             {/* Header Row */}
             <div className="grid grid-cols-2 gap-4 mb-6 border-b border-[#B8860B] pb-2">
-              <div className="text-white text-4xl font-semibold">Player Name</div>
-              <div className="text-white text-4xl font-semibold text-right">Count</div>
+              <div className="text-white text-4xl font-semibold">
+                Player Name
+              </div>
+              <div className="text-white text-4xl font-semibold text-right">
+                Count
+              </div>
             </div>
 
-           
-              <div>
-                {/* Leaderboard Rows */}
-                {LeaderboardData?.map((player: any, index: number) => (
-                  <div
-                    key={`${leaderboardType}-${index}`}
-                    className="grid grid-cols-2 gap-4 py-3 hover:bg-[#B8860B]/30 rounded-lg transition-colors"
-                  >
-                    <div className="text-white text-3xl font-medium">
-                      {player.name}
+            <div>
+              {/* Leaderboard Rows */}
+              {LeaderboardData?.map((player: any, index: number) => {
+                if (player[leaderboardType] !== 0) {
+                  return (
+                    <div
+                      key={`${leaderboardType}-${index}`}
+                      className="grid grid-cols-2 gap-4 py-3 hover:bg-[#B8860B]/30 rounded-lg transition-colors"
+                    >
+                      <div className="text-white text-3xl font-medium">
+                        {player.name}
+                      </div>
+                      <div className="text-white text-3xl font-medium text-right">
+                        {player[leaderboardType]}
+                      </div>
                     </div>
-                    <div className="text-white text-3xl font-medium text-right">
-                      {player[leaderboardType]}
-                    </div>
-                  </div>
-                ))}
-              </div>
-           
+                  );
+                }
+              })}
+            </div>
           </div>
         </div>
       </div>
