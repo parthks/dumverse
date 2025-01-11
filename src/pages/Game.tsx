@@ -15,6 +15,7 @@ import Infirmary from "./Buildings/Infirmary";
 import VisitorCenter from "./Buildings/VisitorCenter";
 import HallOfFame from "./Buildings/HallOfFame";
 import Den from "./Buildings/Den";
+import Second_Town from "./Second_Town";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/canvas";
 import Settings from "@/components/game/Settings";
@@ -88,6 +89,7 @@ export default function Game() {
   if (GameStatePage === GameStatePages.INFIRMARY) page = <Infirmary />;
   if (GameStatePage === GameStatePages.VISITOR_CENTER) page = <VisitorCenter />;
   if (GameStatePage === GameStatePages.HALL_OF_FAME) page = <HallOfFame />;
+  if (GameStatePage === GameStatePages.SECOND_TOWN) page = <Second_Town />;
   if (GameStatePage === GameStatePages.DEN) page = <Den />;
 
   if (!user)

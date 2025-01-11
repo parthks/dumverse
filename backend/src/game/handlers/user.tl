@@ -457,6 +457,16 @@ local function deletingUsersAccountHandler(msg:Message)
    end
 end
 
+-- local function resetUsersDamage(msg: Message)
+--     assert(msg.From==ao.id,"Not access")
+--     print("Initiate")
+--     dbAdmin:exec(string.format([[UPDATE Users SET damage=1 WHERE nft_address IS NOT NULL 
+--     AND nft_address NOT IN ('%s', '%s', '%s', '%s')]], "A8ucm402DGkcJWydu1iibXGvpsDSnI5rj3Z-zP7JjB4",
+--     "XYkNDhHBAPF85xy7E56mmZR4VJTS8os0JbxNh_fdRZE",
+--     "2UMirpNKMZ9MDpApI3gI0Dy0975fC-vOK3UoIeMM2yg",
+--     "5U-KMM4rJ2x19xEEgSIHVdDopxuTXgCjaQgTUrNFiKE"))
+--     print("Successful")
+-- end
 
 -- Add handlers
 Handlers.add("Users.SetCurrentIsland", Handlers.utils.hasMatchingTag('Action', 'SetCurrentIsland'), setCurrentIslandHandler)
@@ -472,6 +482,7 @@ Handlers.add("User.Revive", Handlers.utils.hasMatchingTag('Action', 'User.Revive
 Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Action', 'User.GetAllPlayersAtLocation'), getAllPlayersAtLocationHandler)
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
+-- Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
 return {}
 
 

@@ -49,13 +49,14 @@ local function CalculateUserBaseStats(userData: UserData): BaseStats
     total_stamina = 4,
   }
   if userData.nft_address then
-    baseStats.damage = 2
+    baseStats.damage = 1
     baseStats.defense = 0
     baseStats.health = 2
     baseStats.total_health = 2
     baseStats.stamina = 8
     baseStats.total_stamina = 8
     if utils.includes(userData.nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
+      baseStats.damage = 2
       baseStats.total_health = 4
       baseStats.health = 4
       baseStats.total_stamina = 16

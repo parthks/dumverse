@@ -12,6 +12,7 @@ export enum GameStatePages {
   GAME_MAP = "GAME_MAP",
   COMBAT = "COMBAT",
   TOWN = "TOWN",
+  SECOND_TOWN = "SECOND_TOWN",
   REST_AREA = "REST_AREA",
   BANK = "BANK",
   SHOP = "SHOP",

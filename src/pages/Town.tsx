@@ -99,6 +99,20 @@ export default function Town() {
         <PlayerOnlineList currentSpot={0} />
       </div>
 
+     {(user?.address=="yWEDs-sho-5Ka7ql_Ov71GNFdHqLspekxfhAo1bcqtU" || user?.address=="9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go" || user?.address=="jddq2gt8n-F2KNO2I67qjDAR1dSeL6ZwYtd3GrmmpTg") && <div className="absolute w-[8%] h-[5%] top-[2vh] left-[1vw] z-10">
+             {/* <ImgButton
+                        src="https://arweave.net/nYTjNe4X9GAQjhFIHgMZmkS2pvco7JTAUHb338TOsfo"
+                        alt="Leaderboard"
+                        // disabled={currentPage === 0}
+                        // className="absolute bottom-[20%] left-[12%]"
+                        onClick={() => console.log("afa")} 
+                      /> */}
+
+                      <button className="text-white bg-blue-400 cursor-pointer border-2 w-full h-full rounded-lg border-white"  onClick={() => {
+                handleBuildingSelect(GameStatePages.SECOND_TOWN);
+              }}>Second Town </button>
+            </div>}
+
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
       {/* bottom buttons bar */}
