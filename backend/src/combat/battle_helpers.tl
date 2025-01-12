@@ -235,6 +235,9 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
         if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
             Battles[battle_id].players[attacker_id].special_item_kitten = 1
         end
+        if npc.id == "NPC_13"  then
+            Battles[battle_id].players[attacker_id].trunk_balance = Battles[battle_id].players[attacker_id].trunk_balance + npc.trunk_reward
+        end
     end
     BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)
     -- BattleHelpers.update(battle_id, battle)

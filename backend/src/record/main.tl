@@ -30,11 +30,12 @@ global record CombatEnemyData
     name: string
     total_health: number
     health: number
-    damage: number
+    damage: number | {number}
     difficulty: string
     gold_reward: integer
     dumz_reward: integer
     extra_gold: integer | nil
+    trunk_reward: integer | nil
 end
 
 global record BattleLogEntry

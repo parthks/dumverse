@@ -95,10 +95,11 @@ global type EnemyData = record
     name: string
     total_health: number
     health: number
-    damage: number
+    damage: number | {number}
     difficulty: string
     gold_reward: number | nil
     dumz_reward: number | nil
+    trunk_reward: number | nil
 end
 
 -- Inventory item type

@@ -7,13 +7,16 @@ import { BUILDING_IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
+import GifComponent from "@/components/Dialogue/Dialogue";
 
 export default function Den() {
-  const { shop, getShop, buyItem, buyItemLoading } = useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading, acceptDenQuest} = useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
   const [showBlackjackGame, setShowBlackjackGame] = useState<boolean>(false);
+  const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
+
   const handleClick = () => {
     setShowBlackjackGame(true);
   };
@@ -80,6 +83,16 @@ export default function Den() {
               >
                 <RiveAnimation url={BUILDING_IMAGES.DEN_DUMDUM} />
               </div>
+              <GifComponent
+                className="absolute h-[20vh] translate-x-[13vw] translate-y-[29vh] z-30"
+                onClickFunction={async () => {
+                  setAcceptQuestLoading(true);
+                  const isQuestAccepted = await acceptDenQuest();
+                  setAcceptQuestLoading(false);
+                  return isQuestAccepted;
+                }}
+                buttonDisable={acceptQuestLoading}
+              />
               {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
               {/* Den Counter */}
               <div className="relative">
@@ -118,7 +131,7 @@ export default function Den() {
           {/* bg-red-400 */}
           {/* Den Table And Chair And Playt Button*/}
           <div
-            className="absolute w-full h-full flex flex-col  items-center justify-end"
+            className="absolute w-full h-full flex flex-col  items-center justify-end z-0"
             style={{
               ...calculatePositionAndSize(51, 91, 53),
               transform: "translate(-50%, -100%)",

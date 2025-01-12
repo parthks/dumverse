@@ -5,7 +5,7 @@ require("utils.combat")
 
 local record CombatEntityStats
     health: number
-    damage: number
+    damage: number | {number}
     defense: number
     name: string
     id: string
@@ -83,7 +83,13 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
     end
 
     if success or critical_hit then
-        local damage = attacker.damage
+        local damage : number
+        if attacker_type == "npc" and type(attacker.damage) == "table" then
+            local damage_table = attacker.damage as {number}
+            damage = math.random(damage_table[1], damage_table[2])
+        else
+            damage = attacker.damage as number
+        end
         if critical_hit then
             damage = damage * 2
             table.insert(log, {

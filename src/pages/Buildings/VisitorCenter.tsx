@@ -152,12 +152,20 @@ export default function VisitorCenter() {
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[0%] w-[25%] h-auto"
           />
+          <div>
+            <img
+            src={"https://arweave.net/8wnPkG5iB3_IcvovR-IpNrUn70suknepvMXUdRoT4CE"}
+            alt="Agent Trunk"
+            className="absolute w-[25%] left-[25%] bottom-[1%] z-10"
+            />
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[25%] w-[25%] h-auto"
           />
+          </div>
+         
           <img
             src={"https://arweave.net/SnIUR_P7GXlwEPX0Dl74rGTmXQczbQ0hRY48G_uB5bo"}
             alt="Stage"

@@ -433,23 +433,25 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
               });
 
         const gqlQuery = gql`query {
-          transactions(
-              ids:["uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"]
-    }]
-          ) {
-            edges {
-              node {
-                id
-                tags {
-                  name
-                  value
-                }
-              }
-            }
-          }
-        }
+  transactions(
+      # ids:["uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"],
+    tags: [
+      
+      { name:"Type", values:["Message"]}
+       { name:"Target", values:["uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"]}
+      { name: "Action", values: ["ChatMessage"] }
+    { name: "ChatRoom", values: ["Town"] }
+    ]
+  ) {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
         `
-        const client = new GraphQLClient("https://arweave.net/graphql");
+        const client = new GraphQLClient("https://arweave-search.goldsky.com/graphql");
 
               const check = await  client.request(gqlQuery);
               console.log("Ashu : chat: "+JSON.stringify(check));

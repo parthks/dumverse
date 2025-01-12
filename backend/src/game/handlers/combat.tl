@@ -296,6 +296,9 @@ local function enterNewCombatHandler(msg: Message)
         else
             -- Hard enemies including the Boss (enemy 13)
             enemy_index = math.random(10, 13)
+            if enemy_index == 13 then
+                enemy_index = math.random(1, 10) == 10 and 13 or math.random(10, 12)
+            end
         end
         return enemy_index
     end
@@ -475,10 +478,10 @@ local function playerWonHandler(msg: Message)
 
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f,
+        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f,
         special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
         WHERE id = %f;
-    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance,
+    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0,
     playerData.special_item_kitten,
     playerData.special_item_key,
     playerData.special_item_thread,
