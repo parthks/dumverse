@@ -53,26 +53,26 @@ export const ITEM_IMAGES = {
 };
 
 export const ENEMY_CARD_IMAGE = {
-  NPC_1: "https://arweave.net/-ViThoEIwlBp5mkewLk2OjnnEKNee5SEbmeMwdsfFD0",
-  NPC_2: "https://arweave.net/sf72XoFEIwZy1SpLJ5bqEGs2WLevkHM-ljZy95lGyuY",
-  NPC_3: "https://arweave.net/S9D0Tf9Eu4lnQ3nw2MzuV0gKCgo5vlXUmME1KP3gCBI",
-  NPC_4: "https://arweave.net/5kv0IVgvrCN-Ww1GZFbNevNX3L9aKg0fBwzjK9nabrc",
-  NPC_5: "https://arweave.net/6zXMMGRVxBltXuV6LkVgJbfGhmeNUlBV-T7dJVebM2E",
-  NPC_6: "https://arweave.net/9rXqcbd-c3CPFrMD39uV27B-pfhKUCQdV4l5WmZLvqo",
-  NPC_7: "https://arweave.net/qVe1dy3dQh3xuGyQAQ2pRe-DRdMwhHLIYzkA5h3vTBo",
-  NPC_8: "https://arweave.net/hQb7hRMU4Rynz18euMo3IHEgouij2cmb7TAPocOegQA",
-  NPC_9: "https://arweave.net/ViFdKd-cUkxaJ6WAsw4xjRFKi7QeTzJop7wqmmQOQ9A",
-  NPC_10: "https://arweave.net/9VoHqEbKolMa4Gebk2dUKq-P2ZTyXGh2CCGwxtHfYjg",
-  NPC_11: "https://arweave.net/KAXnRZxDWLG_vl0GEN-OK4uOfoLddEyp2UMNezV7FqE",
-  NPC_12: "https://arweave.net/VwTxz8r7_6U3Jin7QORp_jsEa9OSMH69n1En_cbmff0",
-  NPC_13: "https://arweave.net/owTkaG8UTkdeI9lTtbAHoPjRx0MlOl1qOLxberuuWE0",
-  SHIBA: "https://arweave.net/T1MRwTrs1r0aXAnzC086lOajB-ETp-wP3LrksQCCNSI", // vault key
-  MOUSE: "https://arweave.net/P2YsdMqVYNZFMbUofF1ArW7WixsHCbNzJg4N0OrL3AI", // thread
-  TREE: "https://arweave.net/MCYuvUej12RexhI_AsQIEuOC51upXzAfbV8HEV2gGlk", // bark
-  PEACOCK: "https://arweave.net/Xss-Mc-immgjGomhx7Ozg71AEADhvoOGODLhMbv8yEQ", // heart fragment
-  DUMZ: "https://arweave.net/wW6WIyG3cy36BxoJuPM5y0YHJabdPFCH9Ea77l6I1vQ", // dumz loot
-  BLACK_SWAN: "https://arweave.net/rcdUY5bbvck7dAHQwthelvyIKdUy3JEeJhHoldrXqpQ", // kitten, gold and dumz loot
-  LEPERCHAUN: "https://arweave.net/eF9igMGCSyZcWgaRJBtphMI18zuu0uvrm8oiM8EX6js", // gold loot
+  NPC_1: "https://arweave.net/RLXSxp6VWRYjB_WVx_JdHgPqeLyynUvcWm0wB35b0AA",
+  NPC_2: "https://arweave.net/pJ_kYn4Zwiq9yZz_MSptqYKHokZ_WAA0q6PvSmtQHmI",
+  NPC_3: "https://arweave.net/mk_d1Evx_DISpPxSrmsmadfkU-L7jHuX6dItFwmmke4",
+  NPC_4: "https://arweave.net/CHweVCbT2ekPV7FJ_i1MBn9Og7h6ViaL6NH4xOLe0Jc",
+  NPC_5: "https://arweave.net/FC3nM4tYls2JqwmDgaG158iXv1t2SAQZw4pVZAKFveg",
+  NPC_6: "https://arweave.net/EYPLtsj6eRtfQalAxFKIW85qjIBfZMty9Ln0XkkAuiw",
+  NPC_7: "https://arweave.net/08gxqbuN2e10d5eppgZaIDn_uC6evMbj9naBZrjsTeQ",
+  NPC_8: "https://arweave.net/cUU8QXW5y9ESNBAQVyx9sJtVxW0aWDzB98Ekykvobzk",
+  NPC_9: "https://arweave.net/vqSiZZ3iXhZMB2CfTOrLljB3SN7U9GjMxmlWoW0G8NM",
+  NPC_10: "https://arweave.net/bQVGBWdAMJnyGS9RZgaB5IxKXIrq2JWiS1xeBMZGJG0",
+  NPC_11: "https://arweave.net/C83gjHBXoCUqZ7_C4cHkt1vAvsQviqHd3n3YHeyjGNg",
+  NPC_12: "https://arweave.net/D989Tqp4aQSc0DvXBK9mavJTyoRBWyVf2Xxx_IzTg0Y",
+  NPC_13: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
+  SHIBA: "https://arweave.net/XBCqnltB0sUIgPfzc-zi-0UohyzWmrzfO_mI0K56riY", // vault key
+  MOUSE: "https://arweave.net/DCHssHAYigw_INj5sTFJ2zmy_Dx4ueUbQllsReUuA6U", // thread
+  TREE: "https://arweave.net/GTjbC4vE35EhoCCBbkY4TWsxTlvLxjRQLXB39RjM92c", // bark
+  PEACOCK: "https://arweave.net/sEgKP9-jIum6GtGyGhWp-wvOm8ewGyr71rrG-fSxx-g", // heart fragment
+  DUMZ: "https://arweave.net/rAbQO5YitiTU2jGAHl1Om5Lp7kJl6Tzy8NU5JS2abrU", // dumz loot
+  BLACK_SWAN: "https://arweave.net/tDkbLZT4ITSHCesacdjQykrRKh23aGh4LOY6c5GeL1Y", // kitten, gold and dumz loot
+  LEPERCHAUN: "https://arweave.net/Dh9lbBgZf8hGJQZ77v5yXJSJ_1lW2QISPdqWcSxPRiI", // gold loot
 };
 
 export const SOUNDS = {

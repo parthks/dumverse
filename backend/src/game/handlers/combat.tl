@@ -305,7 +305,7 @@ local function enterNewCombatHandler(msg: Message)
 
     local function getRandomSpecialEnemy(user: UserData, level: integer): EnemyData | nil
         -- 10% chance to get a Leperchaun enemy
-        if ((level > 18 and level < 28) or (level > 45 and level < 55)) and math.random(1, 10) == 1 then
+        if (level > 45 and level < 55) and math.random(1, 10) == 1 then
             return constants.SPECIAL_ENEMIES["LEPERCHAUN"]
         end
         -- 5% chance to get a dumz maxi
@@ -313,7 +313,7 @@ local function enterNewCombatHandler(msg: Message)
             return constants.SPECIAL_ENEMIES["DUMZ"]
         end
         
-        if ((level > 18 and level < 28) or (level > 45 and level < 55)) and user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
+        if (level > 45 and level < 55) and user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
             -- 20% chance to get a shiba enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["SHIBA"]
