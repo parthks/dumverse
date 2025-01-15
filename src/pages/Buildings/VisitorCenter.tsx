@@ -5,9 +5,11 @@ import GifComponent from "@/components/Dialogue/Dialogue";
 import { BUILDING_IMAGES } from "@/lib/constants";
 import { useGameStore } from "@/store/useGameStore";
 import { useState, useEffect } from "react";
+import { set } from "zod";
 
 export default function VisitorCenter() {
   const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [dialogueBoxOpen, setDialogueBoxOpen] = useState<{character_name:string ;character_dialogue:boolean}>({character_name:"",character_dialogue:false});
 
   const { getTotalUsers } = useGameStore();
 
@@ -26,6 +28,14 @@ export default function VisitorCenter() {
 
     return () => clearInterval(intervalId);
   }, [getTotalUsers]);
+
+  function visitorCenterCharacterDialogue(character: string){
+    if(dialogueBoxOpen.character_name=="") setDialogueBoxOpen({character_name:character,character_dialogue:true });
+   if (dialogueBoxOpen.character_name==character) {setDialogueBoxOpen({...dialogueBoxOpen,character_dialogue:!dialogueBoxOpen.character_dialogue});}
+   else {
+    setDialogueBoxOpen({character_name:character,character_dialogue:true});
+   }
+  }
 
   return (
     <div className="h-screen relative">
@@ -126,7 +136,7 @@ export default function VisitorCenter() {
         >
           <RiveAnimation url={BUILDING_IMAGES.VISITOR_CENTER_HALL_FAME_DUMDUM} />
         </div>
-        <GifComponent className="absolute h-[20vh] translate-x-[400px] translate-y-[-520px]" />
+       {!dialogueBoxOpen.character_dialogue && <GifComponent className="absolute h-[20vh] translate-x-[400px] translate-y-[-520px]" />}
       </div>
 
       {/* sign */}
@@ -153,6 +163,7 @@ export default function VisitorCenter() {
             className="absolute bottom-[0] left-[0%] w-[25%] h-auto"
           />
           <div>
+            <div onClick={()=>visitorCenterCharacterDialogue("Agent-Trunk")}> 
             <img
             src={"https://arweave.net/8wnPkG5iB3_IcvovR-IpNrUn70suknepvMXUdRoT4CE"}
             alt="Agent Trunk"
@@ -164,12 +175,13 @@ export default function VisitorCenter() {
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[25%] w-[25%] h-auto"
           />
-          {/* <img
+            </div>
+         {dialogueBoxOpen.character_name == "Agent-Trunk" && dialogueBoxOpen.character_dialogue==true && <img
             src={"https://arweave.net/tBWofK8qmdN5kge2mpDNdn0J3LIOHmd4waEdX1-tyig"}
-            alt="Stage"
+            alt="Agent Trunk Dialogue"
             style={{ transform: "translate(0%, 0%)" }}
-            className="absolute bottom-[32%] left-[6%] w-[25%] h-auto"
-          /> */}
+            className="absolute bottom-[33%] left-[7%] w-[25%] h-auto"
+          />}
           </div>
          
           <img
