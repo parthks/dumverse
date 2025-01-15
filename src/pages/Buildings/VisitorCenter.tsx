@@ -164,6 +164,12 @@ export default function VisitorCenter() {
             style={{ transform: "translate(0%, 0%)" }}
             className="absolute bottom-[0] left-[25%] w-[25%] h-auto"
           />
+          {/* <img
+            src={"https://arweave.net/tBWofK8qmdN5kge2mpDNdn0J3LIOHmd4waEdX1-tyig"}
+            alt="Stage"
+            style={{ transform: "translate(0%, 0%)" }}
+            className="absolute bottom-[32%] left-[6%] w-[25%] h-auto"
+          /> */}
           </div>
          
           <img
