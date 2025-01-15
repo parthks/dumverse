@@ -149,12 +149,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
           })}
           {/* image width="5%" height="10%"  */}
           <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="4%" height="11%" preserveAspectRatio="xMidYMid meet">
-            <title>Lamma</title>
+            <title></title>
           </image>
 
           {tempCurrentIslandLevel <= 27 ? (
             <image href="https://arweave.net/dB07kjfdIJFICANzB7nkt2W8W2FoO4TbFnAVTHeepzw" x="89%" y="92%" width="3%" preserveAspectRatio="xMidYMid meet">
-              <title>Lamma</title>
+              <title></title>
             </image>
           ) : (
             <></>
