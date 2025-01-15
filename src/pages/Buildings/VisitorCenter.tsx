@@ -83,7 +83,7 @@ export default function VisitorCenter() {
 
                 <div className="text-left w-fit">
                   <h3 className="font-semibold text-md mt-2 underline ml-6">Q3</h3>
-                  <p className="mt-2">Cascade 7</p>
+                  <p className="mt-2">Cascade 700</p>
                   <p>Cascade 8</p>
                   <p>Cascade 9</p>
                 </div>
