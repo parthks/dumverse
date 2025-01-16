@@ -533,7 +533,7 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        console.log("Ashu: "+JSON.stringify(resultData));
+        // console.log("Ashu: "+JSON.stringify(resultData));
         if (resultData && resultData.status === "Success"){  await get().refreshUserData();}
         if(typeof(resultData.status) == "string") return resultData.status ;
         return null;      
