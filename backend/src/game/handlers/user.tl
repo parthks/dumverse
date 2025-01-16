@@ -11,6 +11,10 @@ if not ClaimedNFTs then
     ClaimedNFTs = {}
 end
 
+global Daily_Gold: {number:number}
+if not Daily_Gold then
+    Daily_Gold = {}
+end
 
 
 local function setCurrentIslandHandler(msg: Message)
@@ -457,6 +461,45 @@ local function deletingUsersAccountHandler(msg:Message)
    end
 end
 
+local function goldWishesHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local userData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1]
+    local roll = math.random(1,4)
+    local DAILY_LIMIT = 150
+    local current_timestamp = msg.Timestamp
+    local last_updated = tonumber(userData.last_updated_at) 
+    local time_diff = current_timestamp - last_updated
+
+    if not Daily_Gold[user_id] then
+        Daily_Gold[user_id] = 0
+    end
+
+    if Daily_Gold[user_id] >= DAILY_LIMIT then
+        ao.send({ Target = msg.From, Status = "MAX_LIMIT" })
+        return
+    end
+    
+ -- 3/4 times 10 gold should given to the users and max limit of gold that user get in a day is 150
+    if roll ~= 4 then
+        if time_diff >= 86400 then
+            Daily_Gold[user_id] = 0
+        end
+
+        if Daily_Gold[user_id] >= DAILY_LIMIT then
+            ao.send({ Target = msg.From, Status = "MAX_LIMIT" })
+            return
+        end
+        
+        local previous_gold = Daily_Gold[user_id]
+        Daily_Gold[user_id] = Daily_Gold[user_id] + 10
+        local new_gold = Daily_Gold[user_id] - previous_gold 
+
+        dbAdmin:exec(string.format([[UPDATE Users SET gold_balance = gold_balance + %f, last_updated_at= %f  WHERE id = %f;]], new_gold, current_timestamp, user_id))
+        ao.send({Target=msg.From, Status = "Success"})
+    end
+    ao.send({ Target = msg.From, Status = "FAIL" })
+end
+
 -- local function resetUsersDamage(msg: Message)
 --     assert(msg.From==ao.id,"Not access")
 --     print("Initiate")
@@ -482,7 +525,9 @@ Handlers.add("User.Revive", Handlers.utils.hasMatchingTag('Action', 'User.Revive
 Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Action', 'User.GetAllPlayersAtLocation'), getAllPlayersAtLocationHandler)
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
+Handlers.add("User.GoldWishes", Handlers.utils.hasMatchingTag('Action', 'User.GoldWishes'), goldWishesHandler)
 -- Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
+
 return {}
 
 

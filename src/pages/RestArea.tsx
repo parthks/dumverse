@@ -102,8 +102,10 @@ export default function RestArea() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const current_spot = useGameStore((state) => state.user!.current_spot);
+  const goldWishes = useGameStore((store)=>store.goldWishes);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [wishStatus, setWishStatus] = useState<string | null >("m");
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
     return (
       <div>
@@ -117,6 +119,11 @@ export default function RestArea() {
 
   useBackgroundMusic(current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO);
 
+ async function making_wish() {
+      const status = await goldWishes();
+      setWishStatus(status);
+  }
+
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
       {/* {current_spot === 0 ? <audio src={SOUNDS.TOWN_REST_AREA_AUDIO} autoPlay loop /> : <audio src={SOUNDS.REST_AREA_AUDIO} autoPlay loop />} */}
@@ -126,6 +133,39 @@ export default function RestArea() {
       <div className="z-30 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%]">
         <PlayerOnlineList currentSpot={current_spot} />
       </div>
+
+      {current_spot==0 && <div className="z-30 absolute bottom-4 right-[50%]"> <ImgButton
+              // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
+              src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+              alt={"Make Gold Wish"}
+              onClick={making_wish}
+            /> </div>}
+
+    {
+      wishStatus && <div className="fixed inset-0 flex items-center justify-center text-white z-50">
+      <div className=" w-[50vw] h-[40vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-70">
+      <button className="absolute top-2 right-2 text-6xl font-bold" onClick={()=>setWishStatus(null)}>
+          &times;
+        </button>
+
+        <h1 className="text-4xl text-center underline">I Wish... I Wish...</h1>
+
+<div className="w-full h-full flex justify-center items-center">
+{
+          wishStatus == "Success" && <h1 className="text-4xl text-center">10g coins magically appeared in your bag!</h1>
+        }
+        {
+          wishStatus == "FAIL" && <h1 className="text-4xl text-center">hm, looks like no one was listening, maybe try again?</h1>
+        }
+        {
+          wishStatus == "MAX_LIMIT" && <h1 className="text-4xl text-center">Sorry Fren, no more wishes today, try again tomorrow!</h1>
+        }
+  </div>
+        
+</div>
+        </div>
+    }
+
 
       {!chatOpen && (
         <div className="z-30 absolute top-4 right-4">

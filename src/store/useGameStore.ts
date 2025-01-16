@@ -81,6 +81,7 @@ interface GameState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (open: boolean) => void;
   getTotalUsers: () => Promise<number>;
+  goldWishes: ()=>Promise<string | null>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -524,6 +525,18 @@ export const useGameStore = create<GameState>()(
         } else {
           return 0;
         }
+      },
+      goldWishes: async ()=>{
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "User.GoldWishes" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        console.log("Ashu: "+JSON.stringify(resultData));
+        if (resultData && resultData.status === "Success"){  await get().refreshUserData();}
+        if(typeof(resultData.status) == "string") return resultData.status ;
+        return null;      
       },
     }),
     {
