@@ -134,38 +134,52 @@ export default function RestArea() {
         <PlayerOnlineList currentSpot={current_spot} />
       </div>
 
-      {current_spot==0 && <div className="z-30 absolute bottom-4 right-[50%]"> <ImgButton
-              // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
-              src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
-              alt={"Make Gold Wish"}
-              onClick={making_wish}
-            /> </div>}
-
-    {
-      wishStatus && <div className="fixed inset-0 flex items-center justify-center text-white z-50">
-      <div className=" w-[50vw] h-[40vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-70">
-      <button className="absolute top-2 right-2 text-6xl font-bold" onClick={()=>setWishStatus(null)}>
-          &times;
-        </button>
-
-        <h1 className="text-4xl text-center underline">I Wish... I Wish...</h1>
-
-<div className="w-full h-full flex justify-center items-center">
-{
-          wishStatus == "Success" && <h1 className="text-4xl text-center">10g coins magically appeared in your bag!</h1>
-        }
-        {
-          wishStatus == "FAIL" && <h1 className="text-4xl text-center">hm, looks like no one was listening, maybe try again?</h1>
-        }
-        {
-          wishStatus == "MAX_LIMIT" && <h1 className="text-4xl text-center">Sorry Fren, no more wishes today, try again tomorrow!</h1>
-        }
-  </div>
-        
-</div>
+      {current_spot == 0 && (
+        <div className="z-30 absolute bottom-4 right-[50%]">
+          {" "}
+          <ImgButton
+            // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
+            src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+            alt={"Make Gold Wish"}
+            onClick={making_wish}
+          />{" "}
         </div>
-    }
+      )}
 
+      {wishStatus && (
+        <div className="fixed inset-0 flex items-center justify-center text-white z-50">
+          <div className=" w-[50vw] h-[40vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-70">
+            <button
+              className="absolute top-2 right-2 text-6xl font-bold"
+              onClick={() => setWishStatus(null)}
+            >
+              &times;
+            </button>
+
+            <h1 className="text-4xl text-center underline">
+              I Wish... I Wish...
+            </h1>
+
+            <div className="w-full h-full flex justify-center items-center">
+              {wishStatus == "Success" && (
+                <h1 className="text-4xl text-center">
+                  10g coins magically appeared in your bag!
+                </h1>
+              )}
+              {wishStatus == "FAIL" && (
+                <h1 className="text-4xl text-center">
+                  hm, looks like no one was listening, maybe try again?
+                </h1>
+              )}
+              {wishStatus == "MAX_LIMIT" && (
+                <h1 className="text-4xl text-center">
+                  Sorry Fren, no more wishes today, try again tomorrow!
+                </h1>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {!chatOpen && (
         <div className="z-30 absolute top-4 right-4">
@@ -183,18 +197,33 @@ export default function RestArea() {
         <>
           <div className="z-30 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
             <InventoryBag />
-            <ImgButton className="h-[65px]" src={"https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
+            <ImgButton
+              className="h-[65px]"
+              src={
+                "https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"
+              }
+              onClick={() => setOpenBag(!openBag)}
+              alt={"Open Bag"}
+            />
           </div>
 
           <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
             <ImgButton
-              src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
+              src={
+                "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
+              }
               onClick={() => {
                 setChatOpen(true);
               }}
               alt={"Chat"}
             />
-            <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
+            <ImgButton
+              src={
+                "https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"
+              }
+              onClick={() => setIsSettingsOpen(true)}
+              alt={"Open Settings"}
+            />
           </div>
         </>
       )}
@@ -207,30 +236,60 @@ export default function RestArea() {
 
       <div className="relative w-full h-full">
         <div className={`absolute inset-0`}>
-{  current_spot == 0 ?  (<TownRestArea/>) :          <img src={RestAreaImages[current_spot as keyof typeof RestAreaImages]} alt="Rest Area Background" className="w-full h-full object-cover" />
-}        
+          {current_spot == 0 ? (
+            <TownRestArea />
+          ) : (
+            <img
+              src={RestAreaImages[current_spot as keyof typeof RestAreaImages]}
+              alt="Rest Area Background"
+              className="w-full h-full object-cover"
+            />
+          )}
 
-  {current_spot != 0 && (
+          {current_spot != 0 && (
             <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>
               {/* ${cn(current_spot === 18 && "translateX(13vw) translateY(4vh)")} */}
               <div
                 style={{
                   width: current_spot === 27 ? "15vw" : "18vw",
-                  height: current_spot === 45 || current_spot === 54 || current_spot === 72 ? "45vh" : "60vh",
+                  height:
+                    current_spot === 45 ||
+                    current_spot === 54 ||
+                    current_spot === 72
+                      ? "45vh"
+                      : "60vh",
                   transform: `
                 ${cn(current_spot === 9 && "translateX(3vw)")}
                 ${cn(current_spot === 18 && "translateX(13vw)")}
-                ${cn(current_spot === 27 && "translateX(25vw) translateY(-12vh)")}
-                ${cn(current_spot === 36 && "translateX(32vw) translateY(-21vh)")}
-                ${cn(current_spot === 45 && "translateX(-13vw) translateY(-1vh)")}
-                ${cn(current_spot === 54 && "translateX(-11vw) translateY(-2vh)")}
-                ${cn(current_spot === 63 && "translateX(-24vw) translateY(-12vh)")}
-                ${cn(current_spot === 72 && "translateX(23vw) translateY(-1vh)")}
-                ${cn(current_spot === 81 && "translateX(23vw) translateY(-1vh)")}
+                ${cn(
+                  current_spot === 27 && "translateX(25vw) translateY(-12vh)"
+                )}
+                ${cn(
+                  current_spot === 36 && "translateX(32vw) translateY(-21vh)"
+                )}
+                ${cn(
+                  current_spot === 45 && "translateX(-13vw) translateY(-1vh)"
+                )}
+                ${cn(
+                  current_spot === 54 && "translateX(-11vw) translateY(-2vh)"
+                )}
+                ${cn(
+                  current_spot === 63 && "translateX(-24vw) translateY(-12vh)"
+                )}
+                ${cn(
+                  current_spot === 72 && "translateX(23vw) translateY(-1vh)"
+                )}
+                ${cn(
+                  current_spot === 81 && "translateX(23vw) translateY(-1vh)"
+                )}
                 `,
                 }}
               >
-                <RiveAnimation url={"https://arweave.net/rrX4T8R7gZJuh3onSlujy7aeZO8y4ew8Hz_ML_9cE2k"} />
+                <RiveAnimation
+                  url={
+                    "https://arweave.net/rrX4T8R7gZJuh3onSlujy7aeZO8y4ew8Hz_ML_9cE2k"
+                  }
+                />
               </div>
             </div>
           )}
