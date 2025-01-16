@@ -3,7 +3,7 @@ local json = require("json")
 require("combat.types")
 global MAX_PLAYERS_IN_BATTLE = 2
 -- global GAME_PROCESS_ID = ao.env.Process.Tags.GameProcessId
-global GAME_PROCESS_ID = "Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI"
+global GAME_PROCESS_ID = "he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk"
 
 global BATTLE_COUNT: integer
 if not BATTLE_COUNT then
@@ -34,7 +34,7 @@ global CRON_TICK_COUNT = 0
 
 global function sendBatteDataToHistoryProcess(battle_Id:integer,battle_data: Battle, battle_error_status: string)
     ao.send({
-        Target = "6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8",
+        Target = "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0",
         Action = "Record.SavedToHistory",
         Data = json.encode(battle_data),
         SubProcess = tostring(ao.id),
