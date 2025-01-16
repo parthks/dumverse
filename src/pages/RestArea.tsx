@@ -105,7 +105,7 @@ export default function RestArea() {
   const goldWishes = useGameStore((store)=>store.goldWishes);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [wishStatus, setWishStatus] = useState<string | null >("m");
+  const [wishStatus, setWishStatus] = useState<string | null >(null);
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
     return (
       <div>
