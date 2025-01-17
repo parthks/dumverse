@@ -27,7 +27,7 @@ export default function NFTShop() {
 
   // const alreadyOwned = inventory.some((i) => i.item_id === item.id);
 
-  // console.log("Ashu: haswood, buyloading, dmdm: "+ hasWood + " " +buyItemLoading + " "+JSON.stringify(shop) );
+  console.log("Ashu: haswood, buyloading, dmdm: "+ hasWood + " " +buyItemLoading + " "+JSON.stringify(shop) );
 
   return (
     <div className="h-screen relative" style={{ backgroundColor: "#EFECD5" }}>
@@ -123,14 +123,15 @@ export default function NFTShop() {
                   disabled={
                     !hasWood ||
                     buyItemLoading ||
-                    (inventory.some((i) => i.item_id === shop?.items[2].id) && (shop?.items[2].type ? ["WEAPON", "ARMOR"].includes(shop.items[2].type) : false))
+                    (inventory.some((i) => i.item_id === shop?.items[1].id) && (shop?.items[1].type ? ["WEAPON", "ARMOR"].includes(shop.items[1].type) : false))
                   }
                   src="https://arweave.net/SyQA7SYryT_kycFIuBKCIEBlDSLLkF_4BLmOkI0RCBk"
-                  alt={`Buy ${shop?.items[2].name}`}
-                  data-item-type={shop?.items[2].id}
+                  alt={`Buy ${shop?.items[1].name}`}
+                  data-item-type={shop?.items[1].id}
                   onClick={async () => {
-                    if (shop?.items[2]) {
-                      await buyItem(shop?.items[2], shop?.items[2]?.gold_price ? "GOLD" : "DUMZ");
+                    if (shop?.items[1]) {
+                      console.log("Ashu : "+JSON.stringify(shop.items[1]));
+                      await buyItem(shop?.items[1], shop?.items[1]?.gold_price ? "GOLD" : "DUMZ");
                       audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                     }
                   }}
@@ -149,14 +150,15 @@ export default function NFTShop() {
                       disabled={
                         !hasThreads ||
                         buyItemLoading ||
-                        (inventory.some((i) => i.item_id === shop?.items[1].id) && (shop?.items[1].type ? ["WEAPON", "ARMOR"].includes(shop.items[1].type) : false))
+                        (inventory.some((i) => i.item_id === shop?.items[2].id) && (shop?.items[2].type ? ["WEAPON", "ARMOR"].includes(shop.items[2].type) : false))
                       }
                       src="https://arweave.net/SyQA7SYryT_kycFIuBKCIEBlDSLLkF_4BLmOkI0RCBk"
-                      alt={`Buy ${shop?.items[1].name}`}
-                      data-item-type={shop?.items[1].id}
+                      alt={`Buy ${shop?.items[2].name}`}
+                      data-item-type={shop?.items[2].id}
                       onClick={async () => {
-                        if (shop?.items[1]) {
-                          await buyItem(shop?.items[1], shop?.items[1]?.gold_price ? "GOLD" : "DUMZ");
+                        if (shop?.items[2]) {
+                          console.log("Ashu : "+JSON.stringify(shop.items[2]));
+                          await buyItem(shop?.items[2], shop?.items[2]?.gold_price ? "GOLD" : "DUMZ");
                           audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                         }
                       }}

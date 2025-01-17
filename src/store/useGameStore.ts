@@ -67,7 +67,7 @@ interface GameState {
   resetRegenerateCountdown: () => void;
   regenerateCountdownTickDown: () => Promise<void>;
   setRegenerateCountdown: (countdown: number | null) => void;
-  reviveUser: () => Promise<void>;
+  reviveUser: () => Promise<boolean>;
   repairItem: (inventoryId: number) => Promise<void>;
   questBookOpen: boolean;
   setQuestBookOpen: (open: boolean) => void;
@@ -443,7 +443,11 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        await get().refreshUserData();
+        if(resultData.status && resultData.status=="Success") {
+          await get().refreshUserData();
+          return true
+        }
+        return false
       },
       repairItem: async (inventoryId) => {
         const resultData = await sendAndReceiveGameMessage({

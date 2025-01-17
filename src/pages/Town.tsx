@@ -21,8 +21,8 @@ export default function Town() {
   const handleBuildingSelect = (building: GameStatePages) => {
     if (building !== GameStatePages.NFT_SHOP) {
       setGameStatePage(building);
-    } else {
-      if (user?.nft_address) setGameStatePage(building);
+    } else {  
+      if (!user?.nft_address) setGameStatePage(building);
     }
   };
 

@@ -50,9 +50,10 @@ local function shopBuyItemHandler(msg: Message)
     local item = helpers.GetItemDetails(item_id)
     assert(item, "Item does not exist")
 
-    if (item.id == "WAND" or item.id == "MAGIC_ROBE") then
-       assert(userData.nft_address,"To buy this you need to own an NFT")
-    end
+    print(item)
+    -- if (item.id == "WAND" or item.id == "MAGIC_ROBE") then
+    --    assert(userData.nft_address,"To buy this you need to own an NFT")
+    -- end
 
     -- Check if item has the correct price type
     if tokenType == "GOLD" then

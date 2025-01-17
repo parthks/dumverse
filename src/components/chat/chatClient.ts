@@ -1,5 +1,7 @@
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { ChatMessageCreate, ChatMessageHistoryType } from "./Chat";
+import axios from "axios";
+
 
 type HistoryQuery = {
   idAfter?: number;
