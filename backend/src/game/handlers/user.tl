@@ -3,7 +3,6 @@ local helpers = require("game.helpers")
 local constants = require("utils.constants")
 local utils = require("utils.utils.tl-utils")
 
-
 local REST_SPOTS = constants.REST_SPOTS;
 
 global ClaimedNFTs: {string}
@@ -74,6 +73,7 @@ local function OneOfOnesSpecialItemsHandler(nft_address: string, user_id: number
 end
 
 local function addNewUserHandler(msg: Message)
+    print("daafa")
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
     local name = msg.Tags.Name
@@ -503,11 +503,8 @@ end
 -- local function resetUsersDamage(msg: Message)
 --     assert(msg.From==ao.id,"Not access")
 --     print("Initiate")
---     dbAdmin:exec(string.format([[UPDATE Users SET damage=1 WHERE nft_address IS NOT NULL 
---     AND nft_address NOT IN ('%s', '%s', '%s', '%s')]], "A8ucm402DGkcJWydu1iibXGvpsDSnI5rj3Z-zP7JjB4",
---     "XYkNDhHBAPF85xy7E56mmZR4VJTS8os0JbxNh_fdRZE",
---     "2UMirpNKMZ9MDpApI3gI0Dy0975fC-vOK3UoIeMM2yg",
---     "5U-KMM4rJ2x19xEEgSIHVdDopxuTXgCjaQgTUrNFiKE"))
+    
+
 --     print("Successful")
 -- end
 

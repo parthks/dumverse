@@ -1,6 +1,3 @@
-game:
-  processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: 4f6edf207aac63c61c39d502c91d1816bd964a78f3ddab03efc3cb1ee404c19a
 combat:
   processId: jqV5F0Hf69S4_uQbtLJhJMuYZwOVszzO2DUcAbkl57E
   hash: 14728d4a7c123b1302a877a0acdcdab701925db7844938b23fb04e245d31eaa3
@@ -28,3 +25,6 @@ cron:
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
   hash: 04d06b8d6840efef1277a8b9c54b86986dc4944cbecd849a8405de87e902845c
+game:
+  processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
+  hash: 2060d395b5b81ee6477f439dce07751901dc0fbba20c1e283875e4791630ed13
