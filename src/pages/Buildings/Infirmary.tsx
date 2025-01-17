@@ -11,18 +11,25 @@ export default function Infirmary() {
   const reviveUser = useGameStore((state) => state.reviveUser);
 
   useEffect(() => {
+    let isMounted = true; 
+  
     const attemptRevive = async () => {
-      if (!revived) {
+      if (!revived && isMounted) {
         const isUserRevive = await reviveUser();
         if (isUserRevive) {
           setRevived(true);
         } else {
-          attemptRevive();
+          if (isMounted) {
+            attemptRevive();
+          }
         }
       }
     };
   
     attemptRevive();
+      return () => {
+      isMounted = false;
+    };
   }, [revived, reviveUser]);
 
   return (
