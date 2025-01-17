@@ -11,12 +11,13 @@ export default function Infirmary() {
   const reviveUser = useGameStore((state) => state.reviveUser);
 
   useEffect(() => {
-    const revive = async () => {
-      await reviveUser();
-      setRevived(true);
+    if (!revived) {const revive = async () => {
+     const isUserRevive = await reviveUser();
+      setRevived(isUserRevive);
     };
-    revive();
-  }, [reviveUser]);
+    revive();}
+  },[revived]);
+
 
   return (
     <div className="h-screen relative">
