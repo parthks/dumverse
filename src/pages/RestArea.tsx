@@ -132,10 +132,10 @@ export default function RestArea() {
 
       <div className="z-30 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%]">
         <PlayerOnlineList currentSpot={current_spot} />
-      </div>
+        </div>
 
       {current_spot == 0 && (
-        <div className="z-30 absolute bottom-4 right-[50%]">
+        <div className="z-30 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
           {" "}
           <ImgButton
             // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
