@@ -130,7 +130,6 @@ export default function NFTShop() {
                   data-item-type={shop?.items[1].id}
                   onClick={async () => {
                     if (shop?.items[1]) {
-                      console.log("Ashu : "+JSON.stringify(shop.items[1]));
                       await buyItem(shop?.items[1], shop?.items[1]?.gold_price ? "GOLD" : "DUMZ");
                       audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                     }
@@ -157,7 +156,6 @@ export default function NFTShop() {
                       data-item-type={shop?.items[2].id}
                       onClick={async () => {
                         if (shop?.items[2]) {
-                          console.log("Ashu : "+JSON.stringify(shop.items[2]));
                           await buyItem(shop?.items[2], shop?.items[2]?.gold_price ? "GOLD" : "DUMZ");
                           audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                         }

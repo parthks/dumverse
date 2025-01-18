@@ -12,6 +12,7 @@ import React from "react";
 import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { Fit } from "@rive-app/react-canvas";
+import { DailyGoldWishes } from "@/types/game";
 
 // const RestAreaImages = {
 //   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
@@ -41,7 +42,9 @@ const ReturnToTown = React.memo(() => {
     <>
       {current_spot == 0 ? (
         <ImgButton
-          src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"}
+          src={
+            "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
+          }
           onClick={() => {
             setGameStatePage(GameStatePages.TOWN);
           }}
@@ -49,7 +52,9 @@ const ReturnToTown = React.memo(() => {
         />
       ) : (
         <ImgButton
-          src={"https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"}
+          src={
+            "https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"
+          }
           onClick={() => {
             setGameStatePage(GameStatePages.GAME_MAP);
           }}
@@ -62,19 +67,34 @@ const ReturnToTown = React.memo(() => {
 
 function RestAreaPlayerStatsDisplay() {
   const user = useGameStore((state) => state.user!);
-  const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
+  const regenerateCountdown = useGameStore(
+    (state) => state.regenerateCountdown
+  );
 
   const totalStamina = user.total_stamina;
   const filledStamina = user.stamina;
   return (
     <div className="relative w-80 h-[80px]">
-      <img src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg" alt="Background" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
+      <img
+        src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover rounded-lg"
+      />
 
       <div className="absolute inset-0 top-[-24px] left-[-12px] flex items-center justify-start">
         <div className="relative">
-          <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
+          <img
+            src={
+              "https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"
+            }
+            alt="Health"
+            className="w-20"
+          />
           <p
-            style={{ textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+            style={{
+              textShadow:
+                "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000",
+            }}
             className="absolute inset-0 flex items-center mb-5 justify-center text-white text-xl font-bold"
           >
             {user.health}/{user.total_health}
@@ -85,13 +105,26 @@ function RestAreaPlayerStatsDisplay() {
       <div className="absolute inset-0 top-0 flex flex-col gap-1 items-baseline justify-center pl-[69px]">
         <div className={`flex w-[255px] flex-wrap mt-1`}>
           {Array.from({ length: totalStamina }).map((_, index) => (
-            <img className={`${totalStamina > 9 ? "h-6" : "h-10"} mr-1`} key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+            <img
+              className={`${totalStamina > 9 ? "h-6" : "h-10"} mr-1`}
+              key={index}
+              src={
+                index < filledStamina
+                  ? IMAGES.FILLED_STAMINA
+                  : IMAGES.EMPTY_STAMINA
+              }
+              alt="Stamina"
+            />
           ))}
         </div>
         {/* convert regenerateCountdown to minutes and seconds */}
         <div className="flex gap-2">
           {totalStamina != filledStamina &&
-            (regenerateCountdown ? <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label> : null)}
+            (regenerateCountdown ? (
+              <label className="text-[#66D7F8] text-xl font-bold">
+                {Math.ceil(regenerateCountdown / 60)} min to next regen...
+              </label>
+            ) : null)}
         </div>
       </div>
     </div>
@@ -102,10 +135,10 @@ export default function RestArea() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const current_spot = useGameStore((state) => state.user!.current_spot);
-  const goldWishes = useGameStore((store)=>store.goldWishes);
+  const goldWishes = useGameStore((store) => store.goldWishes);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [wishStatus, setWishStatus] = useState<string | null >(null);
+  const [wishStatus, setWishStatus] = useState<DailyGoldWishes | null>(null);
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
     return (
       <div>
@@ -117,11 +150,13 @@ export default function RestArea() {
     );
   }
 
-  useBackgroundMusic(current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO);
+  useBackgroundMusic(
+    current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO
+  );
 
- async function making_wish() {
-      const status = await goldWishes();
-      setWishStatus(status);
+  async function making_wish() {
+    const status: DailyGoldWishes | null = await goldWishes();
+    setWishStatus(status);
   }
 
   return (
@@ -132,10 +167,10 @@ export default function RestArea() {
 
       <div className="z-30 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%]">
         <PlayerOnlineList currentSpot={current_spot} />
-        </div>
+      </div>
 
       {current_spot == 0 && (
-        <div className="z-30 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
+        <div className="z-40 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
           {" "}
           <ImgButton
             // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
@@ -145,37 +180,54 @@ export default function RestArea() {
           />{" "}
         </div>
       )}
-
       {wishStatus && (
-        <div className="fixed inset-0 flex items-center justify-center text-white z-50">
-          <div className=" w-[50vw] h-[40vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-70">
-            <button
-              className="absolute top-2 right-2 text-6xl font-bold"
-              onClick={() => setWishStatus(null)}
-            >
-              &times;
-            </button>
+        <div className="fixed inset-0 flex items-center justify-center text-white z-30">
+          <div
+            // bg-black bg-opacity-70
+            className="relative shadow-lg rounded-lg p-4 "
+            style={{
+              backgroundImage:
+                "url('https://arweave.net/VuvTMQrwAs5Pai_xzwuzl_1gnz3bCFyJ6a0OXJEW_ow')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              borderRadius: "30px",
+              width: "50vw",
+              height: "80vh",
+              overflow: "hidden", // Prevent content from overflowing the container
+            }}
+          >
+            {/* Close button */}
+            {/* <button
+        className="absolute top-4 right-4 text-4xl font-bold hover:text-gray-300"
+        onClick={() => setWishStatus(null)}
+      >
+        &times;
+      </button> */}
+            <ImgButton
+              className="absolute top-4 right-4 "
+              src="https://arweave.net/d-XLB6fqEQsopfIvBAY_eeU5fu9dLhbWh2cipzJqqFM"
+              alt="Close Chat"
+              onClick={() => {
+                setWishStatus(null);
+              }}
+            />
 
-            <h1 className="text-4xl text-center underline">
+            {/* Title */}
+            <h1 className="text-4xl text-center underline mb-6">
               I Wish... I Wish...
             </h1>
 
-            <div className="w-full h-full flex justify-center items-center">
-              {wishStatus == "Success" && (
-                <h1 className="text-4xl text-center">
-                  10g coins magically appeared in your bag!
-                </h1>
-              )}
-              {wishStatus == "FAIL" && (
-                <h1 className="text-4xl text-center">
-                  hm, looks like no one was listening, maybe try again?
-                </h1>
-              )}
-              {wishStatus == "MAX_LIMIT" && (
-                <h1 className="text-4xl text-center">
-                  Sorry Fren, no more wishes today, try again tomorrow!
-                </h1>
-              )}
+            {/* Scrollable container */}
+            <div className="p-4 overflow-y-auto max-h-[calc(80vh-100px)] scrollbar-thin scrollbar-thumb-[#B8860B]/80 scrollbar-track-black rounded-lg">
+              {wishStatus.logs
+                .slice() // Create a shallow copy of the array
+                .sort((a, b) => a.timestamp - b.timestamp) // Sort logs in ascending order
+                .map((val, index) => (
+                  <h1 key={index} className="text-4xl text-center mb-10 ">
+                    {val.message}
+                  </h1>
+                ))}
             </div>
           </div>
         </div>
@@ -350,7 +402,7 @@ function TownRestArea() {
           fit={Fit.Cover}
         />
       </div> */}
-       <img
+      <img
         src="https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ"
         alt="Town Sea"
         className="absolute top-0 left-0 w-full h-full object-cover"

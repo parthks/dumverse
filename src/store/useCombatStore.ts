@@ -53,7 +53,7 @@ export const useCombatStore = create<CombatState>()(
           process: get().subProcess,
         });
         const battles = resultData.data as Battle[];
-        console.log("Ashu : battles: "+JSON.stringify(battles));
+        // console.log("Ashu : battles: "+JSON.stringify(battles));
         if (battles && battles.length > 0) {
           set({ currentBattle: battles?.[0], enteringNewBattle: false });
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
@@ -63,7 +63,7 @@ export const useCombatStore = create<CombatState>()(
             get().sendBattleReadyRequest();
           }
           if (get().currentBattle && get().currentBattle?.started && Object.keys(get().currentBattle?.players || {}).length > 1){
-            console.log("Ashu : Combat screen stuck problem solved");
+            // console.log("Ashu : Combat screen stuck problem solved");
             get().sendBattleReadyRequest();
           }
           console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");

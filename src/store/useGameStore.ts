@@ -2,7 +2,7 @@
 import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -81,7 +81,7 @@ interface GameState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (open: boolean) => void;
   getTotalUsers: () => Promise<number>;
-  goldWishes: ()=>Promise<string | null>;
+  goldWishes: ()=>Promise<DailyGoldWishes | null>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -104,7 +104,6 @@ export const useGameStore = create<GameState>()(
           if (data.status === "Success") {
             // get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
             get().setUserOnLogin(data.data);
-
           }
         }
       },
@@ -133,7 +132,7 @@ export const useGameStore = create<GameState>()(
           //   set({ GameStatePage: GameStatePages.COMBAT });
           // }
           // else
-                        // { name: "NFT_Address", value: nftAddress },
+          // { name: "NFT_Address", value: nftAddress },
 
           const resultData = await sendAndReceiveGameMessage({
             tags: [
@@ -142,7 +141,7 @@ export const useGameStore = create<GameState>()(
             ],
           });
           // if user is not in a spot, only then go to town. Else need to go to game map
-          if (user.current_spot % 9 === 0 && user.current_spot!=0) {
+          if (user.current_spot % 9 === 0 && user.current_spot != 0) {
             // user is in a spot
             const position = getCurrentLamaPosition(user);
             set({
@@ -186,7 +185,9 @@ export const useGameStore = create<GameState>()(
         }
         return null;
       },
-      getAllPlayersAtLocation: async (currentSpot: number): Promise<GameUser[]> => {
+      getAllPlayersAtLocation: async (
+        currentSpot: number
+      ): Promise<GameUser[]> => {
         // this also updates last_updated_at for current user
         const resultData = await sendAndReceiveGameMessage({
           tags: [
@@ -306,7 +307,9 @@ export const useGameStore = create<GameState>()(
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {
-        const point = getInteractivePoints(level).find((point) => point.level == level) || getInitialLamaPosition();
+        const point =
+          getInteractivePoints(level).find((point) => point.level == level) ||
+          getInitialLamaPosition();
         set({
           currentIslandLevel: level,
           lamaPosition: {
@@ -326,7 +329,8 @@ export const useGameStore = create<GameState>()(
       //   await get().refreshUserData();
       // },
       tempCurrentIslandLevel: 0,
-      setTempCurrentIslandLevel: (level) => set({ tempCurrentIslandLevel: level }),
+      setTempCurrentIslandLevel: (level) =>
+        set({ tempCurrentIslandLevel: level }),
       lamaPosition: getInitialLamaPosition(),
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () =>
@@ -405,8 +409,9 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
-        const currentSpot = get().user?.current_spot;  
-        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot) ;
+        const currentSpot = get().user?.current_spot;
+        const inTownOrRestArea =
+          currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
         console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
         // if in town or rest area, set the countdown to 2 minutes
         if (inTownOrRestArea) {
@@ -420,10 +425,10 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdownTickDown: async () => {
         const countdown = get().regenerateCountdown;
-      
+
         if (countdown !== null) {
           set({ regenerateCountdown: countdown - 1 });
-      
+
           if (countdown - 1 === 0) {
             await get().regenerateEnergy();
             get().resetRegenerateCountdown();
@@ -443,11 +448,11 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        if(resultData.status && resultData.status=="Success") {
+        if (resultData.status && resultData.status == "Success") {
           await get().refreshUserData();
-          return true
+          return true;
         }
-        return false
+        return false;
       },
       repairItem: async (inventoryId) => {
         const resultData = await sendAndReceiveGameMessage({
@@ -469,7 +474,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       acceptNFTShopQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -479,7 +484,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       acceptWeaponQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -489,7 +494,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
 
       acceptShopQuest: async () => {
@@ -499,9 +504,9 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        console.log("Ashu : "+JSON.stringify(resultData));
+        // console.log("Ashu : " + JSON.stringify(resultData));
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       acceptDenQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -511,10 +516,11 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       lastDisplayedMessageId: null,
-      setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),
+      setLastDisplayedMessageId: (state) =>
+        set({ lastDisplayedMessageId: state }),
       isSettingsOpen: false,
       setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
       getTotalUsers: async () => {
@@ -530,17 +536,19 @@ export const useGameStore = create<GameState>()(
           return 0;
         }
       },
-      goldWishes: async ()=>{
+      goldWishes: async () => {
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             { name: "Action", value: "User.GoldWishes" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        // console.log("Ashu: "+JSON.stringify(resultData));
-        if (resultData && resultData.status === "Success"){  await get().refreshUserData();}
-        if(typeof(resultData.status) == "string") return resultData.status ;
-        return null;      
+        // console.log("Ashu: " + JSON.stringify(resultData));
+        if (resultData && resultData.data) {
+          await get().refreshUserData();
+          return resultData.data as DailyGoldWishes;
+        }
+        return null;
       },
     }),
     {

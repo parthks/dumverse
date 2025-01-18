@@ -81,3 +81,15 @@ export type BankTransaction = {
   transaction_type: "DEPOSIT" | "WITHDRAW" | "CLAIM_AIRDROP" | "AIRDROP" | "PULL_OUT" | "PULL_IN";
   created_at: string;
 };
+
+type DailyGoldWishesLogType={
+  message: string,
+  timestamp: number
+}
+ 
+export type DailyGoldWishes={
+  user_id: number,
+  timestamp: number,
+  gold: number,
+  logs: DailyGoldWishesLogType[]
+}
