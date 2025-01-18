@@ -493,6 +493,9 @@ local function playerWonHandler(msg: Message)
     local USER_ID = tonumber(user_id)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    if subProcesses[subProcessAssigned] < 0 then
+        subProcesses[subProcessAssigned]= 0
+    end
     subProcessAssignToUsers[USER_ID]=nil
 end
 
@@ -532,6 +535,9 @@ local function playerRanAwayHandler(msg: Message)
     local USER_ID = tonumber(user_id)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    if subProcesses[subProcessAssigned] < 0 then
+        subProcesses[subProcessAssigned]= 0
+    end
     subProcessAssignToUsers[USER_ID]=nil
 end
 
@@ -598,6 +604,9 @@ local function playerPerishedHandler(msg: Message)
     local USER_ID = tonumber(user_id)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
+    if subProcesses[subProcessAssigned] < 0 then
+        subProcesses[subProcessAssigned]= 0
+    end
     subProcessAssignToUsers[USER_ID]=nil
 end
 
