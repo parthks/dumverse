@@ -2,7 +2,7 @@
 import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -81,7 +81,7 @@ interface GameState {
   isSettingsOpen: boolean;
   setIsSettingsOpen: (open: boolean) => void;
   getTotalUsers: () => Promise<number>;
-  goldWishes: ()=>Promise<string | null>;
+  goldWishes: ()=>Promise<DailyGoldWishes | null>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -530,17 +530,19 @@ export const useGameStore = create<GameState>()(
           return 0;
         }
       },
-      goldWishes: async ()=>{
+      goldWishes: async () => {
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             { name: "Action", value: "User.GoldWishes" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        // console.log("Ashu: "+JSON.stringify(resultData));
-        if (resultData && resultData.status === "Success"){  await get().refreshUserData();}
-        if(typeof(resultData.status) == "string") return resultData.status ;
-        return null;      
+        console.log("Ashu: " + JSON.stringify(resultData));
+        if (resultData && resultData.data) {
+          await get().refreshUserData();
+          return resultData.data as DailyGoldWishes;
+        }
+        return null;
       },
     }),
     {

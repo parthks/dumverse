@@ -12,6 +12,7 @@ import React from "react";
 import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { Fit } from "@rive-app/react-canvas";
+import { DailyGoldWishes } from "@/types/game";
 
 // const RestAreaImages = {
 //   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
@@ -105,7 +106,7 @@ export default function RestArea() {
   const goldWishes = useGameStore((store)=>store.goldWishes);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [wishStatus, setWishStatus] = useState<string | null >(null);
+  const [wishStatus, setWishStatus] = useState<DailyGoldWishes | null >(null);
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
     return (
       <div>
@@ -119,10 +120,10 @@ export default function RestArea() {
 
   useBackgroundMusic(current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO);
 
- async function making_wish() {
-      const status = await goldWishes();
-      setWishStatus(status);
-  }
+  async function making_wish() {
+    const status: DailyGoldWishes | null= await goldWishes();
+    setWishStatus(status);
+}
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
@@ -135,7 +136,7 @@ export default function RestArea() {
       </div>
 
       {current_spot == 0 && (
-        <div className="z-30 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
+        <div className="z-40 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
           {" "}
           <ImgButton
             // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
@@ -147,35 +148,51 @@ export default function RestArea() {
       )}
 
       {wishStatus && (
-        <div className="fixed inset-0 flex items-center justify-center text-white z-50">
-          <div className=" w-[50vw] h-[40vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-70">
-            <button
-              className="absolute top-2 right-2 text-6xl font-bold"
-              onClick={() => setWishStatus(null)}
-            >
-              &times;
-            </button>
+        <div className="fixed inset-0 flex items-center justify-center text-white z-30">
+          <div
+            // bg-black bg-opacity-70
+            className="relative shadow-lg rounded-lg p-4 "
+            style={{
+              backgroundImage:
+                "url('https://arweave.net/VuvTMQrwAs5Pai_xzwuzl_1gnz3bCFyJ6a0OXJEW_ow')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              borderRadius: "30px",
+              width: "50vw",
+              height: "80vh",
+              overflow: "hidden",
+            }}
+          >
+            {/* Close button */}
+            {/* <button
+        className="absolute top-4 right-4 text-4xl font-bold hover:text-gray-300"
+        onClick={() => setWishStatus(null)}
+      >
+        &times;
+      </button> */}
+            <ImgButton
+              className="absolute top-4 right-4 "
+              src="https://arweave.net/d-XLB6fqEQsopfIvBAY_eeU5fu9dLhbWh2cipzJqqFM"
+              alt="Close Chat"
+              onClick={() => {
+                setWishStatus(null);
+              }}
+            />
 
-            <h1 className="text-4xl text-center underline">
+            <h1 className="text-4xl text-center underline mb-6">
               I Wish... I Wish...
             </h1>
 
-            <div className="w-full h-full flex justify-center items-center">
-              {wishStatus == "Success" && (
-                <h1 className="text-4xl text-center">
-                  10g coins magically appeared in your bag!
-                </h1>
-              )}
-              {wishStatus == "FAIL" && (
-                <h1 className="text-4xl text-center">
-                  hm, looks like no one was listening, maybe try again?
-                </h1>
-              )}
-              {wishStatus == "MAX_LIMIT" && (
-                <h1 className="text-4xl text-center">
-                  Sorry Fren, no more wishes today, try again tomorrow!
-                </h1>
-              )}
+            <div className="p-4 overflow-y-auto max-h-[calc(80vh-100px)] scrollbar-thin scrollbar-thumb-[#B8860B]/80 scrollbar-track-black rounded-lg">
+              {wishStatus.logs
+                .slice()
+                .sort((a, b) => a.timestamp - b.timestamp)
+                .map((val, index) => (
+                  <h1 key={index} className="text-4xl text-center mb-10 ">
+                    {val.message}
+                  </h1>
+                ))}
             </div>
           </div>
         </div>

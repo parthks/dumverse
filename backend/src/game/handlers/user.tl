@@ -11,11 +11,23 @@ if not ClaimedNFTs then
     ClaimedNFTs = {}
 end
 
-global Daily_Gold: {number:number}
+local record Daily_Daily_Gold_user_log_entry
+    message: string
+    timestamp: integer
+end
+
+local record Daily_Gold_user_dataType 
+  user_id: number
+  timestamp: number
+  logs: {Daily_Daily_Gold_user_log_entry}
+  gold: number
+end
+
+
+global Daily_Gold: {number:Daily_Gold_user_dataType}
 if not Daily_Gold then
     Daily_Gold = {}
 end
-
 
 local function setCurrentIslandHandler(msg: Message)
     local user_address = msg.From
@@ -463,41 +475,68 @@ end
 
 local function goldWishesHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    local userData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1]
+    -- local userData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1]
     local roll = math.random(1,4)
     local DAILY_LIMIT = 150
     local current_timestamp = msg.Timestamp
-    local last_updated = tonumber(userData.last_updated_at) 
-    local time_diff = current_timestamp - last_updated
-
+    local log: Daily_Daily_Gold_user_log_entry = {
+        message = "Sorry Fren, no more wishes today, try again tomorrow!",
+        timestamp = current_timestamp
+    }
+   
     if not Daily_Gold[user_id] then
-        Daily_Gold[user_id] = 0
+        Daily_Gold[user_id] = {
+            user_id = user_id,
+            timestamp = current_timestamp,
+            logs = {},
+            gold = 0
+        }
     end
 
-    if Daily_Gold[user_id] >= DAILY_LIMIT then
-        ao.send({ Target = msg.From, Status = "MAX_LIMIT" })
+    local last_updated = Daily_Gold[user_id].timestamp
+    local time_diff = current_timestamp - last_updated
+
+    if time_diff >= 86400000 then
+        Daily_Gold[user_id].gold = 0
+        Daily_Gold[user_id].logs = {}
+        Daily_Gold[user_id].timestamp = current_timestamp
+    end
+
+    if Daily_Gold[user_id].gold >= DAILY_LIMIT then
+        table.insert(Daily_Gold[user_id].logs,log)
+        ao.send({ Target = msg.From, Data = json.encode(Daily_Gold[user_id]) })
         return
     end
     
  -- 3/4 times 10 gold should given to the users and max limit of gold that user get in a day is 150
     if roll ~= 4 then
-        if time_diff >= 86400 then
-            Daily_Gold[user_id] = 0
+        if time_diff >= 86400000 then
+            Daily_Gold[user_id].gold = 0
+            Daily_Gold[user_id].logs = {}
+            Daily_Gold[user_id].timestamp = current_timestamp
         end
 
-        if Daily_Gold[user_id] >= DAILY_LIMIT then
-            ao.send({ Target = msg.From, Status = "MAX_LIMIT" })
+        if Daily_Gold[user_id].gold >= DAILY_LIMIT then
+            table.insert(Daily_Gold[user_id].logs,log)
+            ao.send({ Target = msg.From, Data = json.encode(Daily_Gold[user_id]) })
             return
         end
         
-        local previous_gold = Daily_Gold[user_id]
-        Daily_Gold[user_id] = Daily_Gold[user_id] + 10
-        local new_gold = Daily_Gold[user_id] - previous_gold 
+        local previous_gold = Daily_Gold[user_id].gold
+        Daily_Gold[user_id].gold = Daily_Gold[user_id].gold + 10
+        local new_gold = Daily_Gold[user_id].gold - previous_gold 
+        Daily_Gold[user_id].timestamp = current_timestamp
+        log.message="10g coins magically appeared in your bag!"
+        table.insert(Daily_Gold[user_id].logs,log)
 
         dbAdmin:exec(string.format([[UPDATE Users SET gold_balance = gold_balance + %f, last_updated_at= %f  WHERE id = %f;]], new_gold, current_timestamp, user_id))
-        ao.send({Target=msg.From, Status = "Success"})
+        ao.send({Target=msg.From, Data = json.encode(Daily_Gold[user_id])})
+        return
     end
-    ao.send({ Target = msg.From, Status = "FAIL" })
+    Daily_Gold[user_id].timestamp = current_timestamp
+    log.message="hm, looks like no one was listening, maybe try again?"
+    table.insert(Daily_Gold[user_id].logs,log)  
+    ao.send({ Target = msg.From, Data = json.encode(Daily_Gold[user_id]) })
 end
 
 -- local function resetUsersDamage(msg: Message)
