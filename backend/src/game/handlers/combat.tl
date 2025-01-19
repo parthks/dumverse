@@ -374,6 +374,8 @@ local function enterNewCombatHandler(msg: Message)
     ao.send({Target=tostring(userAddress[1].address), Data=data})
     end
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
     ao.send({
         Target = subProcess,
         Action = "Battle.NewUserJoin",
@@ -412,6 +414,8 @@ local function enteredNewCombatHandler(msg: Message)
         UPDATE Users SET current_battle_id = %d, stamina = stamina - 1, last_regenerate_time = %f WHERE id = %f;
     ]], battle_id, msg.Timestamp, user_id))
     
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
     -- local userAddress = dbAdmin:exec(string.format([[
     --     SELECT address FROM Users WHERE id = %f;
     -- ]], user_id))
@@ -442,36 +446,7 @@ local function playerWonHandler(msg: Message)
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
     local number_of_enemies: number = tonumber(msg.Tags.NumberOfEnemies)
---     local playerOrginalData = dbAdmin:exec(string.format([[
---         SELECT * from Users WHERE id = %f;
---      ]], user_id))[1]
 
---      local leaderboard = {
---         gold_earned: integer = (playerData.gold_balance - (playerOrginalData.gold_balance as integer)) + (playerOrginalData.gold_balance as integer),
---         token_earned: integer = (playerData.dumz_balance - (playerOrginalData.dumz_balance as integer)) + (playerOrginalData.dumz_balance as integer),
--- -- gold_lost: integer = ,
--- battle_win: integer = 1,
--- -- battle_lost
--- enemy_killed: integer = 1 ,
--- -- player_death
--- -- pvp
--- -- number_of_token_burn
--- death_streak: integer = 1,
--- death_streak_ende: boolean= false,
--- player_with_nft: integer= 0,
--- -- player_without nft 
---     }
- 
---      local numberOfNFTsID = dbAdmin:exec(string.format([[
---         SELECT * from Users WHERE address = %s;
---      ]], playerOrginalData.address))
-
---      local hasNFT = isNestedTableNotEmpty(numberOfNFTsID)
-
---      if hasNFT then
---         leaderboard.player_with_nft = #numberOfNFTsID 
---      end
- 
     local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
 
     ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
@@ -494,6 +469,9 @@ local function playerWonHandler(msg: Message)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 
 local function playerRanAwayHandler(msg: Message)
@@ -533,6 +511,9 @@ local function playerRanAwayHandler(msg: Message)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 
 local function playerPerishedHandler(msg: Message)
@@ -599,6 +580,9 @@ local function playerPerishedHandler(msg: Message)
     local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 
 local function removePlayerFromBattleHandler(msg: Message)
@@ -626,6 +610,9 @@ local function removePlayerFromBattleHandler(msg: Message)
     -- local subProcessAssigned =  subProcessAssignToUsers[USER_ID]
     -- subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 
 end
 

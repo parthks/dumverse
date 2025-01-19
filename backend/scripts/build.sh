@@ -70,4 +70,7 @@ amalg.lua -s record/main.lua -o ../build/record.lua \
 amalg.lua -s chat/main.lua -o ../build/chat.lua \
     utils.utils.tl-utils utils.utils.dbAdmin utils.utils.db-utils \
 
+amalg.lua -s backup/main.lua -o ../build/backup.lua \
+    utils.combat utils.globals utils.constants utils.utils.dbAdmin    
+
 # FINAL RESULT is build/main.lua

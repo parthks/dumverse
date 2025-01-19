@@ -170,6 +170,11 @@ local function addNewUserHandler(msg: Message)
     -- Debug print
     print("New user created with ID: " .. tostring(newUserId))
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], newUserId)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(newUserId), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], newUserId)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(newUserId), user_bank.id ,user_bank)
+
     ao.send({
         Target = msg.From,
         Data = json.encode({
@@ -229,6 +234,10 @@ local function upgradeExistingProfileHandler(msg: Message)
     -- Debug print
     print("user upgraded with ID: " .. tostring(user_id))
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
 
      ao.send({
          Target = msg.From,
@@ -476,7 +485,7 @@ end
 
 local function goldWishesHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    -- local userData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1]
+    local userData: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1] as UserData
     local roll = math.random(1,4)
     local DAILY_LIMIT = 150
     local current_timestamp = msg.Timestamp
@@ -531,6 +540,7 @@ local function goldWishesHandler(msg: Message)
         table.insert(Daily_Gold[user_id].logs,log)
 
         dbAdmin:exec(string.format([[UPDATE Users SET gold_balance = gold_balance + %f, last_updated_at= %f  WHERE id = %f;]], new_gold, current_timestamp, user_id))
+        helpers.sendUserDataToBackupProcess(user_id,userData);
         ao.send({Target=msg.From, Data = json.encode(Daily_Gold[user_id])})
         return
     end

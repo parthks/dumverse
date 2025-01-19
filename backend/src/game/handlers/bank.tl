@@ -75,6 +75,13 @@ local function bankDepositHandler(msg: Message)
         ]], userData.dumz_balance - amount, msg.Tags.UserId))
     end
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
+    local user_bankTransaction: BankTransaction = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions WHERE user_id = %f]], user_id)) [1] as BankTransaction
+    helpers.sendBankTransactionsToBackupProcess(tonumber(user_id), user_bankTransaction.id ,user_bankTransaction)
+
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
@@ -132,6 +139,14 @@ local function bankWithdrawHandler(msg: Message)
     dbAdmin:exec(string.format([[
         INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%f, %f, "%s", "WITHDRAW", %f);
     ]], msg.Tags.UserId, amount, tokenType, msg.Timestamp))
+
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
+    local user_bankTransaction: BankTransaction = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions WHERE user_id = %f]], user_id)) [1] as BankTransaction
+    helpers.sendBankTransactionsToBackupProcess(tonumber(user_id), user_bankTransaction.id ,user_bankTransaction)
 
     ao.send({ Target = msg.From, Status = "Success" })
 end
@@ -194,6 +209,14 @@ local function bankClaimAirdropHandler(msg: Message)
         INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "CLAIM_AIRDROP", %f);
     ]], user_id, amount, tokenType, msg.Timestamp))
 
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
+    local user_bankTransaction: BankTransaction = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions WHERE user_id = %f]], user_id)) [1] as BankTransaction
+    helpers.sendBankTransactionsToBackupProcess(tonumber(user_id), user_bankTransaction.id ,user_bankTransaction)
+
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
@@ -246,6 +269,14 @@ local function bankPushOutHandler(msg: Message)
     else
         ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
     end
+
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
+    local user_bankTransaction: BankTransaction = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions WHERE user_id = %f]], user_id)) [1] as BankTransaction
+    helpers.sendBankTransactionsToBackupProcess(tonumber(user_id), user_bankTransaction.id ,user_bankTransaction)
 
     ao.send({ Target = msg.From, Status = "Success" })
 end
@@ -303,6 +334,14 @@ local function bankPushInHandler(msg: Message)
         INSERT INTO BankTransactions (user_id, amount, token_type, transaction_type, created_at) VALUES (%d, %f, "%s", "PULL_IN", %f);
     ]], user_id, amount, tokenType, msg.Timestamp))
 
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
+    local user_bankTransaction: BankTransaction = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions WHERE user_id = %f]], user_id)) [1] as BankTransaction
+    helpers.sendBankTransactionsToBackupProcess(tonumber(user_id), user_bankTransaction.id ,user_bankTransaction)
+    
     -- send dumz to user address
     ao.send({ Target = fromAddress, Status = "Success" })
 end

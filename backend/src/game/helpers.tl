@@ -1,6 +1,7 @@
 require('utils.globals')
 local constants = require("utils.constants")
 local utils = require("utils.utils.tl-utils")
+local json = require("json")
 
 local type BaseStats = record
   damage: number
@@ -63,10 +64,21 @@ local function CalculateUserBaseStats(userData: UserData): BaseStats
       baseStats.stamina = 16
     end
   end
-
-
-
   return baseStats
+end
+
+
+local function sendUserDataToBackupProcess(userId: number, data: UserData) 
+     ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Backup.addAndUpdateUsers", UserId = tostring(userId), Data = json.encode(data)})
+end
+local function sendInventoryDataToBackupProcess(userId: number, id: number, data: InventoryItem) 
+  ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Backup.addAndUpdateInventory", UserId = tostring(userId), Id = tostring(id), Data = json.encode(data)})
+end
+local function sendBankDataToBackupProcess(userId: number, id: number, data: BankAccountData) 
+  ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Backup.addAndUpdateBank", UserId = tostring(userId), Id = tostring(id), Data = json.encode(data)})
+end
+local function sendBankTransactionsToBackupProcess(userId: number, id: number, data: BankTransaction)  
+  ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Backup.addAndUpdateBankTransactions", UserId = tostring(userId), Id = tostring(id), Data = json.encode(data)})
 end
 
 --[[
@@ -2114,6 +2126,10 @@ return {
   Leaderboard = Leaderboard,
   CheckUserExists = CheckUserExists,
   CalculateUserBaseStats = CalculateUserBaseStats,
+  sendUserDataToBackupProcess = sendUserDataToBackupProcess,
+  sendInventoryDataToBackupProcess = sendInventoryDataToBackupProcess,
+  sendBankDataToBackupProcess = sendBankDataToBackupProcess,
+  sendBankTransactionsToBackupProcess = sendBankTransactionsToBackupProcess,
   GetItemDetails = GetItemDetails,
   IsInRestSpot = IsInRestSpot,
   getNFTBankAmountForNFT = getNFTBankAmountForNFT,

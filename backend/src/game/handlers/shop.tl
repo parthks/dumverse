@@ -50,10 +50,9 @@ local function shopBuyItemHandler(msg: Message)
     local item = helpers.GetItemDetails(item_id)
     assert(item, "Item does not exist")
 
-    print(item)
-    -- if (item.id == "WAND" or item.id == "MAGIC_ROBE") then
-    --    assert(userData.nft_address,"To buy this you need to own an NFT")
-    -- end
+    if (item.id == "WAND" or item.id == "MAGIC_ROBE") then
+       assert(userData.nft_address,"To buy this you need to own an NFT")
+    end
 
     -- Check if item has the correct price type
     if tokenType == "GOLD" then
@@ -125,7 +124,9 @@ local function shopBuyItemHandler(msg: Message)
             UPDATE Users SET defense = %f WHERE id = %d;
         ]], baseStats.defense + armorItem.defense, user_id))
     end
-
+    
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 

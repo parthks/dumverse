@@ -22,7 +22,7 @@ export default function Town() {
     if (building !== GameStatePages.NFT_SHOP) {
       setGameStatePage(building);
     } else {  
-      if (!user?.nft_address) setGameStatePage(building);
+      if (user?.nft_address) setGameStatePage(building);
     }
   };
 
