@@ -39,14 +39,14 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/DbU1JV6vG2wV9WP1h-UmIpsSPs0knHEGeBkxt0hEVTQ')] bg-no-repeat bg-contain bg-center p-4"
+      className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/DbU1JV6vG2wV9WP1h-UmIpsSPs0knHEGeBkxt0hEVTQ')] bg-no-repeat bg-contain bg-center p-4 scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50"
       style={{ aspectRatio: "392/425" }}
     >
       {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
       {/* <audio preload="auto" ref={drinkJooseAudioRef} src={SOUNDS.DRINK_JOOSE_AUDIO} /> */}
       {/* <audio preload="auto" ref={eatCakeAudioRef} src={SOUNDS.EAT_CAKE_AUDIO} /> */}
 
-      <div className="flex flex-col items-center justify-center h-full w-full">
+      <div className="flex flex-col items-center justify-center h-full w-full scale-100 lg:scale-100 md:scale-75 sm:scale-100 xs:scale-75">
         <div className="flex w-[500px] mt-12 flex-col items-center justify-center">
           {/* <h2 className="text-5xl text-white font-bold">{user.name}</h2> */}
 

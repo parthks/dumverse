@@ -321,13 +321,24 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   // }
 
   return (
-    <div
-      className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
-    >
-      <BattleGround currentBattle={currentBattle} />
-      <CombatInventory currentBattle={currentBattle} />
-      <BattleLog currentBattle={currentBattle} />
+    <div className="relative w-screen h-screen overflow-hidden">
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-10 w-full h-full"
+        style={{ 
+          backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')"
+        }}
+      />
+      <div className="relative w-full grid grid-cols-[2fr_1fr] gap-4 p-0 h-full">
+        <div className="border-2 border-white/30 min-w-0 overflow-auto">
+          <BattleGround currentBattle={currentBattle} />
+        </div>
+        <div className="border-2 border-white/30 min-w-0 overflow-auto flex flex-col items-center">
+          <div className="max-w-[460px] w-full scale-[0.8]">
+            <BattleLog currentBattle={currentBattle} />
+            <CombatInventory currentBattle={currentBattle} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -346,7 +357,7 @@ function CombatInventory({ currentBattle }: { currentBattle: Battle }) {
   (player as any).inventory = potionsInBag;
 
   return (
-    <div className="flex flex-col justify-between">
+    <div className="flex flex-col justify-center">
       <div className="flex-grow"></div>
       <InventoryBag combatInventory combatInventoryUserData={player as any} />
       <div className="flex justify-center">
@@ -426,17 +437,15 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   const allPlayers = [...enemies, ...otherPlayers];
 
   return (
-    <div>
-      <div className="flex gap-4 items-center">
-        <div className="grid grid-cols-[1fr_1fr] gap-4 items-start w-[700px]">
-          {/* <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} /> */}
-
-          <div className="relative flex flex-col gap-2 w-[350px] items-center">
+    <div className="w-full h-full p-4">
+      <div className="flex gap-4 items-center w-full">
+        <div className="grid grid-cols-[1fr_1fr] gap-4 items-start w-full max-w-[700px] mx-auto">
+          <div className="relative flex flex-col gap-2 w-full max-w-[250px] items-center">
             <PlayerCard player={currentBattle.players[userId.toString()]} />
             <UserIsAttackedAnimation currentBattle={currentBattle} />
             <ImgButton
               disabled={disableAttackButtons}
-              className={"w-40"}
+              className="w-40"
               src={"https://arweave.net/T2vJXtx4ivM9tySkAq8u2uSCLSDWRaPcIqqBYdAWBfE"}
               onClick={() => userRun()}
               alt={"Run"}
@@ -446,41 +455,39 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           {allPlayers.map((entity, index) => {
             const isNPC = !!(entity as NPC).difficulty;
             const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
-            const newPlayerArrived = !isNPC && !!newPlayerTimers[entity.id]; // pvp 5 second combat cooldown for new players
+            const newPlayerArrived = !isNPC && !!newPlayerTimers[entity.id];
             const disableAttack = disableAttackButtons || newPlayerArrived;
 
             return (
-              <>
-                <div key={entity.id} className="flex flex-col gap-2 w-[350px] items-center">
-                  {isNPC && (
-                    <div className={`relative ${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
-                      <EnemyCard enemy={entity as NPC} />
-                      {attackedEnemyId === entity.id && <AttackAnimation />}
-                    </div>
-                  )}
+              <div key={entity.id} className="flex flex-col gap-2 w-full max-w-[250px] items-center">
+                {isNPC && (
+                  <div className={`relative w-full ${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
+                    <EnemyCard enemy={entity as NPC} />
+                    {attackedEnemyId === entity.id && <AttackAnimation />}
+                  </div>
+                )}
 
-                  {!isNPC && (
-                    <div className={`${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
-                      <PlayerCard player={entity as Battle["players"][string]} />
-                    </div>
-                  )}
+                {!isNPC && (
+                  <div className={`w-full ${enemyIsAlive ? "opacity-100" : "opacity-30"}`}>
+                    <PlayerCard player={entity as Battle["players"][string]} />
+                  </div>
+                )}
 
-                  {enemyIsAlive && (
-                    <div className="flex gap-2 items-center">
-                      <ImgButton
-                        disabled={disableAttack}
-                        className="w-40 shrink-0"
-                        src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
-                        onClick={() => handleAttack(entity.id)}
-                        alt={"Attack" + entity.name}
-                      />
+                {enemyIsAlive && (
+                  <div className="flex gap-2 items-center">
+                    <ImgButton
+                      disabled={disableAttack}
+                      className="w-40 shrink-0"
+                      src={"https://arweave.net/DgrvBd4oLXyLXGxNlU3YRxDo1LBpTYKVc_T0irDrmj0"}
+                      onClick={() => handleAttack(entity.id)}
+                      alt={"Attack" + entity.name}
+                    />
 
-                      {isNPC && <NPCAttackCountDown currentBattle={currentBattle} entity={entity as Battle["npcs"][string]} />}
-                      {!isNPC && <PlayerAttackCountDown currentBattle={currentBattle} entity={entity as Battle["players"][string]} />}
-                    </div>
-                  )}
-                </div>
-              </>
+                    {isNPC && <NPCAttackCountDown currentBattle={currentBattle} entity={entity as Battle["npcs"][string]} />}
+                    {!isNPC && <PlayerAttackCountDown currentBattle={currentBattle} entity={entity as Battle["players"][string]} />}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
@@ -603,7 +610,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
 
   return (
     <div
-      className="w-[250px] relative flex flex-col bg-[url('https://arweave.net/sX67q1nQcG8fOyyJqTOcIc2CfmAsZCocplOXJIWFN0Y')] bg-no-repeat bg-contain bg-center px-3 py-1"
+      className="w-full max-w-[250px] relative flex flex-col bg-[url('https://arweave.net/sX67q1nQcG8fOyyJqTOcIc2CfmAsZCocplOXJIWFN0Y')] bg-no-repeat bg-contain bg-center px-3 py-1"
       style={{ aspectRatio: "302/421", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
     >
       {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
@@ -695,7 +702,7 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
 
   return (
     <div
-      className="w-[250px] flex flex-col bg-no-repeat bg-contain bg-center relative"
+      className="w-full max-w-[250px] flex flex-col bg-no-repeat bg-contain bg-center relative"
       style={{
         textShadow: "-1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000",
         aspectRatio: "302/421",
@@ -770,14 +777,14 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
 
   return (
     <div
-      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/S-6Ww4DB5i7CZlzpXYXBJI8Q8u5DLOCuK6rL0W2MZrU')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full"
+      className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/S-6Ww4DB5i7CZlzpXYXBJI8Q8u5DLOCuK6rL0W2MZrU')] bg-no-repeat bg-contain bg-center p-4 lg:min-w-[460px] max-w-[50vw] h-full"
       style={{ aspectRatio: "649/1040", height: "calc(100vh - 60px)" }}
     >
       <div className="flex items-center justify-between">
         <div className="w-6">{combatLoading && <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>}</div>
         <div className="flex-grow flex flex-col justify-center">
-          <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
-          <p className="text-white text-xl text-center">Battle ID: {currentBattle.id}</p>
+          <h1 className="text-white my-4 text-5xl lg:text-5xl md:text-3xl sm:text-2xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
+          <p className="text-white text-xl lg:text-xl md:text-lg sm:text-base text-center">Battle ID: {currentBattle.id}</p>
         </div>
         <div className="w-6"></div>
       </div>
@@ -785,7 +792,7 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
         {currentBattle.log.map((log, index) => {
           const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || "";
           return (
-            <div key={index} className="flex text-2xl gap-4 justify-between px-4">
+            <div key={index} className="flex text-xl gap-4 justify-between px-4">
               <p className="text-white font-bold text-center">{name ? name + ":" : ""}</p>
               <p className="text-white text-center">
                 {log.message.split(" ").map((word, index) =>

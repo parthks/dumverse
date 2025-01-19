@@ -73,7 +73,7 @@ export default function App() {
       <div className="relative z-10 h-full w-full">
         
         {!playing && (
-          <div className="absolute scale-75 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 lg:mt-48 md:mt-24 sm:mt-20">
+          <div className="absolute scale-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 md:mt-24 sm:mt-20">
             <ImgButton
               src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
               onClick={() => {
@@ -91,7 +91,7 @@ export default function App() {
         )}
 
         {!walletAddressID && playing && (
-          <div className="absolute top-4 right-4 md:scale-75 sm:scale-50">
+          <div className="absolute top-4 right-4 scale-100">
             <ConnectButton
             // onClickAction={() => {
             //   playAudio();
@@ -175,7 +175,9 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
         <p className="text-white absolute top-1/2 text-2xl font-bold">Loading...</p>
       ) : (
         <div
-          className="w-[70%] h-[90%] lg:h-[80%] flex justify-center items-center rounded-[20px] bg-white"
+          // className="sm:w-[70%] sm:h-[90%] lg:h-[80%] flex justify-center items-center rounded-[20px] bg-white"
+          className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"
+          style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
         >
           <FormData />
         </div>

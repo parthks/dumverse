@@ -141,12 +141,12 @@ export default function RestArea() {
 
       {!chatOpen && (
         <>
-          <div className="z-30 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
+          <div className="z-30 fixed bottom-1 left-2 flex flex-col gap-2 items-center scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50">
             <InventoryBag />
             <ImgButton className="h-[65px]" src={"https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"} onClick={() => setOpenBag(!openBag)} alt={"Open Bag"} />
           </div>
 
-          <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50">
+          <div className="z-30 fixed bottom-4 right-0 flex gap-4 items-center justify-end scale-100 lg:scale-75 md:scale-75 sm:scale-50 xs:scale-50">
             <ImgButton
               src={"https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"}
               onClick={() => {

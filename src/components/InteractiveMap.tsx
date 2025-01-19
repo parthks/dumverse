@@ -3,6 +3,7 @@ import { cn, getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
 import React from "react";
+import { useRive } from '@rive-app/react-canvas';
 
 // import {
 //   interactivePointsMap1,
@@ -90,12 +91,41 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     return "https://arweave.net/5uYkotWl32aBSpJV6j-Ykjj_aQRtGpExAYpUZsqtSuM";
   };
 
+  const { RiveComponent } = useRive({
+    src: 'https://arweave.net/JEuA9LC43MqBnjr5o1ah_Wgz98lVcvojOnuVSgIYlIs',
+    stateMachines: 'State Machine 1', // replace with your state machine name
+    autoplay: true,
+
+  });
+
   return (
     <div className="w-full h-full">
       <div className="absolute inset-0">
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
 
         <img src={currentMapImage()} alt="Game Map" className="w-full h-full object-contain" />
+
+        <div className="absolute inset-0 flex items-center justify-center">
+            <RiveComponent 
+                style={{ 
+                    width: '64px', 
+                    height: '64px',
+                    imageRendering: 'crisp-edges',
+                    WebkitFontSmoothing: 'antialiased',
+                }} 
+            />
+        </div>
+
+        {/* <div className="absolute" style={{
+            width: '10%', // adjust size as needed
+            height: '10%',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}>
+            <RiveComponent />
+          </div> */}
+
         {/* {tempCurrentIslandLevel <= 27? (
         <div
           className="absolute"
@@ -147,10 +177,23 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
               </>
             );
           })}
+          
           {/* image width="5%" height="10%"  */}
-          <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="4%" height="11%" preserveAspectRatio="xMidYMid meet">
+          <image href={LAMA_IMAGE[lamaPosition.src]} x={`${lamaPosition.x}%`} y={`${lamaPosition.y}%`} width="8%" height="11%" preserveAspectRatio="xMidYMid meet">
             <title>Lamma</title>
           </image>
+
+          {/* 0-LlaLw6kXVyJVE9Sdt02ag87wmAmZmGtlnZHUVyAGQ */ }
+          {/* <div className="absolute" style={{
+            width: '200px', // adjust size as needed
+            height: '200px',
+            left: '50%', // adjust position as needed
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}>
+            <RiveComponent />
+          </div> */}
+          
 
           {tempCurrentIslandLevel <= 27 ? (
             <image href="https://arweave.net/dB07kjfdIJFICANzB7nkt2W8W2FoO4TbFnAVTHeepzw" x="89%" y="92%" width="3%" preserveAspectRatio="xMidYMid meet">
