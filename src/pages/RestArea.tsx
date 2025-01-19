@@ -157,6 +157,7 @@ export default function RestArea() {
   async function making_wish() {
     const status: DailyGoldWishes | null = await goldWishes();
     setWishStatus(status);
+    console.log(JSON.stringify(status));
   }
 
   return (
@@ -180,7 +181,7 @@ export default function RestArea() {
           />{" "}
         </div>
       )}
-      {wishStatus && (
+       {wishStatus && (
         <div className="fixed inset-0 flex items-center justify-center text-white z-30">
           <div
             // bg-black bg-opacity-70
@@ -194,7 +195,7 @@ export default function RestArea() {
               borderRadius: "30px",
               width: "50vw",
               height: "80vh",
-              overflow: "hidden", // Prevent content from overflowing the container
+              overflow: "hidden",
             }}
           >
             {/* Close button */}
@@ -213,16 +214,14 @@ export default function RestArea() {
               }}
             />
 
-            {/* Title */}
             <h1 className="text-4xl text-center underline mb-6">
               I Wish... I Wish...
             </h1>
 
-            {/* Scrollable container */}
             <div className="p-4 overflow-y-auto max-h-[calc(80vh-100px)] scrollbar-thin scrollbar-thumb-[#B8860B]/80 scrollbar-track-black rounded-lg">
               {wishStatus.logs
-                .slice() // Create a shallow copy of the array
-                .sort((a, b) => a.timestamp - b.timestamp) // Sort logs in ascending order
+                .slice()
+                .sort((a, b) => a.timestamp - b.timestamp)
                 .map((val, index) => (
                   <h1 key={index} className="text-4xl text-center mb-10 ">
                     {val.message}

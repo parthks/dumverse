@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["jqV5F0Hf69S4_uQbtLJhJMuYZwOVszzO2DUcAbkl57E"]=0,
-        ["es7fbu4enhUoICeZnANuT8DWu6fvs-8xKLOvI-Slobo"]=0,
-        ["gZfmxG0HeT5uxmpf5MpdF1AcsrpyibwVWvlCs48A8Fo"]=0,
-        ["_sbrjYFbp4DuWGotLtv8xHqwUXjzTQsaRpBGivAZVAY"]=0,
-        ["OUXGFm3m4jWFLifXmyLuCeIXCnJ4rypN1hU3dsHJW-o"]=0,
+        ["uaUxBrzX8TuryKdJtiFIPai3oUD6zuAf2dEhyH6vEF8"]=0,
+        ["GG6uQ4FoK0ZGiN1zMigiWMz19pFcBVCw5pHd6Kf6HCk"]=0,
+        ["i3FWM48GE_epyPCixxHvSlRAc1sBsVApwXMvdGIzog8"]=0,
+        ["S-HXkhQ8rHTSjvxZE780bdoXH6-ykLS5PyoB0gRqpDg"]=0,
+        ["bQAqPZx2qFbHxwZBM3E7GFzls6cjlwJ4fTEI5GyYWDo"]=0,
     }
 end
 

@@ -43,6 +43,7 @@ export const useCombatStore = create<CombatState>()(
           return null;
         }
         set({ loading: true, enteringNewBattle: true });
+        console.log("Ashu : Subprocess: "+ get().subProcess);
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
@@ -53,7 +54,7 @@ export const useCombatStore = create<CombatState>()(
           process: get().subProcess,
         });
         const battles = resultData.data as Battle[];
-        // console.log("Ashu : battles: "+JSON.stringify(battles));
+        console.log("Ashu : battles: "+JSON.stringify(battles));
         if (battles && battles.length > 0) {
           set({ currentBattle: battles?.[0], enteringNewBattle: false });
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
@@ -129,6 +130,7 @@ export const useCombatStore = create<CombatState>()(
             },
           ],
         });
+        console.log("Ashu :  dattt: "+JSON.stringify(resultData));
         console.log("subProcess: "+JSON.stringify(resultData.data.subprocess));
         set({ subProcess: resultData.data.subprocess });
         set({ hasBattleReady: false });
@@ -171,7 +173,6 @@ export const useCombatStore = create<CombatState>()(
         const battle_id = get().currentBattle?.id;
         if (!user_id || !battle_id) return;
         set({ loading: true, actionLoading: true });
-
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
