@@ -174,8 +174,8 @@ local function addNewUserHandler(msg: Message)
 
     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], newUserId)) [1] as UserData
     helpers.sendUserDataToBackupProcess(tonumber(newUserId), user_data)
-    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], newUserId)) [1] as BankAccountData
-    helpers.sendBankDataToBackupProcess(tonumber(newUserId), user_bank.id ,user_bank)
+    -- local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], newUserId)) [1] as BankAccountData
+    -- helpers.sendBankDataToBackupProcess(tonumber(newUserId), user_bank.id ,user_bank)
 
     ao.send({
         Target = msg.From,
@@ -241,8 +241,8 @@ local function upgradeExistingProfileHandler(msg: Message)
 
     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
     helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
-    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
-    helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
+    -- local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    -- helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
 
      ao.send({
          Target = msg.From,
