@@ -227,7 +227,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
       </div>
       <div className="flex flex-col items-center w-full gap-4 p-16">
         <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
-        <p>Wallet Balance: {tokenBalance !== undefined ? tokenBalance : "--"}</p>
+        <p>Wallet Balance: {tokenBalance !== undefined ? (tokenBalance/1000).toFixed(3) : "--"}</p>
         <p>Bank Balance: {bankDataLoading ? "--" : bankDumz}</p>
         <Input
           placeholder={`Amount to transfer`}

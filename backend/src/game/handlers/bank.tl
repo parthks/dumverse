@@ -421,20 +421,20 @@ local function transferFundsToBankHandler(msg: Message)
 end
 
 local function withdrawlFundsFromBankHandler(msg: Message)
-    assert(constants.BACKUP_PROCESS_ID == msg.From, "You cant access this handler")
+    assert(constants.BANK_PROCESS_ID == msg.From, "You cant access this handler")
     local user_id = tonumber(msg.Tags.UserId)
     local tokenType = msg.Tags.TokenType as TokenType
     local amount = tonumber(msg.Tags.Amount)
-    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+    -- local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
 
     if tokenType == "GOLD" then
         dbAdmin:exec(string.format([[
-            UPDATE Users SET gold_balance = %f WHERE id = %f;
-        ]], userData.gold_balance + amount, msg.Tags.UserId))
+            UPDATE Users SET gold_balance = gold_balance + %f WHERE id = %f;
+        ]], amount, user_id))
     else
         dbAdmin:exec(string.format([[
-            UPDATE Users SET dumz_balance = %f WHERE id = %f;
-        ]], userData.dumz_balance + amount, msg.Tags.UserId))
+            UPDATE Users SET dumz_balance = dumz_balance + %f WHERE id = %f;
+        ]],  amount, user_id))
     end
 
 end

@@ -331,7 +331,7 @@ local function bankWithdrawHandler(msg: Message)
     -- local user_bankTransaction: BankTransaction = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions WHERE user_id = %f]], user_id)) [1] as BankTransaction
     -- helpers.sendBankTransactionsToBackupProcess(tonumber(user_id), user_bankTransaction.id ,user_bankTransaction)
 
-    ao.send({Target=constants.GAME_PROCESS_ID,Action="Game.WithdrawlFundsFromBank", UserId = tostring(user_id), TokenType = tokenType, Amount = tostring(amount)})
+    ao.send({Target = constants.GAME_PROCESS_ID, Action="Game.WithdrawlFundsFromBank", UserId = tostring(user_id), TokenType = tokenType, Amount = tostring(amount)})
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
@@ -455,12 +455,13 @@ local function bankPushOutHandler(msg: Message)
         ]], user_id, amount, tokenType, msg.Timestamp))  
     end
 
-
+print("aaaaaa------------")
+print(amount)
     -- send dumz to user address
     if tokenType == "DUMZ" then
         ao.send({ Target = constants.DUMZ_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
     else
-        ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring(amount) })
+        ao.send({ Target = constants.TRUNK_TOKEN_PROCESS_ID, Action = "Transfer", Recipient = msg.From, ["X-UserId"] = tostring(user_id), Quantity = tostring( tonumber(string.format("%.0f", amount))) })
     end
 
 

@@ -27,6 +27,7 @@ function getProcessId(process: Process) {
 
 export async function sendAndReceiveGameMessage({ tags, data, process = "game" }: { tags: { name: string; value: string }[]; data?: string; process?: Process }) {
   const processId = getProcessId(process);
+  console.log("processsssss : "+processId);
   const action = tags.find((tag) => tag.name === "Action")?.value;
   console.log("sending message:" + action, { tags, data });
   const res = await message({
