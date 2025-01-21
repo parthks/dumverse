@@ -9,13 +9,13 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
-  hash: 70a30cfbedcf14937c5c6c2a37e265123abe36faa9128613f57f6f887a8c2266
+  hash: d855edb2500cd4d40515d705973648a0348f6818fea8cda65487b0173a9c7363
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: 22fa45e89f30aecda9b29b6496b3c8710be0d764ddfb3f2e5229edb66917de61
+  hash: dd19ba09ca0ffb1fdedc874af6db8977b00dbc29edc6eac5d6b9204e59a2d6b6
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
-  hash: d7186d6727197b09de2796fda619fd7c160323c81f36ab0f0780997b956bc8ed
+  hash: 7e8d37e77a43ae18b628130548f54b90a9b12dd2cb09006a082449d58f8aeb4f
 combat:
   processId: uaUxBrzX8TuryKdJtiFIPai3oUD6zuAf2dEhyH6vEF8
   hash: 14728d4a7c123b1302a877a0acdcdab701925db7844938b23fb04e245d31eaa3

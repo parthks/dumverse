@@ -68,5 +68,6 @@ export type NPC = {
   difficulty: string;
   gold_reward: number;
   dumz_reward: number;
+  trunk_reward: number;
   extra_gold: number;
 };

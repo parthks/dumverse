@@ -470,7 +470,7 @@ local function playerWonHandler(msg: Message)
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 
-    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], tonumber(user_id))) [1] as UserData
     helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 

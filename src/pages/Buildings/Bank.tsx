@@ -211,7 +211,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     setTxnLoading(false);
   };
 
-  const title = "Transfer $Dumz";
+  const title = `Transfer ${tokenType === "dumz_token" ? "$Dumz" : "$Trunk"}` ;
   return (
     <div
       className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -293,7 +293,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             <text x="50%" y="35%" fontSize="100" textAnchor="middle" fill="white">
-              {bankDataLoading || !bank ? "--" : `${bank.trunk_amount ?? 0} trunk`}
+              {bankDataLoading || !bank ? "--" : `${bank.trunk_amount ?? 0} $Trunk`}
             </text>
             {/* trunk */}
             <image
@@ -303,7 +303,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.trunk_balance == 1 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.trunk_balance == 0 ? "disabled-image" : ""}`}
               item-type="deposit-trunk"
             />
             <image

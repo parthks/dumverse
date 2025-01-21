@@ -685,7 +685,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
 
 function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   const special_item_hearts = useGameStore((state) => state.user?.special_item_heart ?? 0);
-  const backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
+  var backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
   const totalHealth = enemy.total_health;
   const filledHealth = enemy.health;
 
@@ -747,6 +747,19 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
             }}
           >
             {enemy.dumz_reward} $Dumz
+          </p>
+        </div>
+      )}
+      {enemy.trunk_reward && (
+        <div className="absolute bottom-[12.2%] right-[18%]">
+          <p
+            className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+            style={{
+              fontSize: `${15}px`,
+              lineHeight: "1",
+            }}
+          >
+            {enemy.trunk_reward} $Trunk
           </p>
         </div>
       )}
