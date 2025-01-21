@@ -394,6 +394,8 @@ end
 --     dbAdmin:exec(string.format([[UPDATE Users SET trunk_balance = %f WHERE id = %d]],user_data.trunk_balance, user_id))
 --     print("Quantity 2: " .. quantity)
 --     ao.send({Target = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ", Action = "Transfer", Recipient = user_data.address, Quantity = tostring(quantity)})
+--     ao.send({Target = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ", Action = "Transfer", Recipient = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870", Quantity = 3})
+--     ao.send({Target = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ", Action = "Balance"})
 --     print("Done")
 -- end
 

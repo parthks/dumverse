@@ -207,6 +207,7 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: false, bankDataLoading: true });
         const resultData = await sendDryRunGameMessage({
           tags: [
+            // { name: "Action", value: "Bank.Info" },
             { name: "Action", value: "Bank.Info" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
@@ -225,12 +226,12 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: true });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
-            { name: "Action", value: "Bank.Deposit" },
+            // { name: "Action", value: "Bank.Deposit" },
+            { name: "Action", value: "Game.TransferFundsToBank" },
             { name: "UserId", value: get().user?.id.toString()! },
             { name: "Amount", value: amount.toString() },
             { name: "TokenType", value: tokenType },
           ],
-          process: "bank"
         });
         await get().getBank();
         await get().refreshUserData();
@@ -255,11 +256,11 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: true });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
-            { name: "Action", value: "Bank.ClaimAirdrop" },
+            // { name: "Action", value: "Bank.ClaimAirdrop" },
+            { name: "Action", value: "Game.BankAirdrop" },
             { name: "UserId", value: get().user?.id.toString()! },
             { name: "TokenType", value: tokenType },
           ],
-          process: "bank"
         });
         await Promise.all([get().refreshUserData(), get().getBank()]);
         set({ bankTransactionLoading: false });
