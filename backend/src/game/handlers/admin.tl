@@ -38,12 +38,18 @@ local function sendUserAndBankData(msg: Message)
     assert(msg.From == ao.id, "Only the game server can dynamically set the current spot")
     local data = dbAdmin:exec(string.format([[SELECT * FROM Users]]))
     local data2 = dbAdmin:exec(string.format([[SELECT * FROM Bank]]))
+    local data3 = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions]]))
 
     for _, val in ipairs(data) do
        ao.send({Target="3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY", Action="Backup.addAndUpdateUsers", UserId=tostring(val.id), Data=json.encode(val) })
     end
     for _, val in ipairs(data2) do
         ao.send({Target="3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY", Action="Backup.addAndUpdateBank", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+        ao.send({Target="Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870", Action="Bank.MainBankDataAddAndUpdate", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+     end
+     for _, val in ipairs(data3) do
+        ao.send({Target="3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY", Action="Backup.addAndUpdateBankTransactions", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+        ao.send({Target="Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870", Action="Bank.MainBankTransactionsDataAddAndUpdate", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
      end
 end
 

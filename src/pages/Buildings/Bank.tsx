@@ -144,7 +144,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     fetchBalance();
   }, [fetchBalance]);
 
-  const handleWithdraw = async () => {
+  const handleWithdraw = async () => {  
     if (!inputValue) return;
     if (!bankDumz) return;
     if (inputValue <= 0) {
@@ -164,6 +164,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     ];
     const initialResponse = await sendAndReceiveGameMessage({
       tags: tags,
+      process: "bank"
     });
     console.log("initialResponse", initialResponse, initialResponse.status);
     const result = await pollForTransferSuccess(tokenType, (messageTags) => {

@@ -9,13 +9,13 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
-  hash: d855edb2500cd4d40515d705973648a0348f6818fea8cda65487b0173a9c7363
+  hash: 47da6293a4a44249845e2058882962733a0fc4ee4c07bacc591f5f5f84cf76dd
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: dd19ba09ca0ffb1fdedc874af6db8977b00dbc29edc6eac5d6b9204e59a2d6b6
+  hash: b11a6fcb7de628bcd2c319738c3ebadc8dd9d3719ea9f965f2f82dd0e7aeb32f
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
-  hash: 7e8d37e77a43ae18b628130548f54b90a9b12dd2cb09006a082449d58f8aeb4f
+  hash: cd585a83bd73d1007c4fdc05c8021dd8dc1a61fad088d8a0ff08a78d39c35f0c
 combat:
   processId: uaUxBrzX8TuryKdJtiFIPai3oUD6zuAf2dEhyH6vEF8
   hash: 14728d4a7c123b1302a877a0acdcdab701925db7844938b23fb04e245d31eaa3
@@ -31,3 +31,6 @@ combat4:
 combat5:
   processId: bQAqPZx2qFbHxwZBM3E7GFzls6cjlwJ4fTEI5GyYWDo
   hash: 14728d4a7c123b1302a877a0acdcdab701925db7844938b23fb04e245d31eaa3
+bank:
+  processId: Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870
+  hash: e991923715c9ace8c38c14344de6e5defb9ebe3b53106971056e97605a267119

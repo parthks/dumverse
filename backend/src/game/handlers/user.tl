@@ -157,13 +157,15 @@ local function addNewUserHandler(msg: Message)
     assert(insert_user_result and #insert_user_result > 0, "Failed to insert new user")
     local newUserId = insert_user_result[1].id
 
-    -- Insert into Bank
-    local insert_bank_result = dbAdmin:exec(string.format([[
-        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
-        VALUES (%d, %f, %f, %f, %f);
-    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
+    -- -- Insert into Bank
+    -- local insert_bank_result = dbAdmin:exec(string.format([[
+    --     INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
+    --     VALUES (%d, %f, %f, %f, %f);
+    -- ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
-    assert(insert_bank_result, "Failed to insert into Bank")
+    -- assert(insert_bank_result, "Failed to insert into Bank")
+
+    ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Bank.InsertDataIntoMainBank", UserId = tostring(newUserId), GoldAmount = tostring(bank_gold_amount), DumzAmount = tostring(bank_dumz_amount), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
 
     OneOfOnesSpecialItemsHandler(nft_address, newUserId as number)
     
@@ -218,15 +220,18 @@ local function upgradeExistingProfileHandler(msg: Message)
     if not nft_already_claimed then
         table.insert(ClaimedNFTs, nft_address)
         local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
-        -- update bank
-        dbAdmin:exec(string.format([[
-            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
-        ]], nft_dumz_amount, nft_gold_amount, user_id))
+        -- -- update bank
+        -- dbAdmin:exec(string.format([[
+        --     UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        -- ]], nft_dumz_amount, nft_gold_amount, user_id))
+        ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Bank.UpdateDataIntoMainBank", UserId = tostring(user_id), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
+
     else
         local nft_dumz_amount, nft_gold_amount = 0,0
-         dbAdmin:exec(string.format([[
-            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
-        ]], nft_dumz_amount, nft_gold_amount, user_id))
+        --  dbAdmin:exec(string.format([[
+        --     UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        -- ]], nft_dumz_amount, nft_gold_amount, user_id))
+        ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Bank.UpdateDataIntoMainBank", UserId = tostring(user_id), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
     end
 
     OneOfOnesSpecialItemsHandler(nft_address, user_id as number)

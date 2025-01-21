@@ -210,6 +210,7 @@ export const useGameStore = create<GameState>()(
             { name: "Action", value: "Bank.Info" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
+          process: "bank"
         });
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const bankData = JSON.parse(resultData.Messages[0].Data);
@@ -229,6 +230,7 @@ export const useGameStore = create<GameState>()(
             { name: "Amount", value: amount.toString() },
             { name: "TokenType", value: tokenType },
           ],
+          process: "bank"
         });
         await get().getBank();
         await get().refreshUserData();
@@ -243,6 +245,7 @@ export const useGameStore = create<GameState>()(
             { name: "Amount", value: amount.toString() },
             { name: "TokenType", value: tokenType },
           ],
+          process: "bank"
         });
         await get().getBank();
         await get().refreshUserData();
@@ -256,6 +259,7 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
             { name: "TokenType", value: tokenType },
           ],
+          process: "bank"
         });
         await Promise.all([get().refreshUserData(), get().getBank()]);
         set({ bankTransactionLoading: false });

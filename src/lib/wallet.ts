@@ -1,5 +1,5 @@
 import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
-import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID, DUMZ_TOKEN_PROCESS_ID, TRUNK_TOKEN_PROCESS_ID } from "./utils";
+import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID, DUMZ_TOKEN_PROCESS_ID, TRUNK_TOKEN_PROCESS_ID , BANK_PROCESS_ID} from "./utils";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 
 export type MyMessageResult = MessageResult & {
@@ -12,6 +12,8 @@ type Process = "game" | "combat" | "chat" | "dumz_token" | "trunk_token" | strin
 function getProcessId(process: Process) {
   return process === "chat"
     ? CHAT_PROCESS_ID
+    : process === "bank"
+    ? BANK_PROCESS_ID
     : process === "combat"
     ? COMBAT_PROCESS_ID
     : process === "dumz_token"

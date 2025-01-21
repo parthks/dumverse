@@ -73,4 +73,7 @@ amalg.lua -s chat/main.lua -o ../build/chat.lua \
 amalg.lua -s backup/main.lua -o ../build/backup.lua \
     utils.combat utils.globals utils.constants utils.utils.dbAdmin    
 
+amalg.lua -s bank/main.lua -o ../build/bank.lua \
+    utils.combat utils.globals utils.constants utils.utils.dbAdmin  
+
 # FINAL RESULT is build/main.lua

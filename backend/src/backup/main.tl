@@ -350,59 +350,59 @@ local function addAndUpdateBankTransactionsHandler(msg: Message)
     end
 end
 
-local function withdrawTrunksHandler(msg: Message)
-    local user_id: number = tonumber(msg.Tags.UserId)
-    local quantity = tonumber(msg.Tags.Quantity)
+-- local function withdrawTrunksHandler(msg: Message)
+--     local user_id: number = tonumber(msg.Tags.UserId)
+--     local quantity = tonumber(msg.Tags.Quantity)
 
-    assert(quantity and quantity > 0, "Invalid quantity: must be greater than zero")
+--     assert(quantity and quantity > 0, "Invalid quantity: must be greater than zero")
 
-    quantity = (tonumber(string.format("%.3f", quantity))) * 1000
-    print("Quantity: " .. quantity)
+--     quantity = (tonumber(string.format("%.3f", quantity))) * 1000
+--     print("Quantity: " .. quantity)
 
-    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id))[1] as UserData
-    assert(user_data, "User data not found")
+--     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id))[1] as UserData
+--     assert(user_data, "User data not found")
 
-    local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %d]], user_id))[1] as BankAccountData
-    assert(user_bank, "Bank account data not found")
+--     local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %d]], user_id))[1] as BankAccountData
+--     assert(user_bank, "Bank account data not found")
 
-    user_data.trunk_balance = (tonumber(string.format("%.3f", user_data.trunk_balance))) * 1000
-    user_bank.trunk_amount = (tonumber(string.format("%.3f", user_bank.trunk_amount))) * 1000
-    print("user_data.trunk_balance: " .. user_data.trunk_balance)
-    print("user_bank.trunk_amount: " .. user_bank.trunk_amount)
+--     user_data.trunk_balance = (tonumber(string.format("%.3f", user_data.trunk_balance))) * 1000
+--     user_bank.trunk_amount = (tonumber(string.format("%.3f", user_bank.trunk_amount))) * 1000
+--     print("user_data.trunk_balance: " .. user_data.trunk_balance)
+--     print("user_bank.trunk_amount: " .. user_bank.trunk_amount)
 
-    local total_balance = tonumber(string.format("%.3f", user_data.trunk_balance + user_bank.trunk_amount))
-    assert(total_balance >= quantity, "Insufficient funds: not enough trunk available")
+--     local total_balance = tonumber(string.format("%.3f", user_data.trunk_balance + user_bank.trunk_amount))
+--     assert(total_balance >= quantity, "Insufficient funds: not enough trunk available")
 
-    user_data.trunk_balance = user_data.trunk_balance - quantity
+--     user_data.trunk_balance = user_data.trunk_balance - quantity
 
-    if user_data.trunk_balance < 0 then
-        user_bank.trunk_amount = user_bank.trunk_amount + user_data.trunk_balance 
-        user_data.trunk_balance = 0 
+--     if user_data.trunk_balance <= 0 then
+--         user_bank.trunk_amount = user_bank.trunk_amount + user_data.trunk_balance 
+--         user_data.trunk_balance = 0 
 
-        -- user_bank.trunk_amount = tonumber(string.format("%.3f", user_bank.trunk_amount))
-        user_bank.trunk_amount = user_bank.trunk_amount / 1000
+--         -- user_bank.trunk_amount = tonumber(string.format("%.3f", user_bank.trunk_amount))
+--         user_bank.trunk_amount = user_bank.trunk_amount / 1000
 
-        print("user_data.trunk_balance 2: " .. user_data.trunk_balance)
-        print("user_bank.trunk_amount 2: " .. user_bank.trunk_amount)
-        dbAdmin:exec(string.format([[UPDATE Bank SET trunk_amount = %f WHERE user_id = %d]],user_bank.trunk_amount, user_id))
-    end
+--         print("user_data.trunk_balance 2: " .. user_data.trunk_balance)
+--         print("user_bank.trunk_amount 2: " .. user_bank.trunk_amount)
+--         dbAdmin:exec(string.format([[UPDATE Bank SET trunk_amount = %f WHERE user_id = %d]],user_bank.trunk_amount, user_id))
+--     end
 
-    -- user_data.trunk_balance = tonumber(string.format("%.3f", user_data.trunk_balance))
-    user_data.trunk_balance =  user_data.trunk_balance / 1000
-    print("user_data.trunk_balance 3: " .. user_data.trunk_balance)
-    print("user_bank.trunk_amount 3: " .. user_bank.trunk_amount)
-    dbAdmin:exec(string.format([[UPDATE Users SET trunk_balance = %f WHERE id = %d]],user_data.trunk_balance, user_id))
-    print("Quantity 2: " .. quantity)
-    ao.send({Target = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ", Action = "Transfer", Recipient = user_data.address, Quantity = tostring(quantity)})
-    print("Done")
-end
+--     -- user_data.trunk_balance = tonumber(string.format("%.3f", user_data.trunk_balance))
+--     user_data.trunk_balance =  user_data.trunk_balance / 1000
+--     print("user_data.trunk_balance 3: " .. user_data.trunk_balance)
+--     print("user_bank.trunk_amount 3: " .. user_bank.trunk_amount)
+--     dbAdmin:exec(string.format([[UPDATE Users SET trunk_balance = %f WHERE id = %d]],user_data.trunk_balance, user_id))
+--     print("Quantity 2: " .. quantity)
+--     ao.send({Target = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ", Action = "Transfer", Recipient = user_data.address, Quantity = tostring(quantity)})
+--     print("Done")
+-- end
 
 
 Handlers.add("Backup.addAndUpdateUsers", Handlers.utils.hasMatchingTag("Action", "Backup.addAndUpdateUsers"), addAndUpdateUsersHandler)
 Handlers.add("Backup.addAndUpdateInventory", Handlers.utils.hasMatchingTag("Action", "Backup.addAndUpdateInventory"), addAndUpdateInventoryHandler)
 Handlers.add("Backup.addAndUpdateBank", Handlers.utils.hasMatchingTag("Action", "Backup.addAndUpdateBank"), addAndUpdateBankHandler)
 Handlers.add("Backup.addAndUpdateBankTransactions", Handlers.utils.hasMatchingTag("Action", "Backup.addAndUpdateBankTransactions"), addAndUpdateBankTransactionsHandler)
-Handlers.add("Backup.WithdrawTrunks", Handlers.utils.hasMatchingTag("Action", "Backup.WithdrawTrunks"), withdrawTrunksHandler)
+-- Handlers.add("Backup.WithdrawTrunks", Handlers.utils.hasMatchingTag("Action", "Backup.WithdrawTrunks"), withdrawTrunksHandler)
 
 Handlers.add("Backup.UpdateTable",
     Handlers.utils.hasMatchingTag("Action", "Backup.DANGER.UpdateTable"),
