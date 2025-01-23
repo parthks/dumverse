@@ -598,7 +598,7 @@ local function removePlayerFromBattleHandler(msg: Message)
         assert(found == true, "Only Combat process can send this message")
     end
 
-    local user_id = msg.Tags.UserId
+    local user_id = tonumber(msg.Tags.UserId)
     -- local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
 

@@ -171,7 +171,7 @@ local function CronTick(msg: Message,npcTimer:integer)
             end
 
             local INACTIVITY_LIMIT = 5 * 60 * 1000
-            if battle.created_at + INACTIVITY_LIMIT < msg.Timestamp then
+            if (battle.created_at + INACTIVITY_LIMIT) < msg.Timestamp then
                 print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY " )
                 BattleHelpers.internalLog(
                     battle.id,

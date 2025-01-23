@@ -548,13 +548,32 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        // console.log("Ashu: " + JSON.stringify(resultData));
-        if (resultData && resultData.data) {
-          await get().refreshUserData();
-          return resultData.data as DailyGoldWishes;
+        // Check if resultData and resultData.Messages are defined
+        if (resultData && resultData.Messages) {
+          // Iterate through the Messages array to find the message with the required Data
+          for (const message of resultData.Messages) {
+            if (message.Data) {
+              try {
+                const parsedData = JSON.parse(message.Data);
+      
+                // Check if the parsed data has the 'logs' property
+                if (parsedData.logs) {
+                  console.log("Ashu: DailyGoldWishes Data: ", parsedData);
+                  await get().refreshUserData();
+                  return parsedData as DailyGoldWishes;
+                }
+              } catch (error) {
+                console.error("Error parsing message data:", error);
+              }
+            }
+          }
         }
+        // If no valid data is found, refresh user data and return null
         return null;
-      },
+      }
+      
+      
+      ,
     }),
     {
       name: "Game Store",

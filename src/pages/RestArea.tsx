@@ -170,17 +170,7 @@ export default function RestArea() {
         <PlayerOnlineList currentSpot={current_spot} />
       </div>
 
-      {current_spot == 0 && (
-        <div className="z-40 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
-          {" "}
-          <ImgButton
-            // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
-            src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
-            alt={"Make Gold Wish"}
-            onClick={making_wish}
-          />{" "}
-        </div>
-      )}
+     
        {wishStatus && (
         <div className="fixed inset-0 flex items-center justify-center text-white z-30">
           <div
@@ -219,7 +209,7 @@ export default function RestArea() {
             </h1>
 
             <div className="p-4 overflow-y-auto max-h-[calc(80vh-100px)] scrollbar-thin scrollbar-thumb-[#B8860B]/80 scrollbar-track-black rounded-lg">
-              {wishStatus.logs
+            {wishStatus.logs
                 .slice()
                 .sort((a, b) => a.timestamp - b.timestamp)
                 .map((val, index) => (
@@ -227,6 +217,7 @@ export default function RestArea() {
                     {val.message}
                   </h1>
                 ))}
+
             </div>
           </div>
         </div>
@@ -276,6 +267,18 @@ export default function RestArea() {
               alt={"Open Settings"}
             />
           </div>
+
+          {current_spot == 0 && (
+        <div className={`${!chatOpen ? "z-30" : "z-40"} absolute bottom-[1%] right-[50%] transform translate-x-[35%]`}>
+          {" "}
+          <ImgButton
+            // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
+            src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+            alt={"Make Gold Wish"}
+            onClick={making_wish}
+          />{" "}
+        </div>
+      )}
         </>
       )}
 
