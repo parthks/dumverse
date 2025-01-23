@@ -290,9 +290,15 @@ local function enterNewCombatHandler(msg: Message)
         elseif level <= 54 then
             -- Medium: enemies 6-9
             enemy_index = math.random(6, 9)
-        elseif level <= 63 then
-            -- Hard enemies (10-12)
-            enemy_index = math.random(10, 12)
+        -- elseif level <= 63 then
+        --     -- Hard enemies (10-13) (13->Goat)
+        --     enemy_index = math.random(10, 12)
+        else
+            -- Hard enemies (10-13) (13->Goat)
+            enemy_index = math.random(10, 13)
+            -- if enemy_index == 13 then
+            --     enemy_index = math.random(1, 10) == 10 and 13 or math.random(10, 12)
+            -- end
         end
         return enemy_index
     end
@@ -334,7 +340,7 @@ local function enterNewCombatHandler(msg: Message)
 
             -- 10% chance to get Agent Trunk enemy at high levels
         if (level > 63 and level < 82) and math.random(1, 10) == 1 then
-            return constants.SPECIAL_ENEMIES["NPC_13"]
+            return constants.SPECIAL_ENEMIES["AGENT_TRUNK"]
         end
 
         -- 1% chance to get a black swan enemy

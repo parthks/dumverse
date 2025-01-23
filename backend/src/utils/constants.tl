@@ -401,17 +401,28 @@ local ENEMIES: {EnemyData} = {
         gold_reward = 20,
         dumz_reward = 5
     },
-    {
+    -- {
+    --     id = "NPC_13",
+    --     name = "Agent Trunk",
+    --     total_health = 9,
+    --     health = 9,
+    --     -- damage = 5,
+    --     damage = {7,13},
+    --     difficulty = "HARD",
+    --     gold_reward = 20,
+    --     dumz_reward = 5,
+    --     trunk_reward = 1,
+    -- },
+     {
         id = "NPC_13",
-        name = "Agent Trunk",
-        total_health = 9,
-        health = 9,
+        name = "Goat",
+        total_health = 8,
+        health = 8,
         -- damage = 5,
-        damage = {7,13},
+        damage = {3,6},
         difficulty = "HARD",
         gold_reward = 20,
-        dumz_reward = 5,
-        trunk_reward = 1,
+        dumz_reward = 5
     },
 }
 
@@ -498,6 +509,18 @@ local SPECIAL_ENEMIES = {
         difficulty = "SPECIAL",
         dumz_reward = 500,
         gold_reward = 8000,
+    },
+    AGENT_TRUNK =   {
+        id = "AGENT_TRUNK",
+        name = "Agent Trunk",
+        total_health = 9,
+        health = 9,
+        -- damage = 5,
+        damage = {7,13},
+        difficulty = "HARD",
+        gold_reward = 20,
+        dumz_reward = 5,
+        trunk_reward = 1,
     },
 }
 

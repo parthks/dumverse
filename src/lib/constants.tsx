@@ -65,7 +65,7 @@ export const ENEMY_CARD_IMAGE = {
   NPC_10: "https://arweave.net/bQVGBWdAMJnyGS9RZgaB5IxKXIrq2JWiS1xeBMZGJG0",
   NPC_11: "https://arweave.net/C83gjHBXoCUqZ7_C4cHkt1vAvsQviqHd3n3YHeyjGNg",
   NPC_12: "https://arweave.net/D989Tqp4aQSc0DvXBK9mavJTyoRBWyVf2Xxx_IzTg0Y",
-  NPC_13: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
+  NPC_13: "https://arweave.net/w4WMNCQhyjHk6yIUjoBUURIxf1n7MbEKxsuD1l10SIg",
   SHIBA: "https://arweave.net/XBCqnltB0sUIgPfzc-zi-0UohyzWmrzfO_mI0K56riY", // vault key
   MOUSE: "https://arweave.net/DCHssHAYigw_INj5sTFJ2zmy_Dx4ueUbQllsReUuA6U", // thread
   TREE: "https://arweave.net/GTjbC4vE35EhoCCBbkY4TWsxTlvLxjRQLXB39RjM92c", // bark
@@ -73,6 +73,7 @@ export const ENEMY_CARD_IMAGE = {
   DUMZ: "https://arweave.net/rAbQO5YitiTU2jGAHl1Om5Lp7kJl6Tzy8NU5JS2abrU", // dumz loot
   BLACK_SWAN: "https://arweave.net/tDkbLZT4ITSHCesacdjQykrRKh23aGh4LOY6c5GeL1Y", // kitten, gold and dumz loot
   LEPERCHAUN: "https://arweave.net/Dh9lbBgZf8hGJQZ77v5yXJSJ_1lW2QISPdqWcSxPRiI", // gold loot
+  AGENT_TRUNK: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
 };
 
 export const SOUNDS = {
