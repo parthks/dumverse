@@ -75,7 +75,7 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     local player_id = player_id_tried_running or alive_players[math.random(#alive_players)]
 
     -- 15 % chance to attack a random npc
-    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 1 and player_id_tried_running == nil
+    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 0.15 and player_id_tried_running == nil
 
     -- Log random target selection
     BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - target selection", 

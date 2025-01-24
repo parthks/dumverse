@@ -360,6 +360,7 @@ export const useGameStore = create<GameState>()(
                 GameStatePage: GameStatePages.INFIRMARY,
                 tempCurrentIslandLevel: 0,
               });
+              // await get().reviveUser();
             } else {
               set({
                 GameStatePage: GameStatePages.TOWN,

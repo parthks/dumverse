@@ -353,9 +353,15 @@ local function enterNewCombatHandler(msg: Message)
     local enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
     -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
     -- add special enemies
-    local special_enemy = getRandomSpecialEnemy(userData, combat_level)
+    local special_enemy: EnemyData | nil = getRandomSpecialEnemy(userData, combat_level)
+
     if special_enemy then
-        table.insert(enemies, special_enemy)
+
+        if (special_enemy as EnemyData).id == "AGENT_TRUNK" and math.random(1, 3) == 1 then
+            table.insert(enemies, special_enemy)   
+        else
+            enemies = {special_enemy} -- Replace with only Agent Trunk
+        end
 
     -- if utils.includes(combat_level, doubleEnemies) then
     elseif (combat_level >= 18 and combat_level <= 27) or (combat_level >= 45 and combat_level <= 54) or (combat_level >= 72) then

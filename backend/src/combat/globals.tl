@@ -44,3 +44,7 @@ global function sendBatteDataToHistoryProcess(battle_Id:integer,battle_data: Bat
 end    
 
 
+global DailyTrunkTokenStatus: {number: DailyTrunkToken}
+if not DailyTrunkTokenStatus then
+    DailyTrunkTokenStatus = {}
+end
