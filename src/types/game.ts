@@ -15,6 +15,7 @@ export type GameUser = {
   gold_balance: number;
   dumz_balance: number;
   trunk_balance: number;
+  has_Claimed_All_Trunk_Tokens: number;
   health: number;
   total_health: number;
   stamina: number;

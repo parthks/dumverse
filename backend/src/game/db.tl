@@ -14,6 +14,7 @@ global USERS_TABLE: string = [[
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         trunk_balance FLOAT DEFAULT 0,
+        has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
@@ -148,6 +149,8 @@ Handlers.add("Admin.UpdateTable",
         current_island INTEGER,
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
+        trunk_balance FLOAT DEFAULT 0,
+        has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
@@ -176,5 +179,14 @@ Handlers.add("Admin.UpdateTable",
     end
 )
 -- Send({Target = ao.id, Action = "DANGER.UpdateInventoryTable" })
+
+Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action", "Admin.addNewColumnInTable"),
+ function (msg: Message)
+    assert(msg.From == ao.id, "You are not authorized to perform this action")
+    print("run")
+    dbAdmin.db:exec([[ALTER TABLE Users ADD COLUMN has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE;]])
+    print("end")
+end
+)
 
 return {}

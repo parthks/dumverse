@@ -464,10 +464,10 @@ local function playerWonHandler(msg: Message)
 
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f,
+        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, has_Claimed_All_Trunk_Tokens = %s,
         special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
         WHERE id = %f;
-    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0,
+    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0, playerData.has_Claimed_All_Trunk_Tokens == 1 and "TRUE" or "FALSE",
     playerData.special_item_kitten,
     playerData.special_item_key,
     playerData.special_item_thread,

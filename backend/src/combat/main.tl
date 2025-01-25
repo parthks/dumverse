@@ -450,6 +450,7 @@ local function userIsReadyHandler(msg: Message)
     ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
 end    
 
+
 -- Add handlers
 Handlers.add("Battle.NewUserJoin", Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), newUserJoinHandler)
 Handlers.add("Battle.GetOpenBattles", Handlers.utils.hasMatchingTag("Action", "Battle.GetOpenBattles"), getOpenBattlesHandler)

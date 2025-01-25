@@ -242,18 +242,19 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
                 DailyTrunkTokenStatus[user_id] = {
                     user_id = user_id,
                     address = Battles[battle_id].players[attacker_id].address,
-                    timestamp = 0,
-                    -- trunk_reward = 0,
+                    trunk_reward = 0,
+                    -- timestamp = 0,
                     -- hasReceivedTrunkTokenToday = false
                 }
             end
 
-            local last_updated = DailyTrunkTokenStatus[user_id].timestamp
-            local time_diff = timestamp - last_updated
-
-            if time_diff >= 86400000 then
-            Battles[battle_id].players[attacker_id].trunk_balance = Battles[battle_id].players[attacker_id].trunk_balance + npc.trunk_reward
-            DailyTrunkTokenStatus[user_id].timestamp = timestamp
+            if Battles[battle_id].players[attacker_id].has_Claimed_All_Trunk_Tokens == 0 then
+                print("Agent drop token: " .. npc.trunk_reward)
+                Battles[battle_id].players[attacker_id].trunk_balance = Battles[battle_id].players[attacker_id].trunk_balance + npc.trunk_reward
+                DailyTrunkTokenStatus[user_id].trunk_reward = DailyTrunkTokenStatus[user_id].trunk_reward + Battles[battle_id].players[attacker_id].trunk_balance
+                if DailyTrunkTokenStatus[user_id].trunk_reward >= 10 then
+                    Battles[battle_id].players[attacker_id].has_Claimed_All_Trunk_Tokens = 1
+                end
             end
         end
     end

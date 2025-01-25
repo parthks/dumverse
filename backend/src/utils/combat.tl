@@ -16,6 +16,7 @@ global type CombatUserData = record
     gold_balance: integer
     dumz_balance: integer
     trunk_balance: integer
+    has_Claimed_All_Trunk_Tokens: number
     health: number
     total_health: number
     stamina: number

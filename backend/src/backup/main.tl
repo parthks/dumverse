@@ -16,6 +16,7 @@ global USERS_TABLE: string = [[
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         trunk_balance FLOAT DEFAULT 0,
+        has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,

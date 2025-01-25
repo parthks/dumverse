@@ -447,6 +447,12 @@ local function userLoginHandler(msg: Message)
         ]], new_stamina, timestamp, user_id))
     end
 
+    if userData.health == 0 then
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET health = 1 WHERE id = %f;
+        ]], user_id))
+    end
+
     local user_current_spot= dbAdmin:exec(string.format([[
         SELECT current_spot FROM Users WHERE ID = %d;
     ]],user_id))[1]
