@@ -262,7 +262,9 @@ export const useGameStore = create<GameState>()(
             { name: "TokenType", value: tokenType },
           ],
         });
-        await Promise.all([get().refreshUserData(), get().getBank()]);
+        // await Promise.all([get().refreshUserData(), get().getBank()]);
+        await get().refreshUserData();
+        await get().getBank();
         set({ bankTransactionLoading: false });
       },
       // claimTrunk: async () => {

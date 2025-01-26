@@ -86,7 +86,6 @@ local function OneOfOnesSpecialItemsHandler(nft_address: string, user_id: number
 end
 
 local function addNewUserHandler(msg: Message)
-    print("daafa")
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
     local name = msg.Tags.Name
@@ -165,7 +164,7 @@ local function addNewUserHandler(msg: Message)
 
     -- assert(insert_bank_result, "Failed to insert into Bank")
 
-    ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Bank.InsertDataIntoMainBank", UserId = tostring(newUserId), GoldAmount = tostring(bank_gold_amount), DumzAmount = tostring(bank_dumz_amount), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
+    ao.send({Target = constants.BANK_PROCESS_ID, Action = "Bank.InsertDataIntoMainBank", UserId = tostring(newUserId), GoldAmount = tostring(bank_gold_amount), DumzAmount = tostring(bank_dumz_amount), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
 
     OneOfOnesSpecialItemsHandler(nft_address, newUserId as number)
     
@@ -231,7 +230,7 @@ local function upgradeExistingProfileHandler(msg: Message)
         --  dbAdmin:exec(string.format([[
         --     UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
         -- ]], nft_dumz_amount, nft_gold_amount, user_id))
-        ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Bank.UpdateDataIntoMainBank", UserId = tostring(user_id), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
+        ao.send({Target = constants.BANK_PROCESS_ID, Action = "Bank.UpdateDataIntoMainBank", UserId = tostring(user_id), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
     end
 
     OneOfOnesSpecialItemsHandler(nft_address, user_id as number)
@@ -561,13 +560,22 @@ local function goldWishesHandler(msg: Message)
     ao.send({ Target = msg.From, Data = json.encode(Daily_Gold[user_id]) })
 end
 
--- local function resetUsersDamage(msg: Message)
---     assert(msg.From==ao.id,"Not access")
---     print("Initiate")
+local function resetUsersDamage(msg: Message)
+    assert(msg.From==ao.id,"Not access")
+    print("Initiate")
     
-
---     print("Successful")
--- end
+    local nft_dumz_amount: number
+    local nft_gold_amount: number
+local num=0
+     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT("hwN6feRXmjpN-cx-QGRe4UQpiNVlhuN1h8Gj59Pj9jg")
+     print("nft_dumz_amount: " .. num .. " : " .. nft_dumz_amount)
+     print("nft_gold_amount: " .. num .. " : " .. nft_gold_amount)
+     num =1
+     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT("4hEIkI4wpA4mxQ9_46Q0AuYPS-rjuojOOqQgSKIIHgs")
+     print("nft_dumz_amount: " .. num .. " : " .. nft_dumz_amount)
+     print("nft_gold_amount: " .. num .. " : " .. nft_gold_amount)
+    print("Successful")
+end
 
 -- Add handlers
 Handlers.add("Users.SetCurrentIsland", Handlers.utils.hasMatchingTag('Action', 'SetCurrentIsland'), setCurrentIslandHandler)
@@ -584,7 +592,7 @@ Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Acti
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
 Handlers.add("User.GoldWishes", Handlers.utils.hasMatchingTag('Action', 'User.GoldWishes'), goldWishesHandler)
--- Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
+Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
 
 return {}
 

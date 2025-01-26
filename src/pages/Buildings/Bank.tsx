@@ -145,10 +145,6 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     fetchBalance();
   }, [fetchBalance]);
 
-  // useEffect(() => {
-  //  if (!txnLoading && istxnCompleted) setIstxnCompleted(true);
-  // }, [txnLoading]);
-
   const handleWithdraw = async () => {  
     if (!inputValue) return;
     if (!bankDumz) return;

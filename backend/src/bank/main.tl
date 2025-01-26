@@ -379,15 +379,18 @@ local function bankClaimAirdropHandler(msg: Message)
     end
 
     -- update user balance
-    if tokenType == "GOLD" then
-        dbAdmin:exec(string.format([[
-            UPDATE Users SET gold_balance = gold_balance + %f WHERE id = %d;
-        ]], amount, user_id))
-    else
-        dbAdmin:exec(string.format([[
-            UPDATE Users SET dumz_balance = dumz_balance + %f WHERE id = %d;
-        ]], amount, user_id))
-    end
+    -- if tokenType == "GOLD" then
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Users SET gold_balance = gold_balance + %f WHERE id = %d;
+    --     ]], amount, user_id))
+    -- else
+    --     dbAdmin:exec(string.format([[
+    --         UPDATE Users SET dumz_balance = dumz_balance + %f WHERE id = %d;
+    --     ]], amount, user_id))
+    -- end
+
+    ao.send({Target = constants.GAME_PROCESS_ID, Action="Game.WithdrawlFundsFromBank", UserId = tostring(user_id), TokenType = tokenType, Amount = tostring(amount)})
+
 
     -- add a bank transaction
     dbAdmin:exec(string.format([[
