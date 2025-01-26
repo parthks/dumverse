@@ -31,7 +31,7 @@ export default function Town() {
   return (
     <div className="relative h-screen w-screen overflow-hidden inset-0 bg-center bg-no-repeat bg-cover"
     style={{
-      backgroundImage: `url(https://arweave.net/OFkoongWDrs7jYtmSBKhHmG3S2QwQYJ7IbMsJFrTRgU)`,
+      backgroundImage: `url(https://arweave.net/JV5-FpdcyzSE7GzczVmNavlnoh2dJapAIXPHPajxFY4)`,
     }}
     >
 
@@ -54,7 +54,7 @@ export default function Town() {
 
 
        <div
-              className="absolute top-[42%] left-[79%] w-auto h-auto z-40
+              className="absolute top-[36%] left-[80.3%] w-[23%] h-auto z-40
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
               onClick={() => {
@@ -104,7 +104,7 @@ Bank                 </div>
 
 
             <div
-              className="absolute top-[17%] left-[53.5%] w-[23%] h-auto z-10
+              className="absolute top-[10.5%] left-[52.5%] w-auto h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
               onClick={() => {
@@ -121,7 +121,7 @@ Dumz Hall of Fame                 </div>
 
 
             <div
-              className="absolute top-[23.5%] left-[42.5%] w-auto h-auto z-20
+              className="absolute top-[20.5%] left-[42.5%] w-auto h-auto z-20
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
               onClick={() => {
@@ -191,13 +191,13 @@ Dumz Hall of Fame                 </div>
   className="absolute top-0 left-0 z-50 h-screen overflow-hidden"
 >
   <img
-    src="https://arweave.net/dX6bh-ptkYUXlDwJQpDliAIDiRRzCLnRZBDc2bgHWZM"
+    src="https://arweave.net/qHBs7hlEuGw3RFQcbdiB--rkrZhg2PoNe6oL4aID92Y"
     alt="side left"
     className="object-contain h-full w-auto"
   />
 </div>
 
-<div
+{/* <div
   className="absolute top-[70%] left-[48%] z-50 h-[25%] overflow-hidden"
 >
   <img
@@ -205,7 +205,7 @@ Dumz Hall of Fame                 </div>
     alt="Fountain"
     className="object-contain h-full w-auto"
   />
-</div>
+</div> */}
 
 
 {/* <div className="relative">
