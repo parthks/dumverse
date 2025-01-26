@@ -99,8 +99,10 @@ export const useGameStore = create<GameState>()(
           tags.push({ name: "NFT_Address", value: selectedNFT });
         }
         const resultData = await sendAndReceiveGameMessage({ tags });
-        if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
-          const data = JSON.parse(resultData.Messages[0].Data);
+        // console.log("Ashu : Add new user: "+JSON.stringify(resultData));
+        if (resultData.Messages.length > 0 && resultData.Messages[2].Data) {
+          const data = JSON.parse(resultData.Messages[2].Data);
+          // console.log("Ashu : new user: "+JSON.stringify(data));
           if (data.status === "Success") {
             // get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
             get().setUserOnLogin(data.data);

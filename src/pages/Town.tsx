@@ -104,7 +104,7 @@ Bank                 </div>
 
 
             <div
-              className="absolute top-[10.7%] left-[52.5%] w-auto h-auto z-10
+              className="absolute top-[10%] left-[52.5%] w-auto h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
               onClick={() => {
@@ -366,8 +366,8 @@ Dumz Hall of Fame                 </div>
       )}
 
       {/* Town map container */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative w-full h-full max-w-[177.78vh] max-h-[56.25vw]">
+      {/* <div className="absolute inset-0 flex items-center justify-center">
+        <div className="relative w-full h-full max-w-[177.78vh] max-h-[56.25vw]"> */}
           {/* Town map image */}
           {/* <div
             className="absolute inset-0 bg-center bg-no-repeat bg-contain"
@@ -543,8 +543,8 @@ Dumz Hall of Fame                 </div>
             </div> */}
 {/*            
           </div> */}
-        </div>
-      </div>
+        {/* </div>
+      </div> */}
     </div>
   );
 }
