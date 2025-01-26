@@ -22,7 +22,7 @@ import { DailyGoldWishes } from "@/types/game";
 // };
 
 const RestAreaImages = {
-  0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
+  0: "https://arweave.net/JZfbH_8Wog_d1wdp7XqOtYWhkXJAv7wp8nwW9rITidM",
   9: "https://arweave.net/Sa1M036SjBzwEnWyqRKfUO-_Iqs0wTtGFEG_yWHSxLs",
   18: "https://arweave.net/-kfQ41nBIJy39NR5iwlt-2aHMpbXTz2VTDcCcml44kY",
   27: "https://arweave.net/G8xvyj-KgEieJIi7C8s-_sv_NO-vvp9hzm0Rg47YGwM",
@@ -290,15 +290,15 @@ export default function RestArea() {
 
       <div className="relative w-full h-full">
         <div className={`absolute inset-0`}>
-          {current_spot == 0 ? (
+          {/* {current_spot == 0 ? (
             <TownRestArea />
-          ) : (
+          ) : ( */}
             <img
               src={RestAreaImages[current_spot as keyof typeof RestAreaImages]}
               alt="Rest Area Background"
               className="w-full h-full object-cover"
             />
-          )}
+          {/* // )} */}
 
           {current_spot != 0 && (
             <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>

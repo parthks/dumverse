@@ -104,7 +104,7 @@ Bank                 </div>
 
 
             <div
-              className="absolute top-[10.5%] left-[52.5%] w-auto h-auto z-10
+              className="absolute top-[10.7%] left-[52.5%] w-auto h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
               onClick={() => {
