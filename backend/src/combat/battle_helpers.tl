@@ -237,24 +237,24 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
             Battles[battle_id].players[attacker_id].special_item_kitten = 1
         end
         if npc.id == "AGENT_TRUNK"  then
-            local user_id: integer = math.floor(tonumber(Battles[battle_id].players[attacker_id].id))
-            if not DailyTrunkTokenStatus[user_id] then
-                DailyTrunkTokenStatus[user_id] = {
-                    user_id = user_id,
-                    address = Battles[battle_id].players[attacker_id].address,
-                    trunk_reward = 0,
-                    -- timestamp = 0,
-                    -- hasReceivedTrunkTokenToday = false
-                }
-            end
+            -- local user_id: integer = math.floor(tonumber(Battles[battle_id].players[attacker_id].id))
+            -- if not DailyTrunkTokenStatus[user_id] then
+            --     DailyTrunkTokenStatus[user_id] = {
+            --         user_id = user_id,
+            --         address = Battles[battle_id].players[attacker_id].address,
+            --         trunk_reward = 0,
+            --         -- timestamp = 0,
+            --         -- hasReceivedTrunkTokenToday = false
+            --     }
+            -- end
 
-            if Battles[battle_id].players[attacker_id].has_Claimed_All_Trunk_Tokens == 0 then
+            if Battles[battle_id].players[attacker_id].total_trunk_token > 0 then
                 print("Agent drop token: " .. npc.trunk_reward)
                 Battles[battle_id].players[attacker_id].trunk_balance = Battles[battle_id].players[attacker_id].trunk_balance + npc.trunk_reward
-                DailyTrunkTokenStatus[user_id].trunk_reward = DailyTrunkTokenStatus[user_id].trunk_reward + Battles[battle_id].players[attacker_id].trunk_balance
-                if DailyTrunkTokenStatus[user_id].trunk_reward >= 10 then
-                    Battles[battle_id].players[attacker_id].has_Claimed_All_Trunk_Tokens = 1
-                end
+                -- DailyTrunkTokenStatus[user_id].trunk_reward = DailyTrunkTokenStatus[user_id].trunk_reward + Battles[battle_id].players[attacker_id].trunk_balance
+                -- if DailyTrunkTokenStatus[user_id].trunk_reward >= 10 then
+                    Battles[battle_id].players[attacker_id].total_trunk_token = Battles[battle_id].players[attacker_id].total_trunk_token - npc.trunk_reward
+                -- end
             end
         end
     end

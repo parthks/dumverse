@@ -140,7 +140,7 @@ local ARMORS = {
         -- gold_price = 12000,
         gold_price = 15000,
         -- defense = 5,
-        defense = 11,
+        defense = 110,
         type = "ARMOR",
         material = "MAGIC",
     },

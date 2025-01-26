@@ -14,7 +14,7 @@ global USERS_TABLE: string = [[
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         trunk_balance FLOAT DEFAULT 0,
-        has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE,
+        total_trunk_token FLOAT DEFAULT 10,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
@@ -150,7 +150,7 @@ Handlers.add("Admin.UpdateTable",
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         trunk_balance FLOAT DEFAULT 0,
-        has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE,
+        total_trunk_token FLOAT DEFAULT 10,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
         stamina FLOAT DEFAULT 0,
@@ -184,7 +184,9 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    dbAdmin.db:exec([[ALTER TABLE Users ADD COLUMN has_Claimed_All_Trunk_Tokens BOOLEAN DEFAULT FALSE;]])
+    dbAdmin.db:exec([[ALTER TABLE Users DROP COLUMN has_Claimed_All_Trunk_Tokens]])
+    print("run 1")
+    dbAdmin.db:exec([[ALTER TABLE Users ADD COLUMN total_trunk_token FLOAT DEFAULT 10;]])
     print("end")
 end
 )
