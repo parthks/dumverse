@@ -184,7 +184,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
         width: "408px",
         height: "99px",
       }}
-      className="absolute bottom-20 right-4 z-10"
+      className="absolute bottom-20 right-4 z-[60]"
     >
       <div className="flex items-center space-x-4 p-4">
         <img src={displayMessage.AuthorNFT ? `https://arweave.net/${displayMessage.AuthorNFT}` : IMAGES.DEFAULT_DUMDUM} alt="User Avatar" className="w-16 h-16 object-contain" />

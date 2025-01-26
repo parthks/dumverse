@@ -6,7 +6,7 @@ import { sleep } from "@/lib/time";
 import { GAME_PROCESS_ID, calculatePositionAndSize } from "@/lib/utils";
 import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { useGameStore } from "@/store/useGameStore";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import GifComponent from "@/components/Dialogue/Dialogue";
 import audioManager from "@/utils/audioManager";
@@ -125,6 +125,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
   const [tokenBalance, setTokenBalance] = useState<number | undefined>(undefined);
   const [txnLoading, setTxnLoading] = useState(false);
+  const [txnCompleted, setTxnCompleted] = useState(false);
 
   const bankDumz = tokenType === "dumz_token" ? bank?.dumz_amount : tokenType === "trunk_token" ? bank?.trunk_amount : undefined;
 
@@ -144,6 +145,10 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     fetchBalance();
   }, [fetchBalance]);
 
+  // useEffect(() => {
+  //  if (!txnLoading && istxnCompleted) setIstxnCompleted(true);
+  // }, [txnLoading]);
+
   const handleWithdraw = async () => {  
     if (!inputValue) return;
     if (!bankDumz) return;
@@ -155,6 +160,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
       setInputValue(bankDumz);
       return;
     }
+    setTxnCompleted(false);
     setTxnLoading(true);
     const tags = [
       { name: "Action", value: "Bank.PushOut" },
@@ -176,6 +182,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     getBank();
     fetchBalance();
     setTxnLoading(false);
+    setTxnCompleted(true);
     setInputValue(undefined);
   };
 
@@ -254,6 +261,8 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
           {/* <ImgButton disabled={txnLoading} src={"https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"} onClick={handleDeposit} alt={"Deposit into Bank"} /> */}
           <ImgButton disabled={txnLoading} src={"https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"} onClick={handleWithdraw} alt={"Withdraw from Bank"} />
         </div>
+        {txnLoading && <p className="font-bold text-2xl text-red-600">Transferring Please Wait...</p>}
+        {txnCompleted && <p className="font-bold text-2xl text-green-800">Transaction Complete</p>}
       </div>
     </div>
   );
