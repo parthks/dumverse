@@ -5,8 +5,8 @@ local TRUNK_TOKEN_PROCESS_ID = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ"
 local HISTORY_PROCESS_ID = ""
 local GAME_PROCESS_ID =  "Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI"   -- "_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA"
 local RECORD_PROCESS_ID =  "6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
-local BACKUP_PROCESS_ID = ""
-local BANK_PROCESS_ID = ""
+local BACKUP_PROCESS_ID = "uHYsNF2oF9B2YDLu5rcNJAbzXOuwMdeTUE8axdSgHCE"
+local BANK_PROCESS_ID = "9_7CmT--jxreBXGKNJ_zQ5-Gj6duhVY-aGxuwJVeQ-c"
 
 local REST_SPOTS = {0, 9, 18, 27, 36, 45, 54, 63, 72, 81}
 
