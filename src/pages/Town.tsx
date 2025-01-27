@@ -14,14 +14,13 @@ export default function Town() {
   const goToGameMap = useGameStore((state) => state.goToGameMap);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const user = useGameStore((state) => state.user);
-  
 
   const [chatOpen, setChatOpen] = useState(false);
 
   const handleBuildingSelect = (building: GameStatePages) => {
     if (building !== GameStatePages.NFT_SHOP) {
       setGameStatePage(building);
-    } else {  
+    } else {
       if (user?.nft_address) setGameStatePage(building);
     }
   };
@@ -29,175 +28,168 @@ export default function Town() {
   useBackgroundMusic(SOUNDS.TOWN_AUDIO);
 
   return (
-    <div className="relative h-screen w-screen overflow-hidden inset-0 bg-center bg-no-repeat bg-cover"
-    style={{
-      backgroundImage: `url(https://arweave.net/JV5-FpdcyzSE7GzczVmNavlnoh2dJapAIXPHPajxFY4)`,
-    }}
+    <div
+      className="relative h-screen w-screen overflow-hidden inset-0 bg-center bg-no-repeat bg-cover"
+      style={{
+        backgroundImage: `url(https://arweave.net/JV5-FpdcyzSE7GzczVmNavlnoh2dJapAIXPHPajxFY4)`,
+      }}
     >
-
-<div
-              className="absolute top-[60.8%] left-[86%] w-[23%] h-auto z-50
+      <div
+        className="absolute top-[60.8%] left-[86%] w-[23%] h-auto z-50
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.VISITOR_CENTER);
-              }}
-            >
-              <img
-                src="https://arweave.net/eXLQqI0-T3hdxS3sRtVlEO9MlO_vpmzFP0i3M8LhKPU"
-                alt="Building 3 - Visitor Center"
-              />
-              <div className="invisible group-hover:visible absolute top-[43%] left-[-63%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-              Visitor Center
-                 </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.VISITOR_CENTER);
+        }}
+      >
+        <img
+          src="https://arweave.net/eXLQqI0-T3hdxS3sRtVlEO9MlO_vpmzFP0i3M8LhKPU"
+          alt="Building 3 - Visitor Center"
+        />
+        <div className="invisible group-hover:visible absolute top-[43%] left-[-63%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          Visitor Center
+        </div>
+      </div>
 
-
-       <div
-              className="absolute top-[36%] left-[80.3%] w-[23%] h-auto z-40
+      <div
+        className="absolute top-[36%] left-[80.3%] w-[23%] h-auto z-40
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.BAKERY);
-              }}
-            >
-              <img
-                src="https://arweave.net/Jzct99MVnb3a9pkD3XeeGWtZ9WMtZT-_tRVmrjoEpPw"
-                alt="Building 4 - Bakery"
-              />
-              <div className="invisible group-hover:visible absolute top-[63%] left-[-20%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-Bakery                 </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.BAKERY);
+        }}
+      >
+        <img
+          src="https://arweave.net/Jzct99MVnb3a9pkD3XeeGWtZ9WMtZT-_tRVmrjoEpPw"
+          alt="Building 4 - Bakery"
+        />
+        <div className="invisible group-hover:visible absolute top-[63%] left-[-20%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          Bakery{" "}
+        </div>
+      </div>
 
-
-            <div
-              className="absolute top-[53%] left-[35%] w-[50%] h-auto z-30
+      <div
+        className="absolute top-[53%] left-[35%] w-[50%] h-auto z-30
                          "
-             
-            >
-              <img
-                src="https://arweave.net/uJYhuvHlTTo-UQyGsnieHgzf_DsxgiAoYD7QvBhKID0"
-                alt="Upstairs"
-              />
+      >
+        <img
+          src="https://arweave.net/uJYhuvHlTTo-UQyGsnieHgzf_DsxgiAoYD7QvBhKID0"
+          alt="Upstairs"
+        />
+      </div>
 
-
-            
-            </div>
-
-
-            <div
-              className="absolute top-[17%] left-[74.5%] w-[23%] h-auto z-20
+      <div
+        className="absolute top-[17%] left-[74.5%] w-[23%] h-auto z-20
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.BANK);
-              }}
-            >
-              <img
-                src="https://arweave.net/HtitNBYdIa5ywzu3g-t23fTlmEOe2-PkW_LKUqyIkWM"
-                alt="Building 7 - Bank"
-              />
-              <div className="invisible group-hover:visible absolute top-[50%] left-[19%] text-4xl z-[1000] text-white px-2 py-1 rounded whitespace-nowrap">
-Bank                 </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.BANK);
+        }}
+      >
+        <img
+          src="https://arweave.net/HtitNBYdIa5ywzu3g-t23fTlmEOe2-PkW_LKUqyIkWM"
+          alt="Building 7 - Bank"
+        />
+        <div className="invisible group-hover:visible absolute top-[50%] left-[19%] text-4xl z-[1000] text-white px-2 py-1 rounded whitespace-nowrap">
+          Bank{" "}
+        </div>
+      </div>
 
-
-
-            <div
-              className="absolute top-[10%] left-[52.5%] w-auto h-auto z-10
+      <div
+        className="absolute top-[10%] left-[52.5%] w-auto h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.HALL_OF_FAME);
-              }}
-            >
-              <img
-                src="https://arweave.net/zgFAbWHYyV0VO1DH04RUK12LxjuTScKZMHdtf1Ym9sY"
-                alt="Building 8 - Dumz Hall of Fame"
-              />
-              <div className="invisible group-hover:visible absolute top-[40%] left-[12%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-Dumz Hall of Fame                 </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.HALL_OF_FAME);
+        }}
+      >
+        <img
+          src="https://arweave.net/zgFAbWHYyV0VO1DH04RUK12LxjuTScKZMHdtf1Ym9sY"
+          alt="Building 8 - Dumz Hall of Fame"
+        />
+        <div className="invisible group-hover:visible absolute top-[40%] left-[12%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          Dumz Hall of Fame{" "}
+        </div>
+      </div>
 
-
-            <div
-              className="absolute top-[20.5%] left-[42.5%] w-auto h-auto z-20
+      <div
+        className="absolute top-[20.5%] left-[42.5%] w-auto h-auto z-20
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.WEAPON_SHOP);
-              }}
-            >
-              <img
-                src="https://arweave.net/2k1cPfb8NQGdTGKq39YR3HJnLWD8CYphKCjzDcatVsM"
-                alt="Building 6 - Weapon Shop"
-              />
-              <div className="invisible group-hover:visible absolute top-[10%] left-[10%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-              Weapon Shop               </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.WEAPON_SHOP);
+        }}
+      >
+        <img
+          src="https://arweave.net/2k1cPfb8NQGdTGKq39YR3HJnLWD8CYphKCjzDcatVsM"
+          alt="Building 6 - Weapon Shop"
+        />
+        <div className="invisible group-hover:visible absolute top-[10%] left-[10%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          Weapon Shop{" "}
+        </div>
+      </div>
 
-            <div
-              className="absolute top-[25%] left-[30.5%] h-auto w-auto z-20 
+      <div
+        className="absolute top-[25%] left-[30.5%] h-auto w-auto z-20 
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.ARMORY);
-              }}
-            >
-              <img
-                src="https://arweave.net/gQLHGng3_wZSLtrXYJwW4PeCttHMOeSXlhLdEqYcCTM"
-                alt="Building 5 - Armor Shop"
-                className="w-auto"
-              />
-              <div className="invisible group-hover:visible absolute top-[13%] left-[15%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-              Armor Shop               </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.ARMORY);
+        }}
+      >
+        <img
+          src="https://arweave.net/gQLHGng3_wZSLtrXYJwW4PeCttHMOeSXlhLdEqYcCTM"
+          alt="Building 5 - Armor Shop"
+          className="w-auto"
+        />
+        <div className="invisible group-hover:visible absolute top-[13%] left-[15%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          Armor Shop{" "}
+        </div>
+      </div>
 
-            <div
-              className="absolute top-[33.5%] left-[17%] w-auto h-auto z-40
+      <div
+        className="absolute top-[33.5%] left-[17%] w-auto h-auto z-40
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.NFT_SHOP);
-              }}
-            >
-              <img
-                src="https://arweave.net/VlhBtkkHr0tG_fpmVB_DA00WG_4XASYvF3lhr7ILkLA"
-                alt="Building 2 - NFT Shop"
-              />
-              <div className="invisible group-hover:visible absolute top-[97%] left-[57%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-              NFT Shop               </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.NFT_SHOP);
+        }}
+      >
+        <img
+          src="https://arweave.net/VlhBtkkHr0tG_fpmVB_DA00WG_4XASYvF3lhr7ILkLA"
+          alt="Building 2 - NFT Shop"
+        />
+        <div className="invisible group-hover:visible absolute top-[97%] left-[57%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          NFT Shop{" "}
+        </div>
+      </div>
 
-
-            <div
-              className="absolute top-[42%] left-[2%] w-auto h-auto z-50
+      <div
+        className="absolute top-[42%] left-[2%] w-auto h-auto z-50
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
-              onClick={() => {
-                handleBuildingSelect(GameStatePages.SHOP);
-              }}
-            >
-              <img
-                src="https://arweave.net/B01HnXy0fpizs0-xs-94ghhbMlWo52sLL0hBg4JOUHM"
-                alt="Building 1 - General Shop"
-              />
-              <div className="invisible group-hover:visible absolute top-[95%] left-[60%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-              General Shop               </div>
-            </div>
+        onClick={() => {
+          handleBuildingSelect(GameStatePages.SHOP);
+        }}
+      >
+        <img
+          src="https://arweave.net/B01HnXy0fpizs0-xs-94ghhbMlWo52sLL0hBg4JOUHM"
+          alt="Building 1 - General Shop"
+        />
+        <div className="invisible group-hover:visible absolute top-[95%] left-[60%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+          General Shop{" "}
+        </div>
+      </div>
 
+      <div className="absolute top-0 left-0 z-50 h-screen overflow-hidden">
+        <img
+          src="https://arweave.net/qHBs7hlEuGw3RFQcbdiB--rkrZhg2PoNe6oL4aID92Y"
+          alt="side left"
+          className="object-contain h-full w-auto"
+        />
+      </div>
 
-            <div
-  className="absolute top-0 left-0 z-50 h-screen overflow-hidden"
->
-  <img
-    src="https://arweave.net/qHBs7hlEuGw3RFQcbdiB--rkrZhg2PoNe6oL4aID92Y"
-    alt="side left"
-    className="object-contain h-full w-auto"
-  />
-</div>
-
-{/* <div
+      {/* <div
   className="absolute top-[70%] left-[48%] z-50 h-[25%] overflow-hidden"
 >
   <img
@@ -207,8 +199,7 @@ Dumz Hall of Fame                 </div>
   />
 </div> */}
 
-
-{/* <div className="relative">
+      {/* <div className="relative">
   <img
     src="https://arweave.net/dX6bh-ptkYUXlDwJQpDliAIDiRRzCLnRZBDc2bgHWZM"
     alt="side left"
@@ -225,7 +216,7 @@ Dumz Hall of Fame                 </div>
   </map>
 </div> */}
 
-{/*            
+      {/*            
 
       {/* Town Sky and 3 Clouds */}
       {/* <div
@@ -319,7 +310,7 @@ Dumz Hall of Fame                 </div>
         </div>
       )}
 
-      <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen}/>
+      <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
       {/* bottom buttons bar */}
       {!chatOpen && (
@@ -368,8 +359,8 @@ Dumz Hall of Fame                 </div>
       {/* Town map container */}
       {/* <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full max-w-[177.78vh] max-h-[56.25vw]"> */}
-          {/* Town map image */}
-          {/* <div
+      {/* Town map image */}
+      {/* <div
             className="absolute inset-0 bg-center bg-no-repeat bg-contain"
             style={{
               backgroundImage: `url(https://arweave.net/gFbTgE71cSq3B0maUbkAEXUiLDBF92Dvm148QL67YtA)`,
@@ -385,8 +376,8 @@ Dumz Hall of Fame                 </div>
               <RiveAnimation url="https://arweave.net/7E9e7d3cx7eHObPOnuC2WJac7CqMgohsyjO9gnL4Qfs" />
             </div> */}
 
-            {/* Armory on the hill */}
-            {/* <img
+      {/* Armory on the hill */}
+      {/* <img
               src="https://arweave.net/jcrjRLjmbifAPy0nas_hHobjDIdKyMaRNmQjSD0UVvA"
               alt="Building 7"
               className="absolute top-[10%] left-[5.5%] w-[18%] h-auto z-10
@@ -397,7 +388,7 @@ Dumz Hall of Fame                 </div>
               }}
             /> */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[10%] left-[5.5%] w-[18%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -414,9 +405,9 @@ Dumz Hall of Fame                 </div>
               </div>
             </div> */}
 
-            {/* Hall of Fame center building */}
+      {/* Hall of Fame center building */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[10%] left-[51%] w-[18%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -432,8 +423,8 @@ Dumz Hall of Fame                 </div>
                 Dumz Hall of Fame
               </div>
             </div> */}
-            {/* Weapon Shop red building */}
-            {/* <div
+      {/* Weapon Shop red building */}
+      {/* <div
               className="absolute top-[14%] left-[37%] w-[15%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -450,9 +441,9 @@ Dumz Hall of Fame                 </div>
               </div>
             </div> */}
 
-            {/* Building Bank */}
+      {/* Building Bank */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[13%] left-[65%] w-[18%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -469,9 +460,9 @@ Dumz Hall of Fame                 </div>
               </div>
             </div> */}
 
-            {/* Bakery yellow building */}
+      {/* Bakery yellow building */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[15%] left-[83%] w-[15%] h-auto z-10
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -487,9 +478,9 @@ Dumz Hall of Fame                 </div>
                 Bakery
               </div>
             </div> */}
-            {/* General Shop blue building */}
+      {/* General Shop blue building */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[50%] left-[0%] w-[24%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -505,9 +496,9 @@ Dumz Hall of Fame                 </div>
                 General Store
               </div>
             </div> */}
-            {/* NFT Shop brown building */}
+      {/* NFT Shop brown building */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[31%] left-[20%] w-[20%] h-auto
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -523,9 +514,9 @@ Dumz Hall of Fame                 </div>
                 NFT Holder Shop
               </div>
             </div> */}
-            {/* Visitor Center right bottom building */}
+      {/* Visitor Center right bottom building */}
 
-            {/* <div
+      {/* <div
               className="absolute top-[51%] left-[77%] w-[23%] h-auto 
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
@@ -541,9 +532,9 @@ Dumz Hall of Fame                 </div>
                 Visitor Center
               </div>
             </div> */}
-{/*            
+      {/*            
           </div> */}
-        {/* </div>
+      {/* </div>
       </div> */}
     </div>
   );

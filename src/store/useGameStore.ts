@@ -563,7 +563,7 @@ export const useGameStore = create<GameState>()(
       
                 // Check if the parsed data has the 'logs' property
                 if (parsedData.logs) {
-                  console.log("Ashu: DailyGoldWishes Data: ", parsedData);
+                  // console.log("Ashu: DailyGoldWishes Data: ", parsedData);
                   await get().refreshUserData();
                   return parsedData as DailyGoldWishes;
                 }
