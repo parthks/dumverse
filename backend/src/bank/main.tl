@@ -584,3 +584,27 @@ Handlers.add("Bank.UpdateDataIntoMainBank", Handlers.utils.hasMatchingTag('Actio
 
 
 
+-- local function sendUserAndBankDataH(msg: Message)
+--     assert(msg.From == ao.id, "Only the game server can dynamically set the current spot")
+--     -- local data = dbAdmin:exec(string.format([[SELECT * FROM Users]]))
+--     local data2 = dbAdmin:exec(string.format([[SELECT * FROM Bank]]))
+--     -- local data3 = dbAdmin:exec(string.format([[SELECT * FROM BankTransactions]]))
+
+--     -- for _, val in ipairs(data) do
+--     --    ao.send({Target="uHYsNF2oF9B2YDLu5rcNJAbzXOuwMdeTUE8axdSgHCE", Action="Backup.addAndUpdateUsers", UserId=tostring(val.id), Data=json.encode(val) })
+--     -- end
+--     print("start 1 :" .. #data2 )
+--     -- print("start 2 :" .. #data3)
+
+--     for _, val in ipairs(data2) do
+--         -- ao.send({Target="uHYsNF2oF9B2YDLu5rcNJAbzXOuwMdeTUE8axdSgHCE", Action="Backup.addAndUpdateBank", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+--         ao.send({Target="ijkGWFflWZGtEjsH0XfbEkHxuV4c4g8Qg4J995xLddk", Action="Bank.MainBankDataAddAndUpdate", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+--      end
+--     --  for _, val in ipairs(data3) do
+--     --     -- ao.send({Target="uHYsNF2oF9B2YDLu5rcNJAbzXOuwMdeTUE8axdSgHCE", Action="Backup.addAndUpdateBankTransactions", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+--     --     ao.send({Target="ijkGWFflWZGtEjsH0XfbEkHxuV4c4g8Qg4J995xLddk", Action="Bank.MainBankTransactionsDataAddAndUpdate", Id=tostring(val.id), UserId=tostring(val.user_id), Data=json.encode(val) })
+--     --  end
+--      print("yayyy end")
+-- end
+
+-- Handlers.add("Bank.SendUserAndBankData", Handlers.utils.hasMatchingTag('Action', 'Bank.SendUserAndBankData'), sendUserAndBankDataH)

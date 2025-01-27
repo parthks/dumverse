@@ -10,7 +10,7 @@ export const CHAT_PROCESS_ID = "uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"; //
 export const DUMZ_TOKEN_PROCESS_ID = "mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-dk";
 export const TRUNK_TOKEN_PROCESS_ID = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ";
 export const RECORD_TOKEN_PROCESS_ID = "6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8" //"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A";
-export const BANK_PROCESS_ID = "9_7CmT--jxreBXGKNJ_zQ5-Gj6duhVY-aGxuwJVeQ-c"; 
+export const BANK_PROCESS_ID = "ijkGWFflWZGtEjsH0XfbEkHxuV4c4g8Qg4J995xLddk"; 
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

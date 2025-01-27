@@ -157,7 +157,7 @@ export default function RestArea() {
   async function making_wish() {
     const status: DailyGoldWishes | null = await goldWishes();
     setWishStatus(status);
-    // console.log(JSON.stringify(status));
+    console.log(JSON.stringify(status));
   }
 
   return (

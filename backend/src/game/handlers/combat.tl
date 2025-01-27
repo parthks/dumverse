@@ -639,11 +639,11 @@ end
 local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
    subProcesses = {
-    ["jqV5F0Hf69S4_uQbtLJhJMuYZwOVszzO2DUcAbkl57E"]=0,
-    ["es7fbu4enhUoICeZnANuT8DWu6fvs-8xKLOvI-Slobo"]=0,
-    ["gZfmxG0HeT5uxmpf5MpdF1AcsrpyibwVWvlCs48A8Fo"]=0,
-    ["_sbrjYFbp4DuWGotLtv8xHqwUXjzTQsaRpBGivAZVAY"]=0,
-    ["OUXGFm3m4jWFLifXmyLuCeIXCnJ4rypN1hU3dsHJW-o"]=0,
+    ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
+    ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
+    ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
+    ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
+    ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
    }
 end
 

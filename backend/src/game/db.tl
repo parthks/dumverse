@@ -184,7 +184,7 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    dbAdmin.db:exec([[ALTER TABLE Users DROP COLUMN has_Claimed_All_Trunk_Tokens]])
+    -- dbAdmin.db:exec([[ALTER TABLE Users DROP COLUMN has_Claimed_All_Trunk_Tokens]])
     print("run 1")
     dbAdmin.db:exec([[ALTER TABLE Users ADD COLUMN total_trunk_token FLOAT DEFAULT 10;]])
     print("end")
