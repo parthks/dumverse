@@ -2,7 +2,6 @@ local helpers = require("game.helpers")
 require('utils.globals')
 
 
-
 local function bankAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
@@ -25,7 +24,7 @@ local function nftShopAcceptQuestHandler(msg: Message)
     dbAdmin:exec(string.format([[
         UPDATE Users SET special_item_thread = 0 WHERE id = %d;
     ]], user_id))
-
+    
     ao.send({ Target = msg.From, Status = "Success" })
 end
 

@@ -3,7 +3,6 @@ local helpers = require("game.helpers")
 local constants = require("utils.constants")
 local utils = require("utils.utils.tl-utils")
 
-
 local REST_SPOTS = constants.REST_SPOTS;
 
 global ClaimedNFTs: {string}
@@ -156,18 +155,25 @@ local function addNewUserHandler(msg: Message)
     assert(insert_user_result and #insert_user_result > 0, "Failed to insert new user")
     local newUserId = insert_user_result[1].id
 
-    -- Insert into Bank
-    local insert_bank_result = dbAdmin:exec(string.format([[
-        INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
-        VALUES (%d, %f, %f, %f, %f);
-    ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
+    -- -- Insert into Bank
+    -- local insert_bank_result = dbAdmin:exec(string.format([[
+    --     INSERT INTO Bank (user_id, gold_amount, dumz_amount, nft_gold_amount, nft_dumz_amount)
+    --     VALUES (%d, %f, %f, %f, %f);
+    -- ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
-    assert(insert_bank_result, "Failed to insert into Bank")
+    -- assert(insert_bank_result, "Failed to insert into Bank")
+
+    ao.send({Target = constants.BANK_PROCESS_ID, Action = "Bank.InsertDataIntoMainBank", UserId = tostring(newUserId), GoldAmount = tostring(bank_gold_amount), DumzAmount = tostring(bank_dumz_amount), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
 
     OneOfOnesSpecialItemsHandler(nft_address, newUserId as number)
     
     -- Debug print
     print("New user created with ID: " .. tostring(newUserId))
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], newUserId)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(newUserId), user_data)
+    -- local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], newUserId)) [1] as BankAccountData
+    -- helpers.sendBankDataToBackupProcess(tonumber(newUserId), user_bank.id ,user_bank)
 
     ao.send({
         Target = msg.From,
@@ -212,15 +218,18 @@ local function upgradeExistingProfileHandler(msg: Message)
     if not nft_already_claimed then
         table.insert(ClaimedNFTs, nft_address)
         local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
-        -- update bank
-        dbAdmin:exec(string.format([[
-            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
-        ]], nft_dumz_amount, nft_gold_amount, user_id))
+        -- -- update bank
+        -- dbAdmin:exec(string.format([[
+        --     UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        -- ]], nft_dumz_amount, nft_gold_amount, user_id))
+        ao.send({Target = constants.BACKUP_PROCESS_ID, Action = "Bank.UpdateDataIntoMainBank", UserId = tostring(user_id), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
+
     else
         local nft_dumz_amount, nft_gold_amount = 0,0
-         dbAdmin:exec(string.format([[
-            UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
-        ]], nft_dumz_amount, nft_gold_amount, user_id))
+        --  dbAdmin:exec(string.format([[
+        --     UPDATE Bank SET nft_dumz_amount = %f, nft_gold_amount = %f WHERE user_id = %f;
+        -- ]], nft_dumz_amount, nft_gold_amount, user_id))
+        ao.send({Target = constants.BANK_PROCESS_ID, Action = "Bank.UpdateDataIntoMainBank", UserId = tostring(user_id), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
     end
 
     OneOfOnesSpecialItemsHandler(nft_address, user_id as number)
@@ -228,6 +237,10 @@ local function upgradeExistingProfileHandler(msg: Message)
     -- Debug print
     print("user upgraded with ID: " .. tostring(user_id))
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    -- local user_bank: BankAccountData = dbAdmin:exec(string.format([[SELECT * FROM Bank WHERE user_id = %f]], user_id)) [1] as BankAccountData
+    -- helpers.sendBankDataToBackupProcess(tonumber(user_id), user_bank.id ,user_bank)
 
      ao.send({
          Target = msg.From,
@@ -432,6 +445,12 @@ local function userLoginHandler(msg: Message)
         ]], new_stamina, timestamp, user_id))
     end
 
+    if userData.health == 0 then
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET health = 1 WHERE id = %f;
+        ]], user_id))
+    end
+
     local user_current_spot= dbAdmin:exec(string.format([[
         SELECT current_spot FROM Users WHERE ID = %d;
     ]],user_id))[1]
@@ -475,7 +494,7 @@ end
 
 local function goldWishesHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    -- local userData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1]
+    local userData: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1] as UserData
     local roll = math.random(1,4)
     local DAILY_LIMIT = 150
     local current_timestamp = msg.Timestamp
@@ -530,6 +549,7 @@ local function goldWishesHandler(msg: Message)
         table.insert(Daily_Gold[user_id].logs,log)
 
         dbAdmin:exec(string.format([[UPDATE Users SET gold_balance = gold_balance + %f, last_updated_at= %f  WHERE id = %f;]], new_gold, current_timestamp, user_id))
+        helpers.sendUserDataToBackupProcess(user_id,userData);
         ao.send({Target=msg.From, Data = json.encode(Daily_Gold[user_id])})
         return
     end
@@ -539,16 +559,22 @@ local function goldWishesHandler(msg: Message)
     ao.send({ Target = msg.From, Data = json.encode(Daily_Gold[user_id]) })
 end
 
--- local function resetUsersDamage(msg: Message)
---     assert(msg.From==ao.id,"Not access")
---     print("Initiate")
---     dbAdmin:exec(string.format([[UPDATE Users SET damage=1 WHERE nft_address IS NOT NULL 
---     AND nft_address NOT IN ('%s', '%s', '%s', '%s')]], "A8ucm402DGkcJWydu1iibXGvpsDSnI5rj3Z-zP7JjB4",
---     "XYkNDhHBAPF85xy7E56mmZR4VJTS8os0JbxNh_fdRZE",
---     "2UMirpNKMZ9MDpApI3gI0Dy0975fC-vOK3UoIeMM2yg",
---     "5U-KMM4rJ2x19xEEgSIHVdDopxuTXgCjaQgTUrNFiKE"))
---     print("Successful")
--- end
+local function resetUsersDamage(msg: Message)
+    assert(msg.From==ao.id,"Not access")
+    print("Initiate")
+    
+    local nft_dumz_amount: number
+    local nft_gold_amount: number
+local num=0
+     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT("hwN6feRXmjpN-cx-QGRe4UQpiNVlhuN1h8Gj59Pj9jg")
+     print("nft_dumz_amount: " .. num .. " : " .. nft_dumz_amount)
+     print("nft_gold_amount: " .. num .. " : " .. nft_gold_amount)
+     num =1
+     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT("4hEIkI4wpA4mxQ9_46Q0AuYPS-rjuojOOqQgSKIIHgs")
+     print("nft_dumz_amount: " .. num .. " : " .. nft_dumz_amount)
+     print("nft_gold_amount: " .. num .. " : " .. nft_gold_amount)
+    print("Successful")
+end
 
 -- Add handlers
 Handlers.add("Users.SetCurrentIsland", Handlers.utils.hasMatchingTag('Action', 'SetCurrentIsland'), setCurrentIslandHandler)
@@ -565,7 +591,7 @@ Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Acti
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
 Handlers.add("User.GoldWishes", Handlers.utils.hasMatchingTag('Action', 'User.GoldWishes'), goldWishesHandler)
--- Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
+Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
 
 return {}
 

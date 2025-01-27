@@ -75,7 +75,7 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     local player_id = player_id_tried_running or alive_players[math.random(#alive_players)]
 
     -- 15 % chance to attack a random npc
-    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 1 and player_id_tried_running == nil
+    local npcShouldAttackNPC = random_npc_id ~= nil and math.random() < 0.15 and player_id_tried_running == nil
 
     -- Log random target selection
     BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - target selection", 
@@ -171,7 +171,7 @@ local function CronTick(msg: Message,npcTimer:integer)
             end
 
             local INACTIVITY_LIMIT = 5 * 60 * 1000
-            if battle.created_at + INACTIVITY_LIMIT < msg.Timestamp then
+            if (battle.created_at + INACTIVITY_LIMIT) < msg.Timestamp then
                 print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY " )
                 BattleHelpers.internalLog(
                     battle.id,
@@ -449,6 +449,7 @@ local function userIsReadyHandler(msg: Message)
     battle.started=true
     ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
 end    
+
 
 -- Add handlers
 Handlers.add("Battle.NewUserJoin", Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), newUserJoinHandler)

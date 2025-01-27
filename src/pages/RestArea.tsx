@@ -22,7 +22,7 @@ import { DailyGoldWishes } from "@/types/game";
 // };
 
 const RestAreaImages = {
-  0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
+  0: "https://arweave.net/JZfbH_8Wog_d1wdp7XqOtYWhkXJAv7wp8nwW9rITidM",
   9: "https://arweave.net/Sa1M036SjBzwEnWyqRKfUO-_Iqs0wTtGFEG_yWHSxLs",
   18: "https://arweave.net/-kfQ41nBIJy39NR5iwlt-2aHMpbXTz2VTDcCcml44kY",
   27: "https://arweave.net/G8xvyj-KgEieJIi7C8s-_sv_NO-vvp9hzm0Rg47YGwM",
@@ -42,7 +42,9 @@ const ReturnToTown = React.memo(() => {
     <>
       {current_spot == 0 ? (
         <ImgButton
-          src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"}
+          src={
+            "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
+          }
           onClick={() => {
             setGameStatePage(GameStatePages.TOWN);
           }}
@@ -50,7 +52,9 @@ const ReturnToTown = React.memo(() => {
         />
       ) : (
         <ImgButton
-          src={"https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"}
+          src={
+            "https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"
+          }
           onClick={() => {
             setGameStatePage(GameStatePages.GAME_MAP);
           }}
@@ -63,19 +67,34 @@ const ReturnToTown = React.memo(() => {
 
 function RestAreaPlayerStatsDisplay() {
   const user = useGameStore((state) => state.user!);
-  const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
+  const regenerateCountdown = useGameStore(
+    (state) => state.regenerateCountdown
+  );
 
   const totalStamina = user.total_stamina;
   const filledStamina = user.stamina;
   return (
     <div className="relative w-80 h-[80px]">
-      <img src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg" alt="Background" className="absolute inset-0 w-full h-full object-cover rounded-lg" />
+      <img
+        src="https://arweave.net/4S1TmPOXJcIQV64uf41n_spSqNPFeCBI2jYeXfHKByg"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover rounded-lg"
+      />
 
       <div className="absolute inset-0 top-[-24px] left-[-12px] flex items-center justify-start">
         <div className="relative">
-          <img src={"https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"} alt="Health" className="w-20" />
+          <img
+            src={
+              "https://arweave.net/TztZ9vkeLpTvkVWjCEkV8HnJncb6i-6lo66kZN2r5Fg"
+            }
+            alt="Health"
+            className="w-20"
+          />
           <p
-            style={{ textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+            style={{
+              textShadow:
+                "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000",
+            }}
             className="absolute inset-0 flex items-center mb-5 justify-center text-white text-xl font-bold"
           >
             {user.health}/{user.total_health}
@@ -86,13 +105,26 @@ function RestAreaPlayerStatsDisplay() {
       <div className="absolute inset-0 top-0 flex flex-col gap-1 items-baseline justify-center pl-[69px]">
         <div className={`flex w-[255px] flex-wrap mt-1`}>
           {Array.from({ length: totalStamina }).map((_, index) => (
-            <img className={`${totalStamina > 9 ? "h-6" : "h-10"} mr-1`} key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
+            <img
+              className={`${totalStamina > 9 ? "h-6" : "h-10"} mr-1`}
+              key={index}
+              src={
+                index < filledStamina
+                  ? IMAGES.FILLED_STAMINA
+                  : IMAGES.EMPTY_STAMINA
+              }
+              alt="Stamina"
+            />
           ))}
         </div>
         {/* convert regenerateCountdown to minutes and seconds */}
         <div className="flex gap-2">
           {totalStamina != filledStamina &&
-            (regenerateCountdown ? <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label> : null)}
+            (regenerateCountdown ? (
+              <label className="text-[#66D7F8] text-xl font-bold">
+                {Math.ceil(regenerateCountdown / 60)} min to next regen...
+              </label>
+            ) : null)}
         </div>
       </div>
     </div>
@@ -103,10 +135,10 @@ export default function RestArea() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const current_spot = useGameStore((state) => state.user!.current_spot);
-  const goldWishes = useGameStore((store)=>store.goldWishes);
+  const goldWishes = useGameStore((store) => store.goldWishes);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
-  const [wishStatus, setWishStatus] = useState<DailyGoldWishes | null >(null);
+  const [wishStatus, setWishStatus] = useState<DailyGoldWishes | null>(null);
   if (!RestAreaImages[current_spot as keyof typeof RestAreaImages]) {
     return (
       <div>
@@ -118,12 +150,15 @@ export default function RestArea() {
     );
   }
 
-  useBackgroundMusic(current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO);
+  useBackgroundMusic(
+    current_spot === 0 ? SOUNDS.TOWN_REST_AREA_AUDIO : SOUNDS.REST_AREA_AUDIO
+  );
 
   async function making_wish() {
-    const status: DailyGoldWishes | null= await goldWishes();
+    const status: DailyGoldWishes | null = await goldWishes();
     setWishStatus(status);
-}
+    // console.log(JSON.stringify(status));
+  }
 
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
@@ -135,19 +170,8 @@ export default function RestArea() {
         <PlayerOnlineList currentSpot={current_spot} />
       </div>
 
-      {current_spot == 0 && (
-        <div className="z-40 absolute bottom-[1%] right-[50%] transform translate-x-[35%]">
-          {" "}
-          <ImgButton
-            // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
-            src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
-            alt={"Make Gold Wish"}
-            onClick={making_wish}
-          />{" "}
-        </div>
-      )}
-
-      {wishStatus && (
+     
+       {wishStatus && (
         <div className="fixed inset-0 flex items-center justify-center text-white z-30">
           <div
             // bg-black bg-opacity-70
@@ -185,7 +209,7 @@ export default function RestArea() {
             </h1>
 
             <div className="p-4 overflow-y-auto max-h-[calc(80vh-100px)] scrollbar-thin scrollbar-thumb-[#B8860B]/80 scrollbar-track-black rounded-lg">
-              {wishStatus.logs
+            {wishStatus.logs
                 .slice()
                 .sort((a, b) => a.timestamp - b.timestamp)
                 .map((val, index) => (
@@ -193,6 +217,7 @@ export default function RestArea() {
                     {val.message}
                   </h1>
                 ))}
+
             </div>
           </div>
         </div>
@@ -242,6 +267,18 @@ export default function RestArea() {
               alt={"Open Settings"}
             />
           </div>
+
+          {current_spot == 0 && (
+        <div className={`${!chatOpen ? "z-30" : "z-40"} absolute bottom-[1%] right-[50%] transform translate-x-[35%]`}>
+          {" "}
+          <ImgButton
+            // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
+            src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+            alt={"Make Gold Wish"}
+            onClick={making_wish}
+          />{" "}
+        </div>
+      )}
         </>
       )}
 
@@ -253,15 +290,15 @@ export default function RestArea() {
 
       <div className="relative w-full h-full">
         <div className={`absolute inset-0`}>
-          {current_spot == 0 ? (
+          {/* {current_spot == 0 ? (
             <TownRestArea />
-          ) : (
+          ) : ( */}
             <img
               src={RestAreaImages[current_spot as keyof typeof RestAreaImages]}
               alt="Rest Area Background"
               className="w-full h-full object-cover"
             />
-          )}
+          {/* // )} */}
 
           {current_spot != 0 && (
             <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>
@@ -367,7 +404,7 @@ function TownRestArea() {
           fit={Fit.Cover}
         />
       </div> */}
-       <img
+      <img
         src="https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ"
         alt="Town Sea"
         className="absolute top-0 left-0 w-full h-full object-cover"

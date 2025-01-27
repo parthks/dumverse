@@ -140,3 +140,24 @@
     - name: Name
       value: Record   
 
+
+- name: backup
+  file: build/backup.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Backup      
+
+- name: bank
+  file: build/bank.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: Bank              
+

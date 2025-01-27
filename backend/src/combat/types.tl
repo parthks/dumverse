@@ -53,3 +53,10 @@ global type CombatEnemyData = record
     trunk_reward: integer | nil
 end
 
+-- global type DailyTrunkToken = record
+--     user_id: integer
+--     address: string
+--     -- timestamp: integer
+--     trunk_reward: integer
+--     -- hasReceivedTrunkTokenToday: boolean
+-- end

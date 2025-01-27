@@ -83,7 +83,8 @@ export function InventoryBagWithoutArmor() {
         }}
       >
         <div className="flex justify-center items-center">
-          <label className="text-xl mr-2 text-white">{0}</label>
+
+          <label className="text-xl mr-2 text-white">{data?.trunk_balance.toLocaleString()}</label>
           <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-5" />
         </div>
       </div>
@@ -193,7 +194,8 @@ function InventoryBagRender({ data, combatInventory }: { data: InventoryBagData;
         }}
       >
         <div className="flex justify-center items-center">
-          <label className="text-sm mr-1 text-white">{0}</label>
+
+          <label className="text-sm mr-1 text-white">{data?.trunk_balance.toLocaleString()}</label>
           <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-5" />
         </div>
       </div>

@@ -6,7 +6,7 @@ import { sleep } from "@/lib/time";
 import { GAME_PROCESS_ID, calculatePositionAndSize } from "@/lib/utils";
 import { pollForTransferSuccess, sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { useGameStore } from "@/store/useGameStore";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import GifComponent from "@/components/Dialogue/Dialogue";
 import audioManager from "@/utils/audioManager";
@@ -125,6 +125,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
   const [tokenBalance, setTokenBalance] = useState<number | undefined>(undefined);
   const [txnLoading, setTxnLoading] = useState(false);
+  const [txnCompleted, setTxnCompleted] = useState(false);
 
   const bankDumz = tokenType === "dumz_token" ? bank?.dumz_amount : tokenType === "trunk_token" ? bank?.trunk_amount : undefined;
 
@@ -144,7 +145,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     fetchBalance();
   }, [fetchBalance]);
 
-  const handleWithdraw = async () => {
+  const handleWithdraw = async () => {  
     if (!inputValue) return;
     if (!bankDumz) return;
     if (inputValue <= 0) {
@@ -155,6 +156,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
       setInputValue(bankDumz);
       return;
     }
+    setTxnCompleted(false);
     setTxnLoading(true);
     const tags = [
       { name: "Action", value: "Bank.PushOut" },
@@ -164,6 +166,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     ];
     const initialResponse = await sendAndReceiveGameMessage({
       tags: tags,
+      process: "bank"
     });
     console.log("initialResponse", initialResponse, initialResponse.status);
     const result = await pollForTransferSuccess(tokenType, (messageTags) => {
@@ -175,6 +178,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     getBank();
     fetchBalance();
     setTxnLoading(false);
+    setTxnCompleted(true);
     setInputValue(undefined);
   };
 
@@ -211,7 +215,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
     setTxnLoading(false);
   };
 
-  const title = "Transfer $Dumz";
+  const title = `Transfer ${tokenType === "dumz_token" ? "$Dumz" : "$Trunk"}` ;
   return (
     <div
       className="z-10 bg-cover bg-center bg-no-repeat absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
@@ -226,7 +230,7 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
       </div>
       <div className="flex flex-col items-center w-full gap-4 p-16">
         <h1 className="text-black text-center text-5xl leading-normal font-bold mb-4">{title}</h1>
-        <p>Wallet Balance: {tokenBalance !== undefined ? tokenBalance : "--"}</p>
+        <p>Wallet Balance: {tokenBalance !== undefined ? (tokenBalance/1000).toFixed(3) : "--"}</p>
         <p>Bank Balance: {bankDataLoading ? "--" : bankDumz}</p>
         <Input
           placeholder={`Amount to transfer`}
@@ -253,6 +257,8 @@ function TransferTokens({ onClose, tokenType }: { onClose: () => void; tokenType
           {/* <ImgButton disabled={txnLoading} src={"https://arweave.net/NVZCN7fRzU2SRFQPP5Ww5HHAoR8d8U4PP2xQG3TrujY"} onClick={handleDeposit} alt={"Deposit into Bank"} /> */}
           <ImgButton disabled={txnLoading} src={"https://arweave.net/VEFKvwWj0ZNSqSpNS4Na__FOh9fXW8l-ik83TYlLanM"} onClick={handleWithdraw} alt={"Withdraw from Bank"} />
         </div>
+        {txnLoading && <p className="font-bold text-2xl text-red-600">Transferring Please Wait...</p>}
+        {txnCompleted && <p className="font-bold text-2xl text-green-800">Transaction Complete</p>}
       </div>
     </div>
   );
@@ -293,7 +299,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 
           <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
             <text x="50%" y="35%" fontSize="100" textAnchor="middle" fill="white">
-              {bankDataLoading || !bank ? "--" : `${bank.trunk_amount ?? 0} trunk`}
+              {bankDataLoading || !bank ? "--" : `${bank.trunk_amount ?? 0} $Trunk`}
             </text>
             {/* trunk */}
             <image
@@ -303,7 +309,7 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2 + "%"}
               height={(54 / imageHeight) * 100 * 2 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.trunk_balance == 1 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${bankTransactionLoading || user?.trunk_balance == 0 ? "disabled-image" : ""}`}
               item-type="deposit-trunk"
             />
             <image

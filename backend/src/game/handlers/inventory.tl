@@ -106,6 +106,8 @@ local function inventoryRepairItemHandler(msg: Message)
         UPDATE Users SET dumz_balance = %d WHERE id = %f;
     ]], userData.dumz_balance - repair_cost, user_id))
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 

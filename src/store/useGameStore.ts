@@ -99,12 +99,13 @@ export const useGameStore = create<GameState>()(
           tags.push({ name: "NFT_Address", value: selectedNFT });
         }
         const resultData = await sendAndReceiveGameMessage({ tags });
-        if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
-          const data = JSON.parse(resultData.Messages[0].Data);
+        // console.log("Ashu : Add new user: "+JSON.stringify(resultData));
+        if (resultData.Messages.length > 0 && resultData.Messages[2].Data) {
+          const data = JSON.parse(resultData.Messages[2].Data);
+          // console.log("Ashu : new user: "+JSON.stringify(data));
           if (data.status === "Success") {
             // get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
             get().setUserOnLogin(data.data);
-
           }
         }
       },
@@ -133,7 +134,7 @@ export const useGameStore = create<GameState>()(
           //   set({ GameStatePage: GameStatePages.COMBAT });
           // }
           // else
-                        // { name: "NFT_Address", value: nftAddress },
+          // { name: "NFT_Address", value: nftAddress },
 
           const resultData = await sendAndReceiveGameMessage({
             tags: [
@@ -142,7 +143,7 @@ export const useGameStore = create<GameState>()(
             ],
           });
           // if user is not in a spot, only then go to town. Else need to go to game map
-          if (user.current_spot % 9 === 0 && user.current_spot!=0) {
+          if (user.current_spot % 9 === 0 && user.current_spot != 0) {
             // user is in a spot
             const position = getCurrentLamaPosition(user);
             set({
@@ -186,7 +187,9 @@ export const useGameStore = create<GameState>()(
         }
         return null;
       },
-      getAllPlayersAtLocation: async (currentSpot: number): Promise<GameUser[]> => {
+      getAllPlayersAtLocation: async (
+        currentSpot: number
+      ): Promise<GameUser[]> => {
         // this also updates last_updated_at for current user
         const resultData = await sendAndReceiveGameMessage({
           tags: [
@@ -206,9 +209,11 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: false, bankDataLoading: true });
         const resultData = await sendDryRunGameMessage({
           tags: [
+            // { name: "Action", value: "Bank.Info" },
             { name: "Action", value: "Bank.Info" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
+          process: "bank"
         });
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const bankData = JSON.parse(resultData.Messages[0].Data);
@@ -223,7 +228,8 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: true });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
-            { name: "Action", value: "Bank.Deposit" },
+            // { name: "Action", value: "Bank.Deposit" },
+            { name: "Action", value: "Game.TransferFundsToBank" },
             { name: "UserId", value: get().user?.id.toString()! },
             { name: "Amount", value: amount.toString() },
             { name: "TokenType", value: tokenType },
@@ -242,6 +248,7 @@ export const useGameStore = create<GameState>()(
             { name: "Amount", value: amount.toString() },
             { name: "TokenType", value: tokenType },
           ],
+          process: "bank"
         });
         await get().getBank();
         await get().refreshUserData();
@@ -251,12 +258,15 @@ export const useGameStore = create<GameState>()(
         set({ bankTransactionLoading: true });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
-            { name: "Action", value: "Bank.ClaimAirdrop" },
+            // { name: "Action", value: "Bank.ClaimAirdrop" },
+            { name: "Action", value: "Game.BankAirdrop" },
             { name: "UserId", value: get().user?.id.toString()! },
             { name: "TokenType", value: tokenType },
           ],
         });
-        await Promise.all([get().refreshUserData(), get().getBank()]);
+        // await Promise.all([get().refreshUserData(), get().getBank()]);
+        await get().refreshUserData();
+        await get().getBank();
         set({ bankTransactionLoading: false });
       },
       // claimTrunk: async () => {
@@ -306,7 +316,9 @@ export const useGameStore = create<GameState>()(
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {
-        const point = getInteractivePoints(level).find((point) => point.level == level) || getInitialLamaPosition();
+        const point =
+          getInteractivePoints(level).find((point) => point.level == level) ||
+          getInitialLamaPosition();
         set({
           currentIslandLevel: level,
           lamaPosition: {
@@ -326,7 +338,8 @@ export const useGameStore = create<GameState>()(
       //   await get().refreshUserData();
       // },
       tempCurrentIslandLevel: 0,
-      setTempCurrentIslandLevel: (level) => set({ tempCurrentIslandLevel: level }),
+      setTempCurrentIslandLevel: (level) =>
+        set({ tempCurrentIslandLevel: level }),
       lamaPosition: getInitialLamaPosition(),
       setLamaPosition: (position) => set({ lamaPosition: position }),
       goDirectlyToTownPage: () =>
@@ -351,6 +364,7 @@ export const useGameStore = create<GameState>()(
                 GameStatePage: GameStatePages.INFIRMARY,
                 tempCurrentIslandLevel: 0,
               });
+              // await get().reviveUser();
             } else {
               set({
                 GameStatePage: GameStatePages.TOWN,
@@ -405,8 +419,9 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
-        const currentSpot = get().user?.current_spot;  
-        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot) ;
+        const currentSpot = get().user?.current_spot;
+        const inTownOrRestArea =
+          currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
         console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
         // if in town or rest area, set the countdown to 2 minutes
         if (inTownOrRestArea) {
@@ -420,10 +435,10 @@ export const useGameStore = create<GameState>()(
       },
       regenerateCountdownTickDown: async () => {
         const countdown = get().regenerateCountdown;
-      
+
         if (countdown !== null) {
           set({ regenerateCountdown: countdown - 1 });
-      
+
           if (countdown - 1 === 0) {
             await get().regenerateEnergy();
             get().resetRegenerateCountdown();
@@ -443,11 +458,11 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        if(resultData.status && resultData.status=="Success") {
+        if (resultData.status && resultData.status == "Success") {
           await get().refreshUserData();
-          return true
+          return true;
         }
-        return false
+        return false;
       },
       repairItem: async (inventoryId) => {
         const resultData = await sendAndReceiveGameMessage({
@@ -469,7 +484,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       acceptNFTShopQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -479,7 +494,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       acceptWeaponQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -489,7 +504,7 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
 
       acceptShopQuest: async () => {
@@ -499,9 +514,9 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        console.log("Ashu : "+JSON.stringify(resultData));
+        // console.log("Ashu : " + JSON.stringify(resultData));
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       acceptDenQuest: async () => {
         const resultData = await sendAndReceiveGameMessage({
@@ -511,10 +526,11 @@ export const useGameStore = create<GameState>()(
           ],
         });
         await get().refreshUserData();
-        return resultData.status == "Success"? true : false;
+        return resultData.status == "Success" ? true : false;
       },
       lastDisplayedMessageId: null,
-      setLastDisplayedMessageId: (state) => set({ lastDisplayedMessageId: state }),
+      setLastDisplayedMessageId: (state) =>
+        set({ lastDisplayedMessageId: state }),
       isSettingsOpen: false,
       setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
       getTotalUsers: async () => {
@@ -537,13 +553,32 @@ export const useGameStore = create<GameState>()(
             { name: "UserId", value: get().user?.id.toString()! },
           ],
         });
-        console.log("Ashu: " + JSON.stringify(resultData));
-        if (resultData && resultData.data) {
-          await get().refreshUserData();
-          return resultData.data as DailyGoldWishes;
+        // Check if resultData and resultData.Messages are defined
+        if (resultData && resultData.Messages) {
+          // Iterate through the Messages array to find the message with the required Data
+          for (const message of resultData.Messages) {
+            if (message.Data) {
+              try {
+                const parsedData = JSON.parse(message.Data);
+      
+                // Check if the parsed data has the 'logs' property
+                if (parsedData.logs) {
+                  // console.log("Ashu: DailyGoldWishes Data: ", parsedData);
+                  await get().refreshUserData();
+                  return parsedData as DailyGoldWishes;
+                }
+              } catch (error) {
+                console.error("Error parsing message data:", error);
+              }
+            }
+          }
         }
+        // If no valid data is found, refresh user data and return null
         return null;
-      },
+      }
+      
+      
+      ,
     }),
     {
       name: "Game Store",

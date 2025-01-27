@@ -8,6 +8,7 @@ local json = require("json")
 
 local BattleHelpers: BattleHelpersType = {}
 
+
 -- local function endBattle(battle_id: integer, winner_id: string, timestamp: integer)
 --     local battle = BattleHelpers.get(battle_id)
 --     -- when user attacks, after NPC attacks if NPC ends the battle then this function is called twice
@@ -235,8 +236,26 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
         if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
             Battles[battle_id].players[attacker_id].special_item_kitten = 1
         end
-        if npc.id == "NPC_13"  then
-            Battles[battle_id].players[attacker_id].trunk_balance = Battles[battle_id].players[attacker_id].trunk_balance + npc.trunk_reward
+        if npc.id == "AGENT_TRUNK"  then
+            -- local user_id: integer = math.floor(tonumber(Battles[battle_id].players[attacker_id].id))
+            -- if not DailyTrunkTokenStatus[user_id] then
+            --     DailyTrunkTokenStatus[user_id] = {
+            --         user_id = user_id,
+            --         address = Battles[battle_id].players[attacker_id].address,
+            --         trunk_reward = 0,
+            --         -- timestamp = 0,
+            --         -- hasReceivedTrunkTokenToday = false
+            --     }
+            -- end
+
+            if Battles[battle_id].players[attacker_id].total_trunk_token > 0 then
+                print("Agent drop token: " .. npc.trunk_reward)
+                Battles[battle_id].players[attacker_id].trunk_balance = Battles[battle_id].players[attacker_id].trunk_balance + npc.trunk_reward
+                -- DailyTrunkTokenStatus[user_id].trunk_reward = DailyTrunkTokenStatus[user_id].trunk_reward + Battles[battle_id].players[attacker_id].trunk_balance
+                -- if DailyTrunkTokenStatus[user_id].trunk_reward >= 10 then
+                    Battles[battle_id].players[attacker_id].total_trunk_token = Battles[battle_id].players[attacker_id].total_trunk_token - npc.trunk_reward
+                -- end
+            end
         end
     end
     BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)

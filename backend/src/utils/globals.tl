@@ -74,6 +74,7 @@ global type UserData = record
     gold_balance: number
     dumz_balance: number
     trunk_balance: number
+    total_trunk_token: number
     health: number
     total_health: number
     stamina: number

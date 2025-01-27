@@ -124,7 +124,9 @@ local function shopBuyItemHandler(msg: Message)
             UPDATE Users SET defense = %f WHERE id = %d;
         ]], baseStats.defense + armorItem.defense, user_id))
     end
-
+    
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 

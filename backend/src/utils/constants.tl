@@ -5,8 +5,10 @@ local TRUNK_TOKEN_PROCESS_ID = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ"
 local HISTORY_PROCESS_ID = ""
 local GAME_PROCESS_ID =  "Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI"   -- "_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA"
 local RECORD_PROCESS_ID =  "6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
+local BACKUP_PROCESS_ID = ""
+local BANK_PROCESS_ID = ""
 
-local REST_SPOTS = { 0, 9, 18, 27, 36,45,54,63,72,81 }
+local REST_SPOTS = {0, 9, 18, 27, 36, 45, 54, 63, 72, 81}
 
 require "utils.globals"
 
@@ -399,17 +401,28 @@ local ENEMIES: {EnemyData} = {
         gold_reward = 20,
         dumz_reward = 5
     },
-    {
+    -- {
+    --     id = "NPC_13",
+    --     name = "Agent Trunk",
+    --     total_health = 9,
+    --     health = 9,
+    --     -- damage = 5,
+    --     damage = {7,13},
+    --     difficulty = "HARD",
+    --     gold_reward = 20,
+    --     dumz_reward = 5,
+    --     trunk_reward = 1,
+    -- },
+     {
         id = "NPC_13",
-        name = "Agent Trunk",
-        total_health = 9,
-        health = 9,
+        name = "Goat",
+        total_health = 8,
+        health = 8,
         -- damage = 5,
-        damage = {7,13},
+        damage = {3,6},
         difficulty = "HARD",
         gold_reward = 20,
-        dumz_reward = 5,
-        trunk_reward = 1,
+        dumz_reward = 5
     },
 }
 
@@ -497,6 +510,18 @@ local SPECIAL_ENEMIES = {
         dumz_reward = 500,
         gold_reward = 8000,
     },
+    AGENT_TRUNK =   {
+        id = "AGENT_TRUNK",
+        name = "Agent Trunk",
+        total_health = 9,
+        health = 9,
+        -- damage = 5,
+        damage = {7,13},
+        difficulty = "HARD",
+        gold_reward = 20,
+        dumz_reward = 5,
+        trunk_reward = 1,
+    },
 }
 
 -- 9, 18, 27 are rest spots
@@ -537,6 +562,8 @@ return {
     HISTORY_PROCESS_ID = HISTORY_PROCESS_ID,
     GAME_PROCESS_ID = GAME_PROCESS_ID,
     RECORD_PROCESS_ID = RECORD_PROCESS_ID,
+    BACKUP_PROCESS_ID = BACKUP_PROCESS_ID,
+    BANK_PROCESS_ID = BANK_PROCESS_ID,
     ONE_OF_ONE_ASSET_IDS = ONE_OF_ONE_ASSET_IDS,
     REST_SPOTS = REST_SPOTS,
     SPECIAL_ITEMS = SPECIAL_ITEMS,

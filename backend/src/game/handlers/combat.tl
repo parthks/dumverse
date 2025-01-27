@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
-        ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
-        ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
-        ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
-        ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
+        ["uaUxBrzX8TuryKdJtiFIPai3oUD6zuAf2dEhyH6vEF8"]=0,
+        ["GG6uQ4FoK0ZGiN1zMigiWMz19pFcBVCw5pHd6Kf6HCk"]=0,
+        ["i3FWM48GE_epyPCixxHvSlRAc1sBsVApwXMvdGIzog8"]=0,
+        ["S-HXkhQ8rHTSjvxZE780bdoXH6-ykLS5PyoB0gRqpDg"]=0,
+        ["bQAqPZx2qFbHxwZBM3E7GFzls6cjlwJ4fTEI5GyYWDo"]=0,
     }
 end
 
@@ -281,7 +281,7 @@ local function enterNewCombatHandler(msg: Message)
     --     }
     -- end
 
-    -- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
+-- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
     local function getRandomEnemyIndex(level: integer): integer
         local enemy_index: integer;
         if level <= 27 then
@@ -290,15 +290,15 @@ local function enterNewCombatHandler(msg: Message)
         elseif level <= 54 then
             -- Medium: enemies 6-9
             enemy_index = math.random(6, 9)
-        elseif level <= 63 then
-            -- Hard: enemies 10-12
-            enemy_index = math.random(10, 12)
+        -- elseif level <= 63 then
+        --     -- Hard enemies (10-13) (13->Goat)
+        --     enemy_index = math.random(10, 12)
         else
-            -- Hard enemies including the Boss (enemy 13)
+            -- Hard enemies (10-13) (13->Goat)
             enemy_index = math.random(10, 13)
-            if enemy_index == 13 then
-                enemy_index = math.random(1, 10) == 10 and 13 or math.random(10, 12)
-            end
+            -- if enemy_index == 13 then
+            --     enemy_index = math.random(1, 10) == 10 and 13 or math.random(10, 12)
+            -- end
         end
         return enemy_index
     end
@@ -338,6 +338,11 @@ local function enterNewCombatHandler(msg: Message)
             end
         end
 
+            -- 10% chance to get Agent Trunk enemy at high levels
+        if (level > 63 and level < 82) and math.random(1, 10) == 1 then
+            return constants.SPECIAL_ENEMIES["AGENT_TRUNK"]
+        end
+
         -- 1% chance to get a black swan enemy
         if (level > 72 and level < 82) and math.random(1, 100) == 1 then
             return constants.SPECIAL_ENEMIES["BLACK_SWAN"]
@@ -348,9 +353,15 @@ local function enterNewCombatHandler(msg: Message)
     local enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
     -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
     -- add special enemies
-    local special_enemy = getRandomSpecialEnemy(userData, combat_level)
+    local special_enemy: EnemyData | nil = getRandomSpecialEnemy(userData, combat_level)
+
     if special_enemy then
-        table.insert(enemies, special_enemy)
+
+        if (special_enemy as EnemyData).id == "AGENT_TRUNK" and math.random(1, 3) == 1 then
+            table.insert(enemies, special_enemy)   
+        else
+            enemies = {special_enemy} -- Replace with only Agent Trunk
+        end
 
     -- if utils.includes(combat_level, doubleEnemies) then
     elseif (combat_level >= 18 and combat_level <= 27) or (combat_level >= 45 and combat_level <= 54) or (combat_level >= 72) then
@@ -374,6 +385,8 @@ local function enterNewCombatHandler(msg: Message)
     ao.send({Target=tostring(userAddress[1].address), Data=data})
     end
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
     ao.send({
         Target = subProcess,
         Action = "Battle.NewUserJoin",
@@ -412,6 +425,8 @@ local function enteredNewCombatHandler(msg: Message)
         UPDATE Users SET current_battle_id = %d, stamina = stamina - 1, last_regenerate_time = %f WHERE id = %f;
     ]], battle_id, msg.Timestamp, user_id))
     
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
     -- local userAddress = dbAdmin:exec(string.format([[
     --     SELECT address FROM Users WHERE id = %f;
     -- ]], user_id))
@@ -442,46 +457,17 @@ local function playerWonHandler(msg: Message)
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
     local number_of_enemies: number = tonumber(msg.Tags.NumberOfEnemies)
---     local playerOrginalData = dbAdmin:exec(string.format([[
---         SELECT * from Users WHERE id = %f;
---      ]], user_id))[1]
 
---      local leaderboard = {
---         gold_earned: integer = (playerData.gold_balance - (playerOrginalData.gold_balance as integer)) + (playerOrginalData.gold_balance as integer),
---         token_earned: integer = (playerData.dumz_balance - (playerOrginalData.dumz_balance as integer)) + (playerOrginalData.dumz_balance as integer),
--- -- gold_lost: integer = ,
--- battle_win: integer = 1,
--- -- battle_lost
--- enemy_killed: integer = 1 ,
--- -- player_death
--- -- pvp
--- -- number_of_token_burn
--- death_streak: integer = 1,
--- death_streak_ende: boolean= false,
--- player_with_nft: integer= 0,
--- -- player_without nft 
---     }
- 
---      local numberOfNFTsID = dbAdmin:exec(string.format([[
---         SELECT * from Users WHERE address = %s;
---      ]], playerOrginalData.address))
-
---      local hasNFT = isNestedTableNotEmpty(numberOfNFTsID)
-
---      if hasNFT then
---         leaderboard.player_with_nft = #numberOfNFTsID 
---      end
- 
     local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
 
     ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
 
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f,
+        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, total_trunk_token = %f,
         special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
         WHERE id = %f;
-    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0,
+    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0, playerData.total_trunk_token,
     playerData.special_item_kitten,
     playerData.special_item_key,
     playerData.special_item_thread,
@@ -497,6 +483,9 @@ local function playerWonHandler(msg: Message)
         subProcesses[subProcessAssigned]= 0
     end
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], tonumber(user_id))) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 
 local function playerRanAwayHandler(msg: Message)
@@ -539,6 +528,9 @@ local function playerRanAwayHandler(msg: Message)
         subProcesses[subProcessAssigned]= 0
     end
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 
 local function playerPerishedHandler(msg: Message)
@@ -608,6 +600,9 @@ local function playerPerishedHandler(msg: Message)
         subProcesses[subProcessAssigned]= 0
     end
     subProcessAssignToUsers[USER_ID]=nil
+
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
 end
 
 local function removePlayerFromBattleHandler(msg: Message)
@@ -623,7 +618,7 @@ local function removePlayerFromBattleHandler(msg: Message)
         assert(found == true, "Only Combat process can send this message")
     end
 
-    local user_id = msg.Tags.UserId
+    local user_id = tonumber(msg.Tags.UserId)
     -- local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
 
@@ -636,16 +631,19 @@ local function removePlayerFromBattleHandler(msg: Message)
     -- subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
     subProcessAssignToUsers[USER_ID]=nil
 
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+
 end
 
 local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
    subProcesses = {
-    ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
-    ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
-    ["olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI"]=0,
-    ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
-    ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
+    ["jqV5F0Hf69S4_uQbtLJhJMuYZwOVszzO2DUcAbkl57E"]=0,
+    ["es7fbu4enhUoICeZnANuT8DWu6fvs-8xKLOvI-Slobo"]=0,
+    ["gZfmxG0HeT5uxmpf5MpdF1AcsrpyibwVWvlCs48A8Fo"]=0,
+    ["_sbrjYFbp4DuWGotLtv8xHqwUXjzTQsaRpBGivAZVAY"]=0,
+    ["OUXGFm3m4jWFLifXmyLuCeIXCnJ4rypN1hU3dsHJW-o"]=0,
    }
 end
 
