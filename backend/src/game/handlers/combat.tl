@@ -638,6 +638,7 @@ end
 
 local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
+   print("Starttt")
    subProcesses = {
     ["trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg"]=0,
     ["78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4"]=0,
@@ -645,6 +646,8 @@ local function resetSubprocessesHandler(msg:Message)
     ["ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs"]=0,
     ["j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM"]=0,
    }
+   subProcessAssignToUsers = {}
+   print("Endddd")
 end
 
 -- Add handlers

@@ -54,8 +54,10 @@ export const useCombatStore = create<CombatState>()(
           process: get().subProcess,
         });
         const battles = resultData.data as Battle[];
-        console.log("Ashu : battles: "+JSON.stringify(battles));
+        console.log("Ashu : battles: "+JSON.stringify(resultData));
         if (battles && battles.length > 0) {
+          console.log("Ashu : inside: "+JSON.stringify(battles));
+
           set({ currentBattle: battles?.[0], enteringNewBattle: false });
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
             useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);

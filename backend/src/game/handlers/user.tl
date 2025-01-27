@@ -563,16 +563,8 @@ local function resetUsersDamage(msg: Message)
     assert(msg.From==ao.id,"Not access")
     print("Initiate")
     
-    local nft_dumz_amount: number
-    local nft_gold_amount: number
-local num=0
-     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT("hwN6feRXmjpN-cx-QGRe4UQpiNVlhuN1h8Gj59Pj9jg")
-     print("nft_dumz_amount: " .. num .. " : " .. nft_dumz_amount)
-     print("nft_gold_amount: " .. num .. " : " .. nft_gold_amount)
-     num =1
-     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT("4hEIkI4wpA4mxQ9_46Q0AuYPS-rjuojOOqQgSKIIHgs")
-     print("nft_dumz_amount: " .. num .. " : " .. nft_dumz_amount)
-     print("nft_gold_amount: " .. num .. " : " .. nft_gold_amount)
+    dbAdmin:exec([[UPDATE Users SET current_battle_id = NULL]])
+    
     print("Successful")
 end
 
