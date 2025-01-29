@@ -180,7 +180,10 @@ local function CronTick(msg: Message,npcTimer:integer)
                     "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
                 )
                 battle.ended = true
+                print("Inactive Loop Start: " .. battle.id)
                 for key ,_ in pairs(battle.players) do
+                    print("Inactive player: " .. key)
+                    print("Inactive player Address: " .. GAME_PROCESS_ID)
                     ao.send({
                         Target = GAME_PROCESS_ID,
                         UserId = tostring(key),

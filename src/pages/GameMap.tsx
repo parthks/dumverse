@@ -301,7 +301,7 @@ const GameMap = () => {
       <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
 
       {/* <RiveAnimation fit={Fit.Cover} url={"https://arweave.net/aV1siQE3OyrMZGJTjQoqslFAXn-kU6HZ5lAmoK5sewI"} /> */}
-      <img src="https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ"/>
+      <img src="https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ" alt="Sea" className="object-cover w-full h-full" />
       <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} onLevelSelect={handleLevelSelect} />
     </div>
   );

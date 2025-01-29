@@ -9,28 +9,28 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
-  hash: d114c5d8bc800d8f96d40bd9699567757297401a61a07f617a9746e15755336e
+  hash: bab3dab99f3f232c01c77843c85934ba92e5e818b49842f50815509eee74e264
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: eb4e299b740249cc795e93605c0ad54b506976acac995a163ef0d27b62263783
+  hash: 4b1e4cf50bb715dea8f9f050b3ebf870e8bdf59410356d147d932bfc42df8890
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
   hash: ef6860830433bd149827b3e2a3b8925a1d939ae7f852e4c616af9d349f94f371
-combat:
-  processId: uaUxBrzX8TuryKdJtiFIPai3oUD6zuAf2dEhyH6vEF8
-  hash: 28d61a9c12ba87790380a3e4e52c27ddb390f73bd56fcd7097bdf55a16e6901a
-combat2:
-  processId: GG6uQ4FoK0ZGiN1zMigiWMz19pFcBVCw5pHd6Kf6HCk
-  hash: 28d61a9c12ba87790380a3e4e52c27ddb390f73bd56fcd7097bdf55a16e6901a
-combat3:
-  processId: i3FWM48GE_epyPCixxHvSlRAc1sBsVApwXMvdGIzog8
-  hash: 28d61a9c12ba87790380a3e4e52c27ddb390f73bd56fcd7097bdf55a16e6901a
-combat4:
-  processId: S-HXkhQ8rHTSjvxZE780bdoXH6-ykLS5PyoB0gRqpDg
-  hash: 28d61a9c12ba87790380a3e4e52c27ddb390f73bd56fcd7097bdf55a16e6901a
-combat5:
-  processId: bQAqPZx2qFbHxwZBM3E7GFzls6cjlwJ4fTEI5GyYWDo
-  hash: 28d61a9c12ba87790380a3e4e52c27ddb390f73bd56fcd7097bdf55a16e6901a
 bank:
   processId: Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870
   hash: cbeb291585741e8c276011e794746f91a81e24025deb8848c4d9517ea6883ad8
+combat:
+  processId: Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4
+  hash: 3bcc2a6a270dd4c51faf3372d349c77e6a32a49811dcbb9c7f17dd8416f54650
+combat2:
+  processId: lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks
+  hash: 3bcc2a6a270dd4c51faf3372d349c77e6a32a49811dcbb9c7f17dd8416f54650
+combat3:
+  processId: gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk
+  hash: 3bcc2a6a270dd4c51faf3372d349c77e6a32a49811dcbb9c7f17dd8416f54650
+combat4:
+  processId: G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM
+  hash: 3bcc2a6a270dd4c51faf3372d349c77e6a32a49811dcbb9c7f17dd8416f54650
+combat5:
+  processId: 6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk
+  hash: 3bcc2a6a270dd4c51faf3372d349c77e6a32a49811dcbb9c7f17dd8416f54650

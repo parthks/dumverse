@@ -95,11 +95,11 @@ end
 global SubProcesses: {string}
 if not SubProcesses then
     SubProcesses = {
-        "uaUxBrzX8TuryKdJtiFIPai3oUD6zuAf2dEhyH6vEF8",
-        "GG6uQ4FoK0ZGiN1zMigiWMz19pFcBVCw5pHd6Kf6HCk",
-        "i3FWM48GE_epyPCixxHvSlRAc1sBsVApwXMvdGIzog8",
-        "S-HXkhQ8rHTSjvxZE780bdoXH6-ykLS5PyoB0gRqpDg",
-        "bQAqPZx2qFbHxwZBM3E7GFzls6cjlwJ4fTEI5GyYWDo",
+        "Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4",
+        "lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks",
+        "gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk",
+        "G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM",
+        "6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk",
     }
 end
 
@@ -216,7 +216,14 @@ local function resetRecordSubprocessesHandler(msg:Message)
     assert(msg.From==ao.id,"You can not call this handler")
     print("Initiate")
     -- dbAdmin:exec(string.format([[TRUNCATE TABLE Leaderboard]]))
-    DBInit()
+    -- DBInit()
+    SubProcesses = {
+        "Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4",
+        "lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks",
+        "gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk",
+        "G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM",
+        "6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk",
+    }
     print("Done successfully")
 end
 
