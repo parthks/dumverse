@@ -47,6 +47,27 @@ global USERS_TABLE: string = [[
 --     );
 -- ]]
 
+
+global LEADERBOARD_TABLE: string = [[
+DROP TABLE IF EXISTS Leaderboard;
+    CREATE TABLE IF NOT EXISTS Leaderboard (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        nft_address TEXT,
+        address TEXT NOT NULL,
+        gold_earned INTEGER DEFAULT 0,
+        gold_lost INTEGER DEFAULT 0,
+        battle_win INTEGER DEFAULT 0,
+        battle_lost INTEGER DEFAULT 0,
+        enemy_killed INTEGER DEFAULT 0,
+        player_death INTEGER DEFAULT 0,
+        death_streak INTEGER DEFAULT 0,
+        pvp INTEGER DEFAULT 0
+    );
+]]
+
+
 global INVENTORY_TABLE: string = [[
     CREATE TABLE IF NOT EXISTS Inventory (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -94,6 +115,8 @@ Handlers.add("Admin.ClearDB",
         dbAdmin.db:exec(USERS_TABLE)
         -- dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
         -- dbAdmin.db:exec(LEADERBOARD_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
+        dbAdmin.db:exec(LEADERBOARD_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Inventory;")
         dbAdmin.db:exec(INVENTORY_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
@@ -184,9 +207,7 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    dbAdmin.db:exec([[ALTER TABLE Users DROP COLUMN has_Claimed_All_Trunk_Tokens]])
-    print("run 1")
-    dbAdmin.db:exec([[ALTER TABLE Users ADD COLUMN total_trunk_token FLOAT DEFAULT 10;]])
+    dbAdmin.db:exec(LEADERBOARD_TABLE)
     print("end")
 end
 )

@@ -2,7 +2,7 @@ import { LAMA_IMAGE } from "@/lib/constants";
 import { cn, getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
-import React from "react";
+import React, { useEffect } from "react";
 
 // import {
 //   interactivePointsMap1,
@@ -67,7 +67,7 @@ interface InteractiveMapProps {
 }
 
 const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel, lamaPosition, onLevelSelect }) => {
-  const { currentIslandLevel } = useGameStore();
+  const { currentIslandLevel, user, refreshUserData } = useGameStore();
 
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("interactive-point")) {
@@ -89,6 +89,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     if (tempCurrentIslandLevel <= 54) return "https://arweave.net/ojFFGryPHdTlowmEUjOCYUHKi8P8TRss6tmgD7RrO88";
     return "https://arweave.net/5uYkotWl32aBSpJV6j-Ykjj_aQRtGpExAYpUZsqtSuM";
   };
+
+
+  useEffect(()=>{
+       console.log("Ashu : Current Spot Change");
+       async()=>await refreshUserData();
+  },[user?.current_spot])
 
   return (
     <div className="w-full h-full">
@@ -130,6 +136,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
             //     </image>
             //   );
             // }
+            console.log("Ashu : currentIslandLevel: "+currentIslandLevel);
+            console.log("Ashu : Point.level: "+point.level);
             return (
               <>
                 <circle

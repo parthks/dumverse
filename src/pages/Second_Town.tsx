@@ -34,95 +34,6 @@ export default function Second_Town() {
         backgroundImage: `url(https://arweave.net/GXi6LGzgGM51NCLwAlTNp9u9EK5eUoRzMLlhB_IQMjw)`,
       }}
     >
-      <div
-        className="absolute top-[50%] left-[-9%] w-[27%] h-auto z-20
-                         cursor-pointer transition-all duration-300 ease-in-out
-                         hover:brightness-125 hover:scale-105 group"
-        onClick={() => {
-          handleBuildingSelect(GameStatePages.DEN);
-        }}
-      >
-        <img
-          src="https://arweave.net/AgLEjgWwvwDvFRlRP3OqaxNPY7zgLVaSZhsLUJHJTYE"
-          alt="Den"
-        />
-        <div className="invisible group-hover:visible absolute top-[55%] left-[95%] text-5xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-          Den
-        </div>
-      </div>
-
-      <div
-        className="absolute top-[22%] left-[14.5%] w-[27%] h-auto z-10
-                         cursor-pointer transition-all duration-300 ease-in-out
-                         hover:brightness-125 hover:scale-105 group"
-        onClick={() => {
-          // handleBuildingSelect(GameStatePages.DEN);
-          console.log("Dumverse real estate");
-        }}
-      >
-        <img
-          src="https://arweave.net/xpdzhZ1965LecQNchciQS4B9l2iGWoBT85_G0PUEWRc"
-          alt="Dumverse Real Estate"
-        />
-        <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-          Dumverse Real Estate
-        </div>
-      </div>
-
-      <div
-        className="absolute top-[30%] left-[57.5%] w-[27%] h-auto z-10
-                         cursor-pointer transition-all duration-300 ease-in-out
-                         hover:brightness-125 hover:scale-105 group"
-        onClick={() => {
-          // handleBuildingSelect(GameStatePages.DEN);
-          console.log("Stables");
-        }}
-      >
-        <img
-          src="https://arweave.net/R0jZiAFhjYaZvp56a1-vIpsjJdcbmlDrVWHccqJJIXA"
-          alt="Mounts"
-        />
-        <div className="invisible group-hover:visible absolute top-[95%] left-[27%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-          Stables
-        </div>
-      </div>
-
-      <div
-        className="absolute top-[49%] left-[37.5%] w-[27%] h-auto z-10
-                         cursor-pointer transition-all duration-300 ease-in-out
-                         hover:brightness-125 hover:scale-105 group"
-        onClick={() => {
-          // handleBuildingSelect(GameStatePages.DEN);
-          console.log("Small Market");
-        }}
-      >
-        <img
-          src="https://arweave.net/vhg0LGzuJKdNqIdt8vp0gi8L4uTHRGyTefP1r7T7_uo"
-          alt="Small Market"
-        />
-        <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-          Small Market
-        </div>
-      </div>
-
-      <div
-        className="absolute top-[46%] left-[84.4%] w-[27%] h-auto z-10
-                         cursor-pointer transition-all duration-300 ease-in-out
-                         hover:brightness-125 hover:scale-105 group"
-        onClick={() => {
-          // handleBuildingSelect(GameStatePages.DEN);
-          console.log("Pet Shop");
-        }}
-      >
-        <img
-          src="https://arweave.net/mhz0pvFasbLq2BqC8L3C4a-tcwTw4RxltlP6BcYqB_c"
-          alt="Pet Shop"
-        />
-        <div className="invisible group-hover:visible absolute top-[57%] left-[-25%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-          Pet Shop
-        </div>
-      </div>
-
       <div className="z-10 absolute top-0 left-1/2 transform -translate-x-1/2 w-4/5">
         <PlayerOnlineList currentSpot={0} />
       </div>
@@ -151,17 +62,7 @@ export default function Second_Town() {
               onClick={() => goToGameMap(true)}
               alt={"Return to Town"}
             />
-            <div className="absolute left-[43%] translate-x-[0%]">
-              <ImgButton
-                src={
-                  "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
-                }
-                onClick={() => {
-                  handleBuildingSelect(GameStatePages.REST_AREA);
-                }}
-                alt={"Enter Rest Area"}
-              />
-            </div>
+
             <div className="flex gap-4 items-center justify-end">
               <ImgButton
                 src={
@@ -184,6 +85,107 @@ export default function Second_Town() {
         </div>
       )}
 
+      <div
+        className="absolute w-full h-full"
+        style={{
+          transform: "scale(calc(100vw / 100))",
+          transformOrigin: "top left",
+        }}
+      >
+        <div
+          className="absolute top-[50vh] left-[-9vw] w-[27vw] h-auto z-20
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105 group"
+          onClick={() => {
+            handleBuildingSelect(GameStatePages.DEN);
+          }}
+        >
+          <img
+            src="https://arweave.net/AgLEjgWwvwDvFRlRP3OqaxNPY7zgLVaSZhsLUJHJTYE"
+            alt="Den"
+            className="w-full h-auto"
+          />
+          <div className="invisible group-hover:visible absolute top-[55%] left-[95%] text-5xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+            Den
+          </div>
+        </div>
+
+        <div
+          className="absolute top-[22vh] left-[14.5vw] w-[27vw] h-auto z-10
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105 group"
+          onClick={() => {
+            // handleBuildingSelect(GameStatePages.DEN);
+            console.log("Dumverse real estate");
+          }}
+        >
+          <img
+            src="https://arweave.net/xpdzhZ1965LecQNchciQS4B9l2iGWoBT85_G0PUEWRc"
+            alt="Dumverse Real Estate"
+            className="w-full h-auto"
+          />
+          <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+            Dumverse Real Estate
+          </div>
+        </div>
+
+        <div
+          className="absolute top-[30vh] left-[57.5vw] w-[27vw] h-auto z-10
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105 group"
+          onClick={() => {
+            // handleBuildingSelect(GameStatePages.DEN);
+            console.log("Stables");
+          }}
+        >
+          <img
+            src="https://arweave.net/R0jZiAFhjYaZvp56a1-vIpsjJdcbmlDrVWHccqJJIXA"
+            alt="Mounts"
+            className="w-full h-auto"
+          />
+          <div className="invisible group-hover:visible absolute top-[95%] left-[27%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+            Stables
+          </div>
+        </div>
+
+        <div
+          className="absolute top-[49vh] left-[37.5vw] w-[27vw] h-auto z-10
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105 group"
+          onClick={() => {
+            // handleBuildingSelect(GameStatePages.DEN);
+            console.log("Small Market");
+          }}
+        >
+          <img
+            src="https://arweave.net/vhg0LGzuJKdNqIdt8vp0gi8L4uTHRGyTefP1r7T7_uo"
+            alt="Small Market"
+            className="w-full h-auto"
+          />
+          <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+            Small Market
+          </div>
+        </div>
+
+        <div
+          className="absolute top-[46vh] left-[84.4vw] w-[27vw] h-auto z-10
+                         cursor-pointer transition-all duration-300 ease-in-out
+                         hover:brightness-125 hover:scale-105 group"
+          onClick={() => {
+            // handleBuildingSelect(GameStatePages.DEN);
+            console.log("Pet Shop");
+          }}
+        >
+          <img
+            src="https://arweave.net/mhz0pvFasbLq2BqC8L3C4a-tcwTw4RxltlP6BcYqB_c"
+            alt="Pet Shop"
+            className="w-full h-auto"
+          />
+          <div className="invisible group-hover:visible absolute top-[57%] left-[-25%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+            Pet Shop
+          </div>
+        </div>
+      </div>
       {/* Second Town map container */}
       {/* <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full max-w-[177.78vh] max-h-[56.25vw]"> */}

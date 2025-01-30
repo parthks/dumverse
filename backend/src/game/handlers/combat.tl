@@ -84,6 +84,10 @@ end
 
 local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean, numberOfEnemies: number): Leaderboard
 
+    -- local UserLeaderboardData = dbAdmin:exec(string.format([[
+    --          SELECT * from Leaderboard WHERE user_id = %d;
+    --        ]], user_id))
+
     local playerOriginalData = dbAdmin:exec(string.format([[
         SELECT * from Users WHERE id = %f;
      ]], user_id))[1] as UserData
@@ -191,7 +195,7 @@ local function enterNewCombatHandler(msg: Message)
     local combat_level = tonumber(msg.Tags.Level) as integer
     assert(type(combat_level) == "number", "Level is required")
     assert(type(combat_level) == "number" and math.floor(combat_level) == combat_level, "Combat level must be an integer")
-
+    print("Combat Level: " .. combat_level)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
     assert(combat_level ~= current_spot, "Battle is complete for this spot")
@@ -462,6 +466,7 @@ local function playerWonHandler(msg: Message)
 
     ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
 
+    print("Level: " .. level)
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, total_trunk_token = %f,
