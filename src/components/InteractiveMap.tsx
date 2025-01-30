@@ -91,10 +91,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
   };
 
 
-  useEffect(()=>{
-       console.log("Ashu : Current Spot Change");
-       async()=>await refreshUserData();
-  },[user?.current_spot])
+  useEffect(() => {
+    console.log("Ashu : Current Spot Change");
+
+    const fetchData = async () => {
+        await refreshUserData();
+    };
+
+    fetchData();
+}, [user?.current_spot]);
+
 
   return (
     <div className="w-full h-full">
@@ -136,8 +142,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
             //     </image>
             //   );
             // }
-            console.log("Ashu : currentIslandLevel: "+currentIslandLevel);
-            console.log("Ashu : Point.level: "+point.level);
+            // console.log("Ashu : currentIslandLevel: "+currentIslandLevel);
+            // console.log("Ashu : Point.level: "+point.level);
             return (
               <>
                 <circle
