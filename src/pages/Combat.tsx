@@ -217,7 +217,7 @@ export default function Combat() {
         clearTimeout(stopTimeout);
       }
     };
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle, hasBattleReady]);
 
   useEffect(()=>{
     if (comabatLoadingScreenImageURL === null){
