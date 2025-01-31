@@ -6,10 +6,10 @@ export default function ConnectButton({ className, onClickAction }: { className?
   const { setWalletAddressID, walletAddressID, setProfile, setAssets } = useAppStore();
   if (walletAddressID) return <div>Connected</div>;
   return (
-    <ImgButton
-      src={"https://arweave.net/3Bvp1vK2_SRYeeA2SCVxFip_98QqCt8lpdBacII0wMg"}
-      alt="Connect with AOConnect Wallet"
-      className={className}
+    <button
+      // src={"https://arweave.net/3Bvp1vK2_SRYeeA2SCVxFip_98QqCt8lpdBacII0wMg"}
+      // alt="Connect with AOConnect Wallet"
+      className={`${className} button`}
       onClick={async () => {
         onClickAction?.();
         if (walletAddressID) {
@@ -34,6 +34,6 @@ export default function ConnectButton({ className, onClickAction }: { className?
         setWalletAddressID(userAddress);
         console.log(`Connected to ${userAddress}`);
       }}
-    />
+    > Connect </button>
   );
 }

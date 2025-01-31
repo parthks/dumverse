@@ -236,11 +236,11 @@ export default function RestArea() {
       )}
 
       {!chatOpen && (
-        <>
-          <div className="z-30 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
+        <div className="">
+          <div className="z-30 absolute left-1/2 right-[400px] top-[200px] flex flex-col gap-2 items-center">
             <InventoryBag />
             <ImgButton
-              className="h-[65px]"
+              className=""
               src={
                 "https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"
               }
@@ -249,7 +249,7 @@ export default function RestArea() {
             />
           </div>
 
-          <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
+          <div className="z-30 absolute top-2/3 flex gap-4 items-center justify-end">
             <ImgButton
               src={
                 "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
@@ -279,7 +279,7 @@ export default function RestArea() {
           />{" "}
         </div>
       )}
-        </>
+        </div>
       )}
 
       {openBag && (

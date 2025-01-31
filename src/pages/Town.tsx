@@ -331,7 +331,7 @@ export default function Town() {
                 onClick={() => {
                   handleBuildingSelect(GameStatePages.REST_AREA);
                 }}
-                alt={"Enter Rest Area"}
+                alt={"Rest"}
               />
             </div>
             <div className="flex gap-4 items-center justify-end">
