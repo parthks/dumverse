@@ -16,9 +16,21 @@ local BattleHelpers = require("combat.battle_helpers")
 -- TODO: Distribute earnings after ending battle. Also if one player dies mid battle, the other player should get the earnings
 
 
-local function GetOpenBattlesOfUser(user_address: string): {Battle}
+local function GetOpenBattlesOfUser(user_address: string, timestamp: integer): {Battle}
     local battles = {}
     for _, battle in pairs(Battles) do
+        if not battle.ended and (battle.created_at + 300000) < timestamp then
+            print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY " )
+            BattleHelpers.internalLog(
+                    battle.id,
+                    timestamp,
+                    "CronTick - BattleEnded",
+                    "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
+                )
+            local battle_data = BattleHelpers.get(battle.id)
+            sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
+            battle.ended = true
+        end
         if not battle.ended then
             local user_addresses = {}
             -- get all player addresses in open battle
@@ -192,6 +204,7 @@ local function CronTick(msg: Message,npcTimer:integer)
                 local battle_data = BattleHelpers.get(battle.id)
                 sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
                 battle.ended = true
+                print("Battle ended: " .. tostring(battle.ended))
             end
         end
     end
@@ -213,7 +226,7 @@ local function newUserJoinHandler(msg: Message)
     local level = tonumber(level_input) as integer
 
 
-    local battles = GetOpenBattlesOfUser(msg.From)
+    local battles = GetOpenBattlesOfUser(msg.From, msg.Timestamp)
     if #battles > 0 then
         -- user is already in a battle
         print("user is already in a battle")
@@ -267,7 +280,7 @@ end
 
 
 local function getOpenBattlesHandler(msg: Message)
-    local battles = GetOpenBattlesOfUser(msg.From)
+    local battles = GetOpenBattlesOfUser(msg.From, msg.Timestamp)
     ao.send({ Target = msg.From, Data = json.encode(battles) })
 end
 

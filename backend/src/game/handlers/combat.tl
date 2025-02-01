@@ -20,6 +20,7 @@ local record DataRelatingSubProcessAssignToUser
     user_id: number
     level: number
     subProcess: string
+    timestamp: integer
 end
 
 global subProcessAssignToUsers: {number:DataRelatingSubProcessAssignToUser}
@@ -27,24 +28,37 @@ if not subProcessAssignToUsers then
     subProcessAssignToUsers = {}
 end
 
-local function assignSubProcessToUser(user_id:number, level: number) : string
+local function assignSubProcessToUser(user_id:number, level: number, timestamp: integer) : string
+
+    if subProcessAssignToUsers then
+        -- Cleanup old process assignments (remove if more than 5:30 minutes old)
+        for user, assignProcessData in pairs(subProcessAssignToUsers) do
+            if (assignProcessData.timestamp + 330000) < timestamp then
+                dbAdmin:exec(string.format([[UPDATE Users SET current_battle_id = NULL where id = %f]], user))
+                subProcessAssignToUsers[user] = nil
+            end
+        end 
+    end
 
     if subProcessAssignToUsers[user_id] ~= nil then
         return subProcessAssignToUsers[user_id].subProcess
     end
 
     if subProcessAssignToUsers then
+        -- Try reusing an existing process at the same level (must be within the last 1 minute)
         for _, assignProcessData in pairs(subProcessAssignToUsers) do
-            if assignProcessData.level == level then
-                subProcessAssignToUsers[user_id]={
+            if assignProcessData.level == level and assignProcessData.user_id ~= user_id and (timestamp - assignProcessData.timestamp) <= 60000 then  -- Must be from last 1 minute
+                subProcessAssignToUsers[user_id] = {
                     user_id = user_id,
                     level = level,
                     subProcess = assignProcessData.subProcess,
+                    timestamp = timestamp  -- Set the new timestamp for this user
                 }            
                 return assignProcessData.subProcess
             end
         end 
     end
+    
 
     local minValue = math.huge  -- Set initial minimum to a large value
     local minKey : string | nil = nil  -- Variable to store the key with the smallest value
@@ -64,6 +78,7 @@ local function assignSubProcessToUser(user_id:number, level: number) : string
             user_id = user_id,
             level = level,
             subProcess = minKey,
+            timestamp = timestamp 
         }            
         -- Optionally, increment the value for the assigned subprocess
         subProcesses[minKey] = subProcesses[minKey] + 1
@@ -377,7 +392,7 @@ local function enterNewCombatHandler(msg: Message)
 
     assert(enemies, "No enemies found for combat level: " .. combat_level)
 
-     local subProcess = assignSubProcessToUser(user_id, combat_level) 
+     local subProcess = assignSubProcessToUser(user_id, combat_level, msg.Timestamp) 
      local userAddress = dbAdmin:exec(string.format([[
         SELECT address FROM Users WHERE id = %f;
     ]], user_id))
