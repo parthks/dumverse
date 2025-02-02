@@ -177,6 +177,10 @@ export default function Combat() {
   const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
 
   useEffect(() => {
+    console.log("Effect Triggered! enteringNewBattle:", enteringNewBattle, "currentBattle:", currentBattle?.id);
+    if (!enteringNewBattle && failedToEnterBattle){
+      setEnteringNewBattle(true);
+    }
     let timeout: NodeJS.Timeout | null = null;
     let stopTimeout: NodeJS.Timeout | null = null;
 

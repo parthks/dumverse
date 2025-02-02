@@ -104,8 +104,14 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
     --        ]], user_id))
 
     local playerOriginalData = dbAdmin:exec(string.format([[
-        SELECT * from Users WHERE id = %f;
-     ]], user_id))[1] as UserData
+            SELECT * from Users WHERE id = %f;
+         ]], user_id))[1] as UserData
+
+    -- if #UserLeaderboardData == 0 then
+    --     dbAdmin:exec(string.format([[
+    --             INSERT INTO Leaderboard (user_id, name, nft_address, address ) VALUES (%d, "%s", %s, "%s");
+    --        ]], user_id, playerOriginalData.name, playerOriginalData.nft_address and string.format("'%s'", playerOriginalData.nft_address) or "NULL", playerOriginalData.address))
+    -- end
 
     local leaderboard: Leaderboard = {
         address = "",
@@ -122,6 +128,9 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
     }
 
     if isWin then
+        -- dbAdmin:exec(string.format([[
+        --     UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
+        -- ]], playerData.gold_balance - playerOriginalData.gold_balance, numberOfEnemies ,user_id))
         -- Winning scenario
         leaderboard.address = playerData.address
         leaderboard.name = playerData.name
@@ -132,6 +141,9 @@ local function processPlayerData(user_id: number, playerData: CombatUserData, is
         leaderboard.enemy_killed = numberOfEnemies
         leaderboard.death_streak = 1
     else
+        -- dbAdmin:exec(string.format([[
+        --     UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
+        -- ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
         -- Losing scenario
         leaderboard.address = playerData.address
         leaderboard.name = playerData.name
@@ -477,6 +489,7 @@ local function playerWonHandler(msg: Message)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
     local number_of_enemies: number = tonumber(msg.Tags.NumberOfEnemies)
 
+    -- processPlayerData(tonumber(user_id), playerData, true, number_of_enemies)
     local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
 
     ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
@@ -597,6 +610,7 @@ local function playerPerishedHandler(msg: Message)
 
     -- ao.send({Target = constants.RECORD_PROCESS_ID, Action = "Record.insertOrUpdateDataInLeaderBorad", UserId = tostring(user_id), Data = leaderboardJson})
 
+    -- processPlayerData(tonumber(user_id), playerData, false) 
     local leaderboard = processPlayerData(tonumber(user_id), playerData, false) as Leaderboard
 
     ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})

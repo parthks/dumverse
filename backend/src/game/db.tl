@@ -58,12 +58,15 @@ DROP TABLE IF EXISTS Leaderboard;
         address TEXT NOT NULL,
         gold_earned INTEGER DEFAULT 0,
         gold_lost INTEGER DEFAULT 0,
+        dumz_lost INTEGER DEFAULT 0,
         battle_win INTEGER DEFAULT 0,
         battle_lost INTEGER DEFAULT 0,
         enemy_killed INTEGER DEFAULT 0,
         player_death INTEGER DEFAULT 0,
         death_streak INTEGER DEFAULT 0,
-        pvp INTEGER DEFAULT 0
+        gold_win_in_pvp INTEGER DEFAULT 0,
+        dumz_win_in_pvp INTEGER DEFAULT 0,
+        pvp_wins INTEGER DEFAULT 0,
     );
 ]]
 

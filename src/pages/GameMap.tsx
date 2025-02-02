@@ -87,6 +87,8 @@ const GameMap = () => {
   // tempCurrentIslandLevel controls the level that the lamma is currently on
   // const [tempCurrentIslandLevel, setTempCurrentIslandLevel] = useState(currentIslandLevel);
   const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
+  const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
+  const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
 
@@ -209,6 +211,8 @@ const GameMap = () => {
                 // resultData.status == "Success"             
                 if (typeof(resultData.data.subprocess) === "string") {
                   setGameStatePage(GameStatePages.COMBAT);
+                  // console.log("Ashu :  enteringNewBattle: " + enteringNewBattle);
+                  // setEnteringNewBattle(true);
                 }
                 setEnterNewAreaLoading(false);
               }}
