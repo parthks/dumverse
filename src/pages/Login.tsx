@@ -11,6 +11,8 @@ import { useGameStore } from "@/store/useGameStore";
 import { LOGIN_VIDEO } from "@/lib/constants";
 import GameMap from "./GameMap";
 import Settings from "@/components/game/Settings";
+import { Play } from "lucide-react";
+import NewButton from "@/components/ui/NewButton";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -71,9 +73,9 @@ export default function App() {
       </audio> */}
       <div className="relative z-10 h-full w-full">
         {!playing && (
-          <div className="absolute top-[450px] left-1/2 transform -translate-x-1/2">
-            <ImgButton
-              src={"https://arweave.net/g1ZzJGgsgFLpm9oZ8pB1QsyPgGO_V_1nGrWVrQyUl2A"}
+          <div className="absolute text-[46px] w-96 top-[450px] left-1/2 transform -translate-x-1/2">
+            <button
+              className="button pl-6 pr-20 py-0 inline-flex"
               onClick={() => {
                 if (videoRef.current) {
                   videoRef.current.volume = localStorage.getItem("music-volume") ? parseFloat(localStorage.getItem("music-volume")!) : 1;
@@ -81,14 +83,16 @@ export default function App() {
                 }
                 setPlaying(true);
               }}
-              alt={"Play Game"}
-            />
+            >
+              <Play fill="white" size={40} className="mt-3 mr-2" /> PLAY
+            </button>
           </div>
         )}
 
         {!walletAddressID && playing && (
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-5 -right-5">
             <ConnectButton
+            className="px-20 py-3 text-3xl"
             // onClickAction={() => {
             //   playAudio();
             // }}
@@ -356,7 +360,9 @@ const FormData = () => {
         ) : (
           "loading..."
         )}
-        <ImgButton
+        <div className="absolute mb-7 w-1/2 left-[215px]">
+        <NewButton
+          className="px-12 py-3 text-3xl"
           disabled={loading}
           src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
           alt="Enter Dumverse"
@@ -367,6 +373,7 @@ const FormData = () => {
             handleRegister();
           }}
         />
+        </div>
       </div>
     </form>
   );
