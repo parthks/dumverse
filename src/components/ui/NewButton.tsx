@@ -25,7 +25,7 @@ export default function NewButton({
         await onClick(e);
         setIsLoading(false);
       }}
-      className={`${varient === "blue" ? "button" : "purple-button"} p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
+      className={`${varient === "purple" ? "purple-button": "button"} p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
         buttonDisabled ? "opacity-50 cursor-not-allowed" : "hover:scale-110 active:scale-95"
       } ${className}`}
     >
