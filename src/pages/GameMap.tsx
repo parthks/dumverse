@@ -186,7 +186,7 @@ const GameMap = () => {
       <div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
         <PlayerFrame />
       </div>
-      <div className="z-10 absolute bottom-4 left-[800px]">
+      <div className="z-10 absolute bottom-4 w-[450px] left-[700px]">
         {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 ? (
           <ImgButton
             disabled={enterNewAreaLoading}
@@ -201,7 +201,7 @@ const GameMap = () => {
           />
         ) : (
           tempCurrentIslandLevel != 0 && tempCurrentIslandLevel!=user?.current_spot && (
-            <ImgButton
+            <NewButton
               disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
               src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
               onClick={async () => {
@@ -213,7 +213,7 @@ const GameMap = () => {
                 }
                 setEnterNewAreaLoading(false);
               }}
-              className="shrink-0 mb-8"
+              className="py-4 bottom-1 px-10 text-3xl"
               alt={"Enter Combat"}
             />
           )
