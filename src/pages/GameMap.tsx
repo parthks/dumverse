@@ -178,7 +178,7 @@ const GameMap = () => {
       {questBookOpen && <QuestBook />}
 
       <div className="z-10 absolute top-4 left-[72%] w-[30%]">
-        <NewButton className='px-6 py-4 text-3xl' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
+        <NewButton className='px-9 py-4 text-3xl' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
@@ -219,7 +219,7 @@ const GameMap = () => {
           )
         )}
       </div>
-      <div className="z-10 absolute bottom-2 right-36 flex gap-2">
+      <div className="z-10 absolute bottom-1 right-24 w-[40%] flex gap-2">
         {/* <button
           className="bg-white text-black px-2 py-1 rounded-md"
           onClick={async () => {
@@ -263,7 +263,7 @@ const GameMap = () => {
           Map 3
         </button> */}
         {tempCurrentIslandLevel <= 27 ? (
-          <ImgButton src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} onClick={() => setIsPopupOpen(true)} alt={"Set Sail"} />
+          <NewButton className="bottom-1 px-14 py-2 text-xl" src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} onClick={() => setIsPopupOpen(true)} alt={"Set Sail"} />
         ) : (
           <></>
         )}
