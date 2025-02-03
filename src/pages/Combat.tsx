@@ -158,6 +158,18 @@ import { useEffect, useRef, useState, useMemo } from "react";
 //   id: 110,
 // } as any;
 
+/*
+
+enter new battle - get sub process id
+loop:
+  get open battles - from sub process id -- can take very long.
+    (maybe) if get open battles takes very long, can enter a new battle -- get a new sub process id
+  if no open battles, wait 5 seconds and try again
+  if no open battles, second time then set failedToEnterBattle to true
+  if open battles, set current battle
+
+*/
+
 export default function Combat() {
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
 
@@ -172,27 +184,29 @@ export default function Combat() {
 
   const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
-  
-  const [comabatLoadingScreenImageURL,setComabatLoadingScreenImageURL] = useState<string | null>(null);
+
+  const [comabatLoadingScreenImageURL, setComabatLoadingScreenImageURL] = useState<string | null>(null);
   const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
 
   useEffect(() => {
     console.log("Effect Triggered! enteringNewBattle:", enteringNewBattle, "currentBattle:", currentBattle?.id);
-    if (!enteringNewBattle && failedToEnterBattle){
+    if (!enteringNewBattle && failedToEnterBattle) {
       setEnteringNewBattle(true);
     }
     let timeout: NodeJS.Timeout | null = null;
     let stopTimeout: NodeJS.Timeout | null = null;
 
     const checkOpenBattles = async () => {
-      if (enteringNewBattle && !currentBattle?.id) {
-        console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-        const battle = await getOpenBattles();
-        if (!battle) {
-          // Schedule the next check in 1 second
-          if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(checkOpenBattles, 5000);
-        }
+      console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+      const battle = await getOpenBattles();
+
+      // check if promise is not resolved in 20 seconds
+      // const battlePromise = await Promise.race([battle, new Promise((resolve) => setTimeout(() => resolve(null), 20000))]);
+
+      if (!battle) {
+        // Schedule the next check in 1 second
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(checkOpenBattles, 5000);
       }
     };
 
@@ -221,17 +235,17 @@ export default function Combat() {
         clearTimeout(stopTimeout);
       }
     };
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle, hasBattleReady]);
+  }, [enteringNewBattle, hasBattleReady, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
-  useEffect(()=>{
-    if (comabatLoadingScreenImageURL === null){
+  useEffect(() => {
+    if (comabatLoadingScreenImageURL === null) {
       let savedData: number = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0");
       savedData = (savedData % Object.keys(COMBAT_LOADING_SCREEN).length) + 1;
       const url = COMBAT_LOADING_SCREEN[`scene${savedData}` as keyof typeof COMBAT_LOADING_SCREEN];
       setComabatLoadingScreenImageURL(url);
       localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
     }
-  },[])
+  }, []);
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentBattle?.id}`],
@@ -247,15 +261,12 @@ export default function Combat() {
   // if (enteringNewBattle && !currentBattle?.id) {
   // return <div>Entering a new battle...</div>;
   // }
-    if (!hasBattleReady || (enteringNewBattle && !currentBattle?.id)  ) {
-    
-    return( <div className="w-screen h-screen flex items-center justify-center bg-black">
-      <img
-        src={comabatLoadingScreenImageURL || ""}
-        alt="Entering a new battle..."
-        className="w-full h-full"
-      />
-    </div>);
+  if (!hasBattleReady || (enteringNewBattle && !currentBattle?.id)) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-black">
+        <img src={comabatLoadingScreenImageURL || ""} alt="Entering a new battle..." className="w-full h-full" />
+      </div>
+    );
   }
 
   if (failedToEnterBattle) {
@@ -302,8 +313,6 @@ export default function Combat() {
 }
 
 function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
-
-
   useBackgroundMusic(SOUNDS.BATTLE_AUDIO);
 
   // const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
@@ -320,7 +329,7 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   //       </div>
   //     </div>
   //   </div>
-    
+
   //   )
   // }
 

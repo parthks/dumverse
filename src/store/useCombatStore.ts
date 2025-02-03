@@ -23,7 +23,7 @@ interface CombatState {
   userDrinkPotion: () => void;
   goToMapFromBattle: () => void;
   hasBattleReady: boolean;
-  sendBattleReadyRequest:() => void;
+  sendBattleReadyRequest: () => void;
 }
 
 export const useCombatStore = create<CombatState>()(
@@ -54,16 +54,16 @@ export const useCombatStore = create<CombatState>()(
           process: get().subProcess,
         });
         const battles = resultData.data as Battle[];
-        console.log("Ashu : battles: "+JSON.stringify(battles));
+        console.log("Ashu : battles: " + JSON.stringify(battles));
         if (battles && battles.length > 0) {
           set({ currentBattle: battles?.[0], enteringNewBattle: false });
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
             useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);
           }
-          if (get().currentBattle && !get().currentBattle?.started){
+          if (get().currentBattle && !get().currentBattle?.started) {
             get().sendBattleReadyRequest();
           }
-          if (get().currentBattle && get().currentBattle?.started && Object.keys(get().currentBattle?.players || {}).length > 1){
+          if (get().currentBattle && get().currentBattle?.started && Object.keys(get().currentBattle?.players || {}).length > 1) {
             // console.log("Ashu : Combat screen stuck problem solved");
             get().sendBattleReadyRequest();
           }
@@ -131,7 +131,7 @@ export const useCombatStore = create<CombatState>()(
           ],
         });
         // console.log("Ashu :  dattt: "+JSON.stringify(resultData));
-        console.log("subProcess: "+JSON.stringify(resultData.data.subprocess));
+        console.log("subProcess: " + JSON.stringify(resultData.data.subprocess));
         set({ subProcess: resultData.data.subprocess });
         set({ hasBattleReady: false });
         return resultData;
@@ -235,15 +235,15 @@ export const useCombatStore = create<CombatState>()(
         const isAlive = get().currentBattle?.players?.[user_id]?.health ?? 0 > 0;
         if (isAlive) {
           await useGameStore.getState().refreshUserData();
-          set({ currentBattle: null, loading: false, hasBattleReady:false });
+          set({ currentBattle: null, loading: false, hasBattleReady: false });
           useGameStore.getState().goToGameMap();
         } else {
           await useGameStore.getState().goToTown(true);
-          set({ currentBattle: null, loading: false, hasBattleReady:false });
+          set({ currentBattle: null, loading: false, hasBattleReady: false });
         }
       },
-      hasBattleReady:false,
-      sendBattleReadyRequest: async() => {
+      hasBattleReady: false,
+      sendBattleReadyRequest: async () => {
         const battle_id = get().currentBattle?.id;
         if (!battle_id) return;
         const resultData = await sendAndReceiveGameMessage({
@@ -258,10 +258,10 @@ export const useCombatStore = create<CombatState>()(
             },
           ],
           process: get().subProcess,
-        }); 
+        });
         // console.log("Ashu : BatteReady=> "+JSON.stringify(resultData));
         set({ hasBattleReady: resultData.data.hasBattleBegun });
-      }
+      },
     }),
     {
       name: "Combat Store",
