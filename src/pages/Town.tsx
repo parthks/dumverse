@@ -290,6 +290,7 @@ export default function Town() {
 
       {(user?.address == "yWEDs-sho-5Ka7ql_Ov71GNFdHqLspekxfhAo1bcqtU" ||
         user?.address == "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go" ||
+        user?.address == "OGNCZwB71ZEP5ftJBKi2w1ueGaVh3KzBuzxvW6KqeDw" ||
         user?.address == "jddq2gt8n-F2KNO2I67qjDAR1dSeL6ZwYtd3GrmmpTg") && (
         <div className="absolute w-[8%] h-[5%] top-[2vh] left-[1vw] z-50">
           {/* <ImgButton
