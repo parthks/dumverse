@@ -360,7 +360,7 @@ const FormData = () => {
         ) : (
           "loading..."
         )}
-        <div className="absolute mb-7 w-1/2 left-[215px]">
+        <div className="absolute mt-8 w-1/2 left-[215px]">
         <NewButton
           className="px-12 py-3 text-3xl"
           disabled={loading}
