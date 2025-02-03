@@ -132,6 +132,20 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
     z-index: 999;  /* Position the button to the right */
 }
 
+.purple-button {
+    font-family: 'CustomFont';
+    background: linear-gradient(90deg, #6B3DF6 10%, #AE75EB 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color 100s;
+    position: absolute;
+    /* top: 30px; */
+    right: 50px;
+    z-index: 999;  /* Position the button to the right */
+}
+
 .button:hover {
     transform: scale(1.08);
     transition: 300ms;

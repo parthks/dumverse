@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/store/useAppStore";
-// import ImgButton from "../ui/imgButton";
 import NewButton from "../ui/NewButton";
 
 export default function ConnectButton({ className, onClickAction }: { className?: string; onClickAction?: () => void }) {
@@ -8,6 +7,7 @@ export default function ConnectButton({ className, onClickAction }: { className?
   if (walletAddressID) return <div>Connected</div>;
   return (
     <NewButton
+      varient="blue"
       src={"https://arweave.net/3Bvp1vK2_SRYeeA2SCVxFip_98QqCt8lpdBacII0wMg"}
       alt="Connect"
       className={className}

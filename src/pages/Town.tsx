@@ -8,6 +8,7 @@ import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/react-canvas";
+import NewButton from "@/components/ui/NewButton";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -314,28 +315,36 @@ export default function Town() {
 
       {/* bottom buttons bar */}
       {!chatOpen && (
-        <div className="z-50 absolute bottom-0 w-full p-4">
-          <div className="flex justify-between items-center relative">
-            <ImgButton
+        <div className="z-50 absolute bottom-1 w-full px-2 py-5">
+          <div>
+            <div className="relative w-[320px] bottom-2">
+            <NewButton
+              varient="blue"
+              className="px-11 py-4 text-3xl left-1"
               src={
                 "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
               }
               onClick={() => goToGameMap(true)}
-              alt={"Return to Town"}
+              alt={"Leave Town"}
             />
-            <div className="absolute left-[43%] translate-x-[0%]">
-              <ImgButton
+            </div>
+            <div className="absolute left-[60%] top-3 translate-x-[0%]">
+              <NewButton
+                varient="purple"
+                className="px-24 py-4 text-3xl mr-3"
                 src={
                   "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
                 }
                 onClick={() => {
                   handleBuildingSelect(GameStatePages.REST_AREA);
                 }}
-                alt={"Enter Rest Area"}
+                alt={"Rest"}
               />
             </div>
-            <div className="flex gap-4 items-center justify-end">
-              <ImgButton
+            <div className="flex left-1/2 items-center justify-end">
+              <NewButton
+              varient="blue"
+              className="px-24 py-4 text-3xl mr-3"
                 src={
                   "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
                 }

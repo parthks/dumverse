@@ -362,6 +362,7 @@ const FormData = () => {
         )}
         <div className="absolute mt-8 w-1/2 left-[215px]">
         <NewButton
+          varient="blue"
           className="px-12 py-3 text-3xl"
           disabled={loading}
           src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"

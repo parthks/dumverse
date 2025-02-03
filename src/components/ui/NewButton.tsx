@@ -3,11 +3,13 @@ import { useState } from "react";
 export default function NewButton({
   disabled,
   src,
+  varient,
   onClick,
   alt,
   className,
 }: {
   disabled?: boolean;
+  varient?: String,
   src?: string;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   alt: string;
@@ -23,7 +25,7 @@ export default function NewButton({
         await onClick(e);
         setIsLoading(false);
       }}
-      className={`button img-button p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
+      className={`${varient === "blue" ? "button" : "purple-button"} p-0 border-none bg-transparent cursor-pointer transition-transform duration-200 ${
         buttonDisabled ? "opacity-50 cursor-not-allowed" : "hover:scale-110 active:scale-95"
       } ${className}`}
     >
