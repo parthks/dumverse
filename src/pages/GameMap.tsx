@@ -3,6 +3,7 @@ import { PlayerFrame } from "@/components/game/PlayerFrame";
 import QuestBook from "@/components/game/QuestBook";
 import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
+import NewButton from "@/components/ui/NewButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
 import { getInteractivePoints } from "@/lib/utils";
@@ -176,8 +177,8 @@ const GameMap = () => {
 
       {questBookOpen && <QuestBook />}
 
-      <div className="z-10 absolute top-4 right-4">
-        <ImgButton src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
+      <div className="z-10 absolute top-4 left-[72%] w-[30%]">
+        <NewButton className='px-6 py-4 text-3xl' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
