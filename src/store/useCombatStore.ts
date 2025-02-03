@@ -113,7 +113,7 @@ export const useCombatStore = create<CombatState>()(
       enterNewBattle: async (level: number) => {
         const user_id = useGameStore.getState().user?.id;
         if (!user_id) throw new Error("User not found");
-        set({ enteringNewBattle: true });
+        set({ enteringNewBattle: true, currentBattle: null, hasBattleReady: false, subProcess: "" });
         const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
@@ -133,7 +133,6 @@ export const useCombatStore = create<CombatState>()(
         // console.log("Ashu :  dattt: "+JSON.stringify(resultData));
         console.log("subProcess: " + JSON.stringify(resultData.data.subprocess));
         set({ subProcess: resultData.data.subprocess });
-        set({ hasBattleReady: false });
         return resultData;
       },
       userAttack: async (npc_id: string) => {
