@@ -170,13 +170,12 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
       {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
       <div className="absolute bottom-4 right-4 flex gap-4 items-center justify-end">
-        <ImgButton
-          src="https://arweave.net/F5cG9iaRzliwIizUPBJ8UXWT6y5HUkFvB87NYLOs5tU"
-          alt="Open Tutorial Video"
+        <button 
+          className="bg-gradient-to-r from-[#E730CF] via-[#9524D6] to-[#2C14E0] text-3xl px-20 py-4 text-white scale-95 hover:scale-105 duration-300  transform rounded-[40px]   shadow-[inset_0px_0px_10px_rgba(0,0,0,0.2)]"
           onClick={() => {
             setShowTutorial(true);
           }}
-        />
+        >Tutorial </button>
         <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
       </div>
       {profileLoading ? (
@@ -360,10 +359,10 @@ const FormData = () => {
         ) : (
           "loading..."
         )}
-        <div className="absolute mt-8 w-1/2 left-[215px]">
+        <div className="absolute mt-8 w-1/2 left-[200px]">
         <NewButton
           varient="blue"
-          className="px-12 py-3 text-3xl"
+          className="px-8 py-3 text-3xl"
           disabled={loading}
           src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
           alt="Enter Dumverse"
