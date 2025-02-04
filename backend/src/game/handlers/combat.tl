@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4"]=0,
-        ["lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks"]=0,
-        ["gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk"]=0,
-        ["G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM"]=0,
-        ["6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk"]=0,
+        ["RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8"]=0,
+        ["az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ"]=0,
+        ["sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4"]=0,
+        ["z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E"]=0,
+        ["s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM"]=0,
     }
 end
 
@@ -97,74 +97,74 @@ end
 --     return false
 -- end
 
-local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean, numberOfEnemies: number): Leaderboard
+-- local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean, numberOfEnemies: number): Leaderboard
 
-    -- local UserLeaderboardData = dbAdmin:exec(string.format([[
-    --          SELECT * from Leaderboard WHERE user_id = %d;
-    --        ]], user_id))
+--     -- local UserLeaderboardData = dbAdmin:exec(string.format([[
+--     --          SELECT * from Leaderboard WHERE user_id = %d;
+--     --        ]], user_id))
 
-    local playerOriginalData = dbAdmin:exec(string.format([[
-            SELECT * from Users WHERE id = %f;
-         ]], user_id))[1] as UserData
+--     local playerOriginalData = dbAdmin:exec(string.format([[
+--             SELECT * from Users WHERE id = %f;
+--          ]], user_id))[1] as UserData
 
-    -- if #UserLeaderboardData == 0 then
-    --     dbAdmin:exec(string.format([[
-    --             INSERT INTO Leaderboard (user_id, name, nft_address, address ) VALUES (%d, "%s", %s, "%s");
-    --        ]], user_id, playerOriginalData.name, playerOriginalData.nft_address and string.format("'%s'", playerOriginalData.nft_address) or "NULL", playerOriginalData.address))
-    -- end
+--     -- if #UserLeaderboardData == 0 then
+--     --     dbAdmin:exec(string.format([[
+--     --             INSERT INTO Leaderboard (user_id, name, nft_address, address ) VALUES (%d, "%s", %s, "%s");
+--     --        ]], user_id, playerOriginalData.name, playerOriginalData.nft_address and string.format("'%s'", playerOriginalData.nft_address) or "NULL", playerOriginalData.address))
+--     -- end
 
-    local leaderboard: Leaderboard = {
-        address = "",
-        name = "",
-        nft_address = nil,
-        gold_earned = 0,
-        gold_lost = 0,
-        battle_win = 0,
-        battle_lost = 0,
-        enemy_killed = 0,
-        player_death = 0,
-        death_streak = 0,
-        death_streak_ended = false,
-    }
+--     local leaderboard: Leaderboard = {
+--         address = "",
+--         name = "",
+--         nft_address = nil,
+--         gold_earned = 0,
+--         gold_lost = 0,
+--         battle_win = 0,
+--         battle_lost = 0,
+--         enemy_killed = 0,
+--         player_death = 0,
+--         death_streak = 0,
+--         death_streak_ended = false,
+--     }
 
-    if isWin then
-        -- dbAdmin:exec(string.format([[
-        --     UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
-        -- ]], playerData.gold_balance - playerOriginalData.gold_balance, numberOfEnemies ,user_id))
-        -- Winning scenario
-        leaderboard.address = playerData.address
-        leaderboard.name = playerData.name
-        leaderboard.nft_address = playerData.nft_address 
-        leaderboard.gold_earned = playerData.gold_balance - playerOriginalData.gold_balance
-        -- leaderboard.token_earned = playerData.dumz_balance    
-        leaderboard.battle_win = 1
-        leaderboard.enemy_killed = numberOfEnemies
-        leaderboard.death_streak = 1
-    else
-        -- dbAdmin:exec(string.format([[
-        --     UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
-        -- ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
-        -- Losing scenario
-        leaderboard.address = playerData.address
-        leaderboard.name = playerData.name
-        leaderboard.nft_address = playerData.nft_address
-        leaderboard.gold_lost = playerOriginalData.gold_balance 
-        -- leaderboard.token_lost = playerOriginalData.dumz_balance as integer
-        leaderboard.battle_lost = 1
-        leaderboard.player_death = 1
-        leaderboard.death_streak_ended = true
-    end
+--     if isWin then
+--         -- dbAdmin:exec(string.format([[
+--         --     UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
+--         -- ]], playerData.gold_balance - playerOriginalData.gold_balance, numberOfEnemies ,user_id))
+--         -- Winning scenario
+--         leaderboard.address = playerData.address
+--         leaderboard.name = playerData.name
+--         leaderboard.nft_address = playerData.nft_address 
+--         leaderboard.gold_earned = playerData.gold_balance - playerOriginalData.gold_balance
+--         -- leaderboard.token_earned = playerData.dumz_balance    
+--         leaderboard.battle_win = 1
+--         leaderboard.enemy_killed = numberOfEnemies
+--         leaderboard.death_streak = 1
+--     else
+--         -- dbAdmin:exec(string.format([[
+--         --     UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
+--         -- ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
+--         -- Losing scenario
+--         leaderboard.address = playerData.address
+--         leaderboard.name = playerData.name
+--         leaderboard.nft_address = playerData.nft_address
+--         leaderboard.gold_lost = playerOriginalData.gold_balance 
+--         -- leaderboard.token_lost = playerOriginalData.dumz_balance as integer
+--         leaderboard.battle_lost = 1
+--         leaderboard.player_death = 1
+--         leaderboard.death_streak_ended = true
+--     end
 
-    -- Check for NFTs associated with the player
-    -- local numberOfNFTsID = dbAdmin:exec(string.format([[
-    --     SELECT * from Users WHERE address = %s;
-    --  ]], playerOriginalData.address))
-    -- if isNestedTableNotEmpty(numberOfNFTsID) then
-    --     leaderboard.player_with_nft = #numberOfNFTsID
-    -- end
+--     -- Check for NFTs associated with the player
+--     -- local numberOfNFTsID = dbAdmin:exec(string.format([[
+--     --     SELECT * from Users WHERE address = %s;
+--     --  ]], playerOriginalData.address))
+--     -- if isNestedTableNotEmpty(numberOfNFTsID) then
+--     --     leaderboard.player_with_nft = #numberOfNFTsID
+--     -- end
 
-    return leaderboard
-end
+--     return leaderboard
+-- end
 
 
 local function removeUsedPotion(playerData: CombatUserData, userId: string)
@@ -220,13 +220,22 @@ end
 local function enterNewCombatHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
     local combat_level = tonumber(msg.Tags.Level) as integer
+    local overwrite_the_battle_on_same_spot = msg.Tags.OverWriteTheBattleOnSameSpot
     assert(type(combat_level) == "number", "Level is required")
     assert(type(combat_level) == "number" and math.floor(combat_level) == combat_level, "Combat level must be an integer")
     print("Combat Level: " .. combat_level)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
-    assert(combat_level ~= current_spot, "Battle is complete for this spot")
 
+    if overwrite_the_battle_on_same_spot == "yes" then
+        local assignSubProcessData = subProcessAssignToUsers[user_id]
+        local player_battle_id = dbAdmin:exec(string.format([[SELECT current_battle_id from Users WHERE id = %d]], user_id)) [1]
+        ao.send({Target= assignSubProcessData.subProcess, Action="Battle.ForceDeleteBattle", BattleId= tostring(player_battle_id.current_battle_id)})
+        subProcessAssignToUsers[user_id] = nil
+        dbAdmin:exec(string.format([[UPDATE Users SET current_battle_id = NULL WHERE id = %d]], user_id)) 
+    else
+        assert(combat_level ~= current_spot, "Battle is complete for this spot")
+    end
     assert(userData.health > 0, "User must have health")
     assert(userData.stamina > 0, "User must have stamina")
 
@@ -484,17 +493,44 @@ local function playerWonHandler(msg: Message)
         assert(found == true, "Only Combat process can send this message")
     end
 
-    local user_id = msg.Tags.UserId
+    local user_id = tonumber(msg.Tags.UserId)
     local level = tonumber(msg.Tags.Level)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
     local number_of_enemies: number = tonumber(msg.Tags.NumberOfEnemies)
+    local number_of_players: number = tonumber(msg.Tags.NumberOfPlayers) or 0
+    local gold_win_in_pvp: number = tonumber(msg.Tags.GoldWinInPvP)
+    local dumz_win_in_pvp: number = tonumber(msg.Tags.DumzWinInPvP)
+    
 
     -- processPlayerData(tonumber(user_id), playerData, true, number_of_enemies)
-    local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
+    -- local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
 
-    ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
+    -- ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
 
-    print("Level: " .. level)
+    local UserLeaderboardData = dbAdmin:exec(string.format([[
+             SELECT * from Leaderboard WHERE user_id = %d;
+        ]], user_id))
+
+    local playerOriginalData = dbAdmin:exec(string.format([[
+            SELECT * from Users WHERE id = %f;
+        ]], user_id))[1] as UserData 
+
+      if #UserLeaderboardData == 0 then
+        dbAdmin:exec(string.format([[
+                INSERT INTO Leaderboard (user_id, name, nft_address, address ) VALUES (%d, "%s", %s, "%s");
+           ]], user_id, playerOriginalData.name, playerOriginalData.nft_address and string.format("'%s'", playerOriginalData.nft_address) or "NULL", playerOriginalData.address))
+    end 
+    
+    if number_of_players > 1 then
+      dbAdmin:exec(string.format([[
+            UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1, gold_win_in_pvp = gold_win_in_pvp + %d, dumz_win_in_pvp = dumz_win_in_pvp + %d, pvp_wins = pvp_wins + 1 WHERE user_id = %d ;
+        ]], playerData.gold_balance - playerOriginalData.gold_balance, number_of_enemies , gold_win_in_pvp, dumz_win_in_pvp, user_id))
+    else
+        dbAdmin:exec(string.format([[
+            UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
+        ]], playerData.gold_balance - playerOriginalData.gold_balance, number_of_enemies ,user_id))
+    end
+
     -- update Users table with health, stamina, gold_balance, dumz_balance
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, total_trunk_token = %f,
@@ -508,14 +544,14 @@ local function playerWonHandler(msg: Message)
     playerData.special_item_heart,
     user_id))
     
-    removeUsedPotion(playerData,user_id)
-    local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
+    removeUsedPotion(playerData,tostring(user_id))
+    local subProcessAssigned =  subProcessAssignToUsers[user_id].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
-    subProcessAssignToUsers[USER_ID]=nil
+    subProcessAssignToUsers[user_id]=nil
 
-    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], tonumber(user_id))) [1] as UserData
-    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
+    print("Done")
 end
 
 local function playerRanAwayHandler(msg: Message)
@@ -574,7 +610,7 @@ local function playerPerishedHandler(msg: Message)
         assert(found == true, "Only Combat process can send this message")
     end
 
-    local user_id = msg.Tags.UserId
+    local user_id = tonumber(msg.Tags.UserId)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
 
 --     local playerOrginalData = dbAdmin:exec(string.format([[
@@ -611,23 +647,41 @@ local function playerPerishedHandler(msg: Message)
     -- ao.send({Target = constants.RECORD_PROCESS_ID, Action = "Record.insertOrUpdateDataInLeaderBorad", UserId = tostring(user_id), Data = leaderboardJson})
 
     -- processPlayerData(tonumber(user_id), playerData, false) 
-    local leaderboard = processPlayerData(tonumber(user_id), playerData, false) as Leaderboard
+    -- local leaderboard = processPlayerData(tonumber(user_id), playerData, false) as Leaderboard
 
-    ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
+    -- ao.send({Target = constants.RECORD_PROCESS_ID,Action = "Record.insertOrUpdateDataInLeaderBorad", Data = json.encode(leaderboard), UserId = tostring(user_id)})
 
+    local UserLeaderboardData = dbAdmin:exec(string.format([[
+           SELECT * from Leaderboard WHERE user_id = %d;
+        ]], user_id))
+
+    local playerOriginalData = dbAdmin:exec(string.format([[
+            SELECT * from Users WHERE id = %f;
+        ]], user_id))[1] as UserData 
+
+    if #UserLeaderboardData == 0 then
+            dbAdmin:exec(string.format([[
+                INSERT INTO Leaderboard (user_id, name, nft_address, address ) VALUES (%d, "%s", %s, "%s");
+             ]], user_id, playerOriginalData.name, playerOriginalData.nft_address and string.format("'%s'", playerOriginalData.nft_address) or "NULL", playerOriginalData.address))
+    end 
+
+    dbAdmin:exec(string.format([[
+            UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
+        ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
+     
     -- update Users table
     dbAdmin:exec(string.format([[
         UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0, last_regenerate_time = %f WHERE id = %f;
     ]], msg.Timestamp, user_id))
 
-    removeUsedPotion(playerData,user_id)
-    local USER_ID = tonumber(user_id)
-    local subProcessAssigned =  subProcessAssignToUsers[USER_ID].subProcess
+    removeUsedPotion(playerData,tostring(user_id))
+    -- local USER_ID = tonumber(user_id)
+    local subProcessAssigned =  subProcessAssignToUsers[user_id].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
-    subProcessAssignToUsers[USER_ID]=nil
+    subProcessAssignToUsers[user_id]=nil
 
     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
-    helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
+    helpers.sendUserDataToBackupProcess(user_id, user_data)
 end
 
 local function removePlayerFromBattleHandler(msg: Message)
@@ -664,12 +718,12 @@ end
 local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
    subProcesses = {
-    ["Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4"]=0,
-    ["lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks"]=0,
-    ["gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk"]=0,
-    ["G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM"]=0,
-    ["6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk"]=0,
-   }
+    ["RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8"]=0,
+    ["az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ"]=0,
+    ["sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4"]=0,
+    ["z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E"]=0,
+    ["s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM"]=0,
+    }
    subProcessAssignToUsers={}
 end
 

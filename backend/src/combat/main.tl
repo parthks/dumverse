@@ -459,13 +459,28 @@ local function userIsReadyHandler(msg: Message)
     
     local battle=Battles[battle_id]
     local npcs = battle.npcs as {CombatEnemyData}
+    battle.started=true
+    ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
     for _, npc in ipairs(npcs) do
         battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
     end
-    battle.started=true
-    ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
 end    
 
+local function forceDeleteBattleHandler(msg: Message)
+    assert(msg.From == GAME_PROCESS_ID, "You can't call this handler")
+    local battle_id = tonumber(msg.Tags.BattleId) as integer
+    local battle_data = BattleHelpers.get(battle_id)
+    Battles[battle_id].ended = true
+    print("battle " .. battle_id .. " - ENDED. The getOpenBattlesHandler handler has been running for a long time, so we are terminating the battle now.")
+    BattleHelpers.internalLog(
+        battle_id,
+        msg.Timestamp,
+        "forceDeleteBattleHandler - Deleting Battle",
+        "Battle ended due to getOpenBattlesHandler handler has been running. Last active timestamp: " .. battle_data.created_at
+    )
+    sendBatteDataToHistoryProcess(battle_id,battle_data,"yes")
+    Battles[battle_id] = nil
+end
 
 -- Add handlers
 Handlers.add("Battle.NewUserJoin", Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), newUserJoinHandler)
@@ -475,6 +490,7 @@ Handlers.add("Battle.DrinkPotion", Handlers.utils.hasMatchingTag("Action", "Batt
 Handlers.add("Battle.UserAttack", Handlers.utils.hasMatchingTag("Action", "Battle.UserAttack"), userAttackHandler)
 Handlers.add("Battle.UserRun", Handlers.utils.hasMatchingTag("Action", "Battle.UserRun"), userRunHandler)
 Handlers.add("Battle.UserIsReady", Handlers.utils.hasMatchingTag("Action", "Battle.UserIsReady"), userIsReadyHandler)
+Handlers.add("Battle.ForceDeleteBattle", Handlers.utils.hasMatchingTag("Action", "Battle.ForceDeleteBattle"), forceDeleteBattleHandler)
 
 
 -- CronTick handler will get called every 10 seconds

@@ -9,10 +9,10 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
-  hash: bab3dab99f3f232c01c77843c85934ba92e5e818b49842f50815509eee74e264
+  hash: 101583aecfa4f19c6691bc7a2a00de23bd9d2196d1a8d6b4d3eaa3a59b09c198
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: 4072f5da8b2e8f390f0a33e382260bccfe54a585db32fa04d24fa68a2dffffef
+  hash: b84631bcf1475b8963a0d5c001877fbb3bf7cc2f5cc134381bbd3d0944889cbc
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
   hash: ef6860830433bd149827b3e2a3b8925a1d939ae7f852e4c616af9d349f94f371
@@ -20,17 +20,17 @@ bank:
   processId: Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870
   hash: cbeb291585741e8c276011e794746f91a81e24025deb8848c4d9517ea6883ad8
 combat:
-  processId: Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4
-  hash: 49f9509cd552af26cd2a980ba923cf44434165e0cb1b661e89c833b58ff5ba17
+  processId: RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8
+  hash: 0fb2e6934348ad9f8dee3d8ed8d9cd81fc2e481fc2dc7a2ae8903191e1cadd82
 combat2:
-  processId: lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks
-  hash: 49f9509cd552af26cd2a980ba923cf44434165e0cb1b661e89c833b58ff5ba17
+  processId: az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ
+  hash: 0fb2e6934348ad9f8dee3d8ed8d9cd81fc2e481fc2dc7a2ae8903191e1cadd82
 combat3:
-  processId: gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk
-  hash: 49f9509cd552af26cd2a980ba923cf44434165e0cb1b661e89c833b58ff5ba17
+  processId: sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4
+  hash: 0fb2e6934348ad9f8dee3d8ed8d9cd81fc2e481fc2dc7a2ae8903191e1cadd82
 combat4:
-  processId: G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM
-  hash: 49f9509cd552af26cd2a980ba923cf44434165e0cb1b661e89c833b58ff5ba17
+  processId: z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E
+  hash: 0fb2e6934348ad9f8dee3d8ed8d9cd81fc2e481fc2dc7a2ae8903191e1cadd82
 combat5:
-  processId: 6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk
-  hash: 49f9509cd552af26cd2a980ba923cf44434165e0cb1b661e89c833b58ff5ba17
+  processId: s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM
+  hash: 0fb2e6934348ad9f8dee3d8ed8d9cd81fc2e481fc2dc7a2ae8903191e1cadd82

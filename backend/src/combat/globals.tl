@@ -42,7 +42,7 @@ global function sendBatteDataToHistoryProcess(battle_Id:integer,battle_data: Bat
         BattleId = tostring(battle_Id)
     })
     -- TODO: remove battle from Battles table
-    -- Battles[battle_Id] = nil
+    Battles[battle_Id] = nil
 end    
 
 

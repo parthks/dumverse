@@ -49,7 +49,6 @@ global USERS_TABLE: string = [[
 
 
 global LEADERBOARD_TABLE: string = [[
-DROP TABLE IF EXISTS Leaderboard;
     CREATE TABLE IF NOT EXISTS Leaderboard (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
@@ -66,7 +65,7 @@ DROP TABLE IF EXISTS Leaderboard;
         death_streak INTEGER DEFAULT 0,
         gold_win_in_pvp INTEGER DEFAULT 0,
         dumz_win_in_pvp INTEGER DEFAULT 0,
-        pvp_wins INTEGER DEFAULT 0,
+        pvp_wins INTEGER DEFAULT 0
     );
 ]]
 
@@ -210,6 +209,7 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
+    dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
     dbAdmin.db:exec(LEADERBOARD_TABLE)
     print("end")
 end

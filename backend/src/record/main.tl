@@ -95,11 +95,11 @@ end
 global SubProcesses: {string}
 if not SubProcesses then
     SubProcesses = {
-        "Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4",
-        "lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks",
-        "gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk",
-        "G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM",
-        "6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk",
+        "RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8",
+        "az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ",
+        "sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4",
+        "z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E",
+        "s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM",
     }
 end
 
@@ -218,11 +218,11 @@ local function resetRecordSubprocessesHandler(msg:Message)
     -- dbAdmin:exec(string.format([[TRUNCATE TABLE Leaderboard]]))
     -- DBInit()
     SubProcesses = {
-        "Ww2Y-08Ge7-18F2mzwDmol1srlx8Qit4eQffSEhz3h4",
-        "lXIBTnbJ6VLgMUwZdqVhbp6xWAwSrsKCD5nC6Y3EJks",
-        "gKH-Ap_FEyQ6JUmyw0ErQ85rv4b_1H19NFNwXMjW0Yk",
-        "G6DrOUHaX2uXY1yVbkwA7zwui04UHqAsmsX_ZvM_xiM",
-        "6NyZct0UuzTFO_UkoXaX1mj6grCRWrqwR17sKDBr_gk",
+        "RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8",
+        "az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ",
+        "sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4",
+        "z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E",
+        "s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM",
     }
     print("Done successfully")
 end
