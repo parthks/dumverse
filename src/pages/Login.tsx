@@ -73,9 +73,9 @@ export default function App() {
       </audio> */}
       <div className="relative z-10 h-full w-full">
         {!playing && (
-          <div className="absolute text-[46px] w-96 top-[450px] left-1/2 transform -translate-x-1/2">
+          <div className="absolute text-[53px] w-96 top-[450px] left-1/2 transform -translate-x-1/2">
             <button
-              className="button pl-6 pr-20 py-0 inline-flex"
+              className="button pl-6 pr-20 pt-1 rounded-xl inline-flex"
               onClick={() => {
                 if (videoRef.current) {
                   videoRef.current.volume = localStorage.getItem("music-volume") ? parseFloat(localStorage.getItem("music-volume")!) : 1;
@@ -84,7 +84,7 @@ export default function App() {
                 setPlaying(true);
               }}
             >
-              <Play fill="white" size={40} className="mt-3 mr-2" /> PLAY
+              <Play fill="white" size={55} className="mt-2 mr-2 " /> PLAY
             </button>
           </div>
         )}
