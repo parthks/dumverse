@@ -116,7 +116,61 @@ a, button, input[type="submit"], input[type="button"], input[type="reset"], [rol
   cursor: url("https://arweave.net/lLFjhOhZSscxaOmDmKEZk6CJB-wn6d25JNpbmFErhIo"), pointer !important;
 }
 
+.button {
+    font-family: 'CustomFont';
+    /* padding: 8px 79px; */
+    /* font-size: 40px; */
+    color: #ffffff;
+    background: linear-gradient(to right, #9cd7ed, #029dd1);
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color 100s;
+    position: absolute;
+    /* top: 30px; */
+    right: 50px;
+    z-index: 999;  /* Position the button to the right */
+}
 
+.purple-button {
+    font-family: 'CustomFont';
+    background: linear-gradient(90deg, #6B3DF6 10%, #AE75EB 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color 100s;
+    position: absolute;
+    /* top: 30px; */
+    right: 50px;
+    z-index: 999;  /* Position the button to the right */
+}
+
+.purple-button:hover {
+    transform: scale(1.08);
+    transition: 300ms;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.purple-button:active {
+    transform: scale(0.95); 
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3);  
+    cursor: pointer;
+}
+
+.button:hover {
+    transform: scale(1.08);
+    transition: 300ms;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.button:active {
+    transform: scale(0.95); 
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.3);  
+    cursor: pointer;
+}
 
 @font-face {
   font-family: 'CustomFont';

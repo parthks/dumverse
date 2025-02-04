@@ -2,6 +2,7 @@ import ImgButton from "../ui/imgButton";
 import VolumeSlider from "./VolumeSlider";
 import audioManager from "../../utils/audioManager";
 import { useEffect, useState } from "react";
+import NewButton from "../ui/NewButton";
 
 export default function Settings({ setIsSettingsOpen }: { setIsSettingsOpen: (value: boolean) => void }) {
   const [sfxVolume, setSfxVolume] = useState(audioManager.getSFXVolume());
@@ -53,13 +54,14 @@ export default function Settings({ setIsSettingsOpen }: { setIsSettingsOpen: (va
               }}
               className="mx-auto"
             />
-
-            <ImgButton 
+            <div className="relative mt-20 right-[30%]">
+            <NewButton
               src="https://arweave.net/N0HMTFZFf0oMnCKtjkzXPGlGCaIKcxNqjGtpht-YLI4"
-              alt="Close Settings"
-              className="w-[250px] mx-auto mt-16"
+              alt="Confirm"
+              className="py-4 px-14 text-3xl"
               onClick={() => setIsSettingsOpen(false)}
             />
+            </div>
           </div>
         </div>
       </div>
