@@ -43,7 +43,7 @@ const ReturnToTown = React.memo(() => {
     <>
       {current_spot == 0 ? (
         <NewButton
-          className="px-12 py-3 text-3xl"
+          className="px-8 py-4 text-3xl"
           src={
             "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
           }
@@ -54,7 +54,7 @@ const ReturnToTown = React.memo(() => {
         />
       ) : (
         <NewButton
-          className="px-12 py-3 text-3xl"
+          className="px-8 py-4 text-3xl"
           src={
             "https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"
           }
