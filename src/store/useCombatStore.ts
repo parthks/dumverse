@@ -60,14 +60,7 @@ export const useCombatStore = create<CombatState>()(
           if (useGameStore.getState().GameStatePage !== GameStatePages.COMBAT) {
             useGameStore.getState().setGameStatePage(GameStatePages.COMBAT);
           }
-          if (get().currentBattle && !get().currentBattle?.started) {
-            get().sendBattleReadyRequest();
-          }
-          if (get().currentBattle && get().currentBattle?.started && Object.keys(get().currentBattle?.players || {}).length > 1) {
-            // console.log("Ashu : Combat screen stuck problem solved");
-            get().sendBattleReadyRequest();
-          }
-          console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+          console.log("found open battle => current battle is set");
           return battles?.[0];
         }
         set({ loading: false });

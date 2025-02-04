@@ -178,6 +178,7 @@ export default function Combat() {
 
   const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
   const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
+  const sendBattleReadyRequest = useCombatStore((state) => state.sendBattleReadyRequest);
   // const combatLoading = useCombatStore((state) => state.loading);
 
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -188,53 +189,44 @@ export default function Combat() {
   const [comabatLoadingScreenImageURL, setComabatLoadingScreenImageURL] = useState<string | null>(null);
   const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
 
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
   useEffect(() => {
-    console.log("Effect Triggered! enteringNewBattle:", enteringNewBattle, "currentBattle:", currentBattle?.id);
-    if (!enteringNewBattle && failedToEnterBattle) {
-      setEnteringNewBattle(true);
-    }
-    let timeout: NodeJS.Timeout | null = null;
-    let stopTimeout: NodeJS.Timeout | null = null;
-
-    const checkOpenBattles = async () => {
-      console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-      const battle = await getOpenBattles();
-
-      // check if promise is not resolved in 20 seconds
-      // const battlePromise = await Promise.race([battle, new Promise((resolve) => setTimeout(() => resolve(null), 20000))]);
-
-      if (!battle) {
-        // Schedule the next check in 1 second
-        if (timeout) clearTimeout(timeout);
-        timeout = setTimeout(checkOpenBattles, 5000);
-      }
-    };
-
     if (enteringNewBattle && !currentBattle?.id) {
-      console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-      checkOpenBattles();
+      let cancelled = false;
 
-      // Stop checking after 60 seconds
-      if (stopTimeout) clearTimeout(stopTimeout);
-      stopTimeout = setTimeout(() => {
-        if (timeout) {
-          console.log("Stopped checking for open battles after 60 seconds");
-          clearTimeout(timeout);
+      const pollForBattle = async () => {
+        let attempt = 0;
+        //  loop till a battle is found.
+        while (!cancelled) {
+          console.log("polling for open battles...");
+          const battle = await getOpenBattles();
+          console.log("result from getOpenBattles:", battle);
+  
+          if (battle) {
+            if (!battle.started || (battle.started && Object.keys(battle.players || {}).length > 1)) {
+              console.log("battle found -> Sending battle ready request.");
+              await sendBattleReadyRequest();
+            }
+            break;
+          } else {
+            attempt++;
+            if (attempt === 2) {
+              console.log("mo battle found after 2 attempts. Marking failure.");
+              setFailedToEnterBattle(true);
+            }
+            console.log("waiting 5 seconds before retrying...");
+            await sleep(5000);
+          }
         }
-        setFailedToEnterBattle(true);
-        // Reset the enteringNewBattle state
-        setEnteringNewBattle(false);
-      }, 60000);
-    }
+      };
 
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      if (stopTimeout) {
-        clearTimeout(stopTimeout);
-      }
-    };
+      pollForBattle();
+
+      return () => {
+        cancelled = true;
+      };
+    }
   }, [enteringNewBattle, hasBattleReady, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
 
   useEffect(() => {
