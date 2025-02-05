@@ -290,7 +290,7 @@ local function battleInfoHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     -- VerifyUserInBattle(user_id, battle_id)
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
-    end
+end
 
 
 local function drinkPotionHandler(msg: Message)

@@ -31,7 +31,8 @@ amalg.lua -s game/main.lua -o ../build/game.lua \
     game.handlers.shop \
     game.handlers.bank \
     game.handlers.quest \
-    game.handlers.visitorcenter
+    game.handlers.visitorcenter \
+    game.handlers.leaderboard
 
 amalg.lua -s tokens/dumz.lua -o ../build/dumz.lua \
     utils.utils.bint utils.utils.tl-utils \
