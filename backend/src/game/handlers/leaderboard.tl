@@ -56,6 +56,12 @@ local function pvpWinLeaderboardInfoHandler(msg: Message)
     ao.send({Target= msg.From, Data=json.encode(result)})
 end
 
+local function playerLeaderboardProfileInfoHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local result = dbAdmin:exec(string.format([[SELECT * FROM Leaderboard where user_id = %d]], user_id)) 
+    ao.send({Target= msg.From, Data=json.encode(result)})
+end
+
 Handlers.add("Leaderboard.GoldEarned", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.GoldEarned'), goldEarnedLeaderboardInfoHandler)
 Handlers.add("Leaderboard.GoldLost", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.GoldLost'), goldLostLeaderboardInfoHandler)
 Handlers.add("Leaderboard.DumzLost", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.DumzLost'), dumzLostLeaderboardInfoHandler)
@@ -67,6 +73,7 @@ Handlers.add("Leaderboard.DeathStreak", Handlers.utils.hasMatchingTag('Action', 
 Handlers.add("Leaderboard.GoldWinInPvP", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.GoldWinInPvP'), goldWinInPvPLeaderboardInfoHandler)
 Handlers.add("Leaderboard.DumzWinInPvP", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.DumzWinInPvP'), dumzWinInPvPLeaderboardInfoHandler)
 Handlers.add("Leaderboard.PvPWin", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.PvPWin'), pvpWinLeaderboardInfoHandler)
+Handlers.add("Leaderboard.PlayerLeaderboardProfile", Handlers.utils.hasMatchingTag('Action', 'Leaderboard.PlayerLeaderboardProfile'), playerLeaderboardProfileInfoHandler)
 
 return {}
 

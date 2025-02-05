@@ -19,6 +19,8 @@ export default function HallOfFame() {
     (state) => state.getParticularLeaderboardData
   );
 
+  const {goldEarnedLeaderboardInfo} = useLeaderboardStore();
+
   const { data: fetchedData = [], isFetching } = useQuery({
     queryKey: ["leaderboardData"],
     queryFn: async () => {
@@ -195,25 +197,43 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
   const [isLoadingLocal, setIsLoadingLocal] = useState(false); // Separate loading state
 
   const leaderboardPages = [
+    "player_profile",
     "gold_earned",
     "gold_lost",
+    "dumz_lost",
     "battle_win",
     "battle_lost",
     "enemy_killed",
     "player_death",
     "death_streak",
+    "gold_win_in_pvp",
+    "dumz_win_in_pvp",
+    "pvp_wins"
   ];
 
   const LeaderboardData = useLeaderboardStore((state) => state.LeaderboardData);
   const getParticularLeaderboardData = useLeaderboardStore(
     (state) => state.getParticularLeaderboardData
   );
+  const {playerLeaderboardProfileInfo,goldEarnedLeaderboardInfo,goldLostLeaderboardInfo,dumzLostLeaderboardInfo,battleWinLeaderboardInfo, battleLostLeaderboardInfo,enemiesKilledLeaderboardInfo, playerDeathLeaderboardInfo, deathStreakLeaderboardInfo, goldWinInPvPLeaderboardInfo, dumzWinInPvPLeaderboardInfo, pvpWinLeaderboardInfo } = useLeaderboardStore();
 
   const { data: fetchedData = [], isFetching } = useQuery({
     queryKey: ["leaderboardData", leaderboardType, currentPage],
     queryFn: async () => {
-      try {
-        await getParticularLeaderboardData(leaderboardType); 
+      try {  
+        // await getParticularLeaderboardData(leaderboardType); 
+        if (leaderboardType == "player_profile") await playerLeaderboardProfileInfo();
+        if (leaderboardType == "gold_earned") await goldEarnedLeaderboardInfo();
+        if (leaderboardType == "gold_lost") await goldLostLeaderboardInfo();
+        if (leaderboardType == "dumz_lost") await dumzLostLeaderboardInfo();
+        if (leaderboardType == "battle_win") await battleWinLeaderboardInfo();
+        if (leaderboardType == "battle_lost") await battleLostLeaderboardInfo();
+        if (leaderboardType == "enemy_killed") await enemiesKilledLeaderboardInfo();
+        if (leaderboardType == "player_death") await playerDeathLeaderboardInfo();
+        if (leaderboardType == "death_streak") await deathStreakLeaderboardInfo();
+        if (leaderboardType == "gold_win_in_pvp") await goldWinInPvPLeaderboardInfo();
+        if (leaderboardType == "dumz_win_in_pvp") await dumzWinInPvPLeaderboardInfo();
+        if (leaderboardType == "pvp_wins") await pvpWinLeaderboardInfo();
         return [];
       } catch (error) {
         return [];
@@ -251,10 +271,14 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
 
   const getLeaderboardTitle = (type: string): string => {
     switch (type) {
+      case "player_profile":
+        return "Player Profile";
       case "gold_earned":
         return "Gold Earned";
       case "gold_lost":
         return "Gold Lost";
+      case "dumz_lost":
+        return "Dumz Lost";
       case "battle_win":
         return "Battles Won";
       case "battle_lost":
@@ -265,6 +289,12 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
         return "Player Death";
       case "death_streak":
         return "Death Streak";
+      case "gold_win_in_pvp":
+        return "Gold Win In PvP";
+      case "dumz_win_in_pvp":
+        return "Dumz Win In PvP";
+      case "pvp_wins":
+        return "PvP Wins";
       default:
         return "Leaderboard";
     }
@@ -328,7 +358,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                         {player.name}
                       </div>
                       <div className="text-white text-3xl font-medium text-right">
-                        {player[leaderboardType]}
+                        { leaderboardType=="player_profile"? "ada" : player[leaderboardType]}
                       </div>
                     </div>
                   );
