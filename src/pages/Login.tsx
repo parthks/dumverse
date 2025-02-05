@@ -165,7 +165,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
   }, [showTutorial]);
 
   return (
-    <div className="h-screen flex justify-center items-center">
+    <div className="h-screen flex justify-center items-center ">
       {showTutorial && <Tutorial onClose={() => setShowTutorial(false)} />}
       {isSettingsOpen && <Settings setIsSettingsOpen={setIsSettingsOpen} />}
 
@@ -182,7 +182,7 @@ function LoginForm({ backgroundVideoRef }: { backgroundVideoRef: React.RefObject
         <p className="text-white absolute top-[450px] text-2xl font-bold">Loading...</p>
       ) : (
         <div
-          className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center"
+          className="w-[32rem] h-[32rem] bg-contain bg-center bg-no-repeat flex justify-center items-center "
           style={{ backgroundImage: "url('https://arweave.net/DXvJcyExlsRgwuQl5qbLdRs7rBfYCj9o4x3B-CqpmUk')" }}
         >
           <FormData />
@@ -280,7 +280,7 @@ const FormData = () => {
     }, [profileLoading, dumdumAssets]);
 
   return (
-    <form className="space-y-4 w-full m-16 flex flex-col gap-4 items-center">
+    <form className="space-y-4 w-full mx-16 mb-16 flex flex-col gap-4 items-center">
       <div>
         <div className="relative flex gap-2 items-center">
           <label htmlFor="username" className="text-black font-semibold w-16 text-right">
