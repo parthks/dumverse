@@ -3,6 +3,8 @@ import type {} from "@redux-devtools/extension";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { RECORD_TOKEN_PROCESS_ID } from "@/lib/utils";
+import { useGameStore } from "./useGameStore";
+
 
 interface LeaderboardDataType {
   id: number;
@@ -52,6 +54,18 @@ interface HallOfFameLeaderboardType {
 
 interface LeaderboardState {
   LeaderboardData: LeaderboardDataType[] | null;
+  PlayerLeaderboardProfileData: LeaderboardDataType[] | null;
+  GoldEarnedLeaderboardData: LeaderboardDataType[] | null;
+  GoldLostLeaderboardData: LeaderboardDataType[] | null;
+  DumzLostLeaderboardData: LeaderboardDataType[] | null;
+  BattleWinLeaderboardData: LeaderboardDataType[] | null;
+  BattleLostLeaderboardData: LeaderboardDataType[] | null;
+  EnemiesKilledLeaderboardData: LeaderboardDataType[] | null;
+  PlayerDeathLeaderboardData: LeaderboardDataType[] | null;
+  DeathStreakLeaderboardData: LeaderboardDataType[] | null;
+  GoldWinInPvPLeaderboardData: LeaderboardDataType[] | null;
+  DumzWinInPvPLeaderboardData: LeaderboardDataType[] | null;
+  PvpWinLeaderboardData: LeaderboardDataType[] | null;
   HallOfFameLeaderboardData: HallOfFameLeaderboardType;
   getParticularLeaderboardData: (metric: string) => Promise<void>;
   playerLeaderboardProfileInfo: () => Promise<void>;
@@ -71,6 +85,18 @@ export const useLeaderboardStore = create<LeaderboardState>()(
   devtools(
     (set) => ({
       LeaderboardData: null,
+      PlayerLeaderboardProfileData: null,
+      GoldEarnedLeaderboardData: null,
+      GoldLostLeaderboardData: null,
+      DumzLostLeaderboardData: null,
+      BattleWinLeaderboardData: null,
+      BattleLostLeaderboardData: null,
+      EnemiesKilledLeaderboardData: null,
+      PlayerDeathLeaderboardData: null,
+      DeathStreakLeaderboardData: null,
+      GoldWinInPvPLeaderboardData: null,
+      DumzWinInPvPLeaderboardData: null,
+      PvpWinLeaderboardData: null,
       HallOfFameLeaderboardData: {
         gold_earned: null,
         battle_win: null,
@@ -106,89 +132,91 @@ export const useLeaderboardStore = create<LeaderboardState>()(
         }
       },
       playerLeaderboardProfileInfo: async () => {                  // Personal Leaderboard Stats 
+        const user = useGameStore.getState().user;
         const resultData = await sendDryRunGameMessage({
           tags: [
             { name: "Action", value: "Leaderboard.PlayerLeaderboardProfile" },
+            { name: "UserId", value: user?.id?.toString() || "" },
           ],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
-        // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
+        set({ PlayerLeaderboardProfileData: resultData.data as LeaderboardDataType[] });
+        console.log("Ashu : leaderboard PlayerLeaderboardProfile: "+JSON.stringify(resultData));
       },
       goldEarnedLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.GoldEarned" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
-        // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
+        set({ GoldEarnedLeaderboardData: resultData.data as LeaderboardDataType[] });
+        console.log("Ashu : leaderboard GoldEarnedLeaderboardInfo: "+JSON.stringify(resultData));
       },
       goldLostLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.GoldLost" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ GoldLostLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       dumzLostLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.DumzLost" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ DumzLostLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       battleWinLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.BattleWin" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ BattleWinLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       battleLostLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.BattleLost" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ BattleLostLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       enemiesKilledLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.EnemiesKilled" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ EnemiesKilledLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       playerDeathLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.PlayerDeath" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ PlayerDeathLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       deathStreakLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.DeathStreak" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ DeathStreakLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       goldWinInPvPLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.GoldWinInPvP" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ GoldWinInPvPLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       dumzWinInPvPLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.DumzWinInPvP" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ DumzWinInPvPLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
       pvpWinLeaderboardInfo: async () => {
         const resultData = await sendDryRunGameMessage({
           tags: [{ name: "Action", value: "Leaderboard.PvPWin" }],
         });
-        set({ LeaderboardData: resultData.data as LeaderboardDataType[] });
+        set({ PvpWinLeaderboardData: resultData.data as LeaderboardDataType[] });
         // console.log("Ashu : leaderboard: "+JSON.stringify(resultData));
       },
     }),
