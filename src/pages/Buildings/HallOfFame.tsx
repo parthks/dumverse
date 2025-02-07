@@ -317,7 +317,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
   const { data: fetchedData = [], isFetching } = useQuery({
     queryKey: ["leaderboardData", leaderboardType, currentPage],
     queryFn: async () => {
-      try {  
+      try {
         // await getParticularLeaderboardData(leaderboardType); 
         if (leaderboardType == "player_profile") await playerLeaderboardProfileInfo();
         if (leaderboardType == "gold_earned") await goldEarnedLeaderboardInfo();
@@ -375,7 +375,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
       case "gold_lost":
         return "Gold Lost";
       case "dumz_lost":
-        return "Dumz Lost";
+        return "$DUMZ Lost";
       case "battle_win":
         return "Battles Won";
       case "battle_lost":
@@ -387,11 +387,11 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
       case "death_streak":
         return "Death Streak";
       case "gold_win_in_pvp":
-        return "Gold Win In PvP";
+        return "Gold Won In PvP";
       case "dumz_win_in_pvp":
-        return "Dumz Win In PvP";
+        return "$DUMZ Won In PvP";
       case "pvp_wins":
-        return "PvP Wins";
+        return "PvP Won";
       default:
         return "Leaderboard";
     }
@@ -461,7 +461,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
                             <span className="text-white text-3xl font-medium text-left">Address</span>
-                            <span className="text-white text-3xl font-medium text-right" onClick={(e) => {navigator.clipboard.writeText(player.address)}}>
+                            <span className="text-white text-3xl font-medium text-right" onClick={(e) => { navigator.clipboard.writeText(player.address) }}>
                               {`${player.address.slice(0, 3)}...${player.address.slice(-4)}`}
                             </span>
                           </div>
@@ -474,7 +474,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                             <span className="text-white text-3xl font-medium text-right">{player.enemy_killed}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Dumz Win In PvP</span>
+                            <span className="text-white text-3xl font-medium text-left">$DUMZ Won In PvP</span>
                             <span className="text-white text-3xl font-medium text-right">{player.dumz_win_in_pvp}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
@@ -482,11 +482,11 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                             <span className="text-white text-3xl font-medium text-right">{player.battle_lost}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Dumz Lost</span>
+                            <span className="text-white text-3xl font-medium text-left">$DUMZ Lost</span>
                             <span className="text-white text-3xl font-medium text-right">{player.dumz_lost}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Battle Win</span>
+                            <span className="text-white text-3xl font-medium text-left">Battle Won</span>
                             <span className="text-white text-3xl font-medium text-right">{player.battle_win}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
@@ -494,7 +494,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                             <span className="text-white text-3xl font-medium text-right">{player.gold_earned}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Gold Win In PvP</span>
+                            <span className="text-white text-3xl font-medium text-left">Gold Won In PvP</span>
                             <span className="text-white text-3xl font-medium text-right">{player.gold_win_in_pvp}</span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
