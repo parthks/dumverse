@@ -233,6 +233,7 @@ local function enterNewCombatHandler(msg: Message)
         ao.send({Target= assignSubProcessData.subProcess, Action="Battle.ForceDeleteBattle", BattleId= tostring(player_battle_id.current_battle_id)})
         subProcessAssignToUsers[user_id] = nil
         dbAdmin:exec(string.format([[UPDATE Users SET current_battle_id = NULL WHERE id = %d]], user_id)) 
+        print("Overwrite")
     else
         assert(combat_level ~= current_spot, "Battle is complete for this spot")
     end

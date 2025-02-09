@@ -50,20 +50,20 @@ export default function Den() {
           >
             <div className="relative w-full h-full flex flex-col">
               {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
-              <div className="relative w-full h-full flex flex-col gap-5" style={{ top: "3%" }}>
+              <div className="relative w-full h-full flex flex-col" style={{ top: "-3%" }}>
                 {/* Two Joose On The Shelf */}
-                <div className=" w-ful flex flex-col items-center relative" style={{ left: "-15%" }}>
-                  <div className="flex gap-12  relative" style={{ left: "18px" }}>
-                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
-                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
+                <div className=" w-full flex flex-col items-center relative" style={{ left: "-15%" }}>
+                  <div className="flex gap-12 relative translate-y-3" style={{ left: "120px" }}>
+                    <img src="https://arweave.net/-S67lyxsaXzNbKmrY2Io6X7rjBdKTImryisE88LuRQc" alt="Joose" style={{ width: "15%" }} />
+                    <img src="https://arweave.net/-S67lyxsaXzNbKmrY2Io6X7rjBdKTImryisE88LuRQc" alt="Joose" style={{ width: "15%" }} />
                   </div>
                   <img src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs" alt="Shelf " style={{ width: "60%", height: "35%" }} />
                 </div>
                 {/* Two Joose On The Shelf */}
-                <div className=" w-ful flex flex-col items-center relative" style={{ left: "-15%" }}>
-                  <div className="flex gap-12  relative" style={{ left: "18px" }}>
-                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
-                    <img src="https://arweave.net/OxaOKKjL44SScyyyalWntsj3PwS0-maX-lfSQgbxH7Y" alt="Joose" style={{ width: "20%" }} />
+                <div className=" w-full flex flex-col items-center relative -translate-y-3" style={{ left: "-15%" }}>
+                  <div className="flex gap-12  relative translate-y-3" style={{ left: "120px" }}>
+                    <img src="https://arweave.net/-S67lyxsaXzNbKmrY2Io6X7rjBdKTImryisE88LuRQc" alt="Joose" style={{ width: "15%" }} />
+                    <img src="https://arweave.net/-S67lyxsaXzNbKmrY2Io6X7rjBdKTImryisE88LuRQc" alt="Joose" style={{ width: "15%" }} />
                   </div>
                   <img src="https://arweave.net/nQ03-odZ-vC30jHjueS3UT3XcmKpPeuC8gcWaZS0ZXs" alt="Shelf " style={{ width: "60%", height: "35%" }} />
                 </div>
@@ -84,7 +84,7 @@ export default function Den() {
                 <RiveAnimation url={BUILDING_IMAGES.DEN_DUMDUM} />
               </div>
               <GifComponent
-                className="absolute h-[20vh] translate-x-[13vw] translate-y-[29vh] z-30"
+                className="absolute h-[20vh] translate-x-[13vw] translate-y-[29vh]"
                 onClickFunction={async () => {
                   setAcceptQuestLoading(true);
                   const isQuestAccepted = await acceptDenQuest();

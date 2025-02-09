@@ -171,7 +171,7 @@ loop:
 */
 
 export default function Combat() {
-  const {enteringNewBattle, currentBattle, setCurrentBattle, getOpenBattles, setEnteringNewBattle, hasBattleReady, sendBattleReadyRequest, enterNewBattle} = useCombatStore();
+  const {enteringNewBattle, currentBattle, setCurrentBattle, getOpenBattles, setEnteringNewBattle, hasBattleReady, sendBattleReadyRequest, enterNewBattle, subProcess} = useCombatStore();
   // const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
   // const currentBattle = useCombatStore((state) => state.currentBattle);
   // const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
@@ -283,8 +283,9 @@ export default function Combat() {
       setComabatLoadingScreenImageURL(url);
       localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
     }
-
+      console.log("Coming tothe combat page");
     if (enteringNewBattle && !currentBattle?.id) {
+      console.log("Starting calling getOpenBattles");
       // Ensure polling starts only once
       if (pollingStarted.current) return;
       pollingStarted.current = true;
@@ -335,7 +336,7 @@ export default function Combat() {
         cancelled.current = true; // Cleanup by setting cancelled to true
       };
     }
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage]);
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage, subProcess]);
   
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({

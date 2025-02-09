@@ -359,7 +359,7 @@ const FormData = () => {
         ) : (
           "loading..."
         )}
-        <div className="absolute mt-8 w-1/2 left-[200px]">
+        <div className="absolute mt-8 w-1/2 left-[200px] z-0">
         <NewButton
           varient="blue"
           className="px-8 py-3 text-3xl"

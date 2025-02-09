@@ -17,9 +17,10 @@ export default function HallOfFame() {
   const HallOfFameLeaderboardData = useLeaderboardStore(
     (state) => state.HallOfFameLeaderboardData
   );
-  const getParticularLeaderboardData = useLeaderboardStore(
-    (state) => state.getParticularLeaderboardData
-  );
+  // const getParticularLeaderboardData = useLeaderboardStore(
+  //   (state) => state.getParticularLeaderboardData
+  // );
+  const topThreePlayerInfo = useLeaderboardStore((state) => state.topThreePlayerInfo);
 
   const { goldEarnedLeaderboardInfo } = useLeaderboardStore();
 
@@ -27,26 +28,27 @@ export default function HallOfFame() {
     queryKey: ["leaderboardData"],
     queryFn: async () => {
       try {
-        const leaderboardMetrics = [
-          "battle_win",
-          "gold_earned",
-          "player_death",
-        ];
+        // const leaderboardMetrics = [
+        //   "battle_win",
+        //   "gold_earned",
+        //   "player_death",
+        // ];
 
-        const results = await Promise.all(
-          leaderboardMetrics.map((metric) =>
-            getParticularLeaderboardData(metric)
-          )
-        );
-
-        return results.filter(Boolean);
+        // const results = await Promise.all(
+        //   leaderboardMetrics.map((metric) =>
+        //     getParticularLeaderboardData(metric)
+        //   )
+        // );
+       await topThreePlayerInfo();
+        // return results.filter(Boolean);
+        return [];
       } catch (error) {
         console.error("Error fetching leaderboard data:", error);
         return [];
       }
     },
-    refetchInterval: 1000,
-    staleTime: 1000,
+    refetchInterval: 3000,
+    staleTime: 3000,
     enabled: !isLeaderboardOpen,
   });
 
@@ -139,19 +141,19 @@ export default function HallOfFame() {
 
       <Frame
         index={1}
-        nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address}
+        nft_address={HallOfFameLeaderboardData.gold_earned?.nft_address || null}
         name={HallOfFameLeaderboardData.gold_earned?.name}
         category="Gold Earned"
       />
       <Frame
         index={2}
-        nft_address={HallOfFameLeaderboardData.battle_win?.nft_address}
+        nft_address={HallOfFameLeaderboardData.battle_win?.nft_address || null}
         name={HallOfFameLeaderboardData.battle_win?.name}
         category="Battles Won"
       />
       <Frame
         index={3}
-        nft_address={HallOfFameLeaderboardData.player_death?.nft_address}
+        nft_address={HallOfFameLeaderboardData.player_death?.nft_address || null}
         name={HallOfFameLeaderboardData.player_death?.name}
         category="Deaths"
       />
@@ -182,7 +184,7 @@ function Frame({
   const translateX = index === 1 ? "0" : index === 2 ? "-50%" : "-100%";
 
   // Determine size adjustments for NULL addresses
-  const isNullAddress = nft_address === "NULL";
+  const isNullAddress = nft_address === null;
   const imageStyle: React.CSSProperties = isNullAddress
     ? { objectFit: "contain" } // Add padding to avoid cropping
     : { objectFit: "cover" }; // Normal styling for non-NULL addresses
@@ -208,7 +210,7 @@ function Frame({
       <div className="absolute top-[17%] left-[26%] w-[53%] h-[50%]">
         <img
           src={
-            nft_address !== "NULL"
+            nft_address !== null
               ? `https://arweave.net/${nft_address}`
               : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"
           }
@@ -296,9 +298,9 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
     (state) => state.PvpWinLeaderboardData
   );
 
-  const getParticularLeaderboardData = useLeaderboardStore(
-    (state) => state.getParticularLeaderboardData
-  );
+  // const getParticularLeaderboardData = useLeaderboardStore(
+  //   (state) => state.getParticularLeaderboardData
+  // );
   const {
     playerLeaderboardProfileInfo,
     goldEarnedLeaderboardInfo,
@@ -336,8 +338,8 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
         return [];
       }
     },
-    refetchInterval: 1000,
-    staleTime: 1000,
+    refetchInterval: 3000,
+    staleTime: 3000,
   });
 
   const handleTurnPage = (direction: "prev" | "next") => {
@@ -686,7 +688,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                     );
                   }
                 )
-              ) : leaderboardType === "pvp_wins" ? (
+              ) : (
                 PvpWinLeaderboardData?.map((player: any, index: number) => {
                   return (
                     <div
@@ -702,27 +704,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                     </div>
                   );
                 })
-              ) : (
-                LeaderboardData?.map((player: any, index: number) => {
-                  if (player[leaderboardType] !== 0) {
-                    return (
-                      <div
-                        key={`${leaderboardType}-${index}`}
-                        className="grid grid-cols-2 gap-4 py-3 hover:bg-[#B8860B]/30 rounded-lg transition-colors"
-                      >
-                        <div className="text-white text-3xl font-medium">
-                          {player.name}
-                        </div>
-                        <div className="text-white text-3xl font-medium text-right">
-                          {leaderboardType == "player_profile"
-                            ? "ada"
-                            : player[leaderboardType]}
-                        </div>
-                      </div>
-                    );
-                  }
-                })
-              )}
+              ) }
             </div>
           </div>
         </div>
