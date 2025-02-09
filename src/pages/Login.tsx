@@ -55,9 +55,9 @@ export default function App() {
     <div className="relative h-screen w-screen overflow-hidden">
       <div className="absolute top-0 left-0 min-w-full min-h-full z-0">
         <img
-          src="https://izntki2g2xnsnkbyoi4c452sjd6juxb25bzaq4kpsw3hzboiicfq.arweave.net/Rls1I0bV2yaoOHI4LndSSPyaXDrocghxT5W2fIXIQIs"
+          src="https://arweave.net/2ecDbDnS0Rh0Cycww3lVP47axO7IRH9W9cCtY9jTsxY"
           alt="Background Placeholder"
-          className={`absolute top-0 left-0 min-w-full min-h-full object-cover`}
+          className={`absolute z-10 top-0 left-0 min-w-full min-h-full object-cover`}
         />
         {/* old video with sound */}
         <video ref={videoRef} onLoadedData={() => setVideoLoaded(true)} loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
