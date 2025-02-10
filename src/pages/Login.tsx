@@ -56,7 +56,7 @@ export default function App() {
       <div className="absolute top-0 left-0 min-w-full min-h-full z-0">
         <img
           src="https://arweave.net/2ecDbDnS0Rh0Cycww3lVP47axO7IRH9W9cCtY9jTsxY"
-          alt="Background Placeholder"
+          alt="Background Placeholder 2"
           className={`absolute z-10 top-0 left-0 min-w-full h-full`}
         />
         {/* old video with sound */}
