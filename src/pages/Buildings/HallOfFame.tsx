@@ -240,7 +240,7 @@ function Frame({
 
 const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [leaderboardType, setLeaderboardType] = useState("gold_earned");
+  const [leaderboardType, setLeaderboardType] = useState("player_profile");
   const [isLoadingLocal, setIsLoadingLocal] = useState(false); // Separate loading state
 
   const leaderboardPages = [
@@ -255,7 +255,7 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
     "death_streak",
     "gold_win_in_pvp",
     "dumz_win_in_pvp",
-    "pvp_wins"
+    "pvp_wins",
   ];
 
   const LeaderboardData = useLeaderboardStore((state) => state.LeaderboardData);
@@ -318,18 +318,24 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
     queryKey: ["leaderboardData", leaderboardType, currentPage],
     queryFn: async () => {
       try {
-        // await getParticularLeaderboardData(leaderboardType); 
-        if (leaderboardType == "player_profile") await playerLeaderboardProfileInfo();
+        // await getParticularLeaderboardData(leaderboardType);
+        if (leaderboardType == "player_profile")
+          await playerLeaderboardProfileInfo();
         if (leaderboardType == "gold_earned") await goldEarnedLeaderboardInfo();
         if (leaderboardType == "gold_lost") await goldLostLeaderboardInfo();
         if (leaderboardType == "dumz_lost") await dumzLostLeaderboardInfo();
         if (leaderboardType == "battle_win") await battleWinLeaderboardInfo();
         if (leaderboardType == "battle_lost") await battleLostLeaderboardInfo();
-        if (leaderboardType == "enemy_killed") await enemiesKilledLeaderboardInfo();
-        if (leaderboardType == "player_death") await playerDeathLeaderboardInfo();
-        if (leaderboardType == "death_streak") await deathStreakLeaderboardInfo();
-        if (leaderboardType == "gold_win_in_pvp") await goldWinInPvPLeaderboardInfo();
-        if (leaderboardType == "dumz_win_in_pvp") await dumzWinInPvPLeaderboardInfo();
+        if (leaderboardType == "enemy_killed")
+          await enemiesKilledLeaderboardInfo();
+        if (leaderboardType == "player_death")
+          await playerDeathLeaderboardInfo();
+        if (leaderboardType == "death_streak")
+          await deathStreakLeaderboardInfo();
+        if (leaderboardType == "gold_win_in_pvp")
+          await goldWinInPvPLeaderboardInfo();
+        if (leaderboardType == "dumz_win_in_pvp")
+          await dumzWinInPvPLeaderboardInfo();
         if (leaderboardType == "pvp_wins") await pvpWinLeaderboardInfo();
         return [];
       } catch (error) {
@@ -456,58 +462,116 @@ const LeaderboardPopup = ({ onClose }: { onClose: () => void }) => {
                           className="transition-colors"
                         >
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Name</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.name}</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Address</span>
-                            <span className="text-white text-3xl font-medium text-right" onClick={(e) => { navigator.clipboard.writeText(player.address) }}>
-                              {`${player.address.slice(0, 3)}...${player.address.slice(-4)}`}
+                            <span className="text-white text-3xl font-medium text-left">
+                              Name
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.name}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">PVP</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.pvp_wins}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Address
+                            </span>
+                            <span
+                              className="text-white text-3xl font-medium text-right"
+                              onClick={(e) => {
+                                navigator.clipboard.writeText(player.address);
+                              }}
+                            >
+                              {`${player.address.slice(
+                                0,
+                                3
+                              )}...${player.address.slice(-4)}`}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Enemy Killed</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.enemy_killed}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              PVP
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.pvp_wins}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">$DUMZ Won In PvP</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.dumz_win_in_pvp}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Enemy Killed
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.enemy_killed}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Battle Lost</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.battle_lost}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              $DUMZ Won In PvP
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.dumz_win_in_pvp}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">$DUMZ Lost</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.dumz_lost}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Battle Lost
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.battle_lost}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Battle Won</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.battle_win}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              $DUMZ Lost
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.dumz_lost}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Gold Earned</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.gold_earned}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Battle Won
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.battle_win}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Gold Won In PvP</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.gold_win_in_pvp}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Gold Earned
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.gold_earned}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Gold Lost</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.gold_lost}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Gold Won In PvP
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.gold_win_in_pvp}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Player Death</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.player_death}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Gold Lost
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.gold_lost}
+                            </span>
                           </div>
                           <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
-                            <span className="text-white text-3xl font-medium text-left">Death Streak</span>
-                            <span className="text-white text-3xl font-medium text-right">{player.death_streak}</span>
+                            <span className="text-white text-3xl font-medium text-left">
+                              Player Death
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.player_death}
+                            </span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4 py-3 rounded-lg hover:bg-[#B8860B]/30">
+                            <span className="text-white text-3xl font-medium text-left">
+                              Death Streak
+                            </span>
+                            <span className="text-white text-3xl font-medium text-right">
+                              {player.death_streak}
+                            </span>
                           </div>
                         </div>
                       );
