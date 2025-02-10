@@ -84,24 +84,30 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
 
         local number_of_enemies = 0
         local number_of_players = 0
-        local npc_is_winner = false
+        -- local npc_is_winner = false
         local gold_win_in_pvp = 0
         local dumz_win_in_pvp = 0
-        for npc_ids,_ in pairs(battle.npcs) do
+
+        for _,_ in pairs(battle.players) do
+            number_of_players = number_of_players + 1
+            -- if (not npc_is_winner and battle.winner == player_id and battle.winner ~= player_ids) then
+            --     -- local winners_entity = battle.winner 
+            --      gold_win_in_pvp = battle.players[player_ids].gold_balance
+            --      dumz_win_in_pvp = battle.players[player_ids].dumz_balance
+            -- end
+        end
+
+        for _, npc_data in pairs(battle.npcs) do
             number_of_enemies = number_of_enemies + 1
-            if (battle.winner == npc_ids) then
-                npc_is_winner = true
+            -- if (battle.winner == npc_ids) then
+            --     npc_is_winner = true
+            -- end
+            if number_of_players > 1 then
+                gold_win_in_pvp = battle.players[player_id].gold_balance - npc_data.gold_reward
+                dumz_win_in_pvp = battle.players[player_id].dumz_balance - npc_data.dumz_reward
             end
         end
 
-        for player_ids,_ in pairs(battle.players) do
-            number_of_players = number_of_players + 1
-            if (not npc_is_winner and battle.winner == player_id and battle.winner ~= player_ids) then
-                -- local winners_entity = battle.winner 
-                 gold_win_in_pvp = battle.players[player_ids].gold_balance
-                 dumz_win_in_pvp = battle.players[player_ids].dumz_balance
-            end
-        end
         -- and not npc_is_winner and battle.winner == player_id
         if number_of_players > 1  then
             ao.send({

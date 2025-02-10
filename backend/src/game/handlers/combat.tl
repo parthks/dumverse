@@ -525,7 +525,7 @@ local function playerWonHandler(msg: Message)
     if number_of_players > 1 then
       dbAdmin:exec(string.format([[
             UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1, gold_win_in_pvp = gold_win_in_pvp + %d, dumz_win_in_pvp = dumz_win_in_pvp + %d, pvp_wins = pvp_wins + 1 WHERE user_id = %d ;
-        ]], playerData.gold_balance - playerOriginalData.gold_balance, number_of_enemies , gold_win_in_pvp, dumz_win_in_pvp, user_id))
+        ]], playerData.gold_balance - playerOriginalData.gold_balance, number_of_enemies , gold_win_in_pvp - playerOriginalData.gold_balance, dumz_win_in_pvp - playerOriginalData.dumz_balance, user_id))
     else
         dbAdmin:exec(string.format([[
             UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;

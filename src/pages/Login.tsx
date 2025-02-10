@@ -57,7 +57,7 @@ export default function App() {
         <img
           src="https://arweave.net/2ecDbDnS0Rh0Cycww3lVP47axO7IRH9W9cCtY9jTsxY"
           alt="Background Placeholder"
-          className={`absolute z-10 top-0 left-0 min-w-full min-h-full object-cover`}
+          className={`absolute z-10 top-0 left-0 min-w-full h-full`}
         />
         {/* old video with sound */}
         <video ref={videoRef} onLoadedData={() => setVideoLoaded(true)} loop className="absolute top-0 left-0 min-w-full min-h-full object-cover z-0">
