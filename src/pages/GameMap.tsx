@@ -190,15 +190,16 @@ const GameMap = () => {
       </div>
       <div className="z-10 absolute bottom-4 w-[450px] left-[700px]">
         {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 ? (
-          <ImgButton
+          <NewButton
             disabled={enterNewAreaLoading}
+            varient={"purple"}
             onClick={async () => {
               setEnterNewAreaLoading(true);
               await goToRestArea();
               setEnterNewAreaLoading(false);
             }}
-            className="shrink-0 mb-8"
-            alt="Enter Rest Area"
+            className="py-4 bottom-1 px-28 text-3xl"
+            alt="Rest"
             src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
           />
         ) : (
