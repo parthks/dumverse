@@ -8,6 +8,7 @@ import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/react-canvas";
+import NewButton from "@/components/ui/NewButton";
 
 export default function Second_Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -38,15 +39,14 @@ export default function Second_Town() {
         <PlayerOnlineList currentSpot={0} />
       </div>
 
-      <div className="absolute w-[8%] h-[5%] top-[2vh] left-[1vw] z-10">
-        <button
-          className="text-white bg-blue-400 cursor-pointer border-2 w-full h-full rounded-lg border-white"
+      <div className="absolute w-[20%] top-[2vh] -left-[150px] z-10">
+        <NewButton
+          className="text-xl px-8 py-3"
           onClick={() => {
             handleBuildingSelect(GameStatePages.TOWN);
           }}
-        >
-          Upper City{" "}
-        </button>
+          alt="West Side"
+        />
       </div>
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
