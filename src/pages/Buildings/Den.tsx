@@ -5,12 +5,16 @@ import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { BUILDING_IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
-import { useGameStore } from "@/store/useGameStore";
+import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useState } from "react";
 import GifComponent from "@/components/Dialogue/Dialogue";
+import { sleep } from "@/lib/time";
+import { SOUNDS } from "@/lib/constants";
+import audioManager from "@/utils/audioManager";
+
 
 export default function Den() {
-  const { shop, getShop, buyItem, buyItemLoading, acceptDenQuest} = useGameStore();
+  const { shop, getShop, buyItem, buyItemLoading, acceptDenQuest, setGameStatePage} = useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
@@ -28,7 +32,17 @@ export default function Den() {
   return (
     <div className="h-screen relative">
       <div className="z-10 absolute bottom-4 left-4">
-        <ExistToTownButton />
+        {/* <ExistToTownButton /> */}
+        <ImgButton
+              className="h-12"
+              src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"}
+              onClick={async () => {
+                audioManager.playSFX(SOUNDS.BUILDING_ENTER);
+                await sleep(750);
+                setGameStatePage(GameStatePages.SECOND_TOWN);
+              }}
+              alt={"Return to Town"}
+            />
       </div>
       <div className="z-10 absolute bottom-4 right-4 ">
         <InventoryBag />
@@ -142,7 +156,7 @@ export default function Den() {
                 {/* Play Button */}
 
                 <div style={{ top: "47%", left: "37%", width: "24%", zIndex: 1 }} className=" absolute">
-                  <ImgButton src={"https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"} onClick={handleClick} alt={"Play Button"} className="" />
+                  <ImgButton src={"https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"} onClick={handleClick} alt={"Play Button"} disabled={true} className="" />
                 </div>
 
                 {/* Den Table and Chair */}

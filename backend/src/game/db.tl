@@ -24,6 +24,7 @@ global USERS_TABLE: string = [[
         defense FLOAT DEFAULT 0,
         current_spot INTEGER DEFAULT 0,
         current_battle_id INTEGER,
+        current_blackjack_id INTEGER,
         special_item_key INTEGER DEFAULT -1,
         special_item_thread INTEGER DEFAULT -1,
         special_item_bark INTEGER DEFAULT -1,
@@ -185,6 +186,7 @@ Handlers.add("Admin.UpdateTable",
         defense FLOAT DEFAULT 0,
         current_spot INTEGER DEFAULT 0,
         current_battle_id INTEGER,
+        current_blackjack_id INTEGER,
         special_item_kitten INTEGER DEFAULT -1,
         special_item_key INTEGER DEFAULT -1,
         special_item_thread INTEGER DEFAULT -1,
@@ -209,8 +211,7 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
-    dbAdmin.db:exec(LEADERBOARD_TABLE)
+    dbAdmin.db:exec("ALTER TABLE Users ADD COLUMN current_blackjack_id INTEGER;")
     print("end")
 end
 )

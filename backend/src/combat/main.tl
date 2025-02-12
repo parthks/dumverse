@@ -24,7 +24,7 @@ local function GetOpenBattlesOfUser(user_address: string, timestamp: integer): {
             BattleHelpers.internalLog(
                     battle.id,
                     timestamp,
-                    "CronTick - BattleEnded",
+                    "GetOpenBattlesOfUser",
                     "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
                 )
             local battle_data = BattleHelpers.get(battle.id)
@@ -217,7 +217,6 @@ local function newUserJoinHandler(msg: Message)
     local data = json.decode(msg.Data) as {string: string}
 
     print("Battle.NewUserJoin - user " .. user_id)
-    print(GAME_PROCESS_ID)
     assert(msg.From == GAME_PROCESS_ID, "Only Game process can send this message")
     assert(user_id, "UserId is required")
     assert(level_input, "Combat Level is required")
@@ -226,7 +225,7 @@ local function newUserJoinHandler(msg: Message)
     local level = tonumber(level_input) as integer
 
 
-    local battles = GetOpenBattlesOfUser(msg.From, msg.Timestamp)
+    local battles = GetOpenBattlesOfUser(user_id, msg.Timestamp)
     if #battles > 0 then
         -- user is already in a battle
         print("user is already in a battle")
@@ -290,6 +289,12 @@ local function battleInfoHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     -- VerifyUserInBattle(user_id, battle_id)
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+
+    for battle_ids, battle in pairs(Battles) do
+        if  battle.ended then
+            Battles[battle_ids] = nil
+        end
+    end
 end
 
 
@@ -326,7 +331,8 @@ local function userAttackHandler(msg: Message)
     local user_id = msg.Tags.UserId
     local attackEntityId = msg.Tags.AttackEntityId
 
-    assert(Battles[battle_id].started==true,"Battle has not started yet")
+    assert(Battles[battle_id], "Battle not found with id: " .. tostring(battle_id))
+    assert(Battles[battle_id].started==true,"Battle has not started yet") 
 
     BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - started", 
         "Attacking User: " .. user_id .. ", Target: " .. attackEntityId)

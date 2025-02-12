@@ -84,6 +84,7 @@ global type UserData = record
     defense: number
     current_spot: integer
     current_battle_id: integer | nil
+    current_blackjack_id: integer | nil
     special_item_key: integer | nil -- becomes 0 when user accepts quest
     special_item_thread: integer | nil -- becomes 0 when user accepts quest
     special_item_bark: integer| nil -- becomes 0 when user accepts quest

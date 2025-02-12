@@ -33,16 +33,18 @@ global ONE_OF_ONE_ASSET_IDS: {string} = {
 global CRON_TICK_COUNT = 0
 
 global function sendBatteDataToHistoryProcess(battle_Id:integer,battle_data: Battle, battle_error_status: string)
-    ao.send({
-        Target = "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0",
-        Action = "Record.SavedToHistory",
-        Data = json.encode(battle_data),
-        SubProcess = tostring(ao.id),
-        ErrorStatus = battle_error_status,
-        BattleId = tostring(battle_Id)
-    })
-    -- TODO: remove battle from Battles table
-    Battles[battle_Id] = nil
+    if battle_data.ended == true then
+        ao.send({
+            Target = "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0",
+            Action = "Record.SavedToHistory",
+            Data = json.encode(battle_data),
+            SubProcess = tostring(ao.id),
+            ErrorStatus = battle_error_status,
+            BattleId = tostring(battle_Id)
+        })
+        -- TODO: remove battle from Battles table
+        -- Battles[battle_Id] = nil
+    end
 end    
 
 

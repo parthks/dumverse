@@ -427,7 +427,7 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
 
   return (
     <div
-      className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
+      className="flex justify-between p-8 min-h-screen left-0 top-0 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
     >
       <BattleGround currentBattle={currentBattle} />
