@@ -288,8 +288,12 @@ export default function Town() {
         <PlayerOnlineList currentSpot={0} />
       </div>
 
-        <div className="absolute w-[8%] h-[5%] top-[2vh] left-[1vw] z-50">
-          {/* <ImgButton
+      {/* {(user?.address == "yWEDs-sho-5Ka7ql_Ov71GNFdHqLspekxfhAo1bcqtU" ||
+        user?.address == "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go" ||
+        user?.address == "OGNCZwB71ZEP5ftJBKi2w1ueGaVh3KzBuzxvW6KqeDw" ||
+        user?.address == "jddq2gt8n-F2KNO2I67qjDAR1dSeL6ZwYtd3GrmmpTg") && ( */}
+        <div className="absolute w-[8%] h-[5%] top-[2vh] -right-[1.3  vw] z-50">
+        {/* <ImgButton
                         src="https://arweave.net/nYTjNe4X9GAQjhFIHgMZmkS2pvco7JTAUHb338TOsfo"
                         alt="Leaderboard"
                         // disabled={currentPage === 0}
@@ -297,14 +301,13 @@ export default function Town() {
                         onClick={() => console.log("afa")} 
                       /> */}
 
-          <button
-            className="text-white bg-blue-400 cursor-pointer border-2 w-full h-full rounded-lg border-white"
+          <NewButton
+            className="cursor-pointer text-xl w-full h-full"
             onClick={() => {
               handleBuildingSelect(GameStatePages.SECOND_TOWN);
             }}
-          >
-            Second Town{" "}
-          </button>
+          alt="East Side"
+          />
         </div>
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
