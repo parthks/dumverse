@@ -212,6 +212,7 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
     dbAdmin.db:exec("ALTER TABLE Users ADD COLUMN current_blackjack_id INTEGER;")
+    dbAdmin.db:exec(LEADERBOARD_TABLE)
     print("end")
 end
 )

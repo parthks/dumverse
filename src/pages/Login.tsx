@@ -13,6 +13,7 @@ import GameMap from "./GameMap";
 import Settings from "@/components/game/Settings";
 import { Play } from "lucide-react";
 import NewButton from "@/components/ui/NewButton";
+import { GameUser } from "@/types/game";
 
 export default function App() {
   const { walletAddressID, profileLoading, getGameProfiles, gameProfiles } = useAppStore();
@@ -387,7 +388,7 @@ const FormData = () => {
           <NewButton
             varient="blue"
             className="px-8 py-3 text-3xl"
-            disabled={loading}
+            disabled={loading || (gameProfiles? false : true)}
             src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
             alt="Enter Dumverse"
             onClick={(e) => {
