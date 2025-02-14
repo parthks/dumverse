@@ -144,7 +144,7 @@ local function enterNewCombatHandler(msg: Message)
     local overwrite_the_battle_on_same_spot = msg.Tags.OverWriteTheBattleOnSameSpot
     assert(type(combat_level) == "number", "Level is required")
     assert(type(combat_level) == "number" and math.floor(combat_level) == combat_level, "Combat level must be an integer")
-    print("Combat Level: " .. combat_level)
+
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
 
@@ -476,7 +476,6 @@ local function playerWonHandler(msg: Message)
 
     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
     helpers.sendUserDataToBackupProcess(user_id, user_data)
-    print("Done")
 end
 
 local function playerRanAwayHandler(msg: Message)

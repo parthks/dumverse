@@ -12,7 +12,7 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 game:
   processId: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
-  hash: 7e729ead1e45bcbc964101d193501a7afec76e32015d3bd7c1c743d42246d73b
+  hash: e4eaf4ca014c62ef5ea08fe4da7d9af08e1dab53cde0807cc2b776d43a78b30c
 backup:
   processId: uHYsNF2oF9B2YDLu5rcNJAbzXOuwMdeTUE8axdSgHCE
   hash: 49a899ade966de6fd8f50fecd3366117dd568673058201c8707d2e6fe34be1ad
