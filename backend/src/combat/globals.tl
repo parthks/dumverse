@@ -35,7 +35,7 @@ global CRON_TICK_COUNT = 0
 global function sendBatteDataToHistoryProcess(battle_Id:integer,battle_data: Battle, battle_error_status: string)
     if battle_data.ended == true then
         ao.send({
-            Target = "6sCdkpNtbFwGMk73ys5XImL3akp_ttkKjHU4B-eO-e8",
+            Target = "3LwCZ8h5sHtugRnhcRaLfHLe2VihHVkIQkV_c5PVF7E",
             Action = "Record.SavedToHistory",
             Data = json.encode(battle_data),
             SubProcess = tostring(ao.id),
