@@ -83,18 +83,54 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
     local function playerWon(player_id: string)
 
         local number_of_enemies = 0
-        for _ in pairs(battle.npcs) do
-            number_of_enemies = number_of_enemies + 1
+        local number_of_players = 0
+        -- local npc_is_winner = false
+        local gold_win_in_pvp = 0
+        local dumz_win_in_pvp = 0
+
+        for _,_ in pairs(battle.players) do
+            number_of_players = number_of_players + 1
+            -- if (not npc_is_winner and battle.winner == player_id and battle.winner ~= player_ids) then
+            --     -- local winners_entity = battle.winner 
+            --      gold_win_in_pvp = battle.players[player_ids].gold_balance
+            --      dumz_win_in_pvp = battle.players[player_ids].dumz_balance
+            -- end
         end
 
-        ao.send({
-            Target = GAME_PROCESS_ID,
-            UserId = player_id,
-            Level = tostring(battle.level),
-            Action = "Combat.PlayerWon",
-            Data = json.encode(battle.players[player_id]),
-            NumberOfEnemies = tostring(number_of_enemies)
-        })
+        for _, npc_data in pairs(battle.npcs) do
+            number_of_enemies = number_of_enemies + 1
+            -- if (battle.winner == npc_ids) then
+            --     npc_is_winner = true
+            -- end
+            if number_of_players > 1 then
+                gold_win_in_pvp = battle.players[player_id].gold_balance - npc_data.gold_reward
+                dumz_win_in_pvp = battle.players[player_id].dumz_balance - npc_data.dumz_reward
+            end
+        end
+
+        -- and not npc_is_winner and battle.winner == player_id
+        if number_of_players > 1  then
+            ao.send({
+                Target = GAME_PROCESS_ID,
+                UserId = player_id,
+                Level = tostring(battle.level),
+                Action = "Combat.PlayerWon",
+                Data = json.encode(battle.players[player_id]),
+                NumberOfEnemies = tostring(number_of_enemies),
+                NumberOfPlayers = tostring(number_of_players),
+                GoldWinInPvP = tostring(gold_win_in_pvp),
+                DumzWinInPvP = tostring(dumz_win_in_pvp)
+            })
+        else
+            ao.send({
+                Target = GAME_PROCESS_ID,
+                UserId = player_id,
+                Level = tostring(battle.level),
+                Action = "Combat.PlayerWon",
+                Data = json.encode(battle.players[player_id]),
+                NumberOfEnemies = tostring(number_of_enemies)
+            })
+        end
         -- ao.send({
         --     Target = constants.HISTORY_PROCESS_ID,
         --     Action = "Record.SavedToHistory",
@@ -295,6 +331,7 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
 
     -- BattleHelpers.update(battle_id, battle)
     player = Battles[battle_id].players[player_id]
+
 
     ao.send({
         Target = GAME_PROCESS_ID,

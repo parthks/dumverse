@@ -8,6 +8,7 @@ import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/react-canvas";
+import NewButton from "@/components/ui/NewButton";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -287,11 +288,12 @@ export default function Town() {
         <PlayerOnlineList currentSpot={0} />
       </div>
 
-      {(user?.address == "yWEDs-sho-5Ka7ql_Ov71GNFdHqLspekxfhAo1bcqtU" ||
+      {/* {(user?.address == "yWEDs-sho-5Ka7ql_Ov71GNFdHqLspekxfhAo1bcqtU" ||
         user?.address == "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go" ||
-        user?.address == "jddq2gt8n-F2KNO2I67qjDAR1dSeL6ZwYtd3GrmmpTg") && (
-        <div className="absolute w-[8%] h-[5%] top-[2vh] left-[1vw] z-50">
-          {/* <ImgButton
+        user?.address == "OGNCZwB71ZEP5ftJBKi2w1ueGaVh3KzBuzxvW6KqeDw" ||
+        user?.address == "jddq2gt8n-F2KNO2I67qjDAR1dSeL6ZwYtd3GrmmpTg") && ( */}
+        <div className="absolute w-[8%] h-[5%] top-[2vh] -right-[1.3vw] z-50">
+        {/* <ImgButton
                         src="https://arweave.net/nYTjNe4X9GAQjhFIHgMZmkS2pvco7JTAUHb338TOsfo"
                         alt="Leaderboard"
                         // disabled={currentPage === 0}
@@ -299,43 +301,49 @@ export default function Town() {
                         onClick={() => console.log("afa")} 
                       /> */}
 
-          <button
-            className="text-white bg-blue-400 cursor-pointer border-2 w-full h-full rounded-lg border-white"
+          <NewButton
+            className="cursor-pointer text-xl w-full h-full"
             onClick={() => {
               handleBuildingSelect(GameStatePages.SECOND_TOWN);
             }}
-          >
-            Second Town{" "}
-          </button>
+          alt="East Side"
+          />
         </div>
-      )}
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
       {/* bottom buttons bar */}
       {!chatOpen && (
-        <div className="z-50 absolute bottom-0 w-full p-4">
-          <div className="flex justify-between items-center relative">
-            <ImgButton
+        <div className="z-50 absolute bottom-1 w-full px-2 py-5">
+          <div>
+            <div className="relative w-[320px] bottom-2">
+            <NewButton
+              varient="blue"
+              className="px-11 py-4 text-3xl left-1"
               src={
                 "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
               }
               onClick={() => goToGameMap(true)}
-              alt={"Return to Town"}
+              alt={"Leave Town"}
             />
-            <div className="absolute left-[43%] translate-x-[0%]">
-              <ImgButton
+            </div>
+            <div className="absolute left-[60%] top-3 translate-x-[0%]">
+              <NewButton
+                varient="purple"
+                className="px-24 py-4 text-3xl mr-3"
                 src={
                   "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
                 }
                 onClick={() => {
                   handleBuildingSelect(GameStatePages.REST_AREA);
                 }}
-                alt={"Enter Rest Area"}
+                alt={"Rest"}
               />
             </div>
-            <div className="flex gap-4 items-center justify-end">
-              <ImgButton
+            <div className="flex left-1/2 items-center justify-end">
+              <NewButton
+              varient="blue"
+              className="px-24 py-4 text-3xl mr-3"
                 src={
                   "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
                 }

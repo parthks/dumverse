@@ -31,7 +31,9 @@ amalg.lua -s game/main.lua -o ../build/game.lua \
     game.handlers.shop \
     game.handlers.bank \
     game.handlers.quest \
-    game.handlers.visitorcenter
+    game.handlers.visitorcenter \
+    game.handlers.leaderboard \
+    game.handlers.blackjack
 
 amalg.lua -s tokens/dumz.lua -o ../build/dumz.lua \
     utils.utils.bint utils.utils.tl-utils \
@@ -75,5 +77,9 @@ amalg.lua -s backup/main.lua -o ../build/backup.lua \
 
 amalg.lua -s bank/main.lua -o ../build/bank.lua \
     utils.combat utils.globals utils.constants utils.utils.dbAdmin  
+
+amalg.lua -s blackjack/main.lua -o ../build/blackjack.lua \
+    utils.utils.tl-utils utils.utils.dbAdmin utils.constants utils.combat utils.globals \
+    blackjack.blackjack_helpers blackjack.constant blackjack.globals blackjack.types 
 
 # FINAL RESULT is build/main.lua

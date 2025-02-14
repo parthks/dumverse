@@ -161,3 +161,20 @@
     - name: Name
       value: Bank              
 
+- name: blackjack
+  file: build/blackjack.lua
+  scheduler: _GQ33BkPtZrqxA84vM8Zk-N2aO0toNNu_C-l-rawrBA
+  module: GYrbbe0VbHim_7Hi6zrOpHQXrSQz07XNtwCnfbFo2I0
+  tags:
+    - name: App-Name
+      value: Dumverse
+    - name: Name
+      value: blackjack
+    - name: GameProcessId
+      value: Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI
+    - name: Authority
+      value: fcoN_xJeisVsPXA-trzVAuIiqO3ydLQxM-L4XbrQKzY
+    - name: Cron-Interval
+      value: 60-seconds
+    - name: Cron-Tag-Action
+      value: Cron

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { Fit } from "@rive-app/react-canvas";
 import { DailyGoldWishes } from "@/types/game";
+import NewButton from "@/components/ui/NewButton";
 
 // const RestAreaImages = {
 //   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
@@ -41,7 +42,8 @@ const ReturnToTown = React.memo(() => {
   return (
     <>
       {current_spot == 0 ? (
-        <ImgButton
+        <NewButton
+          className="px-8 py-4 text-3xl"
           src={
             "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
           }
@@ -51,7 +53,8 @@ const ReturnToTown = React.memo(() => {
           alt={"Return to Town"}
         />
       ) : (
-        <ImgButton
+        <NewButton
+          className="px-8 py-4 text-3xl"
           src={
             "https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"
           }
@@ -169,8 +172,6 @@ export default function RestArea() {
       <div className="z-30 absolute top-0 left-1/2 transform -translate-x-[50%] w-[50%]">
         <PlayerOnlineList currentSpot={current_spot} />
       </div>
-
-     
        {wishStatus && (
         <div className="fixed inset-0 flex items-center justify-center text-white z-30">
           <div
@@ -217,14 +218,13 @@ export default function RestArea() {
                     {val.message}
                   </h1>
                 ))}
-
             </div>
           </div>
         </div>
       )}
 
       {!chatOpen && (
-        <div className="z-30 absolute top-4 right-4">
+        <div className="z-30 absolute top-4 right-0 w-[30%]">
           <ReturnToTown />
         </div>
       )}
@@ -237,10 +237,13 @@ export default function RestArea() {
 
       {!chatOpen && (
         <>
-          <div className="z-30 absolute bottom-4 left-4 flex flex-col gap-2 items-center">
-            <InventoryBag />
-            <ImgButton
-              className="h-[65px]"
+          <div className="z-30 absolute bottom-2 flex flex-col w-[350px] items-center">
+            <div className="mb-16 mr-10">
+              <InventoryBag />
+            </div>
+            <NewButton
+              className="py-4 px-[70px] text-3xl bottom-0"
+              varient="blue"
               src={
                 "https://arweave.net/zBW0KWBAJLJWY0a3e6uY4Oq5iL1HVUhkOzWvRcC2LWY"
               }
@@ -249,8 +252,21 @@ export default function RestArea() {
             />
           </div>
 
-          <div className="z-30 absolute bottom-4 right-4 flex gap-4 items-center justify-end">
-            <ImgButton
+          <div className="z-30 absolute bottom-[8%] left-0 right-[40%] flex justify-center gap-4">
+            {current_spot == 0 && (
+              <NewButton
+                className="px-16 py-4 text-3xl "
+                src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+                alt={"Make a Wish"}
+                onClick={making_wish}
+              />
+            )}
+          </div>
+
+          <div className="z-30 absolute bottom-4 right-4 flex items-center justify-end">
+            <NewButton
+              className="px-24 py-4 text-3xl mr-3"
+              varient="blue"
               src={
                 "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
               }
@@ -267,18 +283,6 @@ export default function RestArea() {
               alt={"Open Settings"}
             />
           </div>
-
-          {current_spot == 0 && (
-        <div className={`${!chatOpen ? "z-30" : "z-40"} absolute bottom-[1%] right-[50%] transform translate-x-[35%]`}>
-          {" "}
-          <ImgButton
-            // disabled={buyItemLoading || (alreadyOwned && ["WEAPON", "ARMOR"].includes(item.type))}
-            src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
-            alt={"Make Gold Wish"}
-            onClick={making_wish}
-          />{" "}
-        </div>
-      )}
         </>
       )}
 
@@ -293,11 +297,11 @@ export default function RestArea() {
           {/* {current_spot == 0 ? (
             <TownRestArea />
           ) : ( */}
-            <img
-              src={RestAreaImages[current_spot as keyof typeof RestAreaImages]}
-              alt="Rest Area Background"
-              className="w-full h-full object-cover"
-            />
+          <img
+            src={RestAreaImages[current_spot as keyof typeof RestAreaImages]}
+            alt="Rest Area Background"
+            className="w-full h-full object-cover"
+          />
           {/* // )} */}
 
           {current_spot != 0 && (

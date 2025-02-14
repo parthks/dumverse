@@ -158,76 +158,186 @@ import { useEffect, useRef, useState, useMemo } from "react";
 //   id: 110,
 // } as any;
 
+/*
+
+enter new battle - get sub process id
+loop:
+  get open battles - from sub process id -- can take very long.
+    (maybe) if get open battles takes very long, can enter a new battle -- get a new sub process id
+  if no open battles, wait 5 seconds and try again
+  if no open battles, second time then set failedToEnterBattle to true
+  if open battles, set current battle
+
+*/
+
 export default function Combat() {
-  const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
-
-  const currentBattle = useCombatStore((state) => state.currentBattle);
-  const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
-
-  const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
-  const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
+  const {enteringNewBattle, currentBattle, setCurrentBattle, getOpenBattles, setEnteringNewBattle, hasBattleReady, sendBattleReadyRequest, enterNewBattle, subProcess} = useCombatStore();
+  // const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
+  // const currentBattle = useCombatStore((state) => state.currentBattle);
+  // const setCurrentBattle = useCombatStore((state) => state.setCurrentBattle);
+  // const getOpenBattles = useCombatStore((state) => state.getOpenBattles);
+  // const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
   // const combatLoading = useCombatStore((state) => state.loading);
-
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const tempCurrentIslandLevel = useGameStore((state) => state.tempCurrentIslandLevel);
 
   const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
+  const [comabatLoadingScreenImageURL, setComabatLoadingScreenImageURL] = useState<string | null>(null);
+  // const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
+  // const sendBattleReadyRequest = useCombatStore((state) => state.sendBattleReadyRequest);
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  const cancelled = useRef(false); // Ref to track if polling has been cancelled
+  const pollingStarted = useRef(false); // Ref to track if polling has started
+
+  // useEffect(() => {
+  //   console.log("Effect Triggered! enteringNewBattle:", enteringNewBattle, "currentBattle:", currentBattle?.id);
+  //   if (!enteringNewBattle && failedToEnterBattle) {
+  //     setEnteringNewBattle(true);
+  //   }
+  //   let timeout: NodeJS.Timeout | null = null;
+  //   let stopTimeout: NodeJS.Timeout | null = null;
+
+  //   const checkOpenBattles = async () => {
+  //     console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+  //     const battle = await getOpenBattles();
+
+  //     // check if promise is not resolved in 20 seconds
+  //     // const battlePromise = await Promise.race([battle, new Promise((resolve) => setTimeout(() => resolve(null), 20000))]);
+
+  //     if (!battle) {
+  //       // Schedule the next check in 1 second
+  //       if (timeout) clearTimeout(timeout);
+  //       timeout = setTimeout(checkOpenBattles, 5000);
+  //     }
+  //   };
+
+  //   if (enteringNewBattle && !currentBattle?.id) {
+  //     console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
+  //     checkOpenBattles();
+
+  //     // Stop checking after 60 seconds
+  //     if (stopTimeout) clearTimeout(stopTimeout);
+  //     stopTimeout = setTimeout(() => {
+  //       if (timeout) {
+  //         console.log("Stopped checking for open battles after 60 seconds");
+  //         clearTimeout(timeout);
+  //       }
+  //       setFailedToEnterBattle(true);
+  //       // Reset the enteringNewBattle state
+  //       setEnteringNewBattle(false);
+  //     }, 60000);
+  //   }
+
+  //   return () => {
+  //     if (timeout) {
+  //       clearTimeout(timeout);
+  //     }
+  //     if (stopTimeout) {
+  //       clearTimeout(stopTimeout);
+  //     }
+  //   };
+  // }, [enteringNewBattle, hasBattleReady, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
+//////////////////////////////////////////////////////
+  // useEffect(() => {
+  //   if (enteringNewBattle && !currentBattle?.id) {
+  //     let cancelled = false;
+  //     const pollForBattle = async () => {
+  //       let attempt = 0;
+  //       //  loop till a battle is found.
+  //       while (!cancelled) {
+  //         console.log("polling for open battles...");
+  //         const battle = await getOpenBattles();
+  //         console.log("result from getOpenBattles:", battle);
   
-  const [comabatLoadingScreenImageURL,setComabatLoadingScreenImageURL] = useState<string | null>(null);
-  const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
+        
+  //           if (battle && (!battle.started || (battle?.started && Object.keys(battle.players || {}).length > 1))) {
+  //             console.log("battle found -> Sending battle ready request.");
+  //             await sendBattleReadyRequest();
+            
+  //           break;}
+  //         else {
+  //           attempt++;
+  //           if (attempt === 2) {
+  //             console.log("mo battle found after 2 attempts. Marking failure.");
+  //             setFailedToEnterBattle(true);
+  //           }
+  //           console.log("waiting 5 seconds before retrying...");
+  //           await sleep(5000);
+  //         }
+  //       }
+  //     };
+
+  //     pollForBattle();
+  //     return () => {
+  //       cancelled = true;
+  //     };
+  //   }
+  // }, []);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null;
-    let stopTimeout: NodeJS.Timeout | null = null;
-
-    const checkOpenBattles = async () => {
-      if (enteringNewBattle && !currentBattle?.id) {
-        console.log("Checking for open battles", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-        const battle = await getOpenBattles();
-        if (!battle) {
-          // Schedule the next check in 1 second
-          if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(checkOpenBattles, 5000);
-        }
-      }
-    };
-
-    if (enteringNewBattle && !currentBattle?.id) {
-      console.log("SET UP TIMEOUT FOR CHECKING OPEN BATTLES", "enteringNewBattle", enteringNewBattle, currentBattle?.id);
-      checkOpenBattles();
-
-      // Stop checking after 60 seconds
-      if (stopTimeout) clearTimeout(stopTimeout);
-      stopTimeout = setTimeout(() => {
-        if (timeout) {
-          console.log("Stopped checking for open battles after 60 seconds");
-          clearTimeout(timeout);
-        }
-        setFailedToEnterBattle(true);
-        // Reset the enteringNewBattle state
-        setEnteringNewBattle(false);
-      }, 60000);
-    }
-
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      if (stopTimeout) {
-        clearTimeout(stopTimeout);
-      }
-    };
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, setFailedToEnterBattle, setEnteringNewBattle]);
-
-  useEffect(()=>{
-    if (comabatLoadingScreenImageURL === null){
+    if (comabatLoadingScreenImageURL === null) {
       let savedData: number = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0");
       savedData = (savedData % Object.keys(COMBAT_LOADING_SCREEN).length) + 1;
       const url = COMBAT_LOADING_SCREEN[`scene${savedData}` as keyof typeof COMBAT_LOADING_SCREEN];
       setComabatLoadingScreenImageURL(url);
       localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
     }
-  },[])
+      console.log("Coming tothe combat page");
+    if (enteringNewBattle && !currentBattle?.id) {
+      console.log("Starting calling getOpenBattles");
+      // Ensure polling starts only once
+      if (pollingStarted.current) return;
+      pollingStarted.current = true;
+
+      const pollForBattle = async () => {
+        let attempt = 0;
+
+        while (!cancelled.current) {
+          console.log("polling for open battles...");
+
+          const timeoutId = setTimeout(async () => {
+            console.log("getOpenBattles is taking too long. Calling fallback function.");
+            console.log("Ashu : tempCurrentIslandLevel: "+tempCurrentIslandLevel);
+            const resultData = await enterNewBattle(tempCurrentIslandLevel, true); 
+            if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+              setGameStatePage(GameStatePages.COMBAT);
+            }
+            // cancelled.current = true;
+          }, 60000); // 1 minute timeout
+
+          try {
+            const battle = await getOpenBattles();
+            clearTimeout(timeoutId); // Clear timeout if function completes in time
+
+            console.log("Battle found -> Sending battle ready request.");
+            if (battle && (!battle.started || (battle?.started && Object.keys(battle.players || {}).length > 1))) {
+               await sendBattleReadyRequest();
+              break;
+            } else {
+              attempt++;
+              if (attempt === 2) {
+                console.log("No battle found after 2 attempts. Marking failure.");
+                setFailedToEnterBattle(true);
+              }
+              console.log("waiting 5 seconds before retrying... (GetOpenBattles)");
+              await sleep(5000);
+            }
+          } catch (error) {
+            clearTimeout(timeoutId); // Clear timeout in case of an error
+            console.error("Error fetching battles:", error);
+          }
+        }
+      };
+
+      pollForBattle();
+
+      return () => {
+        cancelled.current = true; // Cleanup by setting cancelled to true
+      };
+    }
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage, subProcess]);
+  
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentBattle?.id}`],
@@ -243,15 +353,12 @@ export default function Combat() {
   // if (enteringNewBattle && !currentBattle?.id) {
   // return <div>Entering a new battle...</div>;
   // }
-    if (!hasBattleReady || (enteringNewBattle && !currentBattle?.id)  ) {
-    
-    return( <div className="w-screen h-screen flex items-center justify-center bg-black">
-      <img
-        src={comabatLoadingScreenImageURL || ""}
-        alt="Entering a new battle..."
-        className="w-full h-full"
-      />
-    </div>);
+  if (!hasBattleReady || (enteringNewBattle && !currentBattle?.id)) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-black">
+        <img src={comabatLoadingScreenImageURL || ""} alt="Entering a new battle..." className="w-full h-full" />
+      </div>
+    );
   }
 
   if (failedToEnterBattle) {
@@ -298,8 +405,6 @@ export default function Combat() {
 }
 
 function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
-
-
   useBackgroundMusic(SOUNDS.BATTLE_AUDIO);
 
   // const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
@@ -316,13 +421,13 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   //       </div>
   //     </div>
   //   </div>
-    
+
   //   )
   // }
 
   return (
     <div
-      className="flex justify-between p-8 min-h-screen bg-cover bg-center bg-no-repeat"
+      className="flex justify-between p-8 min-h-screen left-0 top-0 bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
     >
       <BattleGround currentBattle={currentBattle} />

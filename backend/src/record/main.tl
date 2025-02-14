@@ -1,9 +1,6 @@
 require("utils.combat")
 local json = require("json")
 require("utils.globals")
-local sqlite3 = require('lsqlite3')
-local dbAdminnn = require("utils.utils.dbAdmin")
-local constants = require("utils.constants")
 
 global record Battle
     id: integer
@@ -44,47 +41,6 @@ global record BattleLogEntry
     timestamp: integer
 end
 
-global LEADERBOARD_TABLE: string = [[
-DROP TABLE IF EXISTS Leaderboard;
-    CREATE TABLE IF NOT EXISTS Leaderboard (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER NOT NULL,
-        name TEXT NOT NULL,
-        nft_address TEXT,
-        address TEXT NOT NULL,
-        gold_earned INTEGER DEFAULT 0,
-        gold_lost INTEGER DEFAULT 0,
-        battle_win INTEGER DEFAULT 0,
-        battle_lost INTEGER DEFAULT 0,
-        enemy_killed INTEGER DEFAULT 0,
-        player_death INTEGER DEFAULT 0,
-        death_streak INTEGER DEFAULT 0,
-        pvp INTEGER DEFAULT 0
-    );
-]]
-
-
-global DB: db 
-global dbAdmin: dbAdminType
-
-DB = DB or sqlite3.open_memory()
-if not DB then
-  print("Failed to open database")
-  return
-end
-dbAdmin = dbAdminnn.new(DB)
-
-
-local function DBInit()
-      dbAdmin.db:exec(LEADERBOARD_TABLE)
-end
-    
-global LEADERBOARD_INITIALIZED: boolean
-    LEADERBOARD_INITIALIZED = LEADERBOARD_INITIALIZED or false
-    if (not LEADERBOARD_INITIALIZED) then
-      DBInit()
-      LEADERBOARD_INITIALIZED = true
-end
 
 
 global PlayerBattleData: {number:{Battle}}
@@ -95,11 +51,11 @@ end
 global SubProcesses: {string}
 if not SubProcesses then
     SubProcesses = {
-        "trF_2_iwsl40GDey-7VKSOm7i8S8htASXXch90qWiLg",
-        "78G43Thr_jnSnwkWavzRvovl28efTLdcVJu4EYO02F4",
-        "olbEDcmVafQLguTMpqHQeS6_2USrEBy5ctQZoFCsmFI",
-        "ZG9qfMvERbKNHNPxVtJbB1UOtkkKn85-a9PJFBtLmEs",
-        "j7y0wj1MzNCWx9z1sS-KBsyQDekL0_VOazT_MrJ4GlM",
+        "5EwarJ937Hxx5961oTypYS2R-P4YXlhbNPBtN8MDgcQ",
+        "ePgW-n_4-xW-TVzNuX0LKnO2fAdmf2ArFu87_RzSgVQ",
+        "iDw3CxdrETywWxA_Zed5aEmrFbgitSHZOxOwdfhD4sA",
+        "VFhgKE3lhDnlBRR_3danRaVbVnECpJcK6zIsHnP8-TU",
+        "adOKunFqCj9NuRxWj8KUBp1oCUYf53F2jfEGR8MI_ZM",
     }
 end
 
@@ -131,10 +87,6 @@ global function gettingBattleDataOfPlayer(BattleId: integer, UserAddress: string
     return matched_battles
 end
 
--- local function getLeaderboardByMetric(metric: string):{{any:any}}
---     local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, %s FROM Leaderboard ORDER BY %s DESC;]], metric, metric))
---     return result
--- end
 
 local function savedToHistoryHandler(msg: Message)
     local found = false
@@ -166,63 +118,21 @@ local function savedToHistoryHandler(msg: Message)
 end    
 -- ffvkmPM1jW71hFlBpVbaIapBa_Wl6UIwfdTkDNqsKNw
 
-local function insertOrUpdateDataInLeaderBoradHandler(msg: Message)
-    -- print("Data assert")
-
-    assert(msg.From == constants.GAME_PROCESS_ID,"You cant call this handler")
-     local user_id = tonumber(msg.Tags.UserId)
-     local leaderboarda_data = json.decode(msg.Data) as Leaderboard
-    -- print("Data coming")
-     local user_exist= dbAdmin:exec(string.format([[
-             SELECT * from Leaderboard WHERE user_id = %d;
-           ]], user_id))
-        --    print("Data user_exist")
-
-      if leaderboarda_data.nft_address == nil then
-        leaderboarda_data.nft_address = "NULL"   
-      end
-
-      if #user_exist == 0 then
-        dbAdmin:exec(string.format([[
-        INSERT INTO Leaderboard (user_id, name, address, nft_address, gold_earned, gold_lost, battle_win, battle_lost, enemy_killed, player_death, death_streak, pvp)
-        VALUES (%d, '%s', '%s', '%s', 0, 0, 0, 0, 0, 0, 0, 0);
-    ]], user_id, leaderboarda_data.name, leaderboarda_data.address, leaderboarda_data.nft_address))
-    -- print("Data INSERT")
-      end
-
-        if leaderboarda_data.death_streak_ended then
-            dbAdmin:exec(string.format([[
-        UPDATE Leaderboard SET gold_lost = gold_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
-    ]],  leaderboarda_data.gold_lost, user_id))
-    -- print("Data UPDATE loss")
-
-        else
-            dbAdmin:exec(string.format([[
-                UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
-            ]], leaderboarda_data.gold_earned, leaderboarda_data.enemy_killed ,user_id))
-            -- print("Data UPDATE win")
-        end
-        print("New Leaderboard Entry: " .. user_id)
-
-end  
-
-local function getLeaderboardDataHandler(msg: Message) 
-    local metrices = msg.Tags.metrices
-    local result = dbAdmin:exec(string.format([[SELECT id, user_id, name, address, nft_address, %s FROM Leaderboard ORDER BY %s DESC;]], metrices, metrices)) 
-    ao.send({Target= msg.From, Data=json.encode(result)})
-end
 
 local function resetRecordSubprocessesHandler(msg:Message)
-    assert(msg.From==ao.id,"You can not call this handler")
+    assert(msg.From=="Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI","You can not call this handler")
     print("Initiate")
-    -- dbAdmin:exec(string.format([[TRUNCATE TABLE Leaderboard]]))
-    DBInit()
+    SubProcesses = {
+        "5EwarJ937Hxx5961oTypYS2R-P4YXlhbNPBtN8MDgcQ",
+        "ePgW-n_4-xW-TVzNuX0LKnO2fAdmf2ArFu87_RzSgVQ",
+        "iDw3CxdrETywWxA_Zed5aEmrFbgitSHZOxOwdfhD4sA",
+        "VFhgKE3lhDnlBRR_3danRaVbVnECpJcK6zIsHnP8-TU",
+        "adOKunFqCj9NuRxWj8KUBp1oCUYf53F2jfEGR8MI_ZM",
+    }
     print("Done successfully")
 end
 
 Handlers.add("Record.SavedToHistory", Handlers.utils.hasMatchingTag("Action", "Record.SavedToHistory"), savedToHistoryHandler)
-Handlers.add("Record.insertOrUpdateDataInLeaderBorad", Handlers.utils.hasMatchingTag("Action", "Record.insertOrUpdateDataInLeaderBorad"), insertOrUpdateDataInLeaderBoradHandler)
-Handlers.add("Record.getLeaderboardData", Handlers.utils.hasMatchingTag("Action", "Record.getLeaderboardData"), getLeaderboardDataHandler)
 Handlers.add("Record.ResetRecordSubprocesses", Handlers.utils.hasMatchingTag('Action', 'Record.ResetRecordSubprocesses'), resetRecordSubprocessesHandler)
 
 -- return {}

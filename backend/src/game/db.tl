@@ -24,6 +24,7 @@ global USERS_TABLE: string = [[
         defense FLOAT DEFAULT 0,
         current_spot INTEGER DEFAULT 0,
         current_battle_id INTEGER,
+        current_blackjack_id INTEGER,
         special_item_key INTEGER DEFAULT -1,
         special_item_thread INTEGER DEFAULT -1,
         special_item_bark INTEGER DEFAULT -1,
@@ -46,6 +47,29 @@ global USERS_TABLE: string = [[
 --         pvp INTEGER DEFAULT 0
 --     );
 -- ]]
+
+
+global LEADERBOARD_TABLE: string = [[
+    CREATE TABLE IF NOT EXISTS Leaderboard (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        nft_address TEXT,
+        address TEXT NOT NULL,
+        gold_earned INTEGER DEFAULT 0,
+        gold_lost INTEGER DEFAULT 0,
+        dumz_lost INTEGER DEFAULT 0,
+        battle_win INTEGER DEFAULT 0,
+        battle_lost INTEGER DEFAULT 0,
+        enemy_killed INTEGER DEFAULT 0,
+        player_death INTEGER DEFAULT 0,
+        death_streak INTEGER DEFAULT 0,
+        gold_win_in_pvp INTEGER DEFAULT 0,
+        dumz_win_in_pvp INTEGER DEFAULT 0,
+        pvp_wins INTEGER DEFAULT 0
+    );
+]]
+
 
 global INVENTORY_TABLE: string = [[
     CREATE TABLE IF NOT EXISTS Inventory (
@@ -94,6 +118,8 @@ Handlers.add("Admin.ClearDB",
         dbAdmin.db:exec(USERS_TABLE)
         -- dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
         -- dbAdmin.db:exec(LEADERBOARD_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
+        dbAdmin.db:exec(LEADERBOARD_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Inventory;")
         dbAdmin.db:exec(INVENTORY_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Bank;")
@@ -160,6 +186,7 @@ Handlers.add("Admin.UpdateTable",
         defense FLOAT DEFAULT 0,
         current_spot INTEGER DEFAULT 0,
         current_battle_id INTEGER,
+        current_blackjack_id INTEGER,
         special_item_kitten INTEGER DEFAULT -1,
         special_item_key INTEGER DEFAULT -1,
         special_item_thread INTEGER DEFAULT -1,
@@ -184,9 +211,7 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    -- dbAdmin.db:exec([[ALTER TABLE Users DROP COLUMN has_Claimed_All_Trunk_Tokens]])
-    print("run 1")
-    dbAdmin.db:exec([[ALTER TABLE Users ADD COLUMN total_trunk_token FLOAT DEFAULT 10;]])
+    dbAdmin.db:exec("ALTER TABLE Users ADD COLUMN current_blackjack_id INTEGER;")
     print("end")
 end
 )

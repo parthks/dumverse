@@ -26,6 +26,7 @@ global type CombatUserData = record
     defense: number
     current_spot: integer
     current_battle_id: integer | nil
+    current_blackjack_id: integer | nil
     special_item_key: integer -- default -1, becomes 0 when user accepts quest
     special_item_thread: integer -- default -1, becomes 0 when user accepts quest
     special_item_bark: integer  -- default -1, becomes 0 when user accepts quest

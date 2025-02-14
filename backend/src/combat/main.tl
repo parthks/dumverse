@@ -24,7 +24,7 @@ local function GetOpenBattlesOfUser(user_address: string, timestamp: integer): {
             BattleHelpers.internalLog(
                     battle.id,
                     timestamp,
-                    "CronTick - BattleEnded",
+                    "GetOpenBattlesOfUser",
                     "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
                 )
             local battle_data = BattleHelpers.get(battle.id)
@@ -191,18 +191,20 @@ local function CronTick(msg: Message,npcTimer:integer)
                     "CronTick - BattleEnded",
                     "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
                 )
-                battle.ended = true
-                print("Inactivity Checking")
+                print("Inactive Loop Start: " .. battle.id)
                 for key ,_ in pairs(battle.players) do
+                    print("Inactive player: " .. key)
+                    print("Inactive player Address: " .. GAME_PROCESS_ID)
                     ao.send({
                         Target = GAME_PROCESS_ID,
-                        UserId = tostring(key),
                         Action = "Combat.RemovePlayerFromBattle",
-                    })
-                    local battle_data = BattleHelpers.get(battle.id)
-                    sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
+                        UserId = tostring(key),           
+                    })                  
                 end
-                print("Inactivity End")
+                local battle_data = BattleHelpers.get(battle.id)
+                sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
+                battle.ended = true
+                print("Battle ended: " .. tostring(battle.ended))
             end
         end
     end
@@ -215,7 +217,6 @@ local function newUserJoinHandler(msg: Message)
     local data = json.decode(msg.Data) as {string: string}
 
     print("Battle.NewUserJoin - user " .. user_id)
-    print(GAME_PROCESS_ID)
     assert(msg.From == GAME_PROCESS_ID, "Only Game process can send this message")
     assert(user_id, "UserId is required")
     assert(level_input, "Combat Level is required")
@@ -224,7 +225,7 @@ local function newUserJoinHandler(msg: Message)
     local level = tonumber(level_input) as integer
 
 
-    local battles = GetOpenBattlesOfUser(msg.From, msg.Timestamp)
+    local battles = GetOpenBattlesOfUser(user_id, msg.Timestamp)
     if #battles > 0 then
         -- user is already in a battle
         print("user is already in a battle")
@@ -288,7 +289,13 @@ local function battleInfoHandler(msg: Message)
     local battle_id = tonumber(msg.Tags.BattleId) as integer
     -- VerifyUserInBattle(user_id, battle_id)
     ao.send({ Target = msg.From, Action = "Battle.Data", Data = json.encode(BattleHelpers.get(battle_id)) })
+
+    for battle_ids, battle in pairs(Battles) do
+        if  battle.ended then
+            Battles[battle_ids] = nil
+        end
     end
+end
 
 
 local function drinkPotionHandler(msg: Message)
@@ -324,7 +331,8 @@ local function userAttackHandler(msg: Message)
     local user_id = msg.Tags.UserId
     local attackEntityId = msg.Tags.AttackEntityId
 
-    assert(Battles[battle_id].started==true,"Battle has not started yet")
+    assert(Battles[battle_id], "Battle not found with id: " .. tostring(battle_id))
+    assert(Battles[battle_id].started==true,"Battle has not started yet") 
 
     BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - started", 
         "Attacking User: " .. user_id .. ", Target: " .. attackEntityId)
@@ -457,13 +465,28 @@ local function userIsReadyHandler(msg: Message)
     
     local battle=Battles[battle_id]
     local npcs = battle.npcs as {CombatEnemyData}
+    battle.started=true
+    ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
     for _, npc in ipairs(npcs) do
         battle.last_npc_attack_timestamp[npc.id] = msg.Timestamp
     end
-    battle.started=true
-    ao.send({Target=msg.From,Data=json.encode({hasBattleBegun=true})})
 end    
 
+local function forceDeleteBattleHandler(msg: Message)
+    assert(msg.From == GAME_PROCESS_ID, "You can't call this handler")
+    local battle_id = tonumber(msg.Tags.BattleId) as integer
+    local battle_data = BattleHelpers.get(battle_id)
+    Battles[battle_id].ended = true
+    print("battle " .. battle_id .. " - ENDED. The getOpenBattlesHandler handler has been running for a long time, so we are terminating the battle now.")
+    BattleHelpers.internalLog(
+        battle_id,
+        msg.Timestamp,
+        "forceDeleteBattleHandler - Deleting Battle",
+        "Battle ended due to getOpenBattlesHandler handler has been running. Last active timestamp: " .. battle_data.created_at
+    )
+    sendBatteDataToHistoryProcess(battle_id,battle_data,"yes")
+    Battles[battle_id] = nil
+end
 
 -- Add handlers
 Handlers.add("Battle.NewUserJoin", Handlers.utils.hasMatchingTag("Action", "Battle.NewUserJoin"), newUserJoinHandler)
@@ -473,6 +496,7 @@ Handlers.add("Battle.DrinkPotion", Handlers.utils.hasMatchingTag("Action", "Batt
 Handlers.add("Battle.UserAttack", Handlers.utils.hasMatchingTag("Action", "Battle.UserAttack"), userAttackHandler)
 Handlers.add("Battle.UserRun", Handlers.utils.hasMatchingTag("Action", "Battle.UserRun"), userRunHandler)
 Handlers.add("Battle.UserIsReady", Handlers.utils.hasMatchingTag("Action", "Battle.UserIsReady"), userIsReadyHandler)
+Handlers.add("Battle.ForceDeleteBattle", Handlers.utils.hasMatchingTag("Action", "Battle.ForceDeleteBattle"), forceDeleteBattleHandler)
 
 
 -- CronTick handler will get called every 10 seconds
