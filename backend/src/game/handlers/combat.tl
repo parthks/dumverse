@@ -86,86 +86,6 @@ local function assignSubProcessToUser(user_id:number, level: number, timestamp: 
   return subProcessAssignToUsers[user_id].subProcess
 end
 
--- local function isNestedTableNotEmpty(nestedTable: {any}): boolean
---     for _, innerTable in pairs(nestedTable as {any: any}) do
---         if type(innerTable) == "table" then
---             for _, _ in pairs(innerTable as {any: any}) do
---                 return true
---             end
---         end
---     end
---     return false
--- end
-
--- local function processPlayerData(user_id: number, playerData: CombatUserData, isWin: boolean, numberOfEnemies: number): Leaderboard
-
---     -- local UserLeaderboardData = dbAdmin:exec(string.format([[
---     --          SELECT * from Leaderboard WHERE user_id = %d;
---     --        ]], user_id))
-
---     local playerOriginalData = dbAdmin:exec(string.format([[
---             SELECT * from Users WHERE id = %f;
---          ]], user_id))[1] as UserData
-
---     -- if #UserLeaderboardData == 0 then
---     --     dbAdmin:exec(string.format([[
---     --             INSERT INTO Leaderboard (user_id, name, nft_address, address ) VALUES (%d, "%s", %s, "%s");
---     --        ]], user_id, playerOriginalData.name, playerOriginalData.nft_address and string.format("'%s'", playerOriginalData.nft_address) or "NULL", playerOriginalData.address))
---     -- end
-
---     local leaderboard: Leaderboard = {
---         address = "",
---         name = "",
---         nft_address = nil,
---         gold_earned = 0,
---         gold_lost = 0,
---         battle_win = 0,
---         battle_lost = 0,
---         enemy_killed = 0,
---         player_death = 0,
---         death_streak = 0,
---         death_streak_ended = false,
---     }
-
---     if isWin then
---         -- dbAdmin:exec(string.format([[
---         --     UPDATE Leaderboard SET gold_earned = gold_earned + %d, battle_win = battle_win + 1, enemy_killed = enemy_killed + %d, death_streak = death_streak + 1 WHERE user_id = %d ;
---         -- ]], playerData.gold_balance - playerOriginalData.gold_balance, numberOfEnemies ,user_id))
---         -- Winning scenario
---         leaderboard.address = playerData.address
---         leaderboard.name = playerData.name
---         leaderboard.nft_address = playerData.nft_address 
---         leaderboard.gold_earned = playerData.gold_balance - playerOriginalData.gold_balance
---         -- leaderboard.token_earned = playerData.dumz_balance    
---         leaderboard.battle_win = 1
---         leaderboard.enemy_killed = numberOfEnemies
---         leaderboard.death_streak = 1
---     else
---         -- dbAdmin:exec(string.format([[
---         --     UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
---         -- ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
---         -- Losing scenario
---         leaderboard.address = playerData.address
---         leaderboard.name = playerData.name
---         leaderboard.nft_address = playerData.nft_address
---         leaderboard.gold_lost = playerOriginalData.gold_balance 
---         -- leaderboard.token_lost = playerOriginalData.dumz_balance as integer
---         leaderboard.battle_lost = 1
---         leaderboard.player_death = 1
---         leaderboard.death_streak_ended = true
---     end
-
---     -- Check for NFTs associated with the player
---     -- local numberOfNFTsID = dbAdmin:exec(string.format([[
---     --     SELECT * from Users WHERE address = %s;
---     --  ]], playerOriginalData.address))
---     -- if isNestedTableNotEmpty(numberOfNFTsID) then
---     --     leaderboard.player_with_nft = #numberOfNFTsID
---     -- end
-
---     return leaderboard
--- end
-
 
 local function removeUsedPotion(playerData: CombatUserData, userId: string)
 
@@ -235,7 +155,7 @@ local function enterNewCombatHandler(msg: Message)
         dbAdmin:exec(string.format([[UPDATE Users SET current_battle_id = NULL WHERE id = %d]], user_id)) 
         print("Overwrite")
     else
-        assert(combat_level ~= current_spot, "Battle is complete for this spot")
+        assert(combat_level > current_spot, "Battle is complete for this spot")
     end
     assert(userData.health > 0, "User must have health")
     assert(userData.stamina > 0, "User must have stamina")
