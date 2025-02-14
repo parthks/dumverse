@@ -40,9 +40,12 @@ export default function App() {
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = localStorage.getItem("music-volume") 
-        ? parseFloat(localStorage.getItem("music-volume")!)
-        : 1;
+      const storedVolume = localStorage.getItem("music-volume");
+      if (storedVolume) {
+      audioRef.current.volume =  parseFloat(storedVolume);
+      } else {
+        audioRef.current.volume = 1;
+      }
     }
   }, []);
 
