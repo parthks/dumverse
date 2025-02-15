@@ -31,12 +31,12 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
         if not blackjack.ended then
             local user_addresses = {}
 
-            -- Get all player addresses in open battle
+            -- Get all player addresses in open round
             for _, player in pairs(blackjack.players) do
                 user_addresses[#user_addresses + 1] = player.address
             end
 
-            if utils.includes(user_address, user_addresses) then
+            if not blackjack.ended and utils.includes(user_address, user_addresses) then
                 print("Blackjack round: " .. blackjack.id .. " is open for user " .. user_address)
                 rounds[#rounds + 1] = blackjack
             end
@@ -94,10 +94,55 @@ local function getLatestSuitableOpenBattle(): Round | nil
     return nil
 end
 
+local function createBlackjackRoundCopy(original_round: Round, user_id: integer): Round
+    -- Create a new round table with proper typing
+    local round: Round = {
+        id = original_round.id,
+        players = {},
+        dealer = {
+            address = original_round.dealer.address,
+            balance = original_round.dealer.balance,
+            hiddenCard = #original_round.winner > 0 and original_round.dealer.hiddenCard or nil,
+            visibleCard = original_round.dealer.visibleCard,
+            hasBust = original_round.dealer.hasBust,
+            winnigAmount = original_round.dealer.winnigAmount,
+            status = original_round.dealer.status
+        },
+        deck = #original_round.winner > 0 and original_round.deck or nil,
+        logs = original_round.logs,
+        started = original_round.started,
+        ended = original_round.ended,
+        winner = original_round.winner,
+        created_at = original_round.created_at
+    }
+
+    -- Deep copy players
+    for playerId, originalPlayer in pairs(original_round.players) do
+        round.players[playerId] = {
+            user_id = originalPlayer.user_id,
+            address = originalPlayer.address,
+            nft_address = originalPlayer.nft_address,
+            betAmount = originalPlayer.betAmount,
+            betPlaced = originalPlayer.betPlaced,
+            cards = (playerId == user_id or originalPlayer.hasStood) and originalPlayer.cards or nil,
+            value = originalPlayer.value,
+            hasDoubleDown = originalPlayer.hasDoubleDown,
+            hasBust = originalPlayer.hasBust,
+            hasStood = originalPlayer.hasStood,
+            status = originalPlayer.status,
+            gold_balance = originalPlayer.gold_balance,
+            added_at = originalPlayer.added_at
+        }
+    end
+
+    return round
+end
+
 return {
     addLog = addLog,
     GetOpenBlackjackRoundsOfUser = GetOpenBlackjackRoundsOfUser,
     isPlayerBust = isPlayerBust,
     getLatestSuitableOpenBattle = getLatestSuitableOpenBattle,
-    calculateTotalWithAceAdjustment = calculateTotalWithAceAdjustment
+    calculateTotalWithAceAdjustment = calculateTotalWithAceAdjustment,
+    createBlackjackRoundCopy = createBlackjackRoundCopy
 }

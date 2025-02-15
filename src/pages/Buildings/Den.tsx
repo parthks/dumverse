@@ -11,21 +11,40 @@ import GifComponent from "@/components/Dialogue/Dialogue";
 import { sleep } from "@/lib/time";
 import { SOUNDS } from "@/lib/constants";
 import audioManager from "@/utils/audioManager";
+import { useBlackjackStore } from "@/store/useBlackjackStore";
 
 
 export default function Den() {
   const { shop, getShop, buyItem, buyItemLoading, acceptDenQuest, setGameStatePage} = useGameStore();
+  const {currentRound, enterNewBlackjack, getOpenBlackjackRounds, placeBet, blackjackInfo, hit, doubleDown, stand, userIsReadyForBlackjack} = useBlackjackStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
   const [showBlackjackGame, setShowBlackjackGame] = useState<boolean>(false);
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setShowBlackjackGame(true);
   };
 
   if (showBlackjackGame) {
+    if (!currentRound) {
+      return(
+        <div>
+          Loading........
+          <ImgButton
+              className="h-12"
+              src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"}
+              onClick={async () => {
+                audioManager.playSFX(SOUNDS.BUILDING_ENTER);
+                await sleep(750);
+                setGameStatePage(GameStatePages.SECOND_TOWN);
+              }}
+              alt={"Return to Town"}
+            />
+        </div>
+      )
+    }
     return <BlackjackGame />;
   }
 
@@ -156,7 +175,7 @@ export default function Den() {
                 {/* Play Button */}
 
                 <div style={{ top: "47%", left: "37%", width: "24%", zIndex: 1 }} className=" absolute">
-                  <ImgButton src={"https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"} onClick={handleClick} alt={"Play Button"} disabled={true} className="" />
+                  <ImgButton src={"https://arweave.net/p6Ct2aj2EgGGzXoMGGVBlnQ75YP-EH_YeKLMl4pyYAE"} onClick={handleClick} alt={"Play Button"} disabled={false} className="" />
                 </div>
 
                 {/* Den Table and Chair */}
@@ -172,11 +191,14 @@ export default function Den() {
 }
 
 function BlackjackGame() {
+  const {currentRound, enterNewBlackjack, getOpenBlackjackRounds, placeBet, blackjackInfo, hit, doubleDown, stand, userIsReadyForBlackjack} = useBlackjackStore();
+
   return (
     <div className="h-screen relative">
       <div className="z-10 absolute bottom-4 left-4">
         <ExistToTownButton />
       </div>
+
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
           <img src={"https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"} alt="Den Blackjack Background" className="w-full h-full" />

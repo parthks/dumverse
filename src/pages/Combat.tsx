@@ -596,6 +596,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 
 function NPCAttackCountDown({ entity, currentBattle }: { entity: Battle["npcs"][string]; currentBattle: Battle }) {
   const lastAttackTimestamp = currentBattle.last_npc_attack_timestamp[entity.id];
+  console.log("Ashu : lastAttackTimestamp: " + lastAttackTimestamp);
   const timeTillAttack = lastAttackTimestamp ? 10 - (Date.now() - lastAttackTimestamp) / 1000 : 10;
   return (
     <p className="text-white text-lg font-bold text-center">

@@ -12,8 +12,9 @@ local blackjack_helpers = require("blackjack.blackjack_helpers")
 local addLog = blackjack_helpers.addLog
 local GetOpenBlackjackRoundsOfUser = blackjack_helpers.GetOpenBlackjackRoundsOfUser
 local isPlayerBust = blackjack_helpers.isPlayerBust
-local getLatestSuitableOpenBattle = blackjack_helpers.GetOpenBlackjackRoundsOfUser
+local getLatestSuitableOpenBattle = blackjack_helpers.getLatestSuitableOpenBattle
 local calculateTotalWithAceAdjustment = blackjack_helpers.calculateTotalWithAceAdjustment
+local createBlackjackRoundCopy = blackjack_helpers.createBlackjackRoundCopy
 
 
 local function newUserJoinBlackjackHandler(msg: Message)
@@ -38,7 +39,7 @@ local function newUserJoinBlackjackHandler(msg: Message)
         return
     end
 
-    local round = getLatestSuitableOpenBattle() as Round
+    local round = getLatestSuitableOpenBattle() 
 
     if not round then
         ROUND_COUNT = ROUND_COUNT + 1
@@ -107,7 +108,9 @@ end
 
 
 local function getOpenBlackjackRoundsHandler(msg: Message)
-    local round = GetOpenBlackjackRoundsOfUser(msg.From, msg.Timestamp)
+    local user_id = tonumber(msg.Tags.UserId) as integer
+    local get_open_round = GetOpenBlackjackRoundsOfUser(msg.From, msg.Timestamp)[1]
+    local round = createBlackjackRoundCopy(get_open_round, user_id)
     ao.send({ Target = msg.From, Data = json.encode(round) })
 end
 
@@ -138,25 +141,14 @@ local function placeBetHandler(msg: Message)
 end
 
 
-
--- Handler for showing cards at the end of a round
 local function blackjackInfoHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId) as integer
     local round_id = tonumber(msg.Tags.RoundId) as integer
 
-    local round = Rounds[round_id]
-    if not round.winner then
-        round.dealer.hiddenCard = nil
-        round.deck = nil
-        for playerId, playerDetails in pairs(round.players) do
-            if playerId ~= user_id and not playerDetails.hasStood then
-                playerDetails.cards = nil
-            end
-        end
-    end
+    local original_round = Rounds[round_id]
+    local round = createBlackjackRoundCopy(original_round, user_id)
 
-    local data = json.encode(round)
-    ao.send({ Target = msg.From, Data = data })
+    ao.send({ Target = msg.From, Data = json.encode(round) })
 end
 
 
@@ -250,7 +242,7 @@ local function matchWinner(msg: Message)
         end
 
         -- Check if all players have stood and round duration exceeded
-        if playerCount == stoodCount and round.created_at + 60000 < msg.Timestamp then
+        if playerCount == stoodCount and round.started and round.created_at + 60000 < msg.Timestamp then
             local Deck = round.deck
             local playerAndDealerCardValues: {string: PlayerCardValues} = {}
 
@@ -357,6 +349,9 @@ local function matchWinner(msg: Message)
 
                 round.winner[#round.winner + 1] = winner.id
             end
+            round.ended = true
+        else
+            round.created_at = msg.Timestamp
         end
     end
 end
@@ -379,6 +374,28 @@ local function standHandler(msg: Message)
     ao.send({Target= msg.From, Status = "Success" })
 end
 
+local function userIsReadyForBlackjackHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId) as integer
+    local round_id = tonumber(msg.Tags.RoundId) as integer
+
+    assert(Rounds[round_id], "Blackjack Round not found with id: " .. tostring(round_id) )
+    assert(not Rounds[round_id].ended, "This blackjack round with id: " .. tostring(round_id) .. " is already ended" )
+    assert(Rounds[round_id].players[user_id], "Player " .. tostring(user_id) .. " is not found in Blackjack Round id: " .. tostring(round_id) )
+
+    local round = Rounds[round_id]
+
+    if round.started then
+        ao.send({Target=msg.From, Status = "Success" })
+        return
+    end
+
+    round.started=true
+    round.created_at = msg.Timestamp
+
+    ao.send({Target=msg.From, Status = "Success" })
+
+    round.created_at = msg.Timestamp
+end  
 
 Handlers.add("Blackjack.NewUserJoinBlackjack", Handlers.utils.hasMatchingTag("Action", "Blackjack.NewUserJoinBlackjack"), newUserJoinBlackjackHandler)
 Handlers.add("Blackjack.GetOpenBlackjackRounds", Handlers.utils.hasMatchingTag("Action", "Blackjack.GetOpenBlackjackRounds"), getOpenBlackjackRoundsHandler)
@@ -388,7 +405,7 @@ Handlers.add("Blackjack.Hit", Handlers.utils.hasMatchingTag("Action", "Blackjack
 Handlers.add("Blackjack.DoubleDown", Handlers.utils.hasMatchingTag("Action", "Blackjack.DoubleDown"), doubleDownHandler)
 -- Handlers.add("Blackjack.Win", Handlers.utils.hasMatchingTag("Action", "Blackjack.Win"), matchWinner)
 Handlers.add("Blackjack.Stand", Handlers.utils.hasMatchingTag("Action", "Blackjack.Stand"), standHandler)
-
+Handlers.add("Blackjack.UserIsReadyForBlackjack", Handlers.utils.hasMatchingTag("Action", "Blackjack.UserIsReadyForBlackjack"), userIsReadyForBlackjackHandler)
 
 
 Handlers.add("matchWinner", Handlers.utils.hasMatchingTag("Action", "Cron"), function(msg: Message)

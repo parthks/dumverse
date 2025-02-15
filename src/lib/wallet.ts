@@ -1,5 +1,5 @@
 import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
-import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID, DUMZ_TOKEN_PROCESS_ID, TRUNK_TOKEN_PROCESS_ID , BANK_PROCESS_ID} from "./utils";
+import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID, DUMZ_TOKEN_PROCESS_ID, TRUNK_TOKEN_PROCESS_ID , BANK_PROCESS_ID, BLACKJACK_PROCESS_ID} from "./utils";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 
 export type MyMessageResult = MessageResult & {
@@ -22,11 +22,14 @@ function getProcessId(process: Process) {
     ? TRUNK_TOKEN_PROCESS_ID 
     : process === "game"
     ? GAME_PROCESS_ID
+    : process === "blackjack"
+    ? BLACKJACK_PROCESS_ID
     : process;
 }
 
 export async function sendAndReceiveGameMessage({ tags, data, process = "game" }: { tags: { name: string; value: string }[]; data?: string; process?: Process }) {
   const processId = getProcessId(process);
+  console.log("adada: "+ processId);
   const action = tags.find((tag) => tag.name === "Action")?.value;
   console.log("sending message:" + action, { tags, data });
   const res = await message({
