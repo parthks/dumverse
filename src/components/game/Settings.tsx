@@ -40,6 +40,7 @@ export default function Settings({ setIsSettingsOpen }: { setIsSettingsOpen: (va
               initialVolume={sfxVolume}
               onChange={(volume) => {
                 setSfxVolume(volume);
+                localStorage.setItem("sfx-volume", volume.toString());
                 audioManager.setSFXVolume(volume);
               }}
               className="mx-auto"
@@ -50,6 +51,7 @@ export default function Settings({ setIsSettingsOpen }: { setIsSettingsOpen: (va
               initialVolume={musicVolume}
               onChange={(volume) => {
                 setMusicVolume(volume);
+                localStorage.setItem("music-volume", volume.toString());
                 audioManager.setMusicVolume(volume);
               }}
               className="mx-auto"
