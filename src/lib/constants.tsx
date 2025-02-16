@@ -334,7 +334,7 @@ export const interactivePointsMap3 = [
 ];
 
 export const CARD_IMAGES = {
-  club: {
+  Club: {
     "2": "https://arweave.net/HC1H4rQAdK2ml0CuYPdIaQBGGNo_wbN0cYrCpamW5z4",
     "3": "https://arweave.net/Hh0c0nGw0WgI6U6TCZnEhx0bo8LqOZcU_pNfLwt-Fgg",
     "4": "https://arweave.net/NKqYG93sfIZri-f9_11ZxgJVpcb9cvZpVkGvGFDz9y8",
@@ -344,12 +344,12 @@ export const CARD_IMAGES = {
     "8": "https://arweave.net/D_FbJ74JI5AgC8iQcQFUWJx3DW3O0Up2tCMXhojuqMU",
     "9": "https://arweave.net/1M5Ydt-2VsfdTo1YbZ30ZFPxysGFi9wXj1fnBnUGtio",
     "10": "https://arweave.net/gMmItY9tJ10p01y9q__B50QPxG1NQ7Qa5yhycxBhZMU",
-    "J": "https://arweave.net/q_yJIoaJ0C0UNslLB1SX9Rf-D1xvGxE_3RRkP1BbTDg",
-    "Q": "https://arweave.net/GOBVZaORY6LwMcikfek_F9kY2kv2aX6j64_ZCSV3jo8",
-    "K": "https://arweave.net/VrrOKJyq2esRyphLVEEPigBez5e7j2_--VAc46oly6o",
-    "A": "https://arweave.net/uwCepxcsx9CkfJo3n9f5-CeKQKFaQjafvpBaZgBnZyw"
+    "Jack": "https://arweave.net/q_yJIoaJ0C0UNslLB1SX9Rf-D1xvGxE_3RRkP1BbTDg",
+    "Queen": "https://arweave.net/GOBVZaORY6LwMcikfek_F9kY2kv2aX6j64_ZCSV3jo8",
+    "King": "https://arweave.net/VrrOKJyq2esRyphLVEEPigBez5e7j2_--VAc46oly6o",
+    "Ace": "https://arweave.net/uwCepxcsx9CkfJo3n9f5-CeKQKFaQjafvpBaZgBnZyw"
   },
-  heart: {
+  Heart: {
     "2": "https://arweave.net/M6bbuaIHqd54guPrXw5rBppJQC_NpElHZmxll3e1uS4",
     "3": "https://arweave.net/OgLVtlmJiHQqjIzEBq9gN_uCYHYgRzJNt6Jz3ir7Beg",
     "4": "https://arweave.net/M5Tl_MWAN0ontzHmdUTKqiN6qsQMfQkk4UzwaHPpumQ",
@@ -359,12 +359,12 @@ export const CARD_IMAGES = {
     "8": "https://arweave.net/OEFt8zgB6hfhaPoOCbcrvRgSGxYwoVTXDQXJdajByCQ",
     "9": "https://arweave.net/1vTTBVwiZkpxCK9TVfZnAfg8nKFfSzIEFdNP-gbfLIU",
     "10": "https://arweave.net/bSUxJqhnyHaMrI4-ljRftgaYqgdPY0AyqDTOazNUglU",
-    "J": "https://arweave.net/xmu2r9axo46QT6zmE8DDToZ1tWmy2swBEGZYFo52mos",
-    "Q": "https://arweave.net/TXJHIq0YNZ5ANYvJMsuQ083ym0PqwmVkCJpLAwMsul8",
-    "K": "https://arweave.net/t-yJz3_4cqSr__Xn4shKPYa-FJwaQRciOM6lAdLXOt8",
-    "A": "https://arweave.net/jnG4O7VJCH5ylne-qSU4VbEREPS9dSYg2-9MvgBR0qE"
+    "Jack": "https://arweave.net/xmu2r9axo46QT6zmE8DDToZ1tWmy2swBEGZYFo52mos",
+    "Queen": "https://arweave.net/TXJHIq0YNZ5ANYvJMsuQ083ym0PqwmVkCJpLAwMsul8",
+    "King": "https://arweave.net/t-yJz3_4cqSr__Xn4shKPYa-FJwaQRciOM6lAdLXOt8",
+    "Ace": "https://arweave.net/jnG4O7VJCH5ylne-qSU4VbEREPS9dSYg2-9MvgBR0qE"
   },
-  diamond: {
+  Diamond: {
     "2": "https://arweave.net/H5n8QftrJH8PonA0Y4XWPINFZraG41OJRJnw8PtqU6s",
     "3": "https://arweave.net/GmLvPw_x1rYz1QGRMFsDN4maauG9bpxRaC0CNTf1FvY",
     "4": "https://arweave.net/JXKL0fACmPCe6GWJ9EpHC53FXPJL5HTi8GtScOu3mVI",
@@ -374,12 +374,12 @@ export const CARD_IMAGES = {
     "8": "https://arweave.net/sc24UQQbWbI1T1O70IuFQBR5XdrS4dSA06dgIP4Ni0g",
     "9": "https://arweave.net/2SXTeoR9oiCyTcNHTn0E8Qo3vHac1KXWMomKs7X1W9c",
     "10": "https://arweave.net/UNWpIYWiOlZfCVd3fs0w8HwSE6IO99qERec25R9Q164",
-    "J": "https://arweave.net/eJPnuZXHprLGWMYEUQjHwNAe-xbWuFYmyh-hY7Z_HRE",
-    "Q": "https://arweave.net/Cub3iglXz6qnYFAvyGTc42g5lqHbPPcAamI9jL3U3yA",
-    "K": "https://arweave.net/2AFK6w5zu_rp0ygYEG6-_yvFK3bToy-dEH_b7TBAJBc",
-    "A": "https://arweave.net/EFA2sJ6Q7Kn4I0PtQeyyATtO0mqUYhxulafNB7O9c24"
+    "Jack": "https://arweave.net/eJPnuZXHprLGWMYEUQjHwNAe-xbWuFYmyh-hY7Z_HRE",
+    "Queen": "https://arweave.net/Cub3iglXz6qnYFAvyGTc42g5lqHbPPcAamI9jL3U3yA",
+    "King": "https://arweave.net/2AFK6w5zu_rp0ygYEG6-_yvFK3bToy-dEH_b7TBAJBc",
+    "Ace": "https://arweave.net/EFA2sJ6Q7Kn4I0PtQeyyATtO0mqUYhxulafNB7O9c24"
   },
-  spade: {
+  Spade: {
     "2": "https://arweave.net/9nabwK-RC0FOZ1GV8l9cX5Hcdn2QlRiYeeOc68cRPGE",
     "3": "https://arweave.net/RNkioqWtTI2Q6yWPrIkkOk8_PuKPQaayPhC2t0whdTw",
     "4": "https://arweave.net/MC8NFfbqc9UMxuyky86YJy5a6gqbnbeBMk59Fce42r8",
@@ -389,10 +389,10 @@ export const CARD_IMAGES = {
     "8": "https://arweave.net/UPYOUYG3W4nwTroBmyDZ8cpbNrmJtTfhihh7rVocw-s",
     "9": "https://arweave.net/dh2DolJQgJzsGAbVNvQL6vaaDT76MnitF3B8_1EEeMA",
     "10": "https://arweave.net/NiNA0Yu_yJE7JlkKmBz-GnwR19RfdnzpcbFoVYSECPI",
-    "J": "https://arweave.net/syl4Dr4v7cQ4njXj8V6laBc33zTDJbGj5Pvp_Cy2GAA",
-    "Q": "https://arweave.net/0jhE-LNVXJgIAIg9jAX06cChlvqE3Ivl2FHTjAZDkU4",
-    "K": "https://arweave.net/VnbxbGPFjjZ5lRM_4z7yEjLjcaJIbXcq64-UFh4S8s4",
-    "A": "https://arweave.net/Kfo5AMVhfEPe4jzpGyCDCeVwPUe2cT5jlMq8xDaHbUA"
+    "Jack": "https://arweave.net/syl4Dr4v7cQ4njXj8V6laBc33zTDJbGj5Pvp_Cy2GAA",
+    "Queen": "https://arweave.net/0jhE-LNVXJgIAIg9jAX06cChlvqE3Ivl2FHTjAZDkU4",
+    "King": "https://arweave.net/VnbxbGPFjjZ5lRM_4z7yEjLjcaJIbXcq64-UFh4S8s4",
+    "Ace": "https://arweave.net/Kfo5AMVhfEPe4jzpGyCDCeVwPUe2cT5jlMq8xDaHbUA"
   },
   Back: "https://arweave.net/e_PNFE1Bpd2Bkl_wrPWeeSZkQR1eSGtfDOiLuQq4gCM",
   deck: "https://arweave.net/OPSnlpUh0zp5LMt3jJO1UXm1R_K63X1oAK3vPwkIyuQ"
