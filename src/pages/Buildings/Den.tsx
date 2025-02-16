@@ -282,6 +282,12 @@ function BlackjackGame() {
             </div>
           </div>
         </div>
+        <div className="z-10 absolute bottom-5 right-4">
+          <div className="mb-14">
+          <InventoryBag />
+          </div>
+          <NewButton onClick={() => {}} className="py-3 w-56 text-2xl bottom-0 left-4" alt="Blackjack Chat"></NewButton>
+        </div>
       </div>
     </div>
   );
@@ -312,7 +318,7 @@ function BlackjackPlaying() {
     <>
       {/* players in the game */}
 
-      <div className="text-white grid grid-cols-3 bg-[#37242A] w-[28%] h-[18%] rounded-[35px] p-3 z-10 absolute top-6 left-8">
+      <div className="text-white grid grid-cols-3 bg-[#37242A] w-[28%] h-[19%] rounded-[35px] p-3 z-10 absolute top-6 left-8">
         {activeUsers.map((user) => (
           <div className="flex flex-col items-center">
             <img
