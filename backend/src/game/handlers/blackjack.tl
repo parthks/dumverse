@@ -8,7 +8,7 @@ local function enterNewBlackjackMatchHandler(msg: Message)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     
     assert(userData.gold_balance > 0, "You dont have enough gold to enter into the blackjack")
-
+    
     ao.send({
         Target = constants.BLACKJACK_PROCESS_ID,
         Action = "Blackjack.NewUserJoinBlackjack",
@@ -16,7 +16,7 @@ local function enterNewBlackjackMatchHandler(msg: Message)
         Status = "Success",
         Data = json.encode(userData),
     })
-
+    ao.send({Target= msg.From, Status = "Success" })
 end
 
 local function enteredNewBlackjackMatchHandler(msg: Message)

@@ -242,7 +242,7 @@ local function matchWinner(msg: Message)
         end
 
         -- Check if all players have stood and round duration exceeded
-        if playerCount == stoodCount and round.started and round.created_at + 60000 < msg.Timestamp then
+        if playerCount == stoodCount or (round.started and round.created_at + 60000 < msg.Timestamp) then
             local Deck = round.deck
             local playerAndDealerCardValues: {string: PlayerCardValues} = {}
 
