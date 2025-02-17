@@ -2,9 +2,9 @@ require("blackjack.types")
 require("blackjack.globals")
 local utils = require("utils.utils.tl-utils")
 require("blackjack.globals")
+local constants = require("utils.constants")
 
-
-local function addLog(blackjack_id: integer, timestamp: integer, from: string, message: string)
+local function addLog(blackjack_id: string, timestamp: integer, from: string, message: string)
     Rounds[blackjack_id].logs = Rounds[blackjack_id].logs or {}
     table.insert(Rounds[blackjack_id].logs, {
         from = from,
@@ -20,7 +20,7 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
         if not blackjack.ended and (blackjack.created_at + 300000) < timestamp then
             print("Blackjack round: " .. blackjack.id .. " - ENDED DUE TO PLAYER INACTIVITY")
             addLog(
-                blackjack.id,
+                tostring(blackjack.id),
                 timestamp,
                 "GetOpenBlackjackRoundsOfUser",
                 "Blackjack round ended due to player inactivity. Last active timestamp: " .. blackjack.created_at
@@ -94,7 +94,7 @@ local function getLatestSuitableOpenBattle(): Round | nil
     return nil
 end
 
-local function createBlackjackRoundCopy(original_round: Round, user_id: integer): Round
+local function createBlackjackRoundCopy(original_round: Round, user_id: string): Round
     -- Create a new round table with proper typing
     local round: Round = {
         id = original_round.id,
@@ -122,9 +122,11 @@ local function createBlackjackRoundCopy(original_round: Round, user_id: integer)
             user_id = originalPlayer.user_id,
             address = originalPlayer.address,
             nft_address = originalPlayer.nft_address,
+            name = originalPlayer.name,
             betAmount = originalPlayer.betAmount,
             betPlaced = originalPlayer.betPlaced,
-            cards = (playerId == user_id or originalPlayer.hasStood) and originalPlayer.cards or nil,
+            -- cards = (playerId == user_id or originalPlayer.hasStood) and originalPlayer.cards or nil,
+            cards = (playerId == user_id or originalPlayer.betPlaced) and originalPlayer.cards or nil,
             value = originalPlayer.value,
             hasDoubleDown = originalPlayer.hasDoubleDown,
             hasBust = originalPlayer.hasBust,
@@ -138,11 +140,25 @@ local function createBlackjackRoundCopy(original_round: Round, user_id: integer)
     return round
 end
 
+local function sendGoldToPlayerWin(blackjack_id: string)
+    local players = Rounds[blackjack_id].players
+    for playerId, playerDetails in pairs(players) do
+        ao.send({
+            Target = constants.GAME_PROCESS_ID,
+            UserId = tostring(playerId),
+            RoundId = blackjack_id,
+            Gold = tostring(playerDetails.gold_balance),
+            Action = "BlackjackMatch.BlackjackWon"
+        })
+    end
+end
+
 return {
     addLog = addLog,
     GetOpenBlackjackRoundsOfUser = GetOpenBlackjackRoundsOfUser,
     isPlayerBust = isPlayerBust,
     getLatestSuitableOpenBattle = getLatestSuitableOpenBattle,
     calculateTotalWithAceAdjustment = calculateTotalWithAceAdjustment,
-    createBlackjackRoundCopy = createBlackjackRoundCopy
+    createBlackjackRoundCopy = createBlackjackRoundCopy,
+    sendGoldToPlayerWin = sendGoldToPlayerWin
 }

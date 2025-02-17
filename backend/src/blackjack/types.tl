@@ -7,9 +7,10 @@ end
 
 -- Define the Player type
 global record Player
-    user_id: integer
+    user_id: string
     address: string
     nft_address: string | nil
+    name: string
     betAmount: number
     betPlaced: boolean
     cards: {Card} -- Player's hand of cards
@@ -65,7 +66,7 @@ end
 
 global record Round 
     id: integer
-    players: {integer: Player}
+    players: {string: Player}
     dealer: DealerType
     deck: {Card}
     logs: {BlackjackGameLogEntry}

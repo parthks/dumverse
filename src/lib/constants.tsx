@@ -334,7 +334,7 @@ export const interactivePointsMap3 = [
 ];
 
 export const CARD_IMAGES = {
-  Club: {
+  Clubs: {
     "2": "https://arweave.net/HC1H4rQAdK2ml0CuYPdIaQBGGNo_wbN0cYrCpamW5z4",
     "3": "https://arweave.net/Hh0c0nGw0WgI6U6TCZnEhx0bo8LqOZcU_pNfLwt-Fgg",
     "4": "https://arweave.net/NKqYG93sfIZri-f9_11ZxgJVpcb9cvZpVkGvGFDz9y8",
@@ -349,7 +349,7 @@ export const CARD_IMAGES = {
     "King": "https://arweave.net/VrrOKJyq2esRyphLVEEPigBez5e7j2_--VAc46oly6o",
     "Ace": "https://arweave.net/uwCepxcsx9CkfJo3n9f5-CeKQKFaQjafvpBaZgBnZyw"
   },
-  Heart: {
+  Hearts: {
     "2": "https://arweave.net/M6bbuaIHqd54guPrXw5rBppJQC_NpElHZmxll3e1uS4",
     "3": "https://arweave.net/OgLVtlmJiHQqjIzEBq9gN_uCYHYgRzJNt6Jz3ir7Beg",
     "4": "https://arweave.net/M5Tl_MWAN0ontzHmdUTKqiN6qsQMfQkk4UzwaHPpumQ",
@@ -364,7 +364,7 @@ export const CARD_IMAGES = {
     "King": "https://arweave.net/t-yJz3_4cqSr__Xn4shKPYa-FJwaQRciOM6lAdLXOt8",
     "Ace": "https://arweave.net/jnG4O7VJCH5ylne-qSU4VbEREPS9dSYg2-9MvgBR0qE"
   },
-  Diamond: {
+  Diamonds: {
     "2": "https://arweave.net/H5n8QftrJH8PonA0Y4XWPINFZraG41OJRJnw8PtqU6s",
     "3": "https://arweave.net/GmLvPw_x1rYz1QGRMFsDN4maauG9bpxRaC0CNTf1FvY",
     "4": "https://arweave.net/JXKL0fACmPCe6GWJ9EpHC53FXPJL5HTi8GtScOu3mVI",
@@ -379,7 +379,7 @@ export const CARD_IMAGES = {
     "King": "https://arweave.net/2AFK6w5zu_rp0ygYEG6-_yvFK3bToy-dEH_b7TBAJBc",
     "Ace": "https://arweave.net/EFA2sJ6Q7Kn4I0PtQeyyATtO0mqUYhxulafNB7O9c24"
   },
-  Spade: {
+  Spades: {
     "2": "https://arweave.net/9nabwK-RC0FOZ1GV8l9cX5Hcdn2QlRiYeeOc68cRPGE",
     "3": "https://arweave.net/RNkioqWtTI2Q6yWPrIkkOk8_PuKPQaayPhC2t0whdTw",
     "4": "https://arweave.net/MC8NFfbqc9UMxuyky86YJy5a6gqbnbeBMk59Fce42r8",

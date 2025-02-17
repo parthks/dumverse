@@ -14,37 +14,55 @@ import audioManager from "@/utils/audioManager";
 import NewButton from "@/components/ui/NewButton";
 import { Input } from "@/components/ui/input";
 import { useBlackjackStore } from "@/store/useBlackjackStore";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Den() {
-  const {currentRound, enterNewBlackjack, getOpenBlackjackRounds, placeBet, blackjackInfo, hit, doubleDown, stand, userIsReadyForBlackjack} = useBlackjackStore();
+  const {
+    currentRound,
+    enterNewBlackjack,
+    getOpenBlackjackRounds,
+    blackjackStart,
+    setBlackjackStart,
+    placeBet,
+    blackjackInfo,
+    hit,
+    doubleDown,
+    stand,
+    userIsReadyForBlackjack,
+  } = useBlackjackStore();
   const { getShop, acceptDenQuest, setGameStatePage } = useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("ENERGY") });
 
-  const [showBlackjackGame, setShowBlackjackGame] = useState<boolean>(false);
+  // const [showBlackjackGame, setShowBlackjackGame] = useState<boolean>(false);
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
   const handleClick = async () => {
-    setShowBlackjackGame(true);
+    setBlackjackStart(false);
+    const result = await enterNewBlackjack();
+    setBlackjackStart(true);
+    if ((result.status = "Success")) await getOpenBlackjackRounds();
   };
 
-  if (showBlackjackGame) {
+  if (blackjackStart) {
     if (!currentRound) {
-      return(
+      return (
         <div>
           Loading........
           <ImgButton
-              className="h-12"
-              src={"https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"}
-              onClick={async () => {
-                audioManager.playSFX(SOUNDS.BUILDING_ENTER);
-                await sleep(750);
-                setGameStatePage(GameStatePages.SECOND_TOWN);
-              }}
-              alt={"Return to Town"}
-            />
+            className="h-12"
+            src={
+              "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
+            }
+            onClick={async () => {
+              audioManager.playSFX(SOUNDS.BUILDING_ENTER);
+              await sleep(750);
+              setGameStatePage(GameStatePages.SECOND_TOWN);
+            }}
+            alt={"Return to Town"}
+          />
         </div>
-      )
+      );
     }
     return <BlackjackGame />;
   }
@@ -262,7 +280,29 @@ export default function Den() {
 }
 
 function BlackjackGame() {
-  const {currentRound, enterNewBlackjack, getOpenBlackjackRounds, placeBet, blackjackInfo, hit, doubleDown, stand, userIsReadyForBlackjack} = useBlackjackStore();
+  const {
+    currentRound,
+    enterNewBlackjack,
+    getOpenBlackjackRounds,
+    placeBet,
+    blackjackInfo,
+    hit,
+    doubleDown,
+    stand,
+    userIsReadyForBlackjack,
+  } = useBlackjackStore();
+  const { user } = useGameStore();
+
+  const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
+    queryKey: [`newMessages-${currentRound?.id}`],
+    queryFn: async () => {
+      console.log("refetching blackjack round updates");
+      await blackjackInfo();
+      return [];
+    },
+    enabled: !!currentRound?.id && !currentRound?.ended,
+    refetchInterval: 1000, // Poll every 1 second
+  });
 
   return (
     <div className="h-screen relative">
@@ -280,9 +320,25 @@ function BlackjackGame() {
             className="w-full h-full"
           />
         </div>
-        {/* <BettingAmount/> */}
+
+        {/* {Array.isArray(currentRound?.players)
+          ? currentRound.players.length > 0 &&
+            currentRound.players[0]?.user_id === user?.id.toString() &&
+            !currentRound.players[0]?.betPlaced && <BettingAmount />
+          : currentRound?.players &&
+            Object.entries(currentRound.players).map(([key, player]) =>
+              player.user_id === user?.id.toString() && !player.betPlaced ? (
+                <BettingAmount key={key} />
+              ) : <></>
+            )} */}
+        {currentRound &&
+          user &&
+          !currentRound.players[user.id.toString()].betPlaced && (
+            <BettingAmount />
+          )}
+
         <BlackjackPlaying />
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 z-0">
           <div
             className="absolute w-full h-full flex flex-col  items-center justify-end"
             style={{
@@ -304,11 +360,11 @@ function BlackjackGame() {
             </div>
           </div>
         </div>
-        <div className="z-10 absolute bottom-5 right-4">
-          <div className="mb-14">
-          <InventoryBag />
+        <div className="z-10 absolute bottom-0 right-4">
+          <div className="mb-6">
+            <InventoryBag />
           </div>
-          <NewButton onClick={() => {}} className="py-3 w-56 text-2xl bottom-0 left-4" alt="Blackjack Chat"></NewButton>
+          {/* <NewButton onClick={() => {}} className="py-3 w-56 text-2xl bottom-0 left-4" alt="Blackjack Chat"></NewButton> */}
         </div>
       </div>
     </div>
@@ -321,89 +377,205 @@ const activeUsers = [
     username: "cryptoCherie",
     bet_amount: "30",
   },
-  {
-    image: "https://arweave.net/",
-    username: "DumDum",
-    bet_amount: "25",
-  },
-  {
-    image: "https://arweave.net/",
-    username: "WhoKnows",
-    bet_amount: "50",
-  },
 ];
 
 function BlackjackPlaying() {
-  const nft_address = null;
+  const {
+    currentRound,
+    enterNewBlackjack,
+    getOpenBlackjackRounds,
+    placeBet,
+    blackjackInfo,
+    hit,
+    doubleDown,
+    stand,
+    userIsReadyForBlackjack,
+  } = useBlackjackStore();
+  const { user } = useGameStore();
+
+  const remainingTimeOfRound = currentRound?.created_at
+    ? 60 - (Date.now() - currentRound?.created_at) / 1000
+    : 60;
 
   return (
     <>
-      {/* players in the game */}
-
-      <div className="text-white grid grid-cols-3 bg-[#37242A] w-[28%] h-[19%] rounded-[35px] p-3 z-10 absolute top-6 left-8">
-        {activeUsers.map((user) => (
-          <div className="flex flex-col items-center">
-            <img
-              src={
-                nft_address !== null
-                  ? `https://arweave.net/${nft_address}`
-                  : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"
-              }
-              alt="Content Image"
-              className="w-[30%] h-[34%]"
-            />
-            <h1 className="text-2xl mb-4">{user.username}</h1>
-            <h1 className="text-2xl">BET</h1>
-            <h1 className="text-2xl">{user.bet_amount}g</h1>
-          </div>
-        ))}
+      {/* Players in the game */}
+      <div className="text-white grid grid-cols-3 bg-[#37242A] w-[28%] h-[19%] rounded-[35px] z-10 absolute top-6 left-8 place-items-center">
+        {currentRound?.players &&
+          Object.entries(currentRound.players).map(([key, player]) => (
+            <div
+              key={key}
+              className="flex flex-col items-center justify-center w-full"
+            >
+              <img
+                src={
+                  player.nft_address
+                    ? `https://arweave.net/${player.nft_address}`
+                    : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"
+                }
+                alt="Content Image"
+                className="w-[35%] h-[35%] object-contain"
+              />
+              <h1 className="text-lg mb-1 text-center">{player.name}</h1>
+              <h1 className="text-lg text-center">BET</h1>
+              <h1 className="text-lg text-center">{player.betAmount}g</h1>
+            </div>
+          ))}
       </div>
 
-      {/* dealer hands */}
-      <div className="z-10 absolute rotate-180 top-1/3 left-[52%] transform -translate-x-1/2">
-        <CardsRenderer
-          firstCard={CARD_IMAGES.Back}
-          secondCard={CARD_IMAGES.Spade.Jack}
-        />
-        <img
-          src={CARD_IMAGES.deck}
-          className="rotate-180 w-28 absolute right-72 bottom-10"
-        />
-      </div>
-      {/* players hand */}
-      <div className="absolute bottom-40 left-1/2 transform -translate-x-1/2">
-        <CardsRenderer
-          firstCard={CARD_IMAGES.Diamond[2]}
-          secondCard={CARD_IMAGES.Club.Jack}
-        />
+      {/* Dealer hands */}
+      <div className="z-0 absolute rotate-180 top-1/3 left-[52%] transform -translate-x-1/2">
+        {/* Dealer's Cards */}
+        <div className="flex gap-2 w-auto m-10 left-1/2">
+          {currentRound?.dealer?.visibleCard?.map((val, key) => {
+            const suit = val.suit as keyof typeof CARD_IMAGES;
+            const rank =
+              val.rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES];
+
+            return (
+              <img
+                key={key}
+                src={CARD_IMAGES[suit][rank]}
+                className="w-[95px] h-[135px]" // Fixed size for each card
+                alt={`${rank} of ${suit}`}
+              />
+            );
+          })}
+
+          {/* Dealer's Hidden Card */}
+          <img
+            src={
+              currentRound?.dealer?.hiddenCard
+                ? CARD_IMAGES[
+                    currentRound.dealer.hiddenCard
+                      .suit as keyof typeof CARD_IMAGES
+                  ][
+                    currentRound.dealer.hiddenCard
+                      .rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES]
+                  ]
+                : CARD_IMAGES.Back
+            }
+            className="w-[95px] h-[135px]" // Fixed size
+            alt="Hidden Card"
+          />
+        </div>
       </div>
 
-      {/* left side player */}
-      <div className=" absolute top-[48%] left-[26%] transform -translate-x-1/2">
-        <CardsRenderer
-          firstCard={CARD_IMAGES.Heart[7]}
-          secondCard={CARD_IMAGES.Spade.Queen}
-        />
-      </div>
+      {/* Deck Image */}
+      <img
+        src={CARD_IMAGES.deck}
+        className="w-28 absolute right-[30%] bottom-[48%]"
+      />
 
-      {/* right side player */}
-      <div className="absolute top-[48%] right-[10%] transform -translate-x-1/2">
-        <CardsRenderer
-          firstCard={CARD_IMAGES.Diamond[10]}
-          secondCard={CARD_IMAGES.Spade.Ace}
-        />
-      </div>
+      {!currentRound?.ended ? (
+        <p className="absolute right-[41%] bottom-[40%] text-white text-3xl">
+          {" "}
+          {Math.ceil(remainingTimeOfRound < 0 ? 0 : remainingTimeOfRound)}{" "}
+          seconds remaining{" "}
+        </p>
+      ) : (
+        <p className="absolute right-[41%] bottom-[40%] text-white text-3xl">
+          {" "}
+          {JSON.stringify(currentRound?.winner)} Win{" "}
+        </p>
+      )}
+      {/* Players' Hands */}
+      {currentRound?.players &&
+        Object.entries(currentRound.players).map(
+          ([playerId, player], index) => {
+            const isCurrentUser = player.user_id === user?.id.toString();
+            const positionClass = isCurrentUser
+              ? "absolute bottom-40 left-1/2 transform -translate-x-1/2"
+              : index % 2 === 0
+              ? "absolute top-[48%] left-[26%] transform -translate-x-1/2"
+              : "absolute top-[48%] right-[10%] transform -translate-x-1/2";
 
+            return (
+              <div key={player.user_id} className={positionClass}>
+                {player.cards.length > 0 ? (
+                  <div className="flex gap-2 w-auto m-10 left-1/2">
+                    {player.cards.map((card, key) => {
+                      const suit = card.suit as keyof typeof CARD_IMAGES;
+                      const rank =
+                        card.rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES];
+
+                      return (
+                        <img
+                          key={key}
+                          src={CARD_IMAGES[suit][rank]}
+                          className="w-[95px] h-[135px]" // Fixed size for each card
+                          alt={`${rank} of ${suit}`}
+                        />
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <img
+                    src={CARD_IMAGES.Back}
+                    alt="Back of Card"
+                    className="w-[50px] h-[70px]"
+                  />
+                )}
+              </div>
+            );
+          }
+        )}
+
+      {/* Controls */}
       <div className="absolute bottom-40 right-1/3 text-2xl transform -translate-x-16">
-        <NewButton onClick={() => {}} alt="Stand" className="px-12 py-2" />
-
-        <NewButton onClick={() => {}} alt="Hit" className="px-16 py-2 mr-52" />
-
-        <NewButton
-          onClick={() => {}}
-          alt="Double Down"
-          className="w-52 relative -left-[21rem] mt-16 py-2"
-        />
+        {user?.id && currentRound?.players[user.id.toString()] && (
+          <>
+            <NewButton
+              varient="blue"
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await stand();
+              }}
+              disabled={
+                !currentRound.players[user.id.toString()].betPlaced ||
+                currentRound.players[user.id.toString()].hasDoubleDown ||
+                currentRound.ended
+              }
+              alt="Stand"
+              className="px-12 py-2"
+            />
+            <NewButton
+              varient="blue"
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await hit();
+              }}
+              disabled={
+                !currentRound.players[user.id.toString()].betPlaced ||
+                currentRound.players[user.id.toString()].hasDoubleDown ||
+                currentRound.players[user.id.toString()].hasBust ||
+                currentRound.players[user.id.toString()].hasStood ||
+                currentRound.ended
+              }
+              alt="Hit"
+              className="px-16 py-2 mr-52"
+            />
+            <NewButton
+              varient="blue"
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await doubleDown();
+              }}
+              disabled={
+                !currentRound.players[user.id.toString()].betPlaced ||
+                currentRound.players[user.id.toString()].hasDoubleDown ||
+                currentRound.players[user.id.toString()].hasBust ||
+                currentRound.players[user.id.toString()].hasStood ||
+                currentRound.ended
+              }
+              alt="Double Down"
+              className="w-52 relative -left-[21rem] mt-16 py-2"
+            />
+          </>
+        )}
       </div>
     </>
   );
@@ -421,16 +593,35 @@ function CardsRenderer({
   return (
     <div className={`grid grid-cols-2 w-44 m-10 left-1/2 ${className}`}>
       <img src={firstCard} className={``} />
-      <img src={secondCard} className={`ml-10`} />
+      <img src={secondCard} className={`ml-2`} />
     </div>
   );
 }
 
 function BettingAmount() {
+  const {
+    currentRound,
+    enterNewBlackjack,
+    getOpenBlackjackRounds,
+    placeBet,
+    blackjackInfo,
+    hit,
+    doubleDown,
+    stand,
+    userIsReadyForBlackjack,
+  } = useBlackjackStore();
+
+  const [inputValue, setInputValue] = useState<number | undefined>(undefined);
+  const placingBet = async (betAmount: number) => {
+    // const result = await placeBet(betAmount);
+    // if (result?.status == "Success") await userIsReadyForBlackjack();
+    await placeBet(betAmount);
+    await userIsReadyForBlackjack();
+  };
   return (
     <>
       <div className="z-10 bg-white bg-center px-[120px] py-[20px] pb-20 absolute bottom-32 left-1/2 transform -translate-x-1/2 rounded-xl">
-        <div className="absolute top-4 right-4">
+        {/* <div className="absolute top-4 right-4">
           <ImgButton
             src={
               "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
@@ -438,7 +629,7 @@ function BettingAmount() {
             onClick={() => {}}
             alt={"Exit Quantity Input"}
           />
-        </div>
+        </div> */}
         <div className="flex flex-col items-center w-min pb-10 pt-5">
           <h1 className="text-center text-6xl leading-tight mb-10">
             How much Gold are you betting?
@@ -448,6 +639,15 @@ function BettingAmount() {
               aria-label="Amount"
               type="number"
               className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-20"
+              value={inputValue}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value)) {
+                  setInputValue(value);
+                } else {
+                  setInputValue(undefined);
+                }
+              }}
               style={{
                 width: "calc(153px * 2.5)",
                 height: "calc(37px * 2)",
@@ -457,7 +657,9 @@ function BettingAmount() {
               }}
             />
             <NewButton
-              onClick={() => {}}
+              onClick={() => {
+                placingBet(inputValue as number);
+              }}
               className="bg-center px-20 py-4 text-3xl absolute transform mr-[36%] translate-x-1/2 -translate-y-1/2"
               alt="Confirm"
             />

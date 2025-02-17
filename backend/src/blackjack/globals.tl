@@ -11,7 +11,7 @@ if not ROUND_COUNT then
     ROUND_COUNT = 0
 end
 
-global Rounds: {number:Round}
+global Rounds: {string:Round}
 if not Rounds then
     Rounds = {}
 end

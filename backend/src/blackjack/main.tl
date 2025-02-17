@@ -15,13 +15,13 @@ local isPlayerBust = blackjack_helpers.isPlayerBust
 local getLatestSuitableOpenBattle = blackjack_helpers.getLatestSuitableOpenBattle
 local calculateTotalWithAceAdjustment = blackjack_helpers.calculateTotalWithAceAdjustment
 local createBlackjackRoundCopy = blackjack_helpers.createBlackjackRoundCopy
-
+local sendGoldToPlayerWin = blackjack_helpers.sendGoldToPlayerWin
 
 local function newUserJoinBlackjackHandler(msg: Message)
     
     assert(constants.GAME_PROCESS_ID == msg.From, "Only Game process can send this message")
 
-    local user_id = tonumber(msg.Tags.UserId) as integer
+    local user_id = msg.Tags.UserId
     local user_data = json.decode(msg.Data) as UserData
     local timestamp = msg.Timestamp
 
@@ -34,15 +34,17 @@ local function newUserJoinBlackjackHandler(msg: Message)
             UserId = tostring(user_id),
             RoundId = tostring(rounds[1].id),
             Gold = tostring(rounds[1].players[user_id].gold_balance),
-            Action = "BlackjackMatch.EnteredNewBlackjackMatch",
+            Action = "BlackjackMatch.EnteredNewBlackjackMatch"
         })
         return
     end
 
     local round = getLatestSuitableOpenBattle() 
-
+    
+    local round_id: string
     if not round then
         ROUND_COUNT = ROUND_COUNT + 1
+        round_id = tostring(ROUND_COUNT)
         local new_round: Round = {
             id = ROUND_COUNT,
             players = {},
@@ -56,26 +58,29 @@ local function newUserJoinBlackjackHandler(msg: Message)
             created_at = timestamp
         }
 
-        Rounds[ROUND_COUNT] = new_round
+        Rounds[round_id] = new_round
 
-        for i = #Rounds[ROUND_COUNT].deck, 2, -1 do
+        for i = #Rounds[round_id].deck, 2, -1 do
             local j = math.random(i)
-            Rounds[ROUND_COUNT].deck[i], Rounds[ROUND_COUNT].deck[j] = Rounds[ROUND_COUNT].deck[j], Rounds[ROUND_COUNT].deck[i]
+            Rounds[round_id].deck[i], Rounds[round_id].deck[j] = Rounds[round_id].deck[j], Rounds[round_id].deck[i]
         end
 
-        if #Rounds[ROUND_COUNT].dealer.visibleCard == 0 then
-            Rounds[ROUND_COUNT].dealer.hiddenCard = Rounds[ROUND_COUNT].deck[1]
-            table.remove(Rounds[ROUND_COUNT].deck, 1)
-            table.insert(Rounds[ROUND_COUNT].dealer.visibleCard, Rounds[ROUND_COUNT].deck[1])
-            table.remove(Rounds[ROUND_COUNT].deck, 1)
+        if #Rounds[round_id].dealer.visibleCard == 0 then
+            Rounds[round_id].dealer.hiddenCard = Rounds[round_id].deck[1]
+            table.remove(Rounds[round_id].deck, 1)
+            table.insert(Rounds[round_id].dealer.visibleCard, Rounds[round_id].deck[1])
+            table.remove(Rounds[round_id].deck, 1)
         end
     end
+    
+    round_id = tostring(ROUND_COUNT)
 
     -- Player Information
     local player: Player = {
         user_id = user_id,
         nft_address = user_data.nft_address or nil,
         address = user_data.address,
+        name = user_data.name,
         betAmount = 0,
         betPlaced = false,
         cards = {},
@@ -86,29 +91,29 @@ local function newUserJoinBlackjackHandler(msg: Message)
         added_at = timestamp
     }
 
-    Rounds[ROUND_COUNT].players[user_id] = player
+    Rounds[round_id].players[user_id] = player
 
-    for _, playerDetails in pairs(Rounds[ROUND_COUNT].players) do
-        table.insert(playerDetails.cards, Rounds[ROUND_COUNT].deck[1])
-        table.remove(Rounds[ROUND_COUNT].deck, 1)
-        table.insert(playerDetails.cards, Rounds[ROUND_COUNT].deck[1])
-        table.remove(Rounds[ROUND_COUNT].deck, 1)
+    for _, playerDetails in pairs(Rounds[round_id].players) do
+        table.insert(playerDetails.cards, Rounds[round_id].deck[1])
+        table.remove(Rounds[round_id].deck, 1)
+        table.insert(playerDetails.cards, Rounds[round_id].deck[1])
+        table.remove(Rounds[round_id].deck, 1)
     end
 
-    addLog(Rounds[ROUND_COUNT].id, timestamp, "newUserJoinBlackjackHandler", "Player " .. user_id .. " added to Blackjack")
+    addLog(tostring(Rounds[round_id].id), timestamp, "newUserJoinBlackjackHandler", "Player " .. user_id .. " added to Blackjack")
 
     ao.send({
         Target = constants.GAME_PROCESS_ID,
         UserId = tostring(user_id),
-        RoundId = tostring(Rounds[ROUND_COUNT].id),
-        Gold = tostring(Rounds[ROUND_COUNT].players[user_id].gold_balance),
+        RoundId = tostring(Rounds[round_id].id),
+        Gold = tostring(Rounds[round_id].players[user_id].gold_balance),
         Action = "BlackjackMatch.EnteredNewBlackjackMatch",
     })
 end
 
 
 local function getOpenBlackjackRoundsHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
+    local user_id = msg.Tags.UserId
     local get_open_round = GetOpenBlackjackRoundsOfUser(msg.From, msg.Timestamp)[1]
     local round = createBlackjackRoundCopy(get_open_round, user_id)
     ao.send({ Target = msg.From, Data = json.encode(round) })
@@ -116,8 +121,8 @@ end
 
 -- Handler for placing a bet
 local function placeBetHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
-    local round_id = tonumber(msg.Tags.RoundId) as integer
+    local user_id = msg.Tags.UserId
+    local round_id = msg.Tags.RoundId
     local user_bet_amount = tonumber(msg.Tags.Bet)
 
     assert(Rounds[round_id], "Blackjack Round not found with id: " .. tostring(round_id))
@@ -142,8 +147,8 @@ end
 
 
 local function blackjackInfoHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
-    local round_id = tonumber(msg.Tags.RoundId) as integer
+    local user_id = msg.Tags.UserId
+    local round_id = msg.Tags.RoundId
 
     local original_round = Rounds[round_id]
     local round = createBlackjackRoundCopy(original_round, user_id)
@@ -155,8 +160,8 @@ end
 
 -- Handler for player hitting in Blackjack
 local function hitHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
-    local round_id = tonumber(msg.Tags.RoundId) as integer
+    local user_id = msg.Tags.UserId
+    local round_id = msg.Tags.RoundId
 
     assert(Rounds[round_id], "Blackjack Round not found with id: " .. tostring(round_id))
     assert(not Rounds[round_id].ended, "This blackjack round with id: " .. tostring(round_id) .. " is already ended")
@@ -191,8 +196,8 @@ end
 
 -- Handler for doubling down on a bet
 local function doubleDownHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
-    local round_id = tonumber(msg.Tags.RoundId) as integer
+    local user_id = msg.Tags.UserId
+    local round_id = msg.Tags.RoundId
 
     assert(Rounds[round_id], "Blackjack Round not found with id: " .. tostring(round_id))
     assert(not Rounds[round_id].ended, "This blackjack round with id: " .. tostring(round_id) .. " is already ended")
@@ -248,17 +253,19 @@ local function matchWinner(msg: Message)
 
             -- Process player results
             for _, player in pairs(players) do
-                local playerData = isPlayerBust(player)
-                player.value = playerData.cardsValue
-                playerAndDealerCardValues[playerData.id] = playerData
+                if player.betPlaced then
+                    local playerData = isPlayerBust(player)
+                    player.value = playerData.cardsValue
+                    playerAndDealerCardValues[playerData.id] = playerData
 
-                if playerData.cardsValue == 21 then
-                    player.gold_balance = player.gold_balance + (player.betAmount * 2.5)
-                    playerData.status = "Blackjack"
-                    round.winner[#round.winner + 1] = tostring(player.user_id)
+                    if playerData.cardsValue == 21 then
+                        player.gold_balance = player.gold_balance + (player.betAmount * 2.5)
+                        playerData.status = "Blackjack"
+                        round.winner[#round.winner + 1] = tostring(player.user_id)
+                    end
+
+                    player.status = playerData.status
                 end
-
-                player.status = playerData.status
             end
 
             -- Dealer logic
@@ -289,13 +296,16 @@ local function matchWinner(msg: Message)
                 round.winner[#round.winner + 1] = "Dealer" 
 
                 for _, player in pairs(players) do
-                    if player.status == "Blackjack" then
-                        player.gold_balance = player.gold_balance - (player.betAmount * 2.5) + player.betAmount
-                    else
-                        player.gold_balance = player.gold_balance - player.betAmount
+                    if player.betPlaced then
+                        if player.status == "Blackjack" then
+                            player.gold_balance = player.gold_balance - (player.betAmount * 2.5) + player.betAmount
+                        else
+                            player.gold_balance = player.gold_balance - player.betAmount
+                        end
                     end
                 end
 
+                sendGoldToPlayerWin(tostring(round.id))
                 round.ended = true
                 break
             end
@@ -303,12 +313,15 @@ local function matchWinner(msg: Message)
             -- If dealer busts, all remaining players win
             if dealer.hasBust then
                 for _, player in pairs(players) do
-                    if player.status ~= "Blackjack" then
-                        player.gold_balance = player.gold_balance + player.betAmount
-                    end
-                    round.winner[#round.winner + 1] = tostring(player.user_id)
+                    if player.betPlaced then
+                        if player.status ~= "Blackjack" then
+                            player.gold_balance = player.gold_balance + player.betAmount
+                        end
+                        round.winner[#round.winner + 1] = tostring(player.user_id)
+                    end    
                 end
 
+                sendGoldToPlayerWin(tostring(round.id))
                 round.ended = true
                 break
             end
@@ -328,7 +341,7 @@ local function matchWinner(msg: Message)
                 if winner.id == "Dealer" then
                     dealer.winnigAmount = winner.cardsValue
                     for _, player in pairs(players) do
-                        if player.status ~= "Blackjack" then
+                        if player.status ~= "Blackjack" and player.betPlaced then
                             if player.value == winner.cardsValue then
                                 player.gold_balance = player.gold_balance + player.betAmount
                                 round.winner[#round.winner + 1] = tostring(player.user_id)
@@ -339,19 +352,22 @@ local function matchWinner(msg: Message)
                     end
                 else
                     for _, player in pairs(players) do
-                        if player.address == winner.address and player.user_id == tonumber(winner.id) then
-                            player.gold_balance = player.gold_balance + (player.betAmount * 2)
-                        elseif player.status ~= "Blackjack" then
-                            player.gold_balance = player.gold_balance - player.betAmount
+                        if player.betPlaced then
+                            if player.address == winner.address and player.user_id == tonumber(winner.id) then
+                                player.gold_balance = player.gold_balance + (player.betAmount * 2)
+                            elseif player.status ~= "Blackjack" then
+                                player.gold_balance = player.gold_balance - player.betAmount
+                            end
                         end
                     end
                 end
 
                 round.winner[#round.winner + 1] = winner.id
             end
+            sendGoldToPlayerWin(tostring(round.id))
             round.ended = true
-        else
-            round.created_at = msg.Timestamp
+        -- else
+            -- round.created_at = msg.Timestamp
         end
     end
 end
@@ -360,8 +376,8 @@ end
 
 -- Handler for player standing
 local function standHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
-    local round_id = tonumber(msg.Tags.RoundId) as integer
+    local user_id = msg.Tags.UserId
+    local round_id = msg.Tags.RoundId
 
     assert(Rounds[round_id], "Blackjack Round not found with id: " .. tostring(round_id) )
     assert(not Rounds[round_id].ended, "This blackjack round with id: " .. tostring(round_id) .. " is already ended" )
@@ -375,8 +391,8 @@ local function standHandler(msg: Message)
 end
 
 local function userIsReadyForBlackjackHandler(msg: Message)
-    local user_id = tonumber(msg.Tags.UserId) as integer
-    local round_id = tonumber(msg.Tags.RoundId) as integer
+    local user_id = msg.Tags.UserId
+    local round_id = msg.Tags.RoundId
 
     assert(Rounds[round_id], "Blackjack Round not found with id: " .. tostring(round_id) )
     assert(not Rounds[round_id].ended, "This blackjack round with id: " .. tostring(round_id) .. " is already ended" )

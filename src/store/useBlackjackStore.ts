@@ -7,15 +7,14 @@ import { Round } from "@/types/blackjack";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { GameStatePages, useGameStore } from "./useGameStore";
-import { result } from "@permaweb/aoconnect/browser";
-import { GAME_PROCESS_ID } from "@/lib/utils";
-import { json } from "stream/consumers";
 
 interface BlackjackState {
+  blackjackStart: boolean;
+  setBlackjackStart: (state: boolean) => void;
   currentRound: Round | null;
-  enterNewBlackjack: () => Promise<void>;
+  enterNewBlackjack: () => Promise<MyMessageResult>;
   getOpenBlackjackRounds: () => Promise<void>;
-  placeBet: (betAmount: number) => Promise<void>;
+  placeBet: (betAmount: number) => Promise<MyMessageResult | undefined>;
   blackjackInfo: () => Promise<void>;
   hit: () => Promise<void>;
   doubleDown: () => Promise<void>;
@@ -26,11 +25,13 @@ interface BlackjackState {
 export const useBlackjackStore = create<BlackjackState>()(
   devtools(
     (set, get) => ({
+      blackjackStart: false,
+      setBlackjackStart: (state) => set({ blackjackStart: state }),
       currentRound: null,
       enterNewBlackjack: async () => {
         const user_id = useGameStore.getState().user?.id;
         if (!user_id) throw new Error("User not found");
-        console.log(user_id);
+        set({ currentRound: null });
         const tags = [
           {
             name: "Action",
@@ -43,6 +44,7 @@ export const useBlackjackStore = create<BlackjackState>()(
         ];
         const resultData = await sendAndReceiveGameMessage({ tags });
         console.log("Ashu :  enterNewBlackjack: " + JSON.stringify(resultData));
+        return resultData;
       },
       getOpenBlackjackRounds: async () => {
         const user_id = useGameStore.getState().user?.id;
@@ -60,10 +62,24 @@ export const useBlackjackStore = create<BlackjackState>()(
           ],
           process: "blackjack",
         });
-        set({currentRound: resultData.data as Round})
+        set({
+          currentRound: JSON.parse(
+            resultData.Messages[resultData.Messages.length - 1].Data
+          ) as Round,
+        });
         console.log(
-          "Ashu :  getOpenBlackjackRounds: " + JSON.stringify(resultData.data)
+          "Ashu :  getOpenBlackjackRounds: " +
+            JSON.stringify(resultData.Messages)
         );
+        if (
+          JSON.parse(
+            resultData.Messages[resultData.Messages.length - 1].Data
+          ) &&
+          JSON.parse(resultData.Messages[resultData.Messages.length - 1].Data)
+            .players[user_id.toString()].betPlaced
+        ) {
+          await get().userIsReadyForBlackjack();
+        }
       },
       placeBet: async (betAmount) => {
         const user_id = useGameStore.getState().user?.id as number;
@@ -91,6 +107,8 @@ export const useBlackjackStore = create<BlackjackState>()(
           process: "blackjack",
         });
         console.log("Ashu :  placeBet: " + JSON.stringify(resultData));
+        useGameStore.getState().refreshUserData();
+        return resultData;
       },
       blackjackInfo: async () => {
         const user_id = useGameStore.getState().user?.id as number;
@@ -114,7 +132,26 @@ export const useBlackjackStore = create<BlackjackState>()(
           ],
           process: "blackjack",
         });
-        console.log("Ashu :  blackjackInfo: " + JSON.stringify(resultData));
+
+        console.log("Ashu : blackjackInfo: " + JSON.stringify(resultData));
+
+        // // Check if Messages array has at least 2 elements
+        // if (resultData.Messages && resultData.Messages.length > 1) {
+        //     // Safely access the second message and set currentRound
+        //     set({ currentRound: JSON.parse(resultData.Messages[1].Data) as Round });
+        // } else {
+        //     console.error("Error: No second message found in resultData");
+        // }
+
+        set({
+          currentRound: JSON.parse(
+            resultData.Messages[resultData.Messages.length - 1].Data
+          ) as Round,
+        });
+
+        if (resultData.data?.ended) {
+          useGameStore.getState().refreshUserData();
+        }
       },
       hit: async () => {
         const user_id = useGameStore.getState().user?.id as number;
@@ -213,6 +250,7 @@ export const useBlackjackStore = create<BlackjackState>()(
         console.log(
           "Ashu :  userIsReadyForBlackjack: " + JSON.stringify(resultData)
         );
+        get().blackjackInfo();
       },
     }),
     {

@@ -31,7 +31,20 @@ local function enteredNewBlackjackMatchHandler(msg: Message)
     
 end
 
+local function blackjackWonHandler(msg: Message)
+    assert(constants.BLACKJACK_PROCESS_ID == msg.From, "You cant call this handler")
+    local user_id = tonumber(msg.Tags.UserId)
+    local round_id = tonumber(msg.Tags.RoundId)
+    local user_updated_gold = tonumber(msg.Tags.Gold)
+    
+    dbAdmin:exec(string.format([[
+        UPDATE Users SET current_blackjack_id = NULL, gold_balance = %f WHERE id = %f;
+    ]], round_id, user_updated_gold, user_id))
+    
+end
+
 Handlers.add("BlackjackMatch.EnterNewBlackjackMatch", Handlers.utils.hasMatchingTag('Action', 'BlackjackMatch.EnterNewBlackjackMatch'), enterNewBlackjackMatchHandler)
 Handlers.add("BlackjackMatch.EnteredNewBlackjackMatch", Handlers.utils.hasMatchingTag('Action', 'BlackjackMatch.EnteredNewBlackjackMatch'), enteredNewBlackjackMatchHandler)
+Handlers.add("BlackjackMatch.BlackjackWon", Handlers.utils.hasMatchingTag('Action', 'BlackjackMatch.BlackjackWon'), blackjackWonHandler)
 
 return {}

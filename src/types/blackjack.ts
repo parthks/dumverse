@@ -1,6 +1,6 @@
 export type Round = {
   id: number;
-  players: Record<number, Player>;
+  players: Record<string, Player> ;
   dealer: DealerType;
   deck: Card[];
   logs: BlackjackGameLogEntry[];
@@ -11,9 +11,10 @@ export type Round = {
 };
 
 export type Player = {
-  user_id: number;
+  user_id: string;
   address: string;
   nft_address: string | null;
+  name: string;
   betAmount: number;
   betPlaced: boolean;
   cards: Card[];
