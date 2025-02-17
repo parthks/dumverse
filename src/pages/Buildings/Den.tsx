@@ -649,7 +649,7 @@ function BettingAmount() {
             <Input
               aria-label="Amount"
               type="number"
-              className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-16"
+              className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-14"
               value={inputValue}
               onChange={(e) => {
                 let value = parseInt(e.target.value);
@@ -672,7 +672,7 @@ function BettingAmount() {
             <NewButton
               onClick={handleConfirm}
               disabled={isProcessing || !inputValue}
-              className={`bg-center ${isProcessing ? `px-24`: `px-32`} py-4 text-3xl absolute`}
+              className={`bg-center ${isProcessing ? `px-[100px]`: `px-32`} py-4 text-3xl absolute`}
               alt={isProcessing ? 'Processing...' : 'Confirm'}
             />
             </div>
