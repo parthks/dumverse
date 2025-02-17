@@ -290,8 +290,9 @@ function BlackjackGame() {
     doubleDown,
     stand,
     userIsReadyForBlackjack,
+    setBlackjackStart,
   } = useBlackjackStore();
-  const { user } = useGameStore();
+  const { user   } = useGameStore();
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentRound?.id}`],
@@ -306,9 +307,17 @@ function BlackjackGame() {
 
   return (
     <div className="h-screen relative">
-      <div className="z-10 absolute bottom-4 left-4">
-        <ExistToTownButton />
-      </div>
+      {currentRound?.ended && (
+        <div className="z-20 absolute bottom-16 ml-6 w-60 ">
+          <NewButton
+            className="px-3 py-3 text-2xl"
+            onClick={() => {
+              setBlackjackStart(false);
+            }}
+            alt="Return to Den"
+          />
+        </div>
+      )}
 
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
