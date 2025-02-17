@@ -618,6 +618,7 @@ function BettingAmount() {
     doubleDown,
     stand,
     userIsReadyForBlackjack,
+    setBlackjackStart
   } = useBlackjackStore();
 
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
@@ -641,15 +642,15 @@ function BettingAmount() {
   return (
     <>
       <div className="z-10 bg-white bg-center px-[120px] py-[20px] pb-20 absolute bottom-32 left-1/2 transform -translate-x-1/2 rounded-xl">
-        {/* <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4">
           <ImgButton
             src={
               "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
             }
-            onClick={() => {}}
+            onClick={() => {setBlackjackStart(false)}}
             alt={"Exit Quantity Input"}
           />
-        </div> */}
+        </div>
         <div className="flex flex-col items-center w-min pb-10 pt-5">
           <h1 className="text-center text-6xl leading-tight mb-10">
             How much Gold are you betting?
