@@ -12,7 +12,7 @@ record:
   hash: 7558c2820eb359d533c8ce32237d8ed02339d20f7b7cb350b615f389d7f8a56e
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: 2f8f34a3e4a3f12490652dcf029e6053edf513aa6c50cfd50871b08911bba60c
+  hash: 9e2eaa5a3955fb8000fdfd6cd77cb61cf2675aec16fbde73a5fbf0c52821ed68
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
   hash: 8cb5f7bb53bba4059441ae9c88cb18e47c85dde5c4fcefe42b8388b9cbec5ecb
@@ -21,19 +21,19 @@ bank:
   hash: 445e3772c3d788eaa6903ba418daa5725be53fd7464f394837fceaba2426bba8
 combat:
   processId: RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8
-  hash: dc9ef3965c002b402eac6f10e3f414f1e9e1444c5bed998836a7e6ce9b6bbb36
+  hash: eff3befa8dcdcbeb46c61b6b5951c80e506f328a25e38d2b1b48295321d4ba75
 combat2:
   processId: az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ
-  hash: dc9ef3965c002b402eac6f10e3f414f1e9e1444c5bed998836a7e6ce9b6bbb36
+  hash: eff3befa8dcdcbeb46c61b6b5951c80e506f328a25e38d2b1b48295321d4ba75
 combat3:
   processId: sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4
-  hash: dc9ef3965c002b402eac6f10e3f414f1e9e1444c5bed998836a7e6ce9b6bbb36
+  hash: eff3befa8dcdcbeb46c61b6b5951c80e506f328a25e38d2b1b48295321d4ba75
 combat4:
   processId: z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E
-  hash: dc9ef3965c002b402eac6f10e3f414f1e9e1444c5bed998836a7e6ce9b6bbb36
+  hash: eff3befa8dcdcbeb46c61b6b5951c80e506f328a25e38d2b1b48295321d4ba75
 combat5:
   processId: s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM
-  hash: dc9ef3965c002b402eac6f10e3f414f1e9e1444c5bed998836a7e6ce9b6bbb36
+  hash: eff3befa8dcdcbeb46c61b6b5951c80e506f328a25e38d2b1b48295321d4ba75
 blackjack:
   processId: YWq7VB7zu1cffwoSfWONHwFO2ucYame0hQA360AN6ew
-  hash: ebb1e5455f4ddd54a586deccb220588267029d4255af55a3b33b0152ca592ad9
+  hash: f0d7e2d25f3d6bf195ebcf1301d5351025d3a70e0d42a894c79d314ffe178d8a

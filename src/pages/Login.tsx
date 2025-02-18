@@ -214,6 +214,7 @@ const FormData = () => {
       setName(nonNFTGameProfiles[0].name);
     }
   }, [nonNFTGameProfiles]);
+  console.log("Ashu : "+JSON.stringify(selectedOption));
 
   async function handleRegister() {
     setLoading(true);
@@ -227,8 +228,8 @@ const FormData = () => {
         alert("Game profile not found");
         return;
       }
-      // console.log("Ashu : ASHUUUUUUUUUUU selectedOption: "+JSON.stringify(selectedOption));
-      // console.log("Ashu : ASHUUUUUUUUUUU gameProfile: "+JSON.stringify(gameProfile));
+      console.log("Ashu : ASHUUUUUUUUUUU selectedOption: "+JSON.stringify(selectedOption));
+      console.log("Ashu : ASHUUUUUUUUUUU gameProfile: "+JSON.stringify(gameProfile));
 
       // await setUser(gameProfile, selectedOption.Id ? selectedOption.Id : "NULL" );
       await setUser(gameProfile);
@@ -237,18 +238,31 @@ const FormData = () => {
       // await useGameStore.getState().upgradeExistingProfile(selectedOption?.Id ? selectedOption?.Id : "NULL")
       if (selectedOption?.Id)
         await useGameStore
-          .getState()
+          .getState() 
           .upgradeExistingProfile(selectedOption?.Id);
-      // console.log("Ashu : selectedOption: "+JSON.stringify(selectedOption));
-      // console.log("Ashu : MITTTTTTTTTTALLLLL: "+JSON.stringify(nonNFTGameProfiles[0]));
+      console.log("Ashu : selectedOption: "+JSON.stringify(selectedOption));
+      console.log("Ashu : MITTTTTTTTTTALLLLL: "+JSON.stringify(nonNFTGameProfiles[0]));
       // await setUser(nonNFTGameProfiles[0], selectedOption ? selectedOption.Id : "NULL");
       await setUser(nonNFTGameProfiles[0]);
-    } else if (!selectedOption?.Id && NFTGameProfiles.length > 0) {
-      console.log("Downgrading the account");
-      await useGameStore.getState().deletingUsersAccount("NULL");
-      await useGameStore.getState().registerNewUser(name);
     } else {
       if (!name || name === "") return;
+      console.log("Ashu : selectedOption: "+JSON.stringify(selectedOption));
+      console.log("Ashu : nonNFTGameProfiles: "+JSON.stringify(nonNFTGameProfiles));
+      console.log("Ashu : NFTGameProfiles: "+JSON.stringify(NFTGameProfiles));
+      console.log("Ashu : gameProfiles: "+JSON.stringify(gameProfiles));
+
+      if (gameProfiles) {
+       // === NFT Validation & Account Deletion Logic ===
+    const assetIds = assets.map((asset) => asset.Id);
+
+    for (const profile of gameProfiles) {
+      if (profile.nft_address && !assetIds.includes(profile.nft_address)) {
+        console.log("User's NFT does not match any asset. Deleting account...: "+profile.nft_address );
+        await useGameStore.getState().deletingUsersAccount(profile.nft_address);
+        // break; // Exit after first mismatch found
+      }
+    }} 
+
       await useGameStore.getState().registerNewUser(name, selectedOption?.Id);
     }
     setLoading(false);

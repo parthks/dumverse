@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import axios from "axios";
 
 import ChatBubble from "./ChatBubble";
 import { z } from "zod";
@@ -201,6 +202,7 @@ function LatestPreviewMessage({ latestMessage }: { latestMessage?: ChatMessageTy
     </div>
   );
 }
+
 
 function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   const { GameStatePage, currentIslandLevel } = useGameStore((state) => state);

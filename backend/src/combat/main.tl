@@ -16,35 +16,69 @@ local BattleHelpers = require("combat.battle_helpers")
 -- TODO: Distribute earnings after ending battle. Also if one player dies mid battle, the other player should get the earnings
 
 
+-- local function GetOpenBattlesOfUser(user_address: string, timestamp: integer): {Battle}
+--     local battles = {}
+--     for _, battle in pairs(Battles) do
+--         if not battle.ended and (battle.created_at + 300000) < timestamp then
+--             print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY " )
+--             BattleHelpers.internalLog(
+--                     battle.id,
+--                     timestamp,
+--                     "GetOpenBattlesOfUser",
+--                     "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
+--                 )
+--             local battle_data = BattleHelpers.get(battle.id)
+--             sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
+--             battle.ended = true
+--         end
+--         if not battle.ended then
+--             local user_addresses = {}
+--             -- get all player addresses in open battle
+--             for _, player in pairs(battle.players) do
+--                 table.insert(user_addresses, player.address)
+--             end
+--             if not battle.ended and utils.includes(user_address, user_addresses) then
+--                 print("battle " .. battle.id .. " is open for user " .. user_address)
+--                 table.insert(battles, battle)
+--             end
+--         end
+--     end
+--     return battles
+-- end
+
 local function GetOpenBattlesOfUser(user_address: string, timestamp: integer): {Battle}
     local battles = {}
+
     for _, battle in pairs(Battles) do
-        if not battle.ended and (battle.created_at + 300000) < timestamp then
-            print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY " )
-            BattleHelpers.internalLog(
+        if not battle.ended then
+            -- Check if battle should be ended due to inactivity
+            if (battle.created_at + 300000) < timestamp then
+                battle.ended = true
+                print("battle " .. battle.id .. " - ENDED DUE TO PLAYER INACTIVITY")
+                BattleHelpers.internalLog(
                     battle.id,
                     timestamp,
                     "GetOpenBattlesOfUser",
                     "Battle ended due to player inactivity. Last active timestamp: " .. battle.created_at
                 )
-            local battle_data = BattleHelpers.get(battle.id)
-            sendBatteDataToHistoryProcess(battle.id,battle_data,"yes")
-            battle.ended = true
-        end
-        if not battle.ended then
-            local user_addresses = {}
-            -- get all player addresses in open battle
-            for _, player in pairs(battle.players) do
-                table.insert(user_addresses, player.address)
-            end
-            if not battle.ended and utils.includes(user_address, user_addresses) then
-                print("battle " .. battle.id .. " is open for user " .. user_address)
-                table.insert(battles, battle)
+                local battle_data = BattleHelpers.get(battle.id)
+                sendBatteDataToHistoryProcess(battle.id, battle_data, "yes")
+            else
+                -- Check if user is in the battle without creating a new table
+                for _, player in pairs(battle.players) do
+                    if player.address == user_address then
+                        print("battle " .. battle.id .. " is open for user " .. user_address)
+                        table.insert(battles, battle)
+                        break -- Stop checking other players once a match is found
+                    end
+                end
             end
         end
     end
+
     return battles
 end
+
 
 local function VerifyUserInBattle(user_id: string, battle_id: integer): CombatUserData
     assert(user_id, "UserId is required")

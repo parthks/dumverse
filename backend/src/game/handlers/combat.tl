@@ -147,10 +147,10 @@ local function enterNewCombatHandler(msg: Message)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
 
-    if overwrite_the_battle_on_same_spot == "yes" then
+    if overwrite_the_battle_on_same_spot == "yes" and userData.current_battle_id then
         local assignSubProcessData = subProcessAssignToUsers[user_id]
-        local player_battle_id = dbAdmin:exec(string.format([[SELECT current_battle_id from Users WHERE id = %d]], user_id)) [1]
-        ao.send({Target= assignSubProcessData.subProcess, Action="Battle.ForceDeleteBattle", BattleId= tostring(player_battle_id.current_battle_id)})
+        -- local player_battle_id = dbAdmin:exec(string.format([[SELECT current_battle_id from Users WHERE id = %d]], user_id)) [1]
+        ao.send({Target= assignSubProcessData.subProcess, Action="Battle.ForceDeleteBattle", BattleId= tostring(userData.current_battle_id)})
         subProcessAssignToUsers[user_id] = nil
         dbAdmin:exec(string.format([[UPDATE Users SET current_battle_id = NULL WHERE id = %d]], user_id)) 
         print("Overwrite")

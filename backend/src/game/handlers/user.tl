@@ -485,11 +485,11 @@ local function deletingUsersAccountHandler(msg:Message)
     local user_address = msg.From
     local nft_address = msg.Tags.NFT_Address
     assert(nft_address, "NFT_Address is required")
-    if nft_address == "NULL" then
+    -- if nft_address == "NULL" then
     dbAdmin:exec(string.format([[
-        DELETE FROM Users WHERE address = "%s" ;
-    ]], user_address))
-   end
+        DELETE FROM Users WHERE nft_address = "%s" AND address = "%s";
+    ]], nft_address, user_address))
+--    end
 end
 
 local function goldWishesHandler(msg: Message)
