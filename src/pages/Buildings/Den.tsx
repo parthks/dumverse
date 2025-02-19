@@ -47,10 +47,10 @@ export default function Den() {
   if (blackjackStart) {
     if (!currentRound) {
       return (
-        <div>
+        <div className="flex items-center">
           Loading........
-          <ImgButton
-            className="h-12"
+          <NewButton
+            className="px-12 bottom-10 py-4 text-2xl"
             src={
               "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
             }
@@ -59,7 +59,7 @@ export default function Den() {
               await sleep(750);
               setGameStatePage(GameStatePages.SECOND_TOWN);
             }}
-            alt={"Return to Town"}
+            alt={"Exit"}
           />
         </div>
       );
@@ -290,8 +290,9 @@ function BlackjackGame() {
     doubleDown,
     stand,
     userIsReadyForBlackjack,
+    setBlackjackStart,
   } = useBlackjackStore();
-  const { user } = useGameStore();
+  const { user   } = useGameStore();
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentRound?.id}`],
@@ -306,9 +307,17 @@ function BlackjackGame() {
 
   return (
     <div className="h-screen relative">
-      <div className="z-10 absolute bottom-4 left-4">
-        <ExistToTownButton />
-      </div>
+      {currentRound?.ended && (
+        <div className="z-20 absolute bottom-16 ml-6 w-60 ">
+          <NewButton
+            className="px-3 py-3 text-2xl"
+            onClick={() => {
+              setBlackjackStart(false);
+            }}
+            alt="Return to Den"
+          />
+        </div>
+      )}
 
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
@@ -609,6 +618,7 @@ function BettingAmount() {
     doubleDown,
     stand,
     userIsReadyForBlackjack,
+    setBlackjackStart
   } = useBlackjackStore();
 
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
@@ -618,18 +628,29 @@ function BettingAmount() {
     await placeBet(betAmount);
     await userIsReadyForBlackjack();
   };
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsProcessing(true);
+    try {
+      await placingBet(inputValue as number);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <>
       <div className="z-10 bg-white bg-center px-[120px] py-[20px] pb-20 absolute bottom-32 left-1/2 transform -translate-x-1/2 rounded-xl">
-        {/* <div className="absolute top-4 right-4">
+        <div className="absolute top-4 right-4">
           <ImgButton
             src={
               "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
             }
-            onClick={() => {}}
+            onClick={() => {setBlackjackStart(false)}}
             alt={"Exit Quantity Input"}
           />
-        </div> */}
+        </div>
         <div className="flex flex-col items-center w-min pb-10 pt-5">
           <h1 className="text-center text-6xl leading-tight mb-10">
             How much Gold are you betting?
@@ -638,11 +659,12 @@ function BettingAmount() {
             <Input
               aria-label="Amount"
               type="number"
-              className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-20"
+              className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-14"
               value={inputValue}
               onChange={(e) => {
-                const value = parseInt(e.target.value);
+                let value = parseInt(e.target.value);
                 if (!isNaN(value)) {
+                  value = Math.max(1, value)
                   setInputValue(value);
                 } else {
                   setInputValue(undefined);
@@ -656,13 +678,14 @@ function BettingAmount() {
                 backgroundSize: "100% 100%",
               }}
             />
+            <div className="absolute left-[112%]">
             <NewButton
-              onClick={() => {
-                placingBet(inputValue as number);
-              }}
-              className="bg-center px-20 py-4 text-3xl absolute transform mr-[36%] translate-x-1/2 -translate-y-1/2"
-              alt="Confirm"
+              onClick={handleConfirm}
+              disabled={isProcessing || !inputValue}
+              className={`bg-center ${isProcessing ? `px-[100px]`: `px-32`} py-4 text-3xl absolute`}
+              alt={isProcessing ? 'Processing...' : 'Confirm'}
             />
+            </div>
           </div>
         </div>
       </div>
