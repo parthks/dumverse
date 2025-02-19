@@ -130,7 +130,7 @@ local function placeBetHandler(msg: Message)
     assert(Rounds[round_id].players[user_id], "Player " .. tostring(user_id) .. " is not found in Blackjack Round id: " .. tostring(round_id))
     assert(not Rounds[round_id].players[user_id].betPlaced, "Player " .. tostring(user_id) .. " has already placed bet in Blackjack Round id: " .. tostring(round_id))
     assert(not Rounds[round_id].players[user_id].hasDoubleDown, "Player " .. tostring(user_id) .. " has double down in Blackjack Round id: " .. tostring(round_id))
-    assert(user_bet_amount > MIN_BET_PLACE_BY_USER and user_bet_amount <= MAX_BET_PLACE_BY_USER, "Player " .. tostring(user_id) .. " placed an insufficient bet in Blackjack Round id: " .. tostring(round_id))
+    assert(user_bet_amount >= MIN_BET_PLACE_BY_USER and user_bet_amount <= MAX_BET_PLACE_BY_USER, "Player " .. tostring(user_id) .. " placed an insufficient bet in Blackjack Round id: " .. tostring(round_id))
 
     local player = Rounds[round_id].players[user_id]
 

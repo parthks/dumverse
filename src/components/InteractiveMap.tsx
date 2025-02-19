@@ -1,45 +1,46 @@
 import { LAMA_IMAGE } from "@/lib/constants";
+// import { cn, isValidSpotToMoveTo } from "@/lib/utils";
 import { cn, getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
 import React, { useEffect } from "react";
 
 // import {
-//   interactivePointsMap1,
 //   interactivePointsMap2,
+//   interactivePointsMap1,
 //   lammaHeight,
 //   lammaWidth,
 //   SOUNDS,
 // } from "@/lib/constants";
 
-// const interactivePointsMap3 = [
-//   { x: 85.2, y: 69.5, level: 55 },
-//   { x: 75, y: 69, level: 56 },
-//   { x: 65, y: 68, level: 57 },
-//   { x: 55, y: 68.5, level: 58 },
-//   { x: 45, y: 68.5, level: 59 },
-//   { x: 35, y: 68.5, level: 60 },
-//   { x: 24.5, y: 68, level: 61 },
-//   { x: 15.5, y: 67, level: 62 },
-//   { x: 9.5, y: 60, level: 63 },
-//   { x: 13, y: 49, level: 64 },
-//   { x: 22, y: 46.3, level: 65 },
-//   { x: 32, y: 44.5, level: 66 },
+// export const interactivePointsMap3 = [
+//   { x: 85.2, y: 72, level: 55 },
+//   { x: 75, y: 71, level: 56 },
+//   { x: 65, y: 70.5, level: 57 },
+//   { x: 55, y: 70.5, level: 58 },
+//   { x: 45, y: 70, level: 59 },
+//   { x: 35, y: 70, level: 60 },
+//   { x: 24.5, y: 70, level: 61 },
+//   { x: 13, y: 69.6, level: 62 },
+//   { x: 5, y: 59, level: 63 },
+//   { x: 13, y: 48, level: 64 },
+//   { x: 22.5, y: 45.5, level: 65 },
+//   { x: 33, y: 44.5, level: 66 },
 //   { x: 43, y: 44.5, level: 67 },
 //   { x: 52, y: 44, level: 68 },
 //   { x: 60, y: 43, level: 69 },
-//   { x: 69, y: 42, level: 70 },
-//   { x: 75.3, y: 39, level: 71 },
-//   { x: 82, y: 35.5, level: 72 },
-//   { x: 79, y: 28, level: 73 },
-//   { x: 75, y: 22, level: 74 },
-//   { x: 68.5, y: 20.7, level: 75 },
-//   { x: 61.5, y: 21, level: 76 },
-//   { x: 54.5, y: 21.5, level: 77 },
-//   { x: 47, y: 21.5, level: 78 },
-//   { x: 39.5, y: 21, level: 79 },
-//   { x: 32, y: 21, level: 80 },
-//   { x: 22, y: 22.5, level: 81 },
+//   { x: 69.5, y: 42, level: 70 },
+//   { x: 77.5, y: 38.8, level: 71 },
+//   { x: 84, y: 33.5, level: 72 },
+//   { x: 81, y: 26, level: 73 },
+//   { x: 76, y: 19.5, level: 74 },
+//   { x: 68.5, y: 18.7, level: 75 },
+//   { x: 61.5, y: 19.5, level: 76 },
+//   { x: 54.7, y: 19.6, level: 77 },
+//   { x: 46.4, y: 19, level: 78 },
+//   { x: 37.5, y: 19, level: 79 },
+//   { x: 28, y: 19.5, level: 80 },
+//   { x: 20, y: 20.4, level: 81 },
 // ];
 
 // function getInteractivePoints(currentSpot: number) {
@@ -85,9 +86,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     // if (tempCurrentIslandLevel <= 27) return "https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I";
     // if (tempCurrentIslandLevel <= 54) return "https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI";
     // return "https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE";\
-    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/fXXyF_eEP2ZF0IWKiBflF6HhM1FZcS-rQ9UM9tHZO20";
-    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/ojFFGryPHdTlowmEUjOCYUHKi8P8TRss6tmgD7RrO88";
-    return "https://arweave.net/5uYkotWl32aBSpJV6j-Ykjj_aQRtGpExAYpUZsqtSuM";
+    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/goKdPy958tjqngkqsZCHFoIDmjQjK7gCaR0o05riI0k";
+    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/bjJkfeS08kktzB3BrKXs8EkVDQOpV23SNV8_VtDK2Kk";
+    return "https://arweave.net/zAQS-p2LF3BaSK4APBpn6U-SFa5Zy-RNLhLGvrN-nog";
   };
 
 
@@ -107,7 +108,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
       <div className="absolute inset-0">
         {/* <img src={MapImage} alt="Game Map" className="w-full h-full object-contain" /> */}
 
-        <img src={currentMapImage()} alt="Game Map" className="w-full h-full object-contain" />
+        <img src={currentMapImage()} alt="Game Map" className="w-full h-screen object-cover" />
         {/* {tempCurrentIslandLevel <= 27? (
         <div
           className="absolute"

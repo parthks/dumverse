@@ -34,10 +34,10 @@ export function getInteractivePoints(currentSpot: number) {
 
 export function getInitialLamaPosition(): LamaPosition {
   return {
-    x: 81.5, //81
-    y: 60,
-    src: "STAND_LEFT",
-  };
+      x: 84.1, //81
+      y: 61.4,
+      src: "STAND_LEFT",
+    };
   // if (currentSpot <= 54)
   //   return {
   //     x: 90.2,
