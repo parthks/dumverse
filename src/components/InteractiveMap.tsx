@@ -83,9 +83,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
   };
 
   const currentMapImage = () => {
-    // if (tempCurrentIslandLevel <= 27) return "https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I";
-    // if (tempCurrentIslandLevel <= 54) return "https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI";
-    // return "https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE";\
     if (tempCurrentIslandLevel <= 27) return "https://arweave.net/goKdPy958tjqngkqsZCHFoIDmjQjK7gCaR0o05riI0k";
     if (tempCurrentIslandLevel <= 54) return "https://arweave.net/bjJkfeS08kktzB3BrKXs8EkVDQOpV23SNV8_VtDK2Kk";
     return "https://arweave.net/zAQS-p2LF3BaSK4APBpn6U-SFa5Zy-RNLhLGvrN-nog";
@@ -167,13 +164,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
             <title></title>
           </image>
 
-          {tempCurrentIslandLevel <= 27 ? (
+          {/* {tempCurrentIslandLevel <= 27 ? (
             <image href="https://arweave.net/dB07kjfdIJFICANzB7nkt2W8W2FoO4TbFnAVTHeepzw" x="89%" y="92%" width="3%" preserveAspectRatio="xMidYMid meet">
               <title></title>
             </image>
           ) : (
             <></>
-          )}
+          )} */}
 
           {/* <LoadUserDetails /> */}
           {/* {currentIslandLevel != 0 && (
