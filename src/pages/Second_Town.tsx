@@ -53,7 +53,7 @@ export default function Second_Town() {
 
       {/* bottom buttons bar */}
       {!chatOpen && (
-        <div className="z-20 absolute bottom-0 w-full p-4">
+        <div className="z-50 absolute bottom-0 w-full p-4">
           <div className="flex justify-between items-center relative">
             <ImgButton
               src={
