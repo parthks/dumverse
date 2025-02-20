@@ -42,6 +42,7 @@ global type CombatUserData = record
 
     -- User Quest's Completion Data
     has_collected_all_hearts : boolean | nil
+    has_collected_kitten : boolean | nil
     -- gold_earned : integer   
     -- gold_lost : integer   
     -- enemy_killed : integer   

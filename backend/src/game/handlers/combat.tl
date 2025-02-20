@@ -89,13 +89,23 @@ end
 
 local function removeUsedPotion(playerData: CombatUserData, userId: string)
 
-    if playerData.special_item_heart == 4  and playerData.has_collected_all_hearts == true then
+    local user_data = dbAdmin:exec(string.format([[SELECT * FROM Users where id = %f;]], userId)) [1] as UserData
+
+    if playerData.special_item_heart == 4  and user_data.special_item_heart ~= 4 and playerData.has_collected_all_hearts == true then
         playerData.total_health = playerData.total_health + 1
         -- ao.send({Target="_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA",Action="Quest.ShopHeartQuest",UserId=tostring(Battles[battle_id].players[attacker_id].id),UserAddress=Battles[battle_id].players[attacker_id].address,TotalHeart=tostring(Battles[battle_id].players[attacker_id].special_item_heart)})
        
         dbAdmin:exec(string.format([[
             UPDATE Users SET total_health = %f WHERE id = %f;
         ]], playerData.total_health, userId))
+    end
+
+    if playerData.special_item_kitten == 1  and user_data.special_item_kitten ~= 1 and playerData.has_collected_kitten == true then
+        playerData.gold_balance = playerData.gold_balance + 10000
+
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET gold_balance = %d WHERE id = %f;
+        ]], playerData.gold_balance, userId))
     end
 
     if playerData.potion_used and playerData.potion then
@@ -270,7 +280,7 @@ local function enterNewCombatHandler(msg: Message)
             return constants.SPECIAL_ENEMIES["LEPERCHAUN"]
         end
         -- 5% chance to get a dumz maxi
-        if (level > 72 and level < 82) and math.random(1, 20) == 1 then
+        if (level > 72 and level < 82) and math.random(1, 20) == 1 and user.special_item_kitten > -1 and user.special_item_kitten < 1 then
             return constants.SPECIAL_ENEMIES["DUMZ"]
         end
         

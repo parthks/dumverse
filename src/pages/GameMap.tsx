@@ -6,7 +6,7 @@ import ImgButton from "@/components/ui/imgButton";
 import NewButton from "@/components/ui/NewButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
-import { getInteractivePoints } from "@/lib/utils";
+import { getInteractivePoints, getInitialLamaPosition } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
@@ -81,7 +81,7 @@ const GameMap = () => {
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
   const [stepDistance, setStepDistance] = useState("0.5");
   const [stepTime, setStepTime] = useState("50");
-  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(true);
 
   const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on
@@ -180,7 +180,7 @@ const GameMap = () => {
       {questBookOpen && <QuestBook />}
 
       <div className="z-10 absolute top-4 left-[72%] w-[30%]">
-        <NewButton className='px-9 py-4 text-3xl' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
+        <NewButton className='px-9 py-4 text-3xl z-50' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
@@ -267,11 +267,11 @@ const GameMap = () => {
         >
           Map 3
         </button> */}
-        {tempCurrentIslandLevel <= 27 ? (
+        {/* {tempCurrentIslandLevel <= 27 ? (
           <NewButton className="bottom-1 px-14 py-2 text-xl" src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} onClick={() => setIsPopupOpen(true)} alt={"Set Sail"} />
         ) : (
           <></>
-        )}
+        )} */}
         {isPopupOpen && (
           <SetSailPopup
             onClose={() => setIsPopupOpen(false)}
@@ -336,9 +336,9 @@ function SetSailPopup({
   return (
     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
       <div className=" w-[30vw] h-[60vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50">
-        <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
+        {/* <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
           &times;
-        </button>
+        </button> */}
 
         <div className="w-full text-center">
           <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">Departing to ...</h2>
@@ -360,6 +360,32 @@ function SetSailPopup({
            
         Boat Map Dont know the name and Bad with names
         </button> */}
+
+         <button onClick={async () => {
+              // await travelToLocation(55);
+              setTempCurrentIslandLevel(0);
+              setLamaPosition(getInitialLamaPosition());
+              setTempLamaPosition(getInitialLamaPosition());
+
+              onClose();
+            }}
+            
+            className="bg-blue-400 w-[60%] h-[60px] rounded-3xl text-2xl cursor-pointer transition-transform duration-200  hover:scale-110 active:scale-95">Happy Green Valley</button>
+
+          {/* <ImgButton
+            disabled={!goldArmor && !higherTierArmor}
+            src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
+            onClick={async () => {
+              // await travelToLocation(55);
+              setTempCurrentIslandLevel(0);
+              setLamaPosition(getInitialLamaPosition());
+              setTempLamaPosition(getInitialLamaPosition());
+
+              onClose();
+            }}
+            alt={"Happy Green Valley"}
+            className="w-[60%]"
+          /> */}
 
           <ImgButton
             disabled={!goldArmor && !ironArmor && !higherTierArmor}

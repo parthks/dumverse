@@ -269,8 +269,12 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
             end
             
         end
-        if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
-            Battles[battle_id].players[attacker_id].special_item_kitten = 1
+        -- if npc.id == "DUMZ" and (Battles[battle_id].players[attacker_id].special_item_kitten or 0) < 1 then
+            if npc.id == "DUMZ" then
+            Battles[battle_id].players[attacker_id].special_item_kitten = (Battles[battle_id].players[attacker_id].special_item_kitten or 0) + 1
+            if Battles[battle_id].players[attacker_id].special_item_kitten == 1 and Battles[battle_id].players[attacker_id].has_collected_kitten == nil then
+                Battles[battle_id].players[attacker_id].has_collected_kitten = true
+            end
         end
         if npc.id == "AGENT_TRUNK"  then
             -- local user_id: integer = math.floor(tonumber(Battles[battle_id].players[attacker_id].id))

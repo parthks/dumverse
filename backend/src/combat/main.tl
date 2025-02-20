@@ -258,8 +258,11 @@ local function newUserJoinHandler(msg: Message)
     assert(tonumber(level_input) as integer, "Combat Level is not a integer")
     local level = tonumber(level_input) as integer
 
+    local player = json.decode(data.player) as CombatUserData
+    local npcs = json.decode(data.npcs) as {CombatEnemyData}
 
-    local battles = GetOpenBattlesOfUser(user_id, msg.Timestamp)
+
+    local battles = GetOpenBattlesOfUser(player.address, msg.Timestamp)
     if #battles > 0 then
         -- user is already in a battle
         print("user is already in a battle")
@@ -273,9 +276,6 @@ local function newUserJoinHandler(msg: Message)
             })
             return
         end
-
-        local player = json.decode(data.player) as CombatUserData
-        local npcs = json.decode(data.npcs) as {CombatEnemyData}
 
         -- check lastest open battle and add user to it
         local battle = BattleHelpers.getLatestSuitableOpenBattle(player, level) as Battle

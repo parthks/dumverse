@@ -43,6 +43,8 @@ export type Battle = {
       added_at_timestamp: number;
       inventory_weapon_id?: string;
       inventory_armor_id?: string;
+      has_collected_all_hearts: boolean | null;
+      has_collected_kitten: boolean | null
     }
   >;
   npcs: Record<string, NPC>;
