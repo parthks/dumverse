@@ -55,8 +55,8 @@ end
 
 local function denAcceptQuestHandler(msg: Message)
     local user_id = tonumber(msg.Tags.UserId)
-    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
-    assert(userData.nft_address,"You cant access this quest")
+    -- local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+    -- assert(userData.nft_address,"You cant access this quest")
 
     -- update user quest data
     dbAdmin:exec(string.format([[

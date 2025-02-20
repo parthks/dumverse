@@ -89,9 +89,7 @@ end
 
 local function removeUsedPotion(playerData: CombatUserData, userId: string)
 
-    local user_data = dbAdmin:exec(string.format([[SELECT * FROM Users where id = %f;]], userId)) [1] as UserData
-
-    if playerData.special_item_heart == 4  and user_data.special_item_heart ~= 4 and playerData.has_collected_all_hearts == true then
+    if playerData.special_item_heart == 4 and playerData.has_collected_all_hearts == true then
         playerData.total_health = playerData.total_health + 1
         -- ao.send({Target="_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA",Action="Quest.ShopHeartQuest",UserId=tostring(Battles[battle_id].players[attacker_id].id),UserAddress=Battles[battle_id].players[attacker_id].address,TotalHeart=tostring(Battles[battle_id].players[attacker_id].special_item_heart)})
        
@@ -100,7 +98,7 @@ local function removeUsedPotion(playerData: CombatUserData, userId: string)
         ]], playerData.total_health, userId))
     end
 
-    if playerData.special_item_kitten == 1  and user_data.special_item_kitten ~= 1 and playerData.has_collected_kitten == true then
+    if playerData.special_item_kitten == 1  and playerData.has_collected_kitten == true then
         playerData.gold_balance = playerData.gold_balance + 10000
 
         dbAdmin:exec(string.format([[

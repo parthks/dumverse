@@ -74,14 +74,14 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 // ];
 
 const GameMap = () => {
-  const { goToTown, goToRestArea, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen } =
+  const { goToTown, goToRestArea, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
     useGameStore();
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
   const [currentPathIndex, setCurrentPathIndex] = useState(0);
   const [stepDistance, setStepDistance] = useState("0.5");
   const [stepTime, setStepTime] = useState("50");
-  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(true);
+  // const [isPopupOpen, setIsPopupOpen] = useState<boolean>(true);
 
   const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
   // currentIslandLevel is the level that the lamma in the db is on

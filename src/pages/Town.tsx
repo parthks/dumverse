@@ -13,6 +13,7 @@ import NewButton from "@/components/ui/NewButton";
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const goToGameMap = useGameStore((state) => state.goToGameMap);
+  const setIsPopupOpen = useGameStore((state) => state.setIsPopupOpen);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const user = useGameStore((state) => state.user);
 
@@ -292,7 +293,7 @@ export default function Town() {
         user?.address == "9T6eBRHUSaoS4Dxi0iVdyaSroL6EaxGGKlgxBvMr6go" ||
         user?.address == "OGNCZwB71ZEP5ftJBKi2w1ueGaVh3KzBuzxvW6KqeDw" ||
         user?.address == "jddq2gt8n-F2KNO2I67qjDAR1dSeL6ZwYtd3GrmmpTg") && ( */}
-        <div className="absolute w-[8%] h-[5%] top-[2vh] -right-[1.3vw] z-50">
+      <div className="absolute w-[8%] h-[5%] top-[2vh] -right-[1.3vw] z-50">
         {/* <ImgButton
                         src="https://arweave.net/nYTjNe4X9GAQjhFIHgMZmkS2pvco7JTAUHb338TOsfo"
                         alt="Leaderboard"
@@ -301,14 +302,14 @@ export default function Town() {
                         onClick={() => console.log("afa")} 
                       /> */}
 
-          <NewButton
-            className="cursor-pointer text-xl w-full h-full"
-            onClick={() => {
-              handleBuildingSelect(GameStatePages.SECOND_TOWN);
-            }}
+        <NewButton
+          className="cursor-pointer text-xl w-full h-full"
+          onClick={() => {
+            handleBuildingSelect(GameStatePages.SECOND_TOWN);
+          }}
           alt="East Side"
-          />
-        </div>
+        />
+      </div>
 
       <ChatWindow chatOpen={chatOpen} setChatOpen={setChatOpen} />
 
@@ -317,15 +318,18 @@ export default function Town() {
         <div className="z-50 absolute bottom-1 w-full px-2 py-5">
           <div>
             <div className="relative w-[320px] bottom-2">
-            <NewButton
-              varient="blue"
-              className="px-11 py-4 text-3xl left-1"
-              src={
-                "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
-              }
-              onClick={() => goToGameMap(true)}
-              alt={"Leave Town"}
-            />
+              <NewButton
+                varient="blue"
+                className="px-11 py-4 text-3xl left-1"
+                src={
+                  "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
+                }
+                onClick={() => {
+                  goToGameMap(true);
+                  setIsPopupOpen(true);
+                }}
+                alt={"Leave Town"}
+              />
             </div>
             <div className="absolute left-[60%] top-3 translate-x-[0%]">
               <NewButton
@@ -342,8 +346,8 @@ export default function Town() {
             </div>
             <div className="flex left-1/2 items-center justify-end">
               <NewButton
-              varient="blue"
-              className="px-24 py-4 text-3xl mr-3"
+                varient="blue"
+                className="px-24 py-4 text-3xl mr-3"
                 src={
                   "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
                 }

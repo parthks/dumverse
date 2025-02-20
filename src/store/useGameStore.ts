@@ -82,6 +82,8 @@ interface GameState {
   setIsSettingsOpen: (open: boolean) => void;
   getTotalUsers: () => Promise<number>;
   goldWishes: ()=>Promise<DailyGoldWishes | null>;
+  isPopupOpen: boolean;
+  setIsPopupOpen: (map: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -99,10 +101,10 @@ export const useGameStore = create<GameState>()(
           tags.push({ name: "NFT_Address", value: selectedNFT });
         }
         const resultData = await sendAndReceiveGameMessage({ tags });
-        console.log("Ashu : Add new user: "+JSON.stringify(resultData));
+        console.log("Ashu : Add new user: " + JSON.stringify(resultData));
         if (resultData.Messages.length > 0 && resultData.Messages[2].Data) {
           const data = JSON.parse(resultData.Messages[2].Data);
-          console.log("Ashu : new user: "+JSON.stringify(data));
+          console.log("Ashu : new user: " + JSON.stringify(data));
           if (data.status === "Success") {
             // get().setUserOnLogin(data.data, selectedNFT? selectedNFT : "NULL");
             get().setUserOnLogin(data.data);
@@ -213,7 +215,7 @@ export const useGameStore = create<GameState>()(
             { name: "Action", value: "Bank.Info" },
             { name: "UserId", value: get().user?.id.toString()! },
           ],
-          process: "bank"
+          process: "bank",
         });
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const bankData = JSON.parse(resultData.Messages[0].Data);
@@ -248,7 +250,7 @@ export const useGameStore = create<GameState>()(
             { name: "Amount", value: amount.toString() },
             { name: "TokenType", value: tokenType },
           ],
-          process: "bank"
+          process: "bank",
         });
         await get().getBank();
         await get().refreshUserData();
@@ -560,7 +562,7 @@ export const useGameStore = create<GameState>()(
             if (message.Data) {
               try {
                 const parsedData = JSON.parse(message.Data);
-      
+
                 // Check if the parsed data has the 'logs' property
                 if (parsedData.logs) {
                   console.log("Ashu: DailyGoldWishes Data: ", parsedData);
@@ -575,10 +577,9 @@ export const useGameStore = create<GameState>()(
         }
         // If no valid data is found, refresh user data and return null
         return null;
-      }
-      
-      
-      ,
+      },
+      isPopupOpen: true,
+      setIsPopupOpen: (map) => set({ isPopupOpen: map }),
     }),
     {
       name: "Game Store",
