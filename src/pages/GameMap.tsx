@@ -361,7 +361,8 @@ function SetSailPopup({
         Boat Map Dont know the name and Bad with names
         </button> */}
 
-         <button onClick={async () => {
+         <NewButton 
+          onClick={async () => {
               // await travelToLocation(55);
               setTempCurrentIslandLevel(0);
               setLamaPosition(getInitialLamaPosition());
@@ -370,7 +371,8 @@ function SetSailPopup({
               onClose();
             }}
             
-            className="bg-blue-400 w-[60%] h-[60px] rounded-3xl text-2xl cursor-pointer transition-transform duration-200  hover:scale-110 active:scale-95">Happy Green Valley</button>
+            alt="Happy Green Valley"
+            className="bg-blue-400 w-[58%] mr-[12%] h-[75px] text-3xl" />
 
           {/* <ImgButton
             disabled={!goldArmor && !higherTierArmor}
@@ -386,7 +388,6 @@ function SetSailPopup({
             alt={"Happy Green Valley"}
             className="w-[60%]"
           /> */}
-
           <ImgButton
             disabled={!goldArmor && !ironArmor && !higherTierArmor}
             src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
@@ -407,7 +408,7 @@ function SetSailPopup({
               onClose();
             }}
             alt={"Dumzz Forest"}
-            className="w-[60%]"
+            className="w-[60%] mt-24"
           />
 
           <ImgButton
