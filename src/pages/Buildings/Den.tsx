@@ -531,8 +531,8 @@ function BlackjackPlaying() {
         )}
 
       {/* Controls */}
-      <div className="absolute bottom-40 right-1/3 text-2xl transform -translate-x-16">
-        {user?.id && currentRound?.players[user.id.toString()] && (
+      <div className="absolute bottom-52 right-[40%] text-2xl z-10">
+        {user?.id && currentRound?.players && currentRound.players[user.id.toString()] && (
           <>
             <NewButton
               varient="blue"
@@ -641,7 +641,7 @@ function BettingAmount() {
 
   return (
     <>
-      <div className="z-10 bg-white bg-center px-[120px] py-[20px] pb-20 absolute bottom-32 left-1/2 transform -translate-x-1/2 rounded-xl">
+      <div className="z-40 bg-white bg-center px-[120px] py-[20px] pb-20 absolute bottom-32 left-1/2 transform -translate-x-1/2 rounded-xl">
         <div className="absolute top-4 right-4">
           <ImgButton
             src={
@@ -661,10 +661,11 @@ function BettingAmount() {
               type="number"
               className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-14"
               value={inputValue}
+              placeholder="5-20g"
               onChange={(e) => {
                 let value = parseInt(e.target.value);
                 if (!isNaN(value)) {
-                  value = Math.max(1, value)
+                  value = Math.max(5, Math.min(20, value));
                   setInputValue(value);
                 } else {
                   setInputValue(undefined);
