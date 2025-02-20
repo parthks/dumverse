@@ -69,7 +69,7 @@ export const useBlackjackStore = create<BlackjackState>()(
         });
         console.log(
           "Ashu :  getOpenBlackjackRounds: " +
-            JSON.stringify(resultData.Messages)
+            JSON.stringify(resultData)
         );
         if (
           JSON.parse(

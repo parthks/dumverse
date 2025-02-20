@@ -57,7 +57,8 @@ export default function Den() {
             onClick={async () => {
               audioManager.playSFX(SOUNDS.BUILDING_ENTER);
               await sleep(750);
-              setGameStatePage(GameStatePages.SECOND_TOWN);
+              // setGameStatePage(GameStatePages.SECOND_TOWN);
+              setBlackjackStart(false);
             }}
             alt={"Exit"}
           />
@@ -257,7 +258,7 @@ export default function Den() {
                     }
                     onClick={handleClick}
                     alt={"Play Button"}
-                    disabled={true}
+                    disabled={false}
                     className=""
                   />
                 </div>
