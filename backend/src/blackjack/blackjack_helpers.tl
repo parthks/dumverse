@@ -108,7 +108,8 @@ local function createBlackjackRoundCopy(original_round: Round, user_id: string):
             winnigAmount = original_round.dealer.winnigAmount,
             status = original_round.dealer.status
         },
-        deck = #original_round.winner > 0 and original_round.deck or nil,
+        -- deck = #original_round.winner > 0 and original_round.deck or nil,
+        deck =  nil,
         logs = original_round.logs,
         started = original_round.started,
         ended = original_round.ended,
