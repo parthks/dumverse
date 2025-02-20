@@ -502,7 +502,7 @@ function BlackjackPlaying() {
 
             return (
               <div key={player.user_id} className={positionClass}>
-                {player.cards.length > 0 ? (
+                {player.cards && player.cards.length > 0 ? (
                   <div className="flex gap-2 w-auto m-10 left-1/2">
                     {player.cards.map((card, key) => {
                       const suit = card.suit as keyof typeof CARD_IMAGES;

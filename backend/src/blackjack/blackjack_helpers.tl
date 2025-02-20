@@ -18,7 +18,7 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
 
     for _, blackjack in pairs(Rounds) do
         if not blackjack.ended and (blackjack.created_at + 300000) < timestamp then
-            print("Blackjack round: " .. blackjack.id .. " - ENDED DUE TO PLAYER INACTIVITY")
+            -- print("Blackjack round: " .. blackjack.id .. " - ENDED DUE TO PLAYER INACTIVITY")
             addLog(
                 tostring(blackjack.id),
                 timestamp,
@@ -37,7 +37,7 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
             end
 
             if not blackjack.ended and utils.includes(user_address, user_addresses) then
-                print("Blackjack round: " .. blackjack.id .. " is open for user " .. user_address)
+                -- print("Blackjack round: " .. blackjack.id .. " is open for user " .. user_address)
                 rounds[#rounds + 1] = blackjack
             end
         end
@@ -85,7 +85,7 @@ end
 local function getLatestSuitableOpenBattle(): Round | nil
     for _, blackjack in pairs(Rounds) do
         if not blackjack.ended then
-            print("Checking blackjack round " .. blackjack.id .. " for any online player")
+            -- print("Checking blackjack round " .. blackjack.id .. " for any online player")
             if #utils.keys(blackjack.players) < MAX_PLAYERS_IN_BLACKJACK then
                 return blackjack
             end
@@ -96,6 +96,9 @@ end
 
 local function createBlackjackRoundCopy(original_round: Round, user_id: string): Round
     -- Create a new round table with proper typing
+
+    local uss = user_id
+    uss= ''
     local round: Round = {
         id = original_round.id,
         players = {},
@@ -128,6 +131,7 @@ local function createBlackjackRoundCopy(original_round: Round, user_id: string):
             betPlaced = originalPlayer.betPlaced,
             -- cards = (playerId == user_id or originalPlayer.hasStood) and originalPlayer.cards or nil,
             cards = (playerId == user_id or originalPlayer.betPlaced) and originalPlayer.cards or nil,
+            -- cards = originalPlayer.cards ,
             value = originalPlayer.value,
             hasDoubleDown = originalPlayer.hasDoubleDown,
             hasBust = originalPlayer.hasBust,

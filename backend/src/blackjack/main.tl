@@ -28,7 +28,7 @@ local function newUserJoinBlackjackHandler(msg: Message)
     local rounds = GetOpenBlackjackRoundsOfUser(user_data.address, timestamp)
 
     if #rounds > 0 then
-        print("user is already in a blackjack game")
+        -- print("user is already in a blackjack game")
         ao.send({
             Target = constants.GAME_PROCESS_ID,
             UserId = tostring(user_id),
@@ -160,12 +160,18 @@ local function newUserJoinBlackjackHandler(msg: Message)
 
     Rounds[round_id].players[user_id] = player
 
-    for _, playerDetails in pairs(Rounds[round_id].players) do
-        table.insert(playerDetails.cards, Rounds[round_id].deck[1])
-        table.remove(Rounds[round_id].deck, 1)
-        table.insert(playerDetails.cards, Rounds[round_id].deck[1])
-        table.remove(Rounds[round_id].deck, 1)
-    end
+    -- for _, playerDetails in pairs(Rounds[round_id].players) do
+    --     if #playerDetails.cards <= 2 then
+            -- table.insert(playerDetails.cards, Rounds[round_id].deck[1])
+            -- table.remove(Rounds[round_id].deck, 1)
+            -- table.insert(playerDetails.cards, Rounds[round_id].deck[1])
+            -- table.remove(Rounds[round_id].deck, 1)
+            table.insert(Rounds[round_id].players[user_id].cards, Rounds[round_id].deck[1])
+            table.remove(Rounds[round_id].deck, 1)
+            table.insert(Rounds[round_id].players[user_id].cards, Rounds[round_id].deck[1])
+            table.remove(Rounds[round_id].deck, 1)
+    --     end
+    -- end
 
     addLog(tostring(Rounds[round_id].id), timestamp, "newUserJoinBlackjackHandler", "Player " .. user_id .. " added to Blackjack")
 
@@ -207,7 +213,7 @@ local function placeBetHandler(msg: Message)
 
     Rounds[round_id].players[user_id] = player
 
-    print("Player " .. tostring(user_id) .. " has placed bet " .. user_bet_amount .. " in Blackjack Round id: " .. tostring(round_id))
+    -- print("Player " .. tostring(user_id) .. " has placed bet " .. user_bet_amount .. " in Blackjack Round id: " .. tostring(round_id))
 
     ao.send({ Target = msg.From, Status = "Success" })
 end
@@ -244,7 +250,7 @@ local function hitHandler(msg: Message)
     -- Deal a new card from the deck
     table.insert(player.cards, Deck[1])
     table.remove(Deck, 1)
-    print("card added")
+    -- print("card added")
 
     local checkPlayersBurst = isPlayerBust(player)
     if checkPlayersBurst.status == "Burst" then
@@ -256,7 +262,7 @@ local function hitHandler(msg: Message)
     Rounds[round_id].players[user_id] = player
     Rounds[round_id].deck = Deck
 
-    print("checking burst and send message")
+    -- print("checking burst and send message")
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
@@ -375,7 +381,7 @@ local function matchWinner(msg: Message)
 
                 sendGoldToPlayerWin(tostring(round.id))
                 round.ended = true
-                print("Dealer blackjack: " .. json.encode(playerAndDealerCardValues))
+                -- print("Dealer blackjack: " .. json.encode(playerAndDealerCardValues))
                 break
             end
 
@@ -392,7 +398,7 @@ local function matchWinner(msg: Message)
 
                 sendGoldToPlayerWin(tostring(round.id))
                 round.ended = true
-                print("Dealer Burst: " .. json.encode(playerAndDealerCardValues))
+                -- print("Dealer Burst: " .. json.encode(playerAndDealerCardValues))
                 break
             end
 
@@ -436,7 +442,7 @@ local function matchWinner(msg: Message)
             end
             sendGoldToPlayerWin(tostring(round.id))
             round.ended = true
-            print("Someone blackjack: " .. json.encode(playerAndDealerCardValues))
+            -- print("Someone blackjack: " .. json.encode(playerAndDealerCardValues))
         -- else
             -- round.created_at = msg.Timestamp
         end
