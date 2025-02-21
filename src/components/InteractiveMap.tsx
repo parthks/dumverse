@@ -86,9 +86,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     // if (tempCurrentIslandLevel <= 27) return "https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I";
     // if (tempCurrentIslandLevel <= 54) return "https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI";
     // return "https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE";\
-    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/fXXyF_eEP2ZF0IWKiBflF6HhM1FZcS-rQ9UM9tHZO20";
-    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/ojFFGryPHdTlowmEUjOCYUHKi8P8TRss6tmgD7RrO88";
-    return "https://arweave.net/5uYkotWl32aBSpJV6j-Ykjj_aQRtGpExAYpUZsqtSuM";
+    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/0tihG4RP7k47UXhsac1G1NYYWkrpmR7rzTFDKl3iEt4";
+    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/xBYjHPPmUMwNz7ie-g9gzYx3EGpTr4z1ja3w_gW2NQg";
+    return "https://arweave.net/7pKdnNo5PS8oY8rwta0g6gMX4kRHoYAYoeFpPmPZvSM";
   };
 
   useEffect(() => {
