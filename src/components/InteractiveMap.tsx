@@ -4,6 +4,7 @@ import { cn, getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
 import React, { useEffect } from "react";
+import { BOSS_SPOTS } from "@/lib/constants";
 
 // import {
 //   interactivePointsMap2,
@@ -154,7 +155,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
                   className={cn(
                     "interactive-point transition-colors duration-200",
                     isValidSpotToMoveTo(currentIslandLevel, point.level) ? "hover:fill-[#63af16]" : "fill-black",
-                    point.level % 9 == 0 ? "fill-purple-700" : isValidSpotToMoveTo(currentIslandLevel, point.level) ? "fill-[#3fe406]" : "fill-black"
+                    BOSS_SPOTS.includes(point.level)
+                      ? "fill-red-700"
+                      : point.level % 9 == 0
+                      ? "fill-purple-700"
+                      : isValidSpotToMoveTo(currentIslandLevel, point.level)
+                      ? "fill-[#3fe406]"
+                      : "fill-black"
                   )}
                   data-level={point.level}
                 />

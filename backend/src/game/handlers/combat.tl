@@ -151,7 +151,7 @@ local function enterNewCombatHandler(msg: Message)
     local overwrite_the_battle_on_same_spot = msg.Tags.OverWriteTheBattleOnSameSpot
     assert(type(combat_level) == "number", "Level is required")
     assert(type(combat_level) == "number" and math.floor(combat_level) == combat_level, "Combat level must be an integer")
-
+    print(combat_level)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
 
@@ -253,16 +253,16 @@ local function enterNewCombatHandler(msg: Message)
 -- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
     local function getRandomEnemyIndex(level: integer): integer
         local enemy_index: integer;
-        if level <= 27 then
+        if level < 27 then
             -- Easy: enemies 1-5
             enemy_index = math.random(1, 5)
-        elseif level <= 54 then
+        elseif level > 27 and level < 54 then
             -- Medium: enemies 6-9
             enemy_index = math.random(6, 9)
         -- elseif level <= 63 then
         --     -- Hard enemies (10-13) (13->Goat)
         --     enemy_index = math.random(10, 12)
-        else
+    elseif level > 54 and level < 81 then
             -- Hard enemies (10-13) (13->Goat)
             enemy_index = math.random(10, 13)
             -- if enemy_index == 13 then
@@ -318,11 +318,41 @@ local function enterNewCombatHandler(msg: Message)
         end
         return nil
     end
+
+    local function getRandomBossEnemy(level: integer): integer
+        local boss_enemy_index: integer;
+        if level == 27 then
+            -- Easy: enemies 1-5
+            boss_enemy_index = 1
+        -- elseif level <= 54 then
+        --     -- Medium: enemies 6-9
+        --     enemy_index = math.random(6, 9)
+        -- -- elseif level <= 63 then
+        -- --     -- Hard enemies (10-13) (13->Goat)
+        -- --     enemy_index = math.random(10, 12)
+        -- else
+        --     -- Hard enemies (10-13) (13->Goat)
+        --     enemy_index = math.random(10, 13)
+        --     -- if enemy_index == 13 then
+        --     --     enemy_index = math.random(1, 10) == 10 and 13 or math.random(10, 12)
+        --     -- end
+        end
+        return boss_enemy_index
+    end
      
-    local enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
-    -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
-    -- add special enemies
-    local special_enemy: EnemyData | nil = getRandomSpecialEnemy(userData, combat_level)
+    local enemies: {EnemyData}
+    local special_enemy: EnemyData | nil 
+
+    if utils.includes(combat_level, constants.BOSS_SPOTS) then
+
+        enemies = {constants.BOSSES[getRandomBossEnemy(combat_level)]}
+
+    else
+        enemies = {constants.ENEMIES[getRandomEnemyIndex(combat_level)]}
+        -- local doubleEnemies = {6,7,8,14,15,16,17,23,24,25}
+        -- add special enemies
+         special_enemy = getRandomSpecialEnemy(userData, combat_level)
+    end
 
     if special_enemy then
 

@@ -1,6 +1,7 @@
 import { LamaPosition } from "@/types/game";
 
-export const REST_SPOTS = [0, 9, 18, 27, 36, 45, 54, 63, 72, 81];
+export const REST_SPOTS = [0, 9, 18, 36, 45, 63, 72];
+export const BOSS_SPOTS = [ 27, 54, 81];
 
 export const BUILDING_IMAGES = {
   ARMOR_WEAPON_DUMDUM: "https://arweave.net/lpK2ZqY1jFk2TagQOD8wlzSmWAPXjrdRG926H5MOl8E",
@@ -74,6 +75,7 @@ export const ENEMY_CARD_IMAGE = {
   BLACK_SWAN: "https://arweave.net/tDkbLZT4ITSHCesacdjQykrRKh23aGh4LOY6c5GeL1Y", // kitten, gold and dumz loot
   LEPERCHAUN: "https://arweave.net/Dh9lbBgZf8hGJQZ77v5yXJSJ_1lW2QISPdqWcSxPRiI", // gold loot
   AGENT_TRUNK: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
+  BOSS_1: "https://arweave.net/igNAfO07uMii0ujmYn8n2dte_VByw_mL7D2ek1yobBE",
 };
 
 export const SOUNDS = {

@@ -9,7 +9,8 @@ local BACKUP_PROCESS_ID = "3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY"
 local BANK_PROCESS_ID = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870"
 local BLACKJACK_PROCESS_ID = "yq1BaWDdF5hR3jCf-N0KVtrpyPB0bI0ndQRQECLGj_Y"
 
-local REST_SPOTS = {0, 9, 18, 27, 36, 45, 54, 63, 72, 81}
+local REST_SPOTS = {0, 9, 18, 36, 45, 63, 72}
+local BOSS_SPOTS = {27, 54, 81}
 
 require "utils.globals"
 
@@ -525,6 +526,83 @@ local SPECIAL_ENEMIES = {
     },
 }
 
+local BOSSES: {EnemyData} = {
+    {
+        id = "BOSS_1",
+        name = "Cougar",
+        total_health = 6 ,
+        health = 6 ,
+        damage = {1,2},
+        difficulty = "HARDEST",
+        gold_reward = 120,
+        dumz_reward = 24
+    },
+    {
+        id = "BOSS_2",
+        name = "Eagle",
+        total_health = 6 ,
+        health = 6 ,
+        damage = {1,2},
+        difficulty = "HARDEST",
+        gold_reward = 120,
+        dumz_reward = 24
+    }, {
+        id = "BOSS_3",
+        name = "Wildfire",
+        total_health = 6 ,
+        health = 6 ,
+        damage = {1,2},
+        difficulty = "HARDEST",
+        gold_reward = 120,
+        dumz_reward = 24
+    }, {
+        id = "BOSS_4",
+        name = "Pack Of Wolves",
+        total_health = 9,
+        health = 9,
+        damage = {2,3},
+        difficulty = "HARDEST",
+        gold_reward = 240,
+        dumz_reward = 72
+    }, {
+        id = "BOSS_5",
+        name = "Moose",
+        total_health = 9,
+        health = 9,
+        damage = {2,3},
+        difficulty = "HARDEST",
+        gold_reward = 240,
+        dumz_reward = 72
+    }, {
+        id = "BOSS_6",
+        name = "Giant Spider",
+        total_health = 9,
+        health = 9,
+        damage = {2,3},
+        difficulty = "HARDEST",
+        gold_reward = 240,
+        dumz_reward = 72
+    }, {
+        id = "BOSS_7",
+        name = "Dragon",
+        total_health = 12,
+        health = 12,
+        damage = {3,4},
+        difficulty = "HARDEST",
+        gold_reward = 480,
+        dumz_reward = 120
+    }, {
+        id = "BOSS_8",
+        name = "Grizzly",
+        total_health = 12,
+        health = 12,
+        damage = {3,4},
+        difficulty = "HARDEST",
+        gold_reward = 480,
+        dumz_reward = 120
+    }
+}
+
 -- 9, 18, 27 are rest spots
 -- local ENEMY_PER_LEVEL = {
 --     [1] = { ENEMIES[1] },
@@ -568,6 +646,7 @@ return {
     BLACKJACK_PROCESS_ID = BLACKJACK_PROCESS_ID,
     ONE_OF_ONE_ASSET_IDS = ONE_OF_ONE_ASSET_IDS,
     REST_SPOTS = REST_SPOTS,
+    BOSS_SPOTS = BOSS_SPOTS,
     SPECIAL_ITEMS = SPECIAL_ITEMS,
     WEAPONS = WEAPONS,
     ARMORS = ARMORS,
@@ -576,6 +655,7 @@ return {
     FOOD = FOOD,
     ALL_ITEMS = ALL_ITEMS,
     ENEMIES = ENEMIES,
-    SPECIAL_ENEMIES = SPECIAL_ENEMIES
+    SPECIAL_ENEMIES = SPECIAL_ENEMIES,
+    BOSSES = BOSSES
     -- ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
 }

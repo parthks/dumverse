@@ -12,6 +12,7 @@ import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { LamaPosition } from "@/types/game";
 import { Fit } from "@rive-app/react-canvas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { BOSS_SPOTS } from "@/lib/constants";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
 // export const get = [
@@ -189,7 +190,7 @@ const GameMap = () => {
         <PlayerFrame />
       </div>
       <div className="z-10 absolute bottom-4 w-[450px] left-[700px]">
-        {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 ? (
+        {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 && !BOSS_SPOTS.includes(tempCurrentIslandLevel) ? (
           <NewButton
             disabled={enterNewAreaLoading}
             varient={"purple"}
