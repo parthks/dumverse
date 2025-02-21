@@ -293,7 +293,7 @@ function BlackjackGame() {
     userIsReadyForBlackjack,
     setBlackjackStart,
   } = useBlackjackStore();
-  const { user   } = useGameStore();
+  const { user } = useGameStore();
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentRound?.id}`],
@@ -533,59 +533,61 @@ function BlackjackPlaying() {
 
       {/* Controls */}
       <div className="absolute bottom-52 right-[40%] text-2xl z-10">
-        {user?.id && currentRound?.players && currentRound.players[user.id.toString()] && (
-          <>
-            <NewButton
-              varient="blue"
-              onClick={async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                await stand();
-              }}
-              disabled={
-                !currentRound.players[user.id.toString()].betPlaced ||
-                currentRound.players[user.id.toString()].hasDoubleDown ||
-                currentRound.ended
-              }
-              alt="Stand"
-              className="px-12 py-2"
-            />
-            <NewButton
-              varient="blue"
-              onClick={async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                await hit();
-              }}
-              disabled={
-                !currentRound.players[user.id.toString()].betPlaced ||
-                currentRound.players[user.id.toString()].hasDoubleDown ||
-                currentRound.players[user.id.toString()].hasBust ||
-                currentRound.players[user.id.toString()].hasStood ||
-                currentRound.ended
-              }
-              alt="Hit"
-              className="px-16 py-2 mr-52"
-            />
-            <NewButton
-              varient="blue"
-              onClick={async (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                await doubleDown();
-              }}
-              disabled={
-                !currentRound.players[user.id.toString()].betPlaced ||
-                currentRound.players[user.id.toString()].hasDoubleDown ||
-                currentRound.players[user.id.toString()].hasBust ||
-                currentRound.players[user.id.toString()].hasStood ||
-                currentRound.ended
-              }
-              alt="Double Down"
-              className="w-52 relative -left-[21rem] mt-16 py-2"
-            />
-          </>
-        )}
+        {user?.id &&
+          currentRound?.players &&
+          currentRound.players[user.id.toString()] && (
+            <>
+              <NewButton
+                varient="blue"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  await stand();
+                }}
+                disabled={
+                  !currentRound.players[user.id.toString()].betPlaced ||
+                  currentRound.players[user.id.toString()].hasDoubleDown ||
+                  currentRound.ended
+                }
+                alt="Stand"
+                className="px-12 py-2"
+              />
+              <NewButton
+                varient="blue"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  await hit();
+                }}
+                disabled={
+                  !currentRound.players[user.id.toString()].betPlaced ||
+                  currentRound.players[user.id.toString()].hasDoubleDown ||
+                  currentRound.players[user.id.toString()].hasBust ||
+                  currentRound.players[user.id.toString()].hasStood ||
+                  currentRound.ended
+                }
+                alt="Hit"
+                className="px-16 py-2 mr-52"
+              />
+              <NewButton
+                varient="blue"
+                onClick={async (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  await doubleDown();
+                }}
+                disabled={
+                  !currentRound.players[user.id.toString()].betPlaced ||
+                  currentRound.players[user.id.toString()].hasDoubleDown ||
+                  currentRound.players[user.id.toString()].hasBust ||
+                  currentRound.players[user.id.toString()].hasStood ||
+                  currentRound.ended
+                }
+                alt="Double Down"
+                className="w-52 relative -left-[21rem] mt-16 py-2"
+              />
+            </>
+          )}
       </div>
     </>
   );
@@ -609,18 +611,8 @@ function CardsRenderer({
 }
 
 function BettingAmount() {
-  const {
-    currentRound,
-    enterNewBlackjack,
-    getOpenBlackjackRounds,
-    placeBet,
-    blackjackInfo,
-    hit,
-    doubleDown,
-    stand,
-    userIsReadyForBlackjack,
-    setBlackjackStart
-  } = useBlackjackStore();
+  const { placeBet, userIsReadyForBlackjack, setBlackjackStart } =
+    useBlackjackStore();
 
   const [inputValue, setInputValue] = useState<number | undefined>(undefined);
   const placingBet = async (betAmount: number) => {
@@ -639,6 +631,37 @@ function BettingAmount() {
       setIsProcessing(false);
     }
   };
+  const [currentPage, setCurrentPage] = useState(0);
+  const [page, setPage] = useState("rules_1");
+  const [isLoadingLocal, setIsLoadingLocal] = useState(false);
+  const getPages: any = [
+    "betting_form",
+    "rules_1",
+    "rules_2",
+    "rules_3",
+    "rules_4",
+    "rules_5",
+    "rules_6",
+  ];
+  const handleTurnPage = (direction: "prev" | "next") => {
+    if (isLoadingLocal) return;
+
+    let newPage = currentPage; // Keep the current page value
+
+    if (direction === "next") {
+      const nextIndex = getPages.indexOf(page) + 1;
+      setPage(nextIndex >= getPages.length ? getPages[0] : getPages[nextIndex]);
+      newPage = 0; // Reset page to 0 when moving to the next type
+    } else {
+      const prevIndex = getPages.indexOf(page) - 1;
+      setPage(
+        prevIndex < 0 ? getPages[getPages.length - 1] : getPages[prevIndex]
+      );
+      newPage = 0; // Reset page to 0 when moving to the previous type
+    }
+
+    setCurrentPage(newPage); // Update current page
+  };
 
   return (
     <>
@@ -648,48 +671,240 @@ function BettingAmount() {
             src={
               "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
             }
-            onClick={() => {setBlackjackStart(false)}}
+            onClick={() => {
+              setBlackjackStart(false);
+            }}
             alt={"Exit Quantity Input"}
           />
         </div>
-        <div className="flex flex-col items-center w-min pb-10 pt-5">
-          <h1 className="text-center text-6xl leading-tight mb-10">
-            How much Gold are you betting?
-          </h1>
-          <div className="relative">
-            <Input
-              aria-label="Amount"
-              type="number"
-              className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-14"
-              value={inputValue}
-              placeholder="5-20g"
-              onChange={(e) => {
-                let value = parseInt(e.target.value);
-                if (!isNaN(value)) {
-                  value = Math.max(5, Math.min(20, value));
-                  setInputValue(value);
-                } else {
-                  setInputValue(undefined);
-                }
-              }}
-              style={{
-                width: "calc(153px * 2.5)",
-                height: "calc(37px * 2)",
-                backgroundImage:
-                  "url('https://arweave.net/Z73AkQ5HVh-YIxK8whhA04e-f_AAUoaYY2UjIkYm1A8')",
-                backgroundSize: "100% 100%",
-              }}
-            />
-            <div className="absolute left-[112%]">
-            <NewButton
-              onClick={handleConfirm}
-              disabled={isProcessing || !inputValue}
-              className={`bg-center ${isProcessing ? `px-[100px]`: `px-32`} py-4 text-3xl absolute`}
-              alt={isProcessing ? 'Processing...' : 'Confirm'}
-            />
+        {(() => {
+          return page === "betting_form" ? (
+            <div className="flex flex-col items-center w-min pb-10 pt-5">
+              <h1 className="text-center text-6xl leading-tight mb-10">
+                How much Gold are you betting?
+              </h1>
+              <div className="relative">
+                <Input
+                  aria-label="Amount"
+                  type="number"
+                  className="h-[37px] w-[153px] text-center text-4xl bg-no-repeat bg-left border-none focus-visible:ring-0 mb-14"
+                  value={inputValue}
+                  placeholder="5-20g"
+                  onChange={(e) => {
+                    let value = parseInt(e.target.value);
+                    if (!isNaN(value)) {
+                      value = Math.max(5, Math.min(20, value));
+                      setInputValue(value);
+                    } else {
+                      setInputValue(undefined);
+                    }
+                  }}
+                  style={{
+                    width: "calc(153px * 2.5)",
+                    height: "calc(37px * 2)",
+                    backgroundImage:
+                      "url('https://arweave.net/Z73AkQ5HVh-YIxK8whhA04e-f_AAUoaYY2UjIkYm1A8')",
+                    backgroundSize: "100% 100%",
+                  }}
+                />
+                <div className="absolute left-[112%]">
+                  <NewButton
+                    onClick={handleConfirm}
+                    disabled={isProcessing || !inputValue}
+                    className={`bg-center ${
+                      isProcessing ? `px-[100px]` : `px-32`
+                    } py-4 text-3xl absolute`}
+                    alt={isProcessing ? "Processing..." : "Confirm"}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          ) : page === "rules_1" ? (
+            <>
+              <div className="flex flex-col items-center w-[400px] pb-36">
+                <h1 className="text-center text-4xl underline pb-10">
+                  How to Play Blackjack
+                </h1>
+                <h1 className="text-center text-2xl">Objecives:</h1>
+                <p className="text-center text-2xl pt-10">
+                  The goal is to have a hand value as close to 21 as possible,
+                  without going over. You are playing against the dealer, not
+                  other players
+                </p>
+              </div>
+              <div className="flex absolute bottom-4 right-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/oLYsRSefknK9vSDBVcZ8-NGOXzu9JFZxxiU-BnkY6Pc"
+                  alt="Next Page"
+                  onClick={() => handleTurnPage("next")}
+                />
+              </div>
+            </>
+          ) : page === "rules_2" ? (
+            <>
+              <div className="flex flex-col items-center w-[400px] pb-20">
+                <h1 className="text-center text-4xl underline pb-10">
+                  How to Play Blackjack
+                </h1>
+                <h1 className="text-center text-2xl">Card Value:</h1>
+                <p className="text-center text-2xl pt-10">
+                  <ul>Number cards (2-10) are worth their face value.</ul>
+                  <ul>Face cards (Jack, Queen, King) are worth 10.</ul>
+                  <ul>
+                    Aces can be worth 1 or 11, depending on what benefits your
+                    hand.
+                  </ul>
+                </p>
+              </div>
+              <div className="flex absolute bottom-4 left-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/SKu9BObCHuN4lJVIa9tnP7R4OzwikZzDw1C-ALSIP30"
+                  alt="Previous Page"
+                  onClick={() => handleTurnPage("prev")}
+                />
+              </div>
+              <div className="flex absolute bottom-4 right-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/oLYsRSefknK9vSDBVcZ8-NGOXzu9JFZxxiU-BnkY6Pc"
+                  alt="Next Page"
+                  onClick={() => handleTurnPage("next")}
+                />
+              </div>
+            </>
+          ) : page === "rules_3" ? (
+            <>
+              <div className="flex flex-col items-center w-[400px] pb-[176px]">
+                <h1 className="text-center text-4xl underline pb-10">
+                  How to Play Blackjack
+                </h1>
+                <h1 className="text-center text-2xl">The Deal:</h1>
+                <p className="text-center text-2xl pt-10">
+                  <ul>Each player (and the dealer) gets two cards.</ul>
+                  <ul>
+                    The dealer's cards: One card face up, the other face down.
+                  </ul>
+                </p>
+              </div>
+              <div className="flex absolute bottom-4 left-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/SKu9BObCHuN4lJVIa9tnP7R4OzwikZzDw1C-ALSIP30"
+                  alt="Previous Page"
+                  onClick={() => handleTurnPage("prev")}
+                />
+              </div>
+              <div className="flex absolute bottom-4 right-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/oLYsRSefknK9vSDBVcZ8-NGOXzu9JFZxxiU-BnkY6Pc"
+                  alt="Next Page"
+                  onClick={() => handleTurnPage("next")}
+                />
+              </div>
+            </>
+          ) : page === "rules_4" ? (
+            <>
+              <div className="flex flex-col items-center w-[400px] pb-[72px]">
+                <h1 className="text-center text-4xl underline pb-10">
+                  How to Play Blackjack
+                </h1>
+                <h1 className="text-center text-2xl">Player's Turn:</h1>
+                <p className="text-center text-2xl pt-10 space-y-2">
+                  <ul>
+                    You can choose to "Hit" (get another card) or "Stand" (keep
+                    your current hand).
+                  </ul>
+                  <ul>
+                    You can keep hitting until you are happy with your total or
+                    go over 21 (which is called a "bust," and you lose).
+                  </ul>
+                </p>
+              </div>
+              <div className="flex absolute bottom-4 left-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/SKu9BObCHuN4lJVIa9tnP7R4OzwikZzDw1C-ALSIP30"
+                  alt="Previous Page"
+                  onClick={() => handleTurnPage("prev")}
+                />
+              </div>
+              <div className="flex absolute bottom-4 right-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/oLYsRSefknK9vSDBVcZ8-NGOXzu9JFZxxiU-BnkY6Pc"
+                  alt="Next Page"
+                  onClick={() => handleTurnPage("next")}
+                />
+              </div>
+            </>
+          ) : page === "rules_5" ? (
+            <>
+              <div className="flex flex-col items-center w-[400px] pb-[104px]">
+                <h1 className="text-center text-4xl underline pb-10">
+                  How to Play Blackjack
+                </h1>
+                <h1 className="text-center text-2xl">Dealer's Turn:</h1>
+                <p className="text-center text-2xl pt-10 space-y-2">
+                  <ul>
+                    After all players have finished their turns, the dealer
+                    reveals their face down card.
+                  </ul>
+                  <ul>
+                    The dealer must hit if their hand is 16 or less and must
+                    stand if their hand is 17 or more.
+                  </ul>
+                </p>
+              </div>
+              <div className="flex absolute bottom-4 left-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/SKu9BObCHuN4lJVIa9tnP7R4OzwikZzDw1C-ALSIP30"
+                  alt="Previous Page"
+                  onClick={() => handleTurnPage("prev")}
+                />
+              </div>
+              <div className="flex absolute bottom-4 right-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/oLYsRSefknK9vSDBVcZ8-NGOXzu9JFZxxiU-BnkY6Pc"
+                  alt="Next Page"
+                  onClick={() => handleTurnPage("next")}
+                />
+              </div>
+            </>
+          ) : page === "rules_6" ? (
+            <>
+              <div className="flex flex-col items-center w-[400px] pb-6">
+                <h1 className="text-center text-4xl underline pb-10">
+                  How to Play Blackjack
+                </h1>
+                <h1 className="text-center text-2xl">Wining:</h1>
+                <p className="text-center text-2xl pt-10 space-y-2">
+                  <ul>
+                    If your hand is closer to 21 than the dealer's, you win.
+                  </ul>
+                  <ul>If your hand exceeds 21, you lose ("bust").</ul>
+                  <ul>
+                    If the dealer busts, any player still in the game wins.
+                  </ul>
+                  <ul>
+                    If you and the dealer have the same hand value, it's a tie.
+                  </ul>
+                </p>
+              </div>
+              <div className="flex absolute bottom-4 left-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/SKu9BObCHuN4lJVIa9tnP7R4OzwikZzDw1C-ALSIP30"
+                  alt="Previous Page"
+                  onClick={() => handleTurnPage("prev")}
+                />
+              </div>
+              <div className="flex absolute bottom-4 right-4 justify-between items-center">
+                <ImgButton
+                  src="https://arweave.net/oLYsRSefknK9vSDBVcZ8-NGOXzu9JFZxxiU-BnkY6Pc"
+                  alt="Next Page"
+                  onClick={() => handleTurnPage("next")}
+                />
+              </div>
+            </>
+          ) : (
+            <>something went wrong</>
+          );
+        })()}
       </div>
     </>
   );

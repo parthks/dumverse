@@ -53,7 +53,7 @@ export default function Second_Town() {
 
       {/* bottom buttons bar */}
       {!chatOpen && (
-        <div className="z-20 absolute bottom-0 w-full p-4">
+        <div className="z-50 absolute bottom-0 w-full p-4">
           <div className="flex justify-between items-center relative">
             <ImgButton
               src={
@@ -124,8 +124,9 @@ export default function Second_Town() {
             alt="Dumverse Real Estate"
             className="w-full h-auto"
           />
-          <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-            Dumverse Real Estate
+          <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white text-center px-2 py-1 rounded whitespace-nowrap">
+            <div>Dumverse Real Estate</div>
+            <div>(coming soon)</div>
           </div>
         </div>
 
@@ -143,8 +144,9 @@ export default function Second_Town() {
             alt="Mounts"
             className="w-full h-auto"
           />
-          <div className="invisible group-hover:visible absolute top-[95%] left-[27%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-            Stables
+          <div className="invisible group-hover:visible absolute top-[95%] left-[27%] text-center text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
+            <div>Mounts</div>
+            <div>(coming soon)</div>
           </div>
         </div>
 
@@ -162,8 +164,9 @@ export default function Second_Town() {
             alt="Small Market"
             className="w-full h-auto"
           />
-          <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-            Small Market
+          <div className="invisible group-hover:visible absolute top-[97%] left-[17%] text-4xl z-20 text-white text-center px-2 py-1 rounded whitespace-nowrap">
+            <div>Small Market</div>
+            <div>(coming soon)</div>
           </div>
         </div>
 
@@ -181,8 +184,9 @@ export default function Second_Town() {
             alt="Pet Shop"
             className="w-full h-auto"
           />
-          <div className="invisible group-hover:visible absolute top-[57%] left-[-25%] text-4xl z-20 text-white px-2 py-1 rounded whitespace-nowrap">
-            Pet Shop
+          <div className="invisible group-hover:visible absolute top-[57%] left-[-25%] text-4xl z-20 text-center text-white px-2 py-1 rounded whitespace-nowrap">
+            <div>Pet Shop</div>
+            <div>(coming soon)</div>
           </div>
         </div>
       </div>
