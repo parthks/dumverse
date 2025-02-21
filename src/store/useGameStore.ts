@@ -5,6 +5,18 @@ import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
 import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "@/lib/constants";
+
+// set({
+//   GameStatePage: GameStatePages.GAME_MAP,
+//   lamaPosition: {
+//     x: interactivePointsMap3[0].x - lammaWidth / 2,
+//     y: interactivePointsMap3[0].y - lammaHeight,
+//     src: "STAND_LEFT",
+//   },
+//   tempCurrentIslandLevel:55,
+//   currentIslandLevel: 55,
+// });
 
 export enum GameStatePages {
   HOME = "HOME",

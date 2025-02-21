@@ -9,15 +9,18 @@ import { calculatePositionAndSize } from "@/lib/utils";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/react-canvas";
 import NewButton from "@/components/ui/NewButton";
+import SetSailPopup from "@/components/GameMapMenu";
 
 export default function Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const goToGameMap = useGameStore((state) => state.goToGameMap);
-  const setIsPopupOpen = useGameStore((state) => state.setIsPopupOpen);
+  // const setIsPopupOpen = useGameStore((state) => state.setIsPopupOpen);
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const user = useGameStore((state) => state.user);
 
   const [chatOpen, setChatOpen] = useState(false);
+
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
   const handleBuildingSelect = (building: GameStatePages) => {
     if (building !== GameStatePages.NFT_SHOP) {
@@ -325,7 +328,7 @@ export default function Town() {
                   "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
                 }
                 onClick={() => {
-                  goToGameMap(true);
+                  // goToGameMap(true);
                   setIsPopupOpen(true);
                 }}
                 alt={"Leave Town"}
@@ -548,6 +551,12 @@ export default function Town() {
           </div> */}
       {/* </div>
       </div> */}
+
+       {isPopupOpen && (
+          <SetSailPopup
+            onClose={() => setIsPopupOpen(false)}
+          />
+        )}
     </div>
   );
 }

@@ -272,14 +272,14 @@ const GameMap = () => {
         ) : (
           <></>
         )} */}
-        {isPopupOpen && (
+        {/* {isPopupOpen && (
           <SetSailPopup
             onClose={() => setIsPopupOpen(false)}
             setTempLamaPosition={setTempLamaPosition}
             setLamaPosition={setLamaPosition}
             setTempCurrentIslandLevel={setTempCurrentIslandLevel}
           />
-        )}
+        )} */}
       </div>
       {/* {tempCurrentIslandLevel <= 27 ? (
         <div
@@ -315,126 +315,126 @@ const GameMap = () => {
 
 export default GameMap;
 
-function SetSailPopup({
-  onClose,
-  setTempLamaPosition,
-  setLamaPosition,
-  setTempCurrentIslandLevel,
-}: {
-  onClose: () => void;
-  setTempLamaPosition: (position: { x: number; y: number; src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" }) => void;
-  setLamaPosition: (position: LamaPosition) => void;
-  setTempCurrentIslandLevel: (level: number) => void;
-}) {
-  const user = useGameStore((state) => state.user);
-  const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");
-  const ironArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_2");
-  const goldArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_3");
-  // check if user has ARMOR_4 or ARMOR_5
-  const higherTierArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_4" || armor.item_id === "MAGIC_ROBE");
+// function SetSailPopup({
+//   onClose,
+//   setTempLamaPosition,
+//   setLamaPosition,
+//   setTempCurrentIslandLevel,
+// }: {
+//   onClose: () => void;
+//   setTempLamaPosition: (position: { x: number; y: number; src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" }) => void;
+//   setLamaPosition: (position: LamaPosition) => void;
+//   setTempCurrentIslandLevel: (level: number) => void;
+// }) {
+//   const user = useGameStore((state) => state.user);
+//   const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");
+//   const ironArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_2");
+//   const goldArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_3");
+//   // check if user has ARMOR_4 or ARMOR_5
+//   const higherTierArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_4" || armor.item_id === "MAGIC_ROBE");
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center text-white z-50">
-      <div className=" w-[30vw] h-[60vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50">
-        {/* <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
-          &times;
-        </button> */}
+//   return (
+//     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
+//       <div className=" w-[30vw] h-[60vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50">
+//         {/* <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
+//           &times;
+//         </button> */}
 
-        <div className="w-full text-center">
-          <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">Departing to ...</h2>
-        </div>
+//         <div className="w-full text-center">
+//           <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">Departing to ...</h2>
+//         </div>
 
-        <div className="w-full flex flex-col gap-6 items-center py-6">
-          {/* <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(0);
-            setTempCurrentIslandLevel(0);
-            setTempLamaPosition({
-              x: interactivePointsMap1[0].x - lammaWidth / 2,
-              y: interactivePointsMap1[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
+//         <div className="w-full flex flex-col gap-6 items-center py-6">
+//           {/* <button
+//           className="bg-white text-black px-2 py-1 rounded-md"
+//           onClick={async () => {
+//             // await travelToLocation(0);
+//             setTempCurrentIslandLevel(0);
+//             setTempLamaPosition({
+//               x: interactivePointsMap1[0].x - lammaWidth / 2,
+//               y: interactivePointsMap1[0].y - lammaHeight,
+//               src: "STAND_LEFT",
+//             });
+//           }}
+//         >
            
-        Boat Map Dont know the name and Bad with names
-        </button> */}
+//         Boat Map Dont know the name and Bad with names
+//         </button> */}
 
-         <NewButton 
-          onClick={async () => {
-              // await travelToLocation(55);
-              setTempCurrentIslandLevel(0);
-              setLamaPosition(getInitialLamaPosition());
-              setTempLamaPosition(getInitialLamaPosition());
+//          <NewButton 
+//           onClick={async () => {
+//               // await travelToLocation(55);
+//               setTempCurrentIslandLevel(0);
+//               setLamaPosition(getInitialLamaPosition());
+//               setTempLamaPosition(getInitialLamaPosition());
 
-              onClose();
-            }}
+//               onClose();
+//             }}
             
-            alt="Happy Green Valley"
-            className="bg-blue-400 w-[58%] mr-[12%] h-[75px] text-3xl" />
+//             alt="Happy Green Valley"
+//             className="bg-blue-400 w-[58%] mr-[12%] h-[75px] text-3xl" />
 
-          {/* <ImgButton
-            disabled={!goldArmor && !higherTierArmor}
-            src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
-            onClick={async () => {
-              // await travelToLocation(55);
-              setTempCurrentIslandLevel(0);
-              setLamaPosition(getInitialLamaPosition());
-              setTempLamaPosition(getInitialLamaPosition());
+//           {/* <ImgButton
+//             disabled={!goldArmor && !higherTierArmor}
+//             src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
+//             onClick={async () => {
+//               // await travelToLocation(55);
+//               setTempCurrentIslandLevel(0);
+//               setLamaPosition(getInitialLamaPosition());
+//               setTempLamaPosition(getInitialLamaPosition());
 
-              onClose();
-            }}
-            alt={"Happy Green Valley"}
-            className="w-[60%]"
-          /> */}
-          <ImgButton
-            disabled={!goldArmor && !ironArmor && !higherTierArmor}
-            src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
-            onClick={async () => {
-              // await travelToLocation(28);
-              setTempCurrentIslandLevel(28);
-              setLamaPosition({
-                x: interactivePointsMap2[0].x - lammaWidth / 2,
-                y: interactivePointsMap2[0].y - lammaHeight,
-                src: "STAND_LEFT",
-              });
-              setTempLamaPosition({
-                x: interactivePointsMap2[0].x - lammaWidth / 2,
-                y: interactivePointsMap2[0].y - lammaHeight,
-                src: "STAND_LEFT",
-              });
+//               onClose();
+//             }}
+//             alt={"Happy Green Valley"}
+//             className="w-[60%]"
+//           /> */}
+//           <ImgButton
+//             disabled={!goldArmor && !ironArmor && !higherTierArmor}
+//             src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
+//             onClick={async () => {
+//               // await travelToLocation(28);
+//               setTempCurrentIslandLevel(28);
+//               setLamaPosition({
+//                 x: interactivePointsMap2[0].x - lammaWidth / 2,
+//                 y: interactivePointsMap2[0].y - lammaHeight,
+//                 src: "STAND_LEFT",
+//               });
+//               setTempLamaPosition({
+//                 x: interactivePointsMap2[0].x - lammaWidth / 2,
+//                 y: interactivePointsMap2[0].y - lammaHeight,
+//                 src: "STAND_LEFT",
+//               });
 
-              onClose();
-            }}
-            alt={"Dumzz Forest"}
-            className="w-[60%] mt-24"
-          />
+//               onClose();
+//             }}
+//             alt={"Dumzz Forest"}
+//             className="w-[60%] mt-24"
+//           />
 
-          <ImgButton
-            disabled={!goldArmor && !higherTierArmor}
-            src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
-            onClick={async () => {
-              // await travelToLocation(55);
-              setTempCurrentIslandLevel(55);
-              setLamaPosition({
-                x: interactivePointsMap3[0].x - lammaWidth / 2,
-                y: interactivePointsMap3[0].y - lammaHeight,
-                src: "STAND_LEFT",
-              });
-              setTempLamaPosition({
-                x: interactivePointsMap3[0].x - lammaWidth / 2,
-                y: interactivePointsMap3[0].y - lammaHeight,
-                src: "STAND_LEFT",
-              });
+//           <ImgButton
+//             disabled={!goldArmor && !higherTierArmor}
+//             src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
+//             onClick={async () => {
+//               // await travelToLocation(55);
+//               setTempCurrentIslandLevel(55);
+//               setLamaPosition({
+//                 x: interactivePointsMap3[0].x - lammaWidth / 2,
+//                 y: interactivePointsMap3[0].y - lammaHeight,
+//                 src: "STAND_LEFT",
+//               });
+//               setTempLamaPosition({
+//                 x: interactivePointsMap3[0].x - lammaWidth / 2,
+//                 y: interactivePointsMap3[0].y - lammaHeight,
+//                 src: "STAND_LEFT",
+//               });
 
-              onClose();
-            }}
-            alt={"Tip Top Mountain"}
-            className="w-[60%]"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
+//               onClose();
+//             }}
+//             alt={"Tip Top Mountain"}
+//             className="w-[60%]"
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }

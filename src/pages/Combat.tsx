@@ -343,6 +343,17 @@ export default function Combat() {
 function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   useBackgroundMusic(SOUNDS.BATTLE_AUDIO);
 
+  const { goToTown, goToRestArea, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
+  useGameStore();
+
+  const currentMapImage = () => {
+    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/aSPkGkjMawQdvfa5eJ1qX4PZJv8-6OLDJbvQW5ytsj4";
+    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/fhvcZm6NabNEuF-GswrrOOd1GBS-GUxb9WeTiG2FQVQ";
+    return "https://arweave.net/904Jv473dMlxApd-GlUGUYggDwu20COKPNimTS6Io9k";
+  };
+
+
+
   // const hasBattleReady = useCombatStore((state) => state.hasBattleReady);
 
   // if(!hasBattleReady){
@@ -364,7 +375,7 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   return (
     <div
       className="flex justify-between p-8 min-h-screen left-0 top-0 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: "url('https://arweave.net/S6akCN0tHZTeihCQ0PWKBAcMdA3tnteR_28tWviw8TY')" }}
+      style={{ backgroundImage: `url(${currentMapImage()})` }}
     >
       <BattleGround currentBattle={currentBattle} />
       <CombatInventory currentBattle={currentBattle} />
@@ -416,6 +427,10 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
   const userAttack = useCombatStore((state) => state.userAttack);
   const userRun = useCombatStore((state) => state.userRun);
   const actionLoading = useCombatStore((state) => state.actionLoading);
+  console.log("User attack: " , actionLoading,
+    currentBattle.ended, // battle has ended
+    !!currentBattle.players_attacked.find((player) => player === userId.toString()),
+    !currentBattle.players_alive.find((player) => player === userId.toString()));
   const disableAttackButtons =
     actionLoading ||
     currentBattle.ended || // battle has ended

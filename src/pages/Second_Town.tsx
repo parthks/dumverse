@@ -9,6 +9,7 @@ import { calculatePositionAndSize } from "@/lib/utils";
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/react-canvas";
 import NewButton from "@/components/ui/NewButton";
+import SetSailPopup from "@/components/GameMapMenu";
 
 export default function Second_Town() {
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
@@ -17,6 +18,8 @@ export default function Second_Town() {
   const user = useGameStore((state) => state.user);
 
   const [chatOpen, setChatOpen] = useState(false);
+
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
   const handleBuildingSelect = (building: GameStatePages) => {
     if (building !== GameStatePages.NFT_SHOP) {
@@ -59,7 +62,9 @@ export default function Second_Town() {
               src={
                 "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
               }
-              onClick={() => goToGameMap(true)}
+              onClick={() => {
+                // goToGameMap(true)
+                setIsPopupOpen(true);}}
               alt={"Return to Town"}
             />
 
@@ -281,6 +286,11 @@ export default function Second_Town() {
           </div>
         </div>
       </div> */}
+      {isPopupOpen && (
+                <SetSailPopup
+                  onClose={() => setIsPopupOpen(false)}
+                />
+              )}
     </div>
   );
 }
