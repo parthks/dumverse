@@ -1,4 +1,4 @@
-import { LAMA_IMAGE } from "@/lib/constants";
+import { LAMA_IMAGE, REST_SPOTS } from "@/lib/constants";
 // import { cn, isValidSpotToMoveTo } from "@/lib/utils";
 import { cn, getInteractivePoints, isValidSpotToMoveTo } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
@@ -7,48 +7,49 @@ import React, { useEffect } from "react";
 import { BOSS_SPOTS } from "@/lib/constants";
 
 // import {
-//   interactivePointsMap2,
 //   interactivePointsMap1,
+//   interactivePointsMap2,
 //   lammaHeight,
 //   lammaWidth,
 //   SOUNDS,
 // } from "@/lib/constants";
 
 // export const interactivePointsMap3 = [
-//   { x: 85.2, y: 72, level: 55 },
-//   { x: 75, y: 71, level: 56 },
-//   { x: 65, y: 70.5, level: 57 },
-//   { x: 55, y: 70.5, level: 58 },
-//   { x: 45, y: 70, level: 59 },
-//   { x: 35, y: 70, level: 60 },
-//   { x: 24.5, y: 70, level: 61 },
-//   { x: 13, y: 69.6, level: 62 },
-//   { x: 5, y: 59, level: 63 },
-//   { x: 13, y: 48, level: 64 },
-//   { x: 22.5, y: 45.5, level: 65 },
-//   { x: 33, y: 44.5, level: 66 },
-//   { x: 43, y: 44.5, level: 67 },
-//   { x: 52, y: 44, level: 68 },
-//   { x: 60, y: 43, level: 69 },
-//   { x: 69.5, y: 42, level: 70 },
-//   { x: 77.5, y: 38.8, level: 71 },
-//   { x: 84, y: 33.5, level: 72 },
-//   { x: 81, y: 26, level: 73 },
-//   { x: 76, y: 19.5, level: 74 },
-//   { x: 68.5, y: 18.7, level: 75 },
-//   { x: 61.5, y: 19.5, level: 76 },
-//   { x: 54.7, y: 19.6, level: 77 },
-//   { x: 46.4, y: 19, level: 78 },
-//   { x: 37.5, y: 19, level: 79 },
-//   { x: 28, y: 19.5, level: 80 },
-//   { x: 20, y: 20.4, level: 81 },
+//   { x: 85.2, y: 69.5, level: 53 },
+//   { x: 75, y: 69, level: 54 },
+//   { x: 65, y: 68, level: 55 },
+//   { x: 55, y: 68.5, level: 56 },
+//   { x: 45, y: 68.5, level: 57 },
+//   { x: 35, y: 68.5, level: 58 },
+//   { x: 24.5, y: 68, level: 59 },
+//   { x: 15.5, y: 67, level: 60 },
+//   { x: 9.5, y: 60, level: 61 }, //  Rest Spot 5
+//   { x: 13, y: 49, level: 62 },
+//   { x: 22, y: 46.3, level: 63 },
+//   { x: 32, y: 44.5, level: 64 },
+//   { x: 43, y: 44.5, level: 65 },
+//   { x: 52, y: 44, level: 66 },
+//   { x: 60, y: 43, level: 67 },
+//   { x: 69, y: 42, level: 68 },
+//   { x: 75.3, y: 39, level: 69 },
+//   { x: 82, y: 35.5, level: 70 },  //  Rest Spot 6
+//   { x: 79, y: 28, level: 71 },
+//   { x: 72.5, y: 21, level: 72 },
+//   { x: 63, y: 21.3, level: 73 },
+//   { x: 53, y: 21.5, level: 74 },
+//   { x: 43, y: 21.5, level: 75 },
+//   { x: 33, y: 21.7, level: 76 },
+//   { x: 24, y: 22.4, level: 77 },
+//   // { x: 32, y: 21, level: 80 },
+//   { x: 15, y: 22.3, level: 78 },
 // ];
+
 
 // function getInteractivePoints(currentSpot: number) {
 //   // if currentSpot is less than 27, it's map 1
-//   if (currentSpot <= 27) return interactivePointsMap1;
+//   if (currentSpot <= 26) return interactivePointsMap1;
 //   // if currentSpot is less than 54, it's map 2
-//   if (currentSpot <= 54) return interactivePointsMap2;
+//   if (currentSpot <= 52) return interactivePointsMap2;
 //   return interactivePointsMap3;
 // }
 
@@ -87,8 +88,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
     // if (tempCurrentIslandLevel <= 27) return "https://arweave.net/5pHgEfy8PTzSiByGHkc3kV9Q0k_WGI9vH0tUeRa376I";
     // if (tempCurrentIslandLevel <= 54) return "https://arweave.net/IBWCGccNC1UTFZfHLgfZqATYZvinWiMYDTGg4tzF-NI";
     // return "https://arweave.net/tX8Sx-OUMOnWIA6IbuxFkXvRt3CqD6fnpEqDDPqlOtE";\
-    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/0tihG4RP7k47UXhsac1G1NYYWkrpmR7rzTFDKl3iEt4";
-    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/xBYjHPPmUMwNz7ie-g9gzYx3EGpTr4z1ja3w_gW2NQg";
+    if (tempCurrentIslandLevel <= 26) return "https://arweave.net/0tihG4RP7k47UXhsac1G1NYYWkrpmR7rzTFDKl3iEt4";
+    if (tempCurrentIslandLevel <= 52) return "https://arweave.net/xBYjHPPmUMwNz7ie-g9gzYx3EGpTr4z1ja3w_gW2NQg";
     return "https://arweave.net/7pKdnNo5PS8oY8rwta0g6gMX4kRHoYAYoeFpPmPZvSM";
   };
 
@@ -157,7 +158,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ tempCurrentIslandLevel,
                     isValidSpotToMoveTo(currentIslandLevel, point.level) ? "hover:fill-[#63af16]" : "fill-black",
                     BOSS_SPOTS.includes(point.level)
                       ? "fill-red-700"
-                      : point.level % 9 == 0
+                      // : point.level % 9 == 0
+                      : REST_SPOTS.includes(point.level)
                       ? "fill-purple-700"
                       : isValidSpotToMoveTo(currentIslandLevel, point.level)
                       ? "fill-[#3fe406]"

@@ -22,17 +22,30 @@ import NewButton from "@/components/ui/NewButton";
 //   27: "https://arweave.net/_ZixwsU3FTzyH0ddVB1pqMZEq-xG3UzqAVO3HoD0LFI",
 // };
 
+// const RestAreaImages = {
+//   0: "https://arweave.net/JZfbH_8Wog_d1wdp7XqOtYWhkXJAv7wp8nwW9rITidM",
+//   9: "https://arweave.net/Sa1M036SjBzwEnWyqRKfUO-_Iqs0wTtGFEG_yWHSxLs",
+//   18: "https://arweave.net/-kfQ41nBIJy39NR5iwlt-2aHMpbXTz2VTDcCcml44kY",
+//   27: "https://arweave.net/G8xvyj-KgEieJIi7C8s-_sv_NO-vvp9hzm0Rg47YGwM",
+//   36: "https://arweave.net/nlrX-3MaCfgpRP6gPjcsB6FWNtImdlLZUN_s-p-jXHY",
+//   45: "https://arweave.net/yVowdokmtYGqpchfqxO8y57J2HoGb03OopzRSEE_b6Q",
+//   54: "https://arweave.net/iPVHC5o2Gowb4P0tWoFPRNGAL-RSldG2Ds6G-FGsuMM",
+//   63: "https://arweave.net/NHq0gT__811VV8xylR7HsH8cVWitv5VtmqHU6Pz3PAQ",
+//   72: "https://arweave.net/bQ_aRguO1CZVty_w8chWmMAIUXcrrL7RkQ4NAhgVtns",
+//   81: "https://arweave.net/tdKq4FQpv0k2G08SsF2WGWKQAt4rfCiFB_83e5bt2-Q",
+// };
+
 const RestAreaImages = {
   0: "https://arweave.net/JZfbH_8Wog_d1wdp7XqOtYWhkXJAv7wp8nwW9rITidM",
   9: "https://arweave.net/Sa1M036SjBzwEnWyqRKfUO-_Iqs0wTtGFEG_yWHSxLs",
   18: "https://arweave.net/-kfQ41nBIJy39NR5iwlt-2aHMpbXTz2VTDcCcml44kY",
-  27: "https://arweave.net/G8xvyj-KgEieJIi7C8s-_sv_NO-vvp9hzm0Rg47YGwM",
-  36: "https://arweave.net/nlrX-3MaCfgpRP6gPjcsB6FWNtImdlLZUN_s-p-jXHY",
-  45: "https://arweave.net/yVowdokmtYGqpchfqxO8y57J2HoGb03OopzRSEE_b6Q",
-  54: "https://arweave.net/iPVHC5o2Gowb4P0tWoFPRNGAL-RSldG2Ds6G-FGsuMM",
-  63: "https://arweave.net/NHq0gT__811VV8xylR7HsH8cVWitv5VtmqHU6Pz3PAQ",
-  72: "https://arweave.net/bQ_aRguO1CZVty_w8chWmMAIUXcrrL7RkQ4NAhgVtns",
-  81: "https://arweave.net/tdKq4FQpv0k2G08SsF2WGWKQAt4rfCiFB_83e5bt2-Q",
+  // 27: "https://arweave.net/G8xvyj-KgEieJIi7C8s-_sv_NO-vvp9hzm0Rg47YGwM",
+  35: "https://arweave.net/nlrX-3MaCfgpRP6gPjcsB6FWNtImdlLZUN_s-p-jXHY",
+  44: "https://arweave.net/yVowdokmtYGqpchfqxO8y57J2HoGb03OopzRSEE_b6Q",
+  // 54: "https://arweave.net/iPVHC5o2Gowb4P0tWoFPRNGAL-RSldG2Ds6G-FGsuMM",
+  61: "https://arweave.net/NHq0gT__811VV8xylR7HsH8cVWitv5VtmqHU6Pz3PAQ",
+  70: "https://arweave.net/bQ_aRguO1CZVty_w8chWmMAIUXcrrL7RkQ4NAhgVtns",
+  // 81: "https://arweave.net/tdKq4FQpv0k2G08SsF2WGWKQAt4rfCiFB_83e5bt2-Q",
 };
 
 const ReturnToTown = React.memo(() => {
@@ -308,38 +321,66 @@ export default function RestArea() {
             <div className={`absolute inset-x-0 bottom-0 flex justify-center `}>
               {/* ${cn(current_spot === 18 && "translateX(13vw) translateY(4vh)")} */}
               <div
+                // style={{
+                //   width: current_spot === 27 ? "15vw" : "18vw",
+                //   height:
+                //     current_spot === 45 ||
+                //     current_spot === 54 ||
+                //     current_spot === 72
+                //       ? "45vh"
+                //       : "60vh",
+                //   transform: `
+                // ${cn(current_spot === 9 && "translateX(3vw)")}
+                // ${cn(current_spot === 18 && "translateX(13vw)")}
+                // ${cn(
+                //   current_spot === 27 && "translateX(25vw) translateY(-12vh)"
+                // )}
+                // ${cn(
+                //   current_spot === 36 && "translateX(32vw) translateY(-21vh)"
+                // )}
+                // ${cn(
+                //   current_spot === 45 && "translateX(-13vw) translateY(-1vh)"
+                // )}
+                // ${cn(
+                //   current_spot === 54 && "translateX(-11vw) translateY(-2vh)"
+                // )}
+                // ${cn(
+                //   current_spot === 63 && "translateX(-24vw) translateY(-12vh)"
+                // )}
+                // ${cn(
+                //   current_spot === 72 && "translateX(23vw) translateY(-1vh)"
+                // )}
+                // ${cn(
+                //   current_spot === 81 && "translateX(23vw) translateY(-1vh)"
+                // )}
+                // `,
+                // }}
                 style={{
-                  width: current_spot === 27 ? "15vw" : "18vw",
+                  width: "18vw",
                   height:
-                    current_spot === 45 ||
-                    current_spot === 54 ||
-                    current_spot === 72
+                    current_spot === 44 ||
+                    // current_spot === 54 ||
+                    current_spot === 70
                       ? "45vh"
                       : "60vh",
                   transform: `
                 ${cn(current_spot === 9 && "translateX(3vw)")}
                 ${cn(current_spot === 18 && "translateX(13vw)")}
+                
                 ${cn(
-                  current_spot === 27 && "translateX(25vw) translateY(-12vh)"
+                  current_spot === 35 && "translateX(32vw) translateY(-21vh)"
                 )}
                 ${cn(
-                  current_spot === 36 && "translateX(32vw) translateY(-21vh)"
+                  current_spot === 44 && "translateX(-13vw) translateY(-1vh)"
+                )}
+               
+                ${cn(
+                  current_spot === 61 && "translateX(-24vw) translateY(-12vh)"
                 )}
                 ${cn(
-                  current_spot === 45 && "translateX(-13vw) translateY(-1vh)"
+                  current_spot === 70 && "translateX(23vw) translateY(-1vh)"
                 )}
-                ${cn(
-                  current_spot === 54 && "translateX(-11vw) translateY(-2vh)"
-                )}
-                ${cn(
-                  current_spot === 63 && "translateX(-24vw) translateY(-12vh)"
-                )}
-                ${cn(
-                  current_spot === 72 && "translateX(23vw) translateY(-1vh)"
-                )}
-                ${cn(
-                  current_spot === 81 && "translateX(23vw) translateY(-1vh)"
-                )}
+               
                 `,
                 }}
               >

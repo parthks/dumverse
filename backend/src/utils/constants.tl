@@ -7,10 +7,13 @@ local GAME_PROCESS_ID =  "he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk"   -- "_-h
 local RECORD_PROCESS_ID =  "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
 local BACKUP_PROCESS_ID = "3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY"
 local BANK_PROCESS_ID = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870"
-local BLACKJACK_PROCESS_ID = "yq1BaWDdF5hR3jCf-N0KVtrpyPB0bI0ndQRQECLGj_Y"
+local BLACKJACK_PROCESS_ID = "9O2VnDtHzYSqWrNq5dGJt1CTFZNlXodPhMQD0sCkti0"
 
-local REST_SPOTS = {0, 9, 18, 36, 45, 63, 72}
-local BOSS_SPOTS = {27, 54, 81}
+-- local REST_SPOTS = {0, 9, 18, 36, 45, 63, 72}
+-- local BOSS_SPOTS = {27, 54, 81}
+
+local REST_SPOTS = {0, 9, 18, 35, 44, 61, 70}
+local BOSS_SPOTS = { 26, 52, 78}
 
 require "utils.globals"
 
@@ -38,7 +41,7 @@ local SPECIAL_ITEMS = {
         -- gold_price = 12000,
         gold_price = 15000,
         -- defense = 5,
-        defense = 11,
+        defense = 110,
         type = "ARMOR",
         material = "MAGIC",
     },
@@ -142,7 +145,7 @@ local ARMORS = {
         -- gold_price = 12000,
         gold_price = 15000,
         -- defense = 5,
-        defense = 11,
+        defense = 110,
         type = "ARMOR",
         material = "MAGIC",
     },

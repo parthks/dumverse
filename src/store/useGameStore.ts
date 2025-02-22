@@ -157,7 +157,8 @@ export const useGameStore = create<GameState>()(
             ],
           });
           // if user is not in a spot, only then go to town. Else need to go to game map
-          if (user.current_spot % 9 === 0 && user.current_spot != 0) {
+          // if (user.current_spot % 9 === 0 && user.current_spot != 0) {
+            if (REST_SPOTS.includes(user.current_spot) && user.current_spot != 0) {
             // user is in a spot
             const position = getCurrentLamaPosition(user);
             set({
@@ -165,7 +166,8 @@ export const useGameStore = create<GameState>()(
               tempCurrentIslandLevel: position.currentIslandLevel,
               lamaPosition: position.lamaPosition,
             });
-            if (position.currentIslandLevel % 9 === 0) {
+            // if (position.currentIslandLevel % 9 === 0) {
+              if (REST_SPOTS.includes(position.currentIslandLevel)) {
               // user is in a rest area
               set({ GameStatePage: GameStatePages.REST_AREA });
             } else {

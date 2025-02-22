@@ -5,7 +5,7 @@ import InteractiveMap from "@/components/InteractiveMap";
 import ImgButton from "@/components/ui/imgButton";
 import NewButton from "@/components/ui/NewButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
-import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, SOUNDS } from "@/lib/constants";
+import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, REST_SPOTS, SOUNDS } from "@/lib/constants";
 import { getInteractivePoints, getInitialLamaPosition } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -190,7 +190,8 @@ const GameMap = () => {
         <PlayerFrame />
       </div>
       <div className="z-10 absolute bottom-4 w-[450px] left-[700px]">
-        {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 && !BOSS_SPOTS.includes(tempCurrentIslandLevel) ? (
+        {/* {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 && !BOSS_SPOTS.includes(tempCurrentIslandLevel) ? ( */}
+        {REST_SPOTS.includes(tempCurrentIslandLevel) && tempCurrentIslandLevel != 0 && !BOSS_SPOTS.includes(tempCurrentIslandLevel) ? (
           <NewButton
             disabled={enterNewAreaLoading}
             varient={"purple"}

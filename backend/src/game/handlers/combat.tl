@@ -125,10 +125,10 @@ local function isValidSpotToMoveTo(currentSpot: integer, targetSpot: integer): b
         return true
     end
 
-    if currentSpot == 0 and targetSpot == 28 then
+    if currentSpot == 0 and targetSpot == 27 then
         return true
     end
-    if currentSpot == 0 and targetSpot == 55 then
+    if currentSpot == 0 and targetSpot == 53 then
         return true
     end
 
@@ -253,16 +253,16 @@ local function enterNewCombatHandler(msg: Message)
 -- local enemies = constants.ENEMY_PER_LEVEL[combat_level]
     local function getRandomEnemyIndex(level: integer): integer
         local enemy_index: integer;
-        if level < 27 then
+        if level < 26 then
             -- Easy: enemies 1-5
             enemy_index = math.random(1, 5)
-        elseif level > 27 and level < 54 then
+        elseif level > 26 and level < 52 then
             -- Medium: enemies 6-9
             enemy_index = math.random(6, 9)
         -- elseif level <= 63 then
         --     -- Hard enemies (10-13) (13->Goat)
         --     enemy_index = math.random(10, 12)
-    elseif level > 54 and level < 81 then
+    elseif level > 52 and level < 78 then
             -- Hard enemies (10-13) (13->Goat)
             enemy_index = math.random(10, 13)
             -- if enemy_index == 13 then
@@ -274,33 +274,33 @@ local function enterNewCombatHandler(msg: Message)
 
     local function getRandomSpecialEnemy(user: UserData, level: integer): EnemyData | nil
         -- 10% chance to get a Leperchaun enemy
-        if (level > 45 and level < 55) and math.random(1, 10) == 1 then
+        if (level > 44 and level < 52) and math.random(1, 10) == 1 then
             return constants.SPECIAL_ENEMIES["LEPERCHAUN"]
         end
         -- 5% chance to get a dumz maxi
-        if (level > 72 and level < 82) and math.random(1, 20) == 1 and user.special_item_kitten > -1 and user.special_item_kitten < 1 then
+        if (level > 70 and level < 78) and math.random(1, 20) == 1 and user.special_item_kitten > -1 and user.special_item_kitten < 1 then
             return constants.SPECIAL_ENEMIES["DUMZ"]
         end
         
-        if (level > 45 and level < 55) and user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
+        if (level > 44 and level < 52) and user.nft_address and user.special_item_key > -1 and user.special_item_key < 3 then
             -- 20% chance to get a shiba enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["SHIBA"]
             end
         end
-        if (level > 45 and level < 55) and user.nft_address and user.special_item_thread > -1 and user.special_item_thread < 8 then
+        if (level > 44 and level < 52) and user.nft_address and user.special_item_thread > -1 and user.special_item_thread < 8 then
             -- 20% chance to get a mouse enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["MOUSE"]
             end
         end
-        if (level > 45 and level < 55) and user.nft_address and user.special_item_bark > -1 and user.special_item_bark < 6 then
+        if (level > 44 and level < 52) and user.nft_address and user.special_item_bark > -1 and user.special_item_bark < 6 then
             -- 20% chance to get a heart enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["TREE"]
             end
         end
-        if (level > 63 and level < 82) and user.nft_address and user.special_item_heart > -1 and user.special_item_heart < 4 then
+        if (level > 61 and level < 78) and user.nft_address and user.special_item_heart > -1 and user.special_item_heart < 4 then
             -- 20% chance to get a heart enemy
             if math.random(1, 5) == 1 then
                 return constants.SPECIAL_ENEMIES["PEACOCK"]
@@ -308,12 +308,12 @@ local function enterNewCombatHandler(msg: Message)
         end
 
             -- 10% chance to get Agent Trunk enemy at high levels
-        if (level > 63 and level < 82) and math.random(1, 10) == 1 then
+        if (level > 61 and level < 78) and math.random(1, 10) == 1 then
             return constants.SPECIAL_ENEMIES["AGENT_TRUNK"]
         end
 
         -- 1% chance to get a black swan enemy
-        if (level > 72 and level < 82) and math.random(1, 100) == 1 then
+        if (level > 70 and level < 78) and math.random(1, 100) == 1 then
             return constants.SPECIAL_ENEMIES["BLACK_SWAN"]
         end
         return nil
@@ -321,13 +321,13 @@ local function enterNewCombatHandler(msg: Message)
 
     local function getRandomBossEnemy(level: integer): integer
         local boss_enemy_index: integer;
-        if level == 27 then
+        if level == 26 then
             -- Easy: enemies 1-5
             boss_enemy_index = 1
-            elseif level == 54 then 
+            elseif level == 52 then 
                 boss_enemy_index = 6
 
-            elseif level == 81 then 
+            elseif level == 78 then 
                 boss_enemy_index = 7
 
         -- elseif level <= 54 then
@@ -369,7 +369,7 @@ local function enterNewCombatHandler(msg: Message)
         end
 
     -- if utils.includes(combat_level, doubleEnemies) then
-    elseif (combat_level >= 18 and combat_level <= 27) or (combat_level >= 45 and combat_level <= 54) or (combat_level >= 72) then
+    elseif (combat_level > 18 and combat_level < 26) or (combat_level > 44 and combat_level < 52) or (combat_level > 70) then
         -- double the enemies randomly, if no special enemy
         if #enemies ~= 2 and math.random(1, 2) == 1 then
             table.insert(enemies, constants.ENEMIES[getRandomEnemyIndex(combat_level)])

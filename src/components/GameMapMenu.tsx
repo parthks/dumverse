@@ -27,9 +27,9 @@ export default function SetSailPopup({
   return (
     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
       <div className=" w-[30vw] h-[60vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50">
-        {/* <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
+        <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
           &times;
-        </button> */}
+        </button>
 
         <div className="w-full text-center">
           <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">Departing to ...</h2>
@@ -82,7 +82,8 @@ export default function SetSailPopup({
             src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
             onClick={async () => {
               // await travelToLocation(28);
-              setTempCurrentIslandLevel(28);
+              // setTempCurrentIslandLevel(28);
+              setTempCurrentIslandLevel(27);
               setLamaPosition({
                 x: interactivePointsMap2[0].x - lammaWidth / 2,
                 y: interactivePointsMap2[0].y - lammaHeight,
@@ -101,7 +102,8 @@ export default function SetSailPopup({
             src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
             onClick={async () => {
               // await travelToLocation(55);
-              setTempCurrentIslandLevel(55);
+              // setTempCurrentIslandLevel(55);
+              setTempCurrentIslandLevel(53);
               setLamaPosition({
                 x: interactivePointsMap3[0].x - lammaWidth / 2,
                 y: interactivePointsMap3[0].y - lammaHeight,

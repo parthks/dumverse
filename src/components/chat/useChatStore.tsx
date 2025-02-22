@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import axios from "axios";
 
-interface Transaction {
+export interface Transaction {
   id: string;
   timestamp?: number;
   authorName: string;
@@ -28,28 +28,27 @@ export const useTransactionStore = create<TransactionState>((set) => ({
   fetchTransactions: async (chatRoom: string, pageParam = undefined) => {
     try {
       const endpoint = "https://arweave-search.goldsky.com/graphql";
-      const query0 =  `
-      query ($entityId: String!, $limit: Int!, $sortOrder: SortOrder!, $cursor: String) {
-        transactions(sort: $sortOrder, first: $limit, after: $cursor, ingested_at: {min: 1696107600}, tags: [{name: "From-Process", values: [$entityId]}]) {
-          edges {
-            node {
-              id
-              ingested_at
-              recipient
-              block { timestamp height }
-              tags { name value }
-              data { size }
-              owner { address }
+      const query0 = `
+        query ($entityId: String!, $limit: Int!, $sortOrder: SortOrder!, $cursor: String) {
+          transactions(sort: $sortOrder, first: $limit, after: $cursor, ingested_at: {min: 1696107600}, tags: [{name: "From-Process", values: [$entityId]}]) {
+            edges {
+              node {
+                id
+                ingested_at
+                recipient
+                block { timestamp height }
+                tags { name value }
+                data { size }
+                owner { address }
+              }
+            }
+            pageInfo {
+              hasNextPage
+              
             }
           }
-          pageInfo {
-            hasNextPage
-            
-          }
         }
-      }
-    `;
-    
+      `;
 
       const variables = {
         entityId: "uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI",
@@ -63,39 +62,25 @@ export const useTransactionStore = create<TransactionState>((set) => ({
       let transactions = data.data.transactions.edges.map((edge: any) => edge.node);
       const pageInfo = data.data.transactions.pageInfo;
       const nextCursor = pageInfo.hasNextPage ? pageInfo.endCursor : null;
-      const query1 = `
-      query ($id: ID!) {
-        transactions(ids: [$id], ingested_at: {min: 1696107600}) {
-          edges {
-            node {
-              id
-              block {
-                timestamp
-              }
-              tags { name value }
-            }
-          }
-        }
-      }
-    `;
+
       // Fetch "Pushed-For" values
       const pushedForValues = await Promise.all(
         transactions.map(async (tx: any) => {
           const query1 = `
-  query ($id: ID!) {
-    transactions(ids: [$id], ingested_at: {min: 1696107600}) {
-      edges {
-        node {
-          id
-          block {
-          timestamp
-        }
-          tags { name value }
-        }
-      }
-    }
-  }
-`;
+            query ($id: ID!) {
+              transactions(ids: [$id], ingested_at: {min: 1696107600}) {
+                edges {
+                  node {
+                    id
+                    block {
+                      timestamp
+                    }
+                    tags { name value }
+                  }
+                }
+              }
+            }
+          `;
           const { data } = await axios.post(endpoint, { query: query1, variables: { id: tx.id } });
           const pushedForTag = data.data.transactions.edges[0]?.node.tags.find(
             (tag: any) => tag.name === "Pushed-For"
@@ -109,7 +94,21 @@ export const useTransactionStore = create<TransactionState>((set) => ({
         pushedForValues.map(async (pushedForId) => {
           if (!pushedForId) return null;
           const { data } = await axios.post(endpoint, {
-            query: query1,
+            query:  `
+            query ($id: ID!) {
+              transactions(ids: [$id], ingested_at: {min: 1696107600}) {
+                edges {
+                  node {
+                    id
+                    block {
+                      timestamp
+                    }
+                    tags { name value }
+                  }
+                }
+              }
+            }
+          `,
             variables: { id: pushedForId },
           });
 
@@ -144,7 +143,6 @@ export const useTransactionStore = create<TransactionState>((set) => ({
           }
         })
       );
-
       return { transactions: transactionDetails.filter(Boolean), nextCursor };
     } catch (error) {
       console.error("Error fetching transactions:", error);
