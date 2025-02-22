@@ -76,6 +76,8 @@ export const ENEMY_CARD_IMAGE = {
   LEPERCHAUN: "https://arweave.net/Dh9lbBgZf8hGJQZ77v5yXJSJ_1lW2QISPdqWcSxPRiI", // gold loot
   AGENT_TRUNK: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
   BOSS_1: "https://arweave.net/igNAfO07uMii0ujmYn8n2dte_VByw_mL7D2ek1yobBE",
+  BOSS_6: "https://arweave.net/KpXw6XDWxb_xCm2AREx7i5bJxjuDApGNbfCmrrEdD1M",
+  BOSS_7: "https://arweave.net/2WeC19EyOKzxtUJ4W9mhP5O-zcn4xMZXAR5pAYwra2U",
 };
 
 export const SOUNDS = {

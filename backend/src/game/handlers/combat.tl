@@ -324,6 +324,12 @@ local function enterNewCombatHandler(msg: Message)
         if level == 27 then
             -- Easy: enemies 1-5
             boss_enemy_index = 1
+            elseif level == 54 then 
+                boss_enemy_index = 6
+
+            elseif level == 81 then 
+                boss_enemy_index = 7
+
         -- elseif level <= 54 then
         --     -- Medium: enemies 6-9
         --     enemy_index = math.random(6, 9)

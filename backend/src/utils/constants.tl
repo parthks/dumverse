@@ -575,7 +575,7 @@ local BOSSES: {EnemyData} = {
         dumz_reward = 72
     }, {
         id = "BOSS_6",
-        name = "Giant Spider",
+        name = "Sinister Spider",
         total_health = 9,
         health = 9,
         damage = {2,3},
@@ -584,7 +584,7 @@ local BOSSES: {EnemyData} = {
         dumz_reward = 72
     }, {
         id = "BOSS_7",
-        name = "Dragon",
+        name = "Devilish Dragon",
         total_health = 12,
         health = 12,
         damage = {3,4},
