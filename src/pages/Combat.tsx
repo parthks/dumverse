@@ -347,8 +347,8 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   useGameStore();
 
   const currentMapImage = () => {
-    if (tempCurrentIslandLevel <= 27) return "https://arweave.net/aSPkGkjMawQdvfa5eJ1qX4PZJv8-6OLDJbvQW5ytsj4";
-    if (tempCurrentIslandLevel <= 54) return "https://arweave.net/fhvcZm6NabNEuF-GswrrOOd1GBS-GUxb9WeTiG2FQVQ";
+    if (tempCurrentIslandLevel <= 26) return "https://arweave.net/aSPkGkjMawQdvfa5eJ1qX4PZJv8-6OLDJbvQW5ytsj4";
+    if (tempCurrentIslandLevel <= 52) return "https://arweave.net/fhvcZm6NabNEuF-GswrrOOd1GBS-GUxb9WeTiG2FQVQ";
     return "https://arweave.net/904Jv473dMlxApd-GlUGUYggDwu20COKPNimTS6Io9k";
   };
 
