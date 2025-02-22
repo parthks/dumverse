@@ -198,6 +198,7 @@ export const useGameStore = create<GameState>()(
             user: user,
             inventory: inventory,
             currentIslandLevel: user.current_spot,
+            tempCurrentIslandLevel: user.current_spot,
           });
           return user;
         }

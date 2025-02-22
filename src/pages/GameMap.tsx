@@ -144,9 +144,9 @@ const GameMap = () => {
   }, [path, currentPathIndex]);
 
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
-    const interactivePoints = getInteractivePoints(currentIslandLevel);
+    const interactivePoints = getInteractivePoints(tempCurrentIslandLevel);
 
-    const currentIndex = fromStart || currentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === currentIslandLevel);
+    const currentIndex = fromStart || tempCurrentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === tempCurrentIslandLevel);
 
     const targetIndex = interactivePoints.findIndex((point) => point.level === level);
 
