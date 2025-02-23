@@ -6,7 +6,7 @@ import ImgButton from "@/components/ui/imgButton";
 import { BUILDING_IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import GifComponent from "@/components/Dialogue/Dialogue";
 import { sleep } from "@/lib/time";
 import { SOUNDS, CARD_IMAGES } from "@/lib/constants";
@@ -36,7 +36,7 @@ export default function Den() {
 
   // const [showBlackjackGame, setShowBlackjackGame] = useState<boolean>(false);
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
-
+  const [showExitButton, setShowExitButton] = useState(false);
   const handleClick = async () => {
     setBlackjackStart(false);
     const result = await enterNewBlackjack();
@@ -44,11 +44,29 @@ export default function Den() {
     if ((result.status = "Success")) await getOpenBlackjackRounds();
   };
 
+  useEffect(()=> {
+    const timer = setTimeout(()=> {
+      setShowExitButton(true);
+    }, 60000)
+    return () => clearTimeout(timer);
+  },[])
+
   if (blackjackStart) {
     if (!currentRound) {
       return (
-        <div className="flex items-center">
-          Loading........
+        <div>
+        <h1 className="text-2xl text-white py-[23%] px-[50%]">Loading...</h1>
+        <div className="-z-10 absolute inset-0">
+          <img
+            src={
+              "https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"
+            }
+            alt="Den Blackjack Background"
+            className="w-full h-full"
+          />
+        </div>
+
+        {showExitButton && (
           <NewButton
             className="px-12 bottom-10 py-4 text-2xl"
             src={
@@ -62,6 +80,7 @@ export default function Den() {
             }}
             alt={"Exit"}
           />
+        )}
         </div>
       );
     }
@@ -330,6 +349,15 @@ function BlackjackGame() {
             className="w-full h-full"
           />
         </div>
+        <div className="z-10 absolute inset-0">
+          <img
+            src={
+              "https://arweave.net/z7xV22MBGjXgfXSRc_ULaj2lKVpb9oO_EtlB8fgZOLs"
+            }
+            alt="Den table"
+            className="w-full h-full"
+          />
+        </div>
 
         {/* {Array.isArray(currentRound?.players)
           ? currentRound.players.length > 0 &&
@@ -434,7 +462,7 @@ function BlackjackPlaying() {
       </div>
 
       {/* Dealer hands */}
-      <div className="z-0 absolute rotate-180 top-1/3 left-[52%] transform -translate-x-1/2">
+      <div className="z-10 absolute rotate-180 top-1/3 left-[52%] transform -translate-x-1/2">
         {/* Dealer's Cards */}
         <div className="flex gap-2 w-auto m-10 left-1/2">
           {currentRound?.dealer?.visibleCard?.map((val, key) => {
@@ -474,17 +502,17 @@ function BlackjackPlaying() {
       {/* Deck Image */}
       <img
         src={CARD_IMAGES.deck}
-        className="w-28 absolute right-[30%] bottom-[48%]"
+        className="z-10 w-28 absolute right-[32%] bottom-[48%]"
       />
 
       {!currentRound?.ended ? (
-        <p className="absolute right-[41%] bottom-[40%] text-white text-3xl">
+        <p className="z-10 absolute right-[41%] bottom-[40%] text-white text-3xl">
           {" "}
           {Math.ceil(remainingTimeOfRound < 0 ? 0 : remainingTimeOfRound)}{" "}
           seconds remaining{" "}
         </p>
       ) : (
-        <p className="absolute right-[41%] bottom-[40%] text-white text-3xl">
+        <p className="z-10 absolute right-[41%] bottom-[40%] text-white text-3xl">
           {" "}
           {JSON.stringify(currentRound?.winner)} Win{" "}
         </p>
@@ -495,10 +523,10 @@ function BlackjackPlaying() {
           ([playerId, player], index) => {
             const isCurrentUser = player.user_id === user?.id.toString();
             const positionClass = isCurrentUser
-              ? "absolute bottom-40 left-1/2 transform -translate-x-1/2"
+              ? "z-10 absolute bottom-40 left-1/2 transform -translate-x-1/2"
               : index % 2 === 0
-              ? "absolute top-[48%] left-[26%] transform -translate-x-1/2"
-              : "absolute top-[48%] right-[10%] transform -translate-x-1/2";
+              ? "z-10 absolute top-[48%] left-[26%] transform -translate-x-1/2"
+              : "z-10 absolute top-[48%] right-[10%] transform -translate-x-1/2";
 
             return (
               <div key={player.user_id} className={positionClass}>
@@ -532,7 +560,7 @@ function BlackjackPlaying() {
         )}
 
       {/* Controls */}
-      <div className="absolute bottom-52 right-[40%] text-2xl z-10">
+      <div className="absolute bottom-40 right-[37%] text-2xl z-10">
         {user?.id &&
           currentRound?.players &&
           currentRound.players[user.id.toString()] && (
