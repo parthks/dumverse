@@ -277,7 +277,7 @@ export default function Den() {
                     }
                     onClick={handleClick}
                     alt={"Play Button"}
-                    disabled={false}
+                    disabled={true}
                     className=""
                   />
                 </div>
