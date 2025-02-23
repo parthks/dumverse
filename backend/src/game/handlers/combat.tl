@@ -8,12 +8,12 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8"]=0,
-        ["az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ"]=0,
-        ["sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4"]=0,
-        ["z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E"]=0,
-        ["s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM"]=0,
-    }
+        ["5EwarJ937Hxx5961oTypYS2R-P4YXlhbNPBtN8MDgcQ"]=0,
+        ["ePgW-n_4-xW-TVzNuX0LKnO2fAdmf2ArFu87_RzSgVQ"]=0,
+        ["iDw3CxdrETywWxA_Zed5aEmrFbgitSHZOxOwdfhD4sA"]=0,
+        ["VFhgKE3lhDnlBRR_3danRaVbVnECpJcK6zIsHnP8-TU"]=0,
+        ["adOKunFqCj9NuRxWj8KUBp1oCUYf53F2jfEGR8MI_ZM"]=0,
+       }
 end
 
 local record DataRelatingSubProcessAssignToUser
@@ -692,11 +692,11 @@ local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
    print("Starttt")
    subProcesses = {
-    ["RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8"]=0,
-    ["az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ"]=0,
-    ["sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4"]=0,
-    ["z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E"]=0,
-    ["s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM"]=0,
+    ["5EwarJ937Hxx5961oTypYS2R-P4YXlhbNPBtN8MDgcQ"]=0,
+    ["ePgW-n_4-xW-TVzNuX0LKnO2fAdmf2ArFu87_RzSgVQ"]=0,
+    ["iDw3CxdrETywWxA_Zed5aEmrFbgitSHZOxOwdfhD4sA"]=0,
+    ["VFhgKE3lhDnlBRR_3danRaVbVnECpJcK6zIsHnP8-TU"]=0,
+    ["adOKunFqCj9NuRxWj8KUBp1oCUYf53F2jfEGR8MI_ZM"]=0,
    }
    print("Endddd")
 
