@@ -380,6 +380,7 @@ local function matchWinner(msg: Message)
                 end
 
                 sendGoldToPlayerWin(tostring(round.id))
+                print("round ended at: " .. msg.Timestamp)
                 round.ended = true
                 -- print("Dealer blackjack: " .. json.encode(playerAndDealerCardValues))
                 break
@@ -397,6 +398,7 @@ local function matchWinner(msg: Message)
                 end
 
                 sendGoldToPlayerWin(tostring(round.id))
+                print("round ended at: " .. msg.Timestamp)
                 round.ended = true
                 -- print("Dealer Burst: " .. json.encode(playerAndDealerCardValues))
                 break
@@ -441,6 +443,7 @@ local function matchWinner(msg: Message)
                 round.winner[#round.winner + 1] = winner.id
             end
             sendGoldToPlayerWin(tostring(round.id))
+            print("round ended at: " .. msg.Timestamp)
             round.ended = true
             -- print("Someone blackjack: " .. json.encode(playerAndDealerCardValues))
         -- else

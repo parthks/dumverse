@@ -189,7 +189,7 @@ export default function Combat() {
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
   const cancelled = useRef(false); // Ref to track if polling has been cancelled
   const pollingStarted = useRef(false); // Ref to track if polling has started
-  
+  const workerRef = useRef<Worker | null>(null);
 
   useEffect(() => {
     if (comabatLoadingScreenImageURL === null) {
@@ -204,34 +204,61 @@ export default function Combat() {
       console.log("Starting calling getOpenBattles");
       if (pollingStarted.current) return;
       pollingStarted.current = true;
+      if (!workerRef.current) {
+        workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url), { type: 'module' });
+      }  
+
+      const worker = workerRef.current;
 
       const pollForBattle = async () => {
         let attempt = 0;
-        let timeoutTriggered = false;
+        // let timeoutTriggered = false;
 
         while (!cancelled.current) {
           console.log("polling for open battles...");
 
-          const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => {
-              if (!cancelled.current) {
-                timeoutTriggered = true;
-                reject(new Error("Timeout"));
-              }
-            }, 60000);
-          });
+          // const timeoutPromise = new Promise((_, reject) => {
+          //   setTimeout(() => {
+          //     if (!cancelled.current) {
+          //       timeoutTriggered = true;
+          //       reject(new Error("Timeout"));
+          //     }
+          //   }, 60000);
+          // });
 
           try {
             // Race between getOpenBattles and timeout
-            const battle = await Promise.race([
-              getOpenBattles(),
-              timeoutPromise
-            ]);
+            // const battle = await Promise.race([
+            //   getOpenBattles(),
+            //   timeoutPromise
+            // ]);
+
+            worker.onmessage = async (event) => {
+              const { combatCountdown: newCountdown, complete } = event.data;
+        
+              if (newCountdown !== undefined || newCountdown == null) {
+
+      const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
+                if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+                  setGameStatePage(GameStatePages.COMBAT);
+                }              }
+        
+            };
+
+            worker.postMessage({
+              type: "combat_start",
+              data: {
+              //  interval: 1000, // 1 second interval
+                initialCountdown: 60000,
+              },
+            });
+
+            const battle = await getOpenBattles();
 
             // If timeout was triggered, stop the polling loop
-            if (timeoutTriggered) {
-              break;
-            }
+            // if (timeoutTriggered) {
+            //   break;
+            // }
             console.log("Battle found -> Sending battle ready request.");
             if (battle && (!(battle as Battle).started || ((battle as Battle).started && Object.keys((battle as Battle).players || {}).length > 1))) {
               await sendBattleReadyRequest();
@@ -247,21 +274,21 @@ export default function Combat() {
               await sleep(5000);
             }
           } catch (error) {
-            if (timeoutTriggered) {
-              console.log("getOpenBattles is taking too long. Calling fallback function.");
-              console.log("tempCurrentIslandLevel:", tempCurrentIslandLevel);
-              try {
-                const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
-                if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
-                  setGameStatePage(GameStatePages.COMBAT);
-                }
-                break;
-              } catch (fallbackError) {
-                console.error("Error in fallback:", fallbackError);
-              }
-            } else {
+            // if (timeoutTriggered) {
+            //   console.log("getOpenBattles is taking too long. Calling fallback function.");
+            //   console.log("tempCurrentIslandLevel:", tempCurrentIslandLevel);
+            //   try {
+            //     const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
+            //     if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+            //       setGameStatePage(GameStatePages.COMBAT);
+            //     }
+            //     break;
+            //   } catch (fallbackError) {
+            //     console.error("Error in fallback:", fallbackError);
+            //   }
+            // } else {
               console.error("Error fetching battles:", error);
-            }
+            // }
           }
         }
       };
@@ -270,6 +297,9 @@ export default function Combat() {
 
       return () => {
         cancelled.current = true;
+        worker.postMessage({ type: "combat_stop" });
+      worker.terminate();
+      workerRef.current = null;
       };
     }
   }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage, subProcess]);
