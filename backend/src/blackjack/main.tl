@@ -20,7 +20,7 @@ local sendGoldToPlayerWin = blackjack_helpers.sendGoldToPlayerWin
 local function newUserJoinBlackjackHandler(msg: Message)
     
     assert(constants.GAME_PROCESS_ID == msg.From, "Only Game process can send this message")
-
+    print("started newUserJoinBlackjackHandler")
     local user_id = msg.Tags.UserId
     local user_data = json.decode(msg.Data) as UserData
     local timestamp = msg.Timestamp
@@ -124,6 +124,7 @@ local function newUserJoinBlackjackHandler(msg: Message)
             winner = {},
             created_at = timestamp
         }
+        print("User is enter in new blackjack: " .. timestamp)
 
         Rounds[round_id] = new_round
 
@@ -225,8 +226,10 @@ local function blackjackInfoHandler(msg: Message)
 
     local original_round = Rounds[round_id]
     local round = createBlackjackRoundCopy(original_round, user_id)
-
     ao.send({ Target = msg.From, Data = json.encode(round) })
+    if round.ended then
+        Rounds[round_id] = nil
+    end
 end
 
 
@@ -320,7 +323,7 @@ local function matchWinner(msg: Message)
         end
 
         -- Check if all players have stood and round duration exceeded
-        if playerCount == stoodCount or (round.started and round.created_at + 60000 < msg.Timestamp and not round.ended) then
+        if playerCount == stoodCount or (round.started and round.created_at + 11000 < msg.Timestamp and not round.ended) then
             -- local Deck = round.deck
             local playerAndDealerCardValues: {string: PlayerCardValues} = {}
             round.winner = {}
@@ -485,8 +488,8 @@ local function userIsReadyForBlackjackHandler(msg: Message)
     end
 
     round.started=true
-    round.created_at = msg.Timestamp
-
+    Rounds[round_id].created_at = msg.Timestamp
+    print("User is ready for blackjack: " .. msg.Timestamp)
     ao.send({Target=msg.From, Status = "Success" })
 
     -- round.created_at = msg.Timestamp

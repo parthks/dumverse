@@ -9,16 +9,16 @@ cron:
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
-  hash: b41f779b82a0c2e278ce662a735599253b40f5bb367200d38295c95625c59bfc
+  hash: 30092fdfc748529f2f2067ef7e9f9738529cbd0a35adf32ca37d99c80e895439
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: 39b9f82d674bbc73f342b40c458ae511be6ae65653b61a7b396766839287c5df
+  hash: 7b8abbecf6941ccf09c524a43e080cb1aa6813a7c6bf03c05e83b85dea2376e0
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
-  hash: 550fc180fd79007b3ab6b7ea86e90c06212527d35c07758503cf9f58d438570c
+  hash: 3afd16ad604418c05cb7330d81010e6281052f239767e73f35b97cd78b5c5ef7
 bank:
   processId: Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870
-  hash: ea23bf2b1e325ccdd1bc1592ff2afa90751f8a65a1d42da6786606880fad5dbc
+  hash: 683d8a367b8ac95731bf884f3ad2442c094d8971189ec707ad83d1d1932c618c
 combat:
   processId: RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8
   hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
@@ -35,5 +35,5 @@ combat5:
   processId: s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM
   hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
 blackjack:
-  processId: waf_0opXMk54ZuJOCDREtW3CBMQ5yul6efu-WGc0idk
-  hash: 2635bd4f618ec7315b403a4deafed49eb0271fca18d9a71167a7043dcc9fa713
+  processId: _a0QuThzu1KoTyxNC4jHw0LUbi41zEfhbvdBOYn1cn0
+  hash: 05a07938fb09eb138bcbd691d7e8aa28fd3b7a70cbe16a5a7511548321c767cd

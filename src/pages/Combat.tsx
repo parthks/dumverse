@@ -237,7 +237,7 @@ export default function Combat() {
               const { combatCountdown: newCountdown, complete } = event.data;
         
               if (newCountdown !== undefined || newCountdown == null) {
-
+                console.log("Worker sent enterNewBattle: ");
       const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
                 if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
                   setGameStatePage(GameStatePages.COMBAT);
