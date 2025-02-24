@@ -14,7 +14,7 @@ local function addLog(blackjack_id: string, timestamp: integer, from: string, me
 end
 
 local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: integer): {Round}
-    local rounds = {}
+    local rounds: {Round} = {}
 
     for _, blackjack in pairs(Rounds) do
         if not blackjack.ended and (blackjack.created_at + 300000) < timestamp then
@@ -36,7 +36,7 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
                 user_addresses[#user_addresses + 1] = player.address
             end
 
-            if not blackjack.ended and utils.includes(user_address, user_addresses) then
+            if utils.includes(user_address, user_addresses) then
                 -- print("Blackjack round: " .. blackjack.id .. " is open for user " .. user_address)
                 rounds[#rounds + 1] = blackjack
             end
