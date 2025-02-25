@@ -17,6 +17,11 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
     local rounds: {Round} = {}
 
     for _, blackjack in pairs(Rounds) do
+
+        if blackjack.ended and (blackjack.created_at + 60000) < timestamp then
+            Rounds[tostring(blackjack.id)] = nil
+        end
+
         if not blackjack.ended and (blackjack.created_at + 300000) < timestamp then
             -- print("Blackjack round: " .. blackjack.id .. " - ENDED DUE TO PLAYER INACTIVITY")
             addLog(
@@ -26,6 +31,7 @@ local function GetOpenBlackjackRoundsOfUser(user_address: string, timestamp: int
                 "Blackjack round ended due to player inactivity. Last active timestamp: " .. blackjack.created_at
             )
             blackjack.ended = true
+            Rounds[tostring(blackjack.id)] = nil
         end
 
         if not blackjack.ended then

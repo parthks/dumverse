@@ -7,7 +7,7 @@ local GAME_PROCESS_ID =  "he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk"   -- "_-h
 local RECORD_PROCESS_ID =  "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
 local BACKUP_PROCESS_ID = "3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY"
 local BANK_PROCESS_ID = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870"
-local BLACKJACK_PROCESS_ID = "_a0QuThzu1KoTyxNC4jHw0LUbi41zEfhbvdBOYn1cn0"
+local BLACKJACK_PROCESS_ID = "BbVp5h0NPmwqgucFZmnxdPKJeeXeP2m9JlhqyE3obkM"
 
 -- local REST_SPOTS = {0, 9, 18, 36, 45, 63, 72}
 -- local BOSS_SPOTS = {27, 54, 81}

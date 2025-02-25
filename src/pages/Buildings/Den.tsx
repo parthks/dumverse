@@ -322,7 +322,7 @@ function BlackjackGame() {
       return [];
     },
     enabled: !!currentRound?.id && !currentRound?.ended,
-    refetchInterval: 1000, // Poll every 1 second
+    refetchInterval: 3000, // Poll every 1 second
   });
 
   return (
@@ -654,11 +654,23 @@ function BettingAmount() {
   const handleConfirm = async () => {
     setIsProcessing(true);
     try {
-      await placingBet(inputValue as number);
+        if (inputValue !== undefined) {
+            await placingBet(inputValue);
+        }
     } finally {
-      setIsProcessing(false);
+        setIsProcessing(false);
     }
-  };
+};
+
+const handleBlur = () => {
+    if (inputValue !== undefined) {
+        if (inputValue < 5) {
+            setInputValue(5); // Set to minimum
+        } else if (inputValue > 20) {
+            setInputValue(20); // Set to maximum
+        }
+    }
+};
   const [currentPage, setCurrentPage] = useState(0);
   const [page, setPage] = useState("rules_1");
   const [isLoadingLocal, setIsLoadingLocal] = useState(false);
@@ -700,7 +712,8 @@ function BettingAmount() {
               "https://arweave.net/T2yq7k38DKhERIR4Mg3UBwp8G6IzfAjl0UXidNjrOdA"
             }
             onClick={() => {
-              setBlackjackStart(false);
+              // setBlackjackStart(false);
+              setPage(getPages[0]);
             }}
             alt={"Exit Quantity Input"}
           />
@@ -721,12 +734,12 @@ function BettingAmount() {
                   onChange={(e) => {
                     let value = parseInt(e.target.value);
                     if (!isNaN(value)) {
-                      value = Math.max(5, Math.min(20, value));
-                      setInputValue(value);
+                        setInputValue(value); // Allow any number input
                     } else {
-                      setInputValue(undefined);
+                        setInputValue(undefined); // Reset if not a number
                     }
-                  }}
+                }}
+                onBlur={handleBlur} 
                   style={{
                     width: "calc(153px * 2.5)",
                     height: "calc(37px * 2)",

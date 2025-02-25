@@ -317,13 +317,13 @@ local function matchWinner(msg: Message)
         -- Count players and those who have stood
         for _, player in pairs(round.players) do
             playerCount = playerCount + 1
-            if player.hasStood then 
+            if player.hasStood or (round.created_at + 60000 < msg.Timestamp) then 
                 stoodCount = stoodCount + 1 
             end
         end
 
         -- Check if all players have stood and round duration exceeded
-        if playerCount == stoodCount or (round.started and round.created_at + 11000 < msg.Timestamp and not round.ended) then
+        if playerCount == stoodCount or (round.started and (round.created_at + 60000 < msg.Timestamp) and not round.ended) then
             -- local Deck = round.deck
             local playerAndDealerCardValues: {string: PlayerCardValues} = {}
             round.winner = {}
@@ -409,10 +409,28 @@ local function matchWinner(msg: Message)
 
             -- Determine the highest valid hand (not busted or blackjack)
             local winner: PlayerCardValues
+            local highestValue = 0
+
+            -- First check if there are any blackjacks
+            local blackjackWinner: PlayerCardValues | nil = nil
             for _, entry in pairs(playerAndDealerCardValues) do
-                if entry.status == "Not Bust" and entry.status ~= "Blackjack" then
-                    if not winner or entry.cardsValue > winner.cardsValue then
-                        winner = entry
+                if entry.cardsValue == 21 then
+                    blackjackWinner = entry
+                    break
+                end
+            end
+
+            -- If there's a blackjack, they are the winner
+            if blackjackWinner then
+                winner = blackjackWinner
+            else
+                -- Otherwise find highest non-bust hand
+                for _, entry in pairs(playerAndDealerCardValues) do
+                    if entry.status == "Not Bust" then
+                        if not winner or entry.cardsValue > winner.cardsValue then
+                            winner = entry
+                            highestValue = entry.cardsValue
+                        end
                     end
                 end
             end
