@@ -11,7 +11,7 @@ export const DUMZ_TOKEN_PROCESS_ID = "mdZ4A4RJpd47KEmirFTyjRuTFxc52g2UYahrsmAe-d
 export const TRUNK_TOKEN_PROCESS_ID = "wOrb8b_V8QixWyXZub48Ki5B6OIDyf_p1ngoonsaRpQ";
 export const RECORD_TOKEN_PROCESS_ID = "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0" //"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A";
 export const BANK_PROCESS_ID = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870"; 
-export const BLACKJACK_PROCESS_ID = "BbVp5h0NPmwqgucFZmnxdPKJeeXeP2m9JlhqyE3obkM";
+export const BLACKJACK_PROCESS_ID = "qMEdSK_8VJv_PgTHMRNSOMlkhfJcXSKb3Mh6NnLfcPs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

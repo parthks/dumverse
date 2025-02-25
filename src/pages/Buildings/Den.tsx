@@ -322,7 +322,7 @@ function BlackjackGame() {
       return [];
     },
     enabled: !!currentRound?.id && !currentRound?.ended,
-    refetchInterval: 3000, // Poll every 1 second
+    refetchInterval: 2500, // Poll every 1 second
   });
 
   return (

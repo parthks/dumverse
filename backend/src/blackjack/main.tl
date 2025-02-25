@@ -317,9 +317,13 @@ local function matchWinner(msg: Message)
         -- Count players and those who have stood
         for _, player in pairs(round.players) do
             playerCount = playerCount + 1
-            if player.hasStood or (round.created_at + 60000 < msg.Timestamp) then 
+            if player.hasStood then 
                 stoodCount = stoodCount + 1 
             end
+        end
+
+        if (round.created_at + 60000 < msg.Timestamp) then
+            stoodCount = playerCount
         end
 
         -- Check if all players have stood and round duration exceeded
