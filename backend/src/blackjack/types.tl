@@ -54,6 +54,7 @@ end
 global record PlayerCardValues
     address: string
     id: string
+    name: string
     cardsValue: integer
     status: string
 end

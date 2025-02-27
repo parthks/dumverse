@@ -81,6 +81,7 @@ local function isPlayerBust(players: Player): PlayerCardValues
     local data: PlayerCardValues = {
         address = players.address,
         id = tostring(players.user_id),
+        name = players.name,
         cardsValue = total,
         status = (total > 21) and "Burst" or "Not Burst"
     }
@@ -155,10 +156,6 @@ end
 local function sendGoldToPlayerWin(blackjack_id: string)
     local players = Rounds[blackjack_id].players
     for playerId, playerDetails in pairs(players) do
-        print(constants.GAME_PROCESS_ID)
-        print(playerId)
-        print(blackjack_id)
-        print(playerDetails.gold_balance)
         ao.send({
             Target = constants.GAME_PROCESS_ID,
             Action = "BlackjackMatch.BlackjackWon",

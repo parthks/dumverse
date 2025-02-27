@@ -311,13 +311,15 @@ local function doubleDownHandler(msg: Message)
 end
 
 
--- Handler for determining the winner of the game
+-- Main function to determine winners and handle payouts in a blackjack game
+-- Processes all active rounds and determines winners based on:
+-- 1. If all players have stood (hasStood = true)
+-- 2. If round duration has exceeded 60 seconds
+-- 3. Various winning conditions (blackjack, bust, highest hand)
 local function matchWinner(msg: Message)
     for _, round in pairs(Rounds) do
+        -- Count total players and players who have stood (finished their turns)
         local playerCount, stoodCount = 0, 0
-        -- local players = round.players
-
-        -- Count players and those who have stood
         for _, player in pairs(round.players) do
             playerCount = playerCount + 1
             if player.hasStood then 
@@ -325,39 +327,45 @@ local function matchWinner(msg: Message)
             end
         end
 
-        if (round.created_at + 60000 < msg.Timestamp) then
-            stoodCount = playerCount
-        end
+        -- Force all players to stand if round time exceeds 60 seconds
+        -- if (round.created_at + 60000 < msg.Timestamp) then
+        --     stoodCount = playerCount
+        -- end
 
-        -- Check if all players have stood and round duration exceeded
+        -- Process round if all players have stood or time has expired
         if playerCount == stoodCount or (round.started and (round.created_at + 60000 < msg.Timestamp) and not round.ended) then
-            -- local Deck = round.deck
             local playerAndDealerCardValues: {string: PlayerCardValues} = {}
             round.winner = {}
 
-            -- Process player results
+            -- Process each player's hand and handle blackjacks
             for _, player in pairs(round.players) do
                 if player.betPlaced then
                     local playerData = isPlayerBust(player)
                     player.value = playerData.cardsValue
                     playerAndDealerCardValues[playerData.id] = playerData
 
+                    -- Handle immediate blackjack wins (21)
                     if playerData.cardsValue == 21 then
                         player.gold_balance = player.gold_balance + (player.betAmount * 2.5)
                         playerData.status = "Blackjack"
-                        round.winner[#round.winner + 1] = tostring(player.user_id)
+                        round.winner[#round.winner + 1] = tostring(player.name)
+                        if playerCount == 1 then
+                            player.status = playerData.status
+                            sendGoldToPlayerWin(tostring(round.id))
+                            print("round ended at: " .. msg.Timestamp)
+                            round.ended = true
+                            break
+                        end
                     end
 
                     player.status = playerData.status
                 end
             end
 
-            -- Dealer logic
-            -- local dealer = round.dealer
+            -- Process dealer's hand and hit until reaching at least 17
             local dealerCards = { round.dealer.visibleCard[1], round.dealer.hiddenCard }
             local dealerTotal = calculateTotalWithAceAdjustment(dealerCards)
 
-            -- Dealer must hit until at least 17
             while dealerTotal <= 16 and #dealerCards <= 3 do
                 table.insert(round.dealer.visibleCard, round.deck[1])
                 table.remove(round.deck, 1)
@@ -365,25 +373,30 @@ local function matchWinner(msg: Message)
                 dealerTotal = calculateTotalWithAceAdjustment(dealerCards)
             end
 
+            -- Set dealer's final status and record values
             round.dealer.status = (dealerTotal == 21 and "Blackjack") or (dealerTotal > 21 and "Bust") or "Not Bust"
             round.dealer.hasBust = dealerTotal > 21
             playerAndDealerCardValues["Dealer"] = { 
                 address = round.dealer.address, 
                 cardsValue = dealerTotal, 
                 status = round.dealer.status, 
-                id = "Dealer" 
+                id = "Dealer",
+                name = "Dealer"
             }
 
-            -- If dealer has blackjack, check for tie scenario
+            -- Handle dealer blackjack scenario
             if round.dealer.status == "Blackjack" then
                 round.dealer.winnigAmount = dealerTotal
                 round.winner[#round.winner + 1] = "Dealer" 
 
+                -- Process payouts for dealer blackjack
                 for _, player in pairs(round.players) do
                     if player.betPlaced then
                         if player.status == "Blackjack" then
+                            -- Push (tie) - return original bet for player blackjack
                             player.gold_balance = player.gold_balance - (player.betAmount * 2.5) + player.betAmount
                         else
+                            -- Player loses to dealer blackjack
                             player.gold_balance = player.gold_balance - player.betAmount
                         end
                     end
@@ -391,34 +404,32 @@ local function matchWinner(msg: Message)
 
                 sendGoldToPlayerWin(tostring(round.id))
                 print("round ended at: " .. msg.Timestamp)
-                Rounds[tostring(round.id)].ended = true
-                -- print("Dealer blackjack: " .. json.encode(playerAndDealerCardValues))
+                round.ended = true
                 break
             end
 
-            -- If dealer busts, all remaining players win
+            -- Handle dealer bust scenario - all non-bust players win
             if round.dealer.hasBust then
                 for _, player in pairs(round.players) do
                     if player.betPlaced then
                         if player.status ~= "Blackjack" then
                             player.gold_balance = player.gold_balance + player.betAmount
                         end
-                        round.winner[#round.winner + 1] = tostring(player.user_id)
+                        round.winner[#round.winner + 1] = tostring(player.name)
                     end    
                 end
 
                 sendGoldToPlayerWin(tostring(round.id))
                 print("round ended at: " .. msg.Timestamp)
-                Rounds[tostring(round.id)].ended = true
-                -- print("Dealer Burst: " .. json.encode(playerAndDealerCardValues))
+                round.ended = true
                 break
             end
 
-            -- Determine the highest valid hand (not busted or blackjack)
+            -- Determine winner for normal gameplay (no dealer blackjack/bust)
             local winner: PlayerCardValues
             local highestValue = 0
 
-            -- First check if there are any blackjacks
+            -- Check for any player blackjacks first
             local blackjackWinner: PlayerCardValues | nil = nil
             for _, entry in pairs(playerAndDealerCardValues) do
                 if entry.cardsValue == 21 then
@@ -427,11 +438,10 @@ local function matchWinner(msg: Message)
                 end
             end
 
-            -- If there's a blackjack, they are the winner
+            -- Set winner to blackjack holder or find highest non-bust hand
             if blackjackWinner then
                 winner = blackjackWinner
             else
-                -- Otherwise find highest non-bust hand
                 for _, entry in pairs(playerAndDealerCardValues) do
                     if entry.status == "Not Bust" then
                         if not winner or entry.cardsValue > winner.cardsValue then
@@ -442,40 +452,44 @@ local function matchWinner(msg: Message)
                 end
             end
 
-            -- Handle winnings based on winner determination
+            -- Process payouts based on winner
             if winner then
                 if winner.id == "Dealer" then
+                    -- Handle dealer win scenario
                     round.dealer.winnigAmount = winner.cardsValue
                     for _, player in pairs(round.players) do
                         if player.status ~= "Blackjack" and player.betPlaced then
                             if player.value == winner.cardsValue then
+                                -- Push (tie) - return original bet
                                 player.gold_balance = player.gold_balance + player.betAmount
-                                round.winner[#round.winner + 1] = tostring(player.user_id)
+                                round.winner[#round.winner + 1] = tostring(player.name)
                             else
+                                -- Player loses to dealer
                                 player.gold_balance = player.gold_balance - player.betAmount
                             end
                         end
                     end
                 else
+                    -- Handle player win scenario
                     for _, player in pairs(round.players) do
                         if player.betPlaced then
                             if player.address == winner.address and player.user_id == tonumber(winner.id) then
+                                -- Winner gets 2:1 payout
                                 player.gold_balance = player.gold_balance + (player.betAmount * 2)
                             elseif player.status ~= "Blackjack" then
+                                -- Other players lose their bets
                                 player.gold_balance = player.gold_balance - player.betAmount
                             end
                         end
                     end
                 end
-
-                round.winner[#round.winner + 1] = winner.id
+                round.winner[#round.winner + 1] = winner.name
             end
+            
+            -- Finalize round and process payouts
             sendGoldToPlayerWin(tostring(round.id))
             print("round ended at: " .. msg.Timestamp)
-            Rounds[tostring(round.id)].ended = true
-            -- print("Someone blackjack: " .. json.encode(playerAndDealerCardValues))
-        -- else
-            -- round.created_at = msg.Timestamp
+            round.ended = true
         end
     end
 end
