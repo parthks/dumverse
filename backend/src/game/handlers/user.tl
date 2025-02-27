@@ -189,7 +189,6 @@ local function upgradeExistingProfileHandler(msg: Message)
     local nft_address = msg.Tags.NFT_Address
     assert(nft_address, "NFT_Address is required")
 
-
     local userData = dbAdmin:exec(string.format([[
         SELECT * FROM Users WHERE address = "%s" and nft_address is NULL;
     ]], user_address))

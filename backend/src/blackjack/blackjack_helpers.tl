@@ -151,15 +151,20 @@ local function createBlackjackRoundCopy(original_round: Round, user_id: string):
     return round
 end
 
+
 local function sendGoldToPlayerWin(blackjack_id: string)
     local players = Rounds[blackjack_id].players
     for playerId, playerDetails in pairs(players) do
+        print(constants.GAME_PROCESS_ID)
+        print(playerId)
+        print(blackjack_id)
+        print(playerDetails.gold_balance)
         ao.send({
             Target = constants.GAME_PROCESS_ID,
+            Action = "BlackjackMatch.BlackjackWon",
             UserId = tostring(playerId),
             RoundId = blackjack_id,
             Gold = tostring(playerDetails.gold_balance),
-            Action = "BlackjackMatch.BlackjackWon"
         })
     end
 end

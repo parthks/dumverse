@@ -195,6 +195,9 @@ end
 
 -- Handler for placing a bet
 local function placeBetHandler(msg: Message)
+
+    assert(constants.GAME_PROCESS_ID == msg.From, "You cant call this handler")
+
     local user_id = msg.Tags.UserId
     local round_id = msg.Tags.RoundId
     local user_bet_amount = tonumber(msg.Tags.Bet)
@@ -388,7 +391,7 @@ local function matchWinner(msg: Message)
 
                 sendGoldToPlayerWin(tostring(round.id))
                 print("round ended at: " .. msg.Timestamp)
-                round.ended = true
+                Rounds[tostring(round.id)].ended = true
                 -- print("Dealer blackjack: " .. json.encode(playerAndDealerCardValues))
                 break
             end
@@ -406,7 +409,7 @@ local function matchWinner(msg: Message)
 
                 sendGoldToPlayerWin(tostring(round.id))
                 print("round ended at: " .. msg.Timestamp)
-                round.ended = true
+                Rounds[tostring(round.id)].ended = true
                 -- print("Dealer Burst: " .. json.encode(playerAndDealerCardValues))
                 break
             end
@@ -469,7 +472,7 @@ local function matchWinner(msg: Message)
             end
             sendGoldToPlayerWin(tostring(round.id))
             print("round ended at: " .. msg.Timestamp)
-            round.ended = true
+            Rounds[tostring(round.id)].ended = true
             -- print("Someone blackjack: " .. json.encode(playerAndDealerCardValues))
         -- else
             -- round.created_at = msg.Timestamp

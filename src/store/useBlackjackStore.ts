@@ -89,7 +89,7 @@ export const useBlackjackStore = create<BlackjackState>()(
           tags: [
             {
               name: "Action",
-              value: "Blackjack.PlaceBet",
+              value: "BlackjackMatch.PlaceBet",
             },
             {
               name: "UserId",
@@ -104,10 +104,9 @@ export const useBlackjackStore = create<BlackjackState>()(
               value: betAmount.toString(),
             },
           ],
-          process: "blackjack",
         });
         console.log("Ashu :  placeBet: " + JSON.stringify(resultData));
-        useGameStore.getState().refreshUserData();
+        await useGameStore.getState().refreshUserData();
         return resultData;
       },
       blackjackInfo: async () => {
@@ -115,7 +114,7 @@ export const useBlackjackStore = create<BlackjackState>()(
         const round_id = get().currentRound?.id as number;
         if (!user_id || !round_id) return;
 
-        const resultData = await sendDryRunGameMessage({
+        const resultData = await sendAndReceiveGameMessage({
           tags: [
             {
               name: "Action",
@@ -149,8 +148,10 @@ export const useBlackjackStore = create<BlackjackState>()(
           ) as Round,
         });
 
-        if (resultData.data?.ended) {
-          useGameStore.getState().refreshUserData();
+        if (JSON.parse(
+          resultData.Messages[resultData.Messages.length - 1].Data
+        ).ended) {
+          await useGameStore.getState().refreshUserData();
         }
       },
       hit: async () => {

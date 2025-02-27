@@ -44,43 +44,43 @@ export default function Den() {
     if ((result.status = "Success")) await getOpenBlackjackRounds();
   };
 
-  useEffect(()=> {
-    const timer = setTimeout(()=> {
+  useEffect(() => {
+    const timer = setTimeout(() => {
       setShowExitButton(true);
     }, 60000)
     return () => clearTimeout(timer);
-  },[])
+  }, [])
 
   if (blackjackStart) {
     if (!currentRound) {
       return (
         <div>
-        <h1 className="text-2xl text-white py-[23%] px-[50%]">Loading...</h1>
-        <div className="-z-10 absolute inset-0">
-          <img
-            src={
-              "https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"
-            }
-            alt="Den Blackjack Background"
-            className="w-full h-full"
-          />
-        </div>
+          <h1 className="text-2xl text-white py-[23%] px-[50%]">Loading...</h1>
+          <div className="-z-10 absolute inset-0">
+            <img
+              src={
+                "https://arweave.net/cGEJFKDsbiLbRlT3DR8bnf2UJ1_NjmLt_6GNAcw7i1o"
+              }
+              alt="Den Blackjack Background"
+              className="w-full h-full"
+            />
+          </div>
 
-        {showExitButton && (
-          <NewButton
-            className="px-12 bottom-10 py-4 text-2xl"
-            src={
-              "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
-            }
-            onClick={async () => {
-              audioManager.playSFX(SOUNDS.BUILDING_ENTER);
-              await sleep(750);
-              // setGameStatePage(GameStatePages.SECOND_TOWN);
-              setBlackjackStart(false);
-            }}
-            alt={"Exit"}
-          />
-        )}
+          {showExitButton && (
+            <NewButton
+              className="px-12 bottom-10 py-4 text-2xl"
+              src={
+                "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
+              }
+              onClick={async () => {
+                audioManager.playSFX(SOUNDS.BUILDING_ENTER);
+                await sleep(750);
+                // setGameStatePage(GameStatePages.SECOND_TOWN);
+                setBlackjackStart(false);
+              }}
+              alt={"Exit"}
+            />
+          )}
         </div>
       );
     }
@@ -221,8 +221,8 @@ export default function Den() {
                   alt="Den Counter"
                   className="relative w-full"
                   style={{ height: "auto", top: "-13%" }}
-                  // className="absolute "
-                  // style={{ ...calculatePositionAndSize(14, 80, 28) }}
+                // className="absolute "
+                // style={{ ...calculatePositionAndSize(14, 80, 28) }}
                 />
               </div>
               {/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
@@ -485,12 +485,12 @@ function BlackjackPlaying() {
             src={
               currentRound?.dealer?.hiddenCard
                 ? CARD_IMAGES[
-                    currentRound.dealer.hiddenCard
-                      .suit as keyof typeof CARD_IMAGES
-                  ][
-                    currentRound.dealer.hiddenCard
-                      .rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES]
-                  ]
+                currentRound.dealer.hiddenCard
+                  .suit as keyof typeof CARD_IMAGES
+                ][
+                currentRound.dealer.hiddenCard
+                  .rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES]
+                ]
                 : CARD_IMAGES.Back
             }
             className="w-[95px] h-[135px]" // Fixed size
@@ -504,19 +504,20 @@ function BlackjackPlaying() {
         src={CARD_IMAGES.deck}
         className="z-10 w-28 absolute right-[32%] bottom-[48%]"
       />
-
-      {!currentRound?.ended ? (
-        <p className="z-10 absolute right-[41%] bottom-[40%] text-white text-3xl">
-          {" "}
-          {Math.ceil(remainingTimeOfRound < 0 ? 0 : remainingTimeOfRound)}{" "}
-          seconds remaining{" "}
-        </p>
-      ) : (
-        <p className="z-10 absolute right-[41%] bottom-[40%] text-white text-3xl">
-          {" "}
-          {JSON.stringify(currentRound?.winner)} Win{" "}
-        </p>
-      )}
+      <div className="w-full h-full flex flex-col items-center justify-center pt-[9%]">
+        {/* right-[41%] bottom-[40%] */}
+        {!currentRound?.ended ? (
+          <p className="z-10 absolute  text-white text-3xl">
+            {" "}
+            {Math.ceil(remainingTimeOfRound < 0 ? 0 : remainingTimeOfRound)}{" "}
+            seconds remaining{" "}
+          </p>
+        ) : (
+          <p className="z-10 absolute  text-white text-3xl">
+            {" "}
+            {currentRound?.winner?.join(", ")} Win{" "}
+          </p>
+        )}</div>
       {/* Players' Hands */}
       {currentRound?.players &&
         Object.entries(currentRound.players).map(
@@ -525,34 +526,40 @@ function BlackjackPlaying() {
             const positionClass = isCurrentUser
               ? "z-10 absolute bottom-40 left-1/2 transform -translate-x-1/2"
               : index % 2 === 0
-              ? "z-10 absolute top-[48%] left-[26%] transform -translate-x-1/2"
-              : "z-10 absolute top-[48%] right-[10%] transform -translate-x-1/2";
+                ? "z-10 absolute top-[48%] left-[26%] transform -translate-x-1/2"
+                : "z-10 absolute top-[48%] right-[10%] transform -translate-x-1/2";
 
             return (
               <div key={player.user_id} className={positionClass}>
                 {player.cards && player.cards.length > 0 ? (
-                  <div className="flex gap-2 w-auto m-10 left-1/2">
-                    {player.cards.map((card, key) => {
-                      const suit = card.suit as keyof typeof CARD_IMAGES;
-                      const rank =
-                        card.rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES];
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="flex gap-2 w-auto mb-2 left-1/2">
+                      {player.cards.map((card, key) => {
+                        const suit = card.suit as keyof typeof CARD_IMAGES;
+                        const rank =
+                          card.rank as keyof (typeof CARD_IMAGES)[keyof typeof CARD_IMAGES];
 
-                      return (
-                        <img
-                          key={key}
-                          src={CARD_IMAGES[suit][rank]}
-                          className="w-[95px] h-[135px]" // Fixed size for each card
-                          alt={`${rank} of ${suit}`}
-                        />
-                      );
-                    })}
+                        return (
+                          <img
+                            key={key}
+                            src={CARD_IMAGES[suit][rank]}
+                            className="w-[95px] h-[135px]" // Fixed size for each card
+                            alt={`${rank} of ${suit}`}
+                          />
+                        );
+                      })}
+                    </div>
+                    <h1 className="text-white text-3xl">{player.name}</h1>
                   </div>
                 ) : (
-                  <img
-                    src={CARD_IMAGES.Back}
-                    alt="Back of Card"
-                    className="w-[50px] h-[70px]"
-                  />
+                  <div className="flex flex-col items-center justify-center gap-1"> {/* Added gap-1 and removed default spacing */}
+                    <img
+                      src={CARD_IMAGES.Back}
+                      alt="Back of Card"
+                      className="w-[50px] h-[70px]"
+                    />
+                    <h1 className="text-white">{player.name}</h1>
+                  </div>
                 )}
               </div>
             );
@@ -654,23 +661,23 @@ function BettingAmount() {
   const handleConfirm = async () => {
     setIsProcessing(true);
     try {
-        if (inputValue !== undefined) {
-            await placingBet(inputValue);
-        }
+      if (inputValue !== undefined) {
+        await placingBet(inputValue);
+      }
     } finally {
-        setIsProcessing(false);
+      setIsProcessing(false);
     }
-};
+  };
 
-const handleBlur = () => {
+  const handleBlur = () => {
     if (inputValue !== undefined) {
-        if (inputValue < 5) {
-            setInputValue(5); // Set to minimum
-        } else if (inputValue > 20) {
-            setInputValue(20); // Set to maximum
-        }
+      if (inputValue < 5) {
+        setInputValue(5); // Set to minimum
+      } else if (inputValue > 20) {
+        setInputValue(20); // Set to maximum
+      }
     }
-};
+  };
   const [currentPage, setCurrentPage] = useState(0);
   const [page, setPage] = useState("rules_1");
   const [isLoadingLocal, setIsLoadingLocal] = useState(false);
@@ -734,12 +741,12 @@ const handleBlur = () => {
                   onChange={(e) => {
                     let value = parseInt(e.target.value);
                     if (!isNaN(value)) {
-                        setInputValue(value); // Allow any number input
+                      setInputValue(value); // Allow any number input
                     } else {
-                        setInputValue(undefined); // Reset if not a number
+                      setInputValue(undefined); // Reset if not a number
                     }
-                }}
-                onBlur={handleBlur} 
+                  }}
+                  onBlur={handleBlur}
                   style={{
                     width: "calc(153px * 2.5)",
                     height: "calc(37px * 2)",
@@ -752,9 +759,8 @@ const handleBlur = () => {
                   <NewButton
                     onClick={handleConfirm}
                     disabled={isProcessing || !inputValue}
-                    className={`bg-center ${
-                      isProcessing ? `px-[100px]` : `px-32`
-                    } py-4 text-3xl absolute`}
+                    className={`bg-center ${isProcessing ? `px-[100px]` : `px-32`
+                      } py-4 text-3xl absolute`}
                     alt={isProcessing ? "Processing..." : "Confirm"}
                   />
                 </div>
@@ -772,6 +778,9 @@ const handleBlur = () => {
                   without going over. You are playing against the dealer, not
                   other players
                 </p>
+              </div>
+              <div>
+                <h1 className="text-center text-2xl">{getPages.indexOf(page)}</h1>
               </div>
               <div className="flex absolute bottom-4 right-4 justify-between items-center">
                 <ImgButton
@@ -796,6 +805,9 @@ const handleBlur = () => {
                     hand.
                   </ul>
                 </p>
+              </div>
+              <div>
+                <h1 className="text-center text-2xl">{getPages.indexOf(page)}</h1>
               </div>
               <div className="flex absolute bottom-4 left-4 justify-between items-center">
                 <ImgButton
@@ -825,6 +837,9 @@ const handleBlur = () => {
                     The dealer's cards: One card face up, the other face down.
                   </ul>
                 </p>
+              </div>
+              <div>
+                <h1 className="text-center text-2xl">{getPages.indexOf(page)}</h1>
               </div>
               <div className="flex absolute bottom-4 left-4 justify-between items-center">
                 <ImgButton
@@ -859,6 +874,9 @@ const handleBlur = () => {
                   </ul>
                 </p>
               </div>
+              <div>
+                <h1 className="text-center text-2xl">{getPages.indexOf(page)}</h1>
+              </div>
               <div className="flex absolute bottom-4 left-4 justify-between items-center">
                 <ImgButton
                   src="https://arweave.net/SKu9BObCHuN4lJVIa9tnP7R4OzwikZzDw1C-ALSIP30"
@@ -891,6 +909,9 @@ const handleBlur = () => {
                     stand if their hand is 17 or more.
                   </ul>
                 </p>
+              </div>
+              <div>
+                <h1 className="text-center text-2xl">{getPages.indexOf(page)}</h1>
               </div>
               <div className="flex absolute bottom-4 left-4 justify-between items-center">
                 <ImgButton
@@ -926,6 +947,9 @@ const handleBlur = () => {
                     If you and the dealer have the same hand value, it's a tie.
                   </ul>
                 </p>
+              </div>
+              <div>
+                <h1 className="text-center text-2xl">{getPages.indexOf(page)}</h1>
               </div>
               <div className="flex absolute bottom-4 left-4 justify-between items-center">
                 <ImgButton
