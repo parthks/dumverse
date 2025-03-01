@@ -349,13 +349,13 @@ local function matchWinner(msg: Message)
                         player.gold_balance = player.gold_balance + (player.betAmount * 2.5)
                         playerData.status = "Blackjack"
                         round.winner[#round.winner + 1] = tostring(player.name)
-                        if playerCount == 1 then
-                            player.status = playerData.status
-                            sendGoldToPlayerWin(tostring(round.id))
-                            print("round ended at: " .. msg.Timestamp)
-                            round.ended = true
-                            break
-                        end
+                        -- if playerCount == 1 then
+                        --     player.status = playerData.status
+                        --     sendGoldToPlayerWin(tostring(round.id))
+                        --     print("round ended at: " .. msg.Timestamp)
+                        --     round.ended = true
+                        --     break
+                        -- end
                     end
 
                     player.status = playerData.status

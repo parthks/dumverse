@@ -161,6 +161,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
         idBefore: pageParam ? pageParam + 1 : undefined,
         limit: queryPageSize,
       });
+      console.log("Just checking: "+ JSON.stringify(result));
       setLatestMessage(result[0]);
       console.log("Fetched messages:", result);
       return result;

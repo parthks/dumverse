@@ -31,31 +31,26 @@ self.onmessage = (event) => {
   }
 
   if (type === "combat_start") {
-    const {  initialCountdown } = data;
+    const { initialCountdown } = data;
 
     if (combatCountdown === null) {
       combatCountdown = initialCountdown;
     }
 
-    const timer = setInterval(() => {
-      if (combatCountdown > 0) {
-        // combatCountdown -= 1;
-        // if (combatCountdown == 0) {
-        console.log("combatCountdown: "+combatCountdown);
-          clearInterval(timer);
+    const combatInterval = setInterval(() => {
+      if (combatCountdown !== null && combatCountdown > 0) {
+        combatCountdown -= 1000; // Decrement by 1 second
+        self.postMessage({ combatCountdown });
+
+        if (combatCountdown <= 0) {
+          clearInterval(combatInterval);
           combatCountdown = null;
-        // }
-
-        self.postMessage({ combatCountdown }); // Send updated countdown
+          self.postMessage({ complete: true });
+        }
       }
-
-      //   if (countdown == 0) {
-      //     clearInterval(timer);
-      //     countdown = null;
-      //     self.postMessage({ complete: true }); // Notify completion
-      //   }
-    }, initialCountdown);
+    }, 1000);
   }
+
 
   if (type === "stop") {
     countdown = null;

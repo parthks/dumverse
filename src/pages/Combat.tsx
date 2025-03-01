@@ -193,73 +193,59 @@ export default function Combat() {
 
   useEffect(() => {
     if (comabatLoadingScreenImageURL === null) {
-      let savedData: number = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0");
+      let savedData = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0", 10);
       savedData = (savedData % Object.keys(COMBAT_LOADING_SCREEN).length) + 1;
       const url = COMBAT_LOADING_SCREEN[`scene${savedData}` as keyof typeof COMBAT_LOADING_SCREEN];
       setComabatLoadingScreenImageURL(url);
       localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
     }
-      console.log("Coming tothe combat page");
+  
+    console.log("Coming to the combat page");
+  
     if (enteringNewBattle && !currentBattle?.id) {
-      console.log("Starting calling getOpenBattles");
+      console.log("Starting polling for open battles...");
       if (pollingStarted.current) return;
       pollingStarted.current = true;
+  
       if (!workerRef.current) {
-        workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url), { type: 'module' });
-      }  
-
+        workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url), { type: "module" });
+      }
+  
       const worker = workerRef.current;
-
+  
       const pollForBattle = async () => {
         let attempt = 0;
-        // let timeoutTriggered = false;
-
+  
         while (!cancelled.current) {
-          console.log("polling for open battles...");
-
-          // const timeoutPromise = new Promise((_, reject) => {
-          //   setTimeout(() => {
-          //     if (!cancelled.current) {
-          //       timeoutTriggered = true;
-          //       reject(new Error("Timeout"));
-          //     }
-          //   }, 60000);
-          // });
-
+          console.log("Polling for open battles...");
+  
+          worker.onmessage = async (event) => {
+            const { combatCountdown, complete } = event.data;
+  
+            if (complete) {
+              console.log("Worker countdown complete, attempting to enter battle...");
+              const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
+              if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+                setGameStatePage(GameStatePages.COMBAT);
+              }
+            }
+  
+            if (combatCountdown !== undefined) {
+              console.log("Worker countdown update:", combatCountdown);
+            }
+          };
+  
+          worker.postMessage({
+            type: "combat_start",
+            data: {
+              initialCountdown: 60000, // 60 seconds
+            },
+          });
+  
           try {
-            // Race between getOpenBattles and timeout
-            // const battle = await Promise.race([
-            //   getOpenBattles(),
-            //   timeoutPromise
-            // ]);
-
-            worker.onmessage = async (event) => {
-              const { combatCountdown: newCountdown, complete } = event.data;
-        
-              if (newCountdown !== undefined || newCountdown == null) {
-                console.log("Worker sent enterNewBattle: ");
-      const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
-                if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
-                  setGameStatePage(GameStatePages.COMBAT);
-                }              }
-        
-            };
-
-            worker.postMessage({
-              type: "combat_start",
-              data: {
-              //  interval: 1000, // 1 second interval
-                initialCountdown: 60000,
-              },
-            });
-
             const battle = await getOpenBattles();
-
-            // If timeout was triggered, stop the polling loop
-            // if (timeoutTriggered) {
-            //   break;
-            // }
-            console.log("Battle found -> Sending battle ready request.");
+            console.log("Battle found:", battle);
+  
             if (battle && (!(battle as Battle).started || ((battle as Battle).started && Object.keys((battle as Battle).players || {}).length > 1))) {
               await sendBattleReadyRequest();
               break;
@@ -270,40 +256,27 @@ export default function Combat() {
                 setFailedToEnterBattle(true);
                 break;
               }
-              console.log("waiting 5 seconds before retrying... (GetOpenBattles)");
+              console.log("Waiting 5 seconds before retrying...");
               await sleep(5000);
             }
           } catch (error) {
-            // if (timeoutTriggered) {
-            //   console.log("getOpenBattles is taking too long. Calling fallback function.");
-            //   console.log("tempCurrentIslandLevel:", tempCurrentIslandLevel);
-            //   try {
-            //     const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
-            //     if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
-            //       setGameStatePage(GameStatePages.COMBAT);
-            //     }
-            //     break;
-            //   } catch (fallbackError) {
-            //     console.error("Error in fallback:", fallbackError);
-            //   }
-            // } else {
-              console.error("Error fetching battles:", error);
-            // }
+            console.error("Error fetching battles:", error);
           }
         }
       };
-
+  
       pollForBattle();
-
+  
       return () => {
         cancelled.current = true;
-        worker.postMessage({ type: "combat_stop" });
-      worker.terminate();
-      workerRef.current = null;
+        if (worker) {
+          worker.postMessage({ type: "combat_stop" });
+          worker.terminate();
+          workerRef.current = null;
+        }
       };
     }
   }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage, subProcess]);
-  
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentBattle?.id}`],
