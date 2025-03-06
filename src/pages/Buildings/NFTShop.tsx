@@ -167,7 +167,7 @@ export default function NFTShop() {
               <div className="relative w-full  h-full flex flex-row">
                 <div className="relative flex flex-col items-center gap-3">
                   <img
-                    src="https://arweave.net/rKIIgoJfpt_bgEVBVoMyOA9zLUPBuXdUucYVB9_ywdE"
+                    src="https://arweave.net/6dkpwbzZVMTQQvAMumsa_upKZ8PVTFHgC06M3B98X5c"
                     alt="NFT Shop - Shelf with Robe"
                     className="relative w-full"
                     style={{ height: "auto", top: "-37%", left: "-65%" }}
