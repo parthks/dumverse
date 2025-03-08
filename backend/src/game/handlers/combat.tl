@@ -155,7 +155,8 @@ local function enterNewCombatHandler(msg: Message)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
 
-    if overwrite_the_battle_on_same_spot == "yes" and userData.current_battle_id then
+    -- if overwrite_the_battle_on_same_spot == "yes" and userData.current_battle_id then
+        if overwrite_the_battle_on_same_spot == "yes" then
         local assignSubProcessData = subProcessAssignToUsers[user_id]
         -- local player_battle_id = dbAdmin:exec(string.format([[SELECT current_battle_id from Users WHERE id = %d]], user_id)) [1]
         ao.send({Target= assignSubProcessData.subProcess, Action="Battle.ForceDeleteBattle", BattleId= tostring(userData.current_battle_id)})
@@ -323,7 +324,7 @@ local function enterNewCombatHandler(msg: Message)
         local boss_enemy_index: integer;
         if level == 26 then
             -- Easy: enemies 1-5
-            boss_enemy_index = 1
+            boss_enemy_index = math.random(1, 5)
             elseif level == 52 then 
                 boss_enemy_index = 6
 

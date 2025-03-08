@@ -96,6 +96,7 @@ interface GameState {
   goldWishes: ()=>Promise<DailyGoldWishes | null>;
   isPopupOpen: boolean;
   setIsPopupOpen: (map: boolean) => void;
+  setEquipInventoryItem: (userId: number, itemId: number) => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -158,7 +159,10 @@ export const useGameStore = create<GameState>()(
           });
           // if user is not in a spot, only then go to town. Else need to go to game map
           // if (user.current_spot % 9 === 0 && user.current_spot != 0) {
-            if (REST_SPOTS.includes(user.current_spot) && user.current_spot != 0) {
+          if (
+            REST_SPOTS.includes(user.current_spot) &&
+            user.current_spot != 0
+          ) {
             // user is in a spot
             const position = getCurrentLamaPosition(user);
             set({
@@ -167,7 +171,7 @@ export const useGameStore = create<GameState>()(
               lamaPosition: position.lamaPosition,
             });
             // if (position.currentIslandLevel % 9 === 0) {
-              if (REST_SPOTS.includes(position.currentIslandLevel)) {
+            if (REST_SPOTS.includes(position.currentIslandLevel)) {
               // user is in a rest area
               set({ GameStatePage: GameStatePages.REST_AREA });
             } else {
@@ -594,6 +598,17 @@ export const useGameStore = create<GameState>()(
       },
       isPopupOpen: true,
       setIsPopupOpen: (map) => set({ isPopupOpen: map }),
+      setEquipInventoryItem: async (userId: number, itemId: number) => {
+        if (userId != get().user?.id) return;
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Inventory.EquipItem" },
+            { name: "UserId", value: userId.toString()! },
+            { name: "InventoryId", value: itemId.toString() },
+          ],
+        });
+        await get().refreshUserData();
+      },
     }),
     {
       name: "Game Store",

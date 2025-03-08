@@ -5,13 +5,14 @@ import { InventoryBagWithoutArmor, UserWeaponItem } from "./InventoryBag";
 
 export function PlayerFrame() {
   const user = useGameStore((state) => state.user);
+  const inventory = useGameStore((state) => state.inventory);
   const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
   const setQuestBookOpen = useGameStore((state) => state.setQuestBookOpen);
 
   if (!user) return null;
   const totalStamina = user.total_stamina;
   const filledStamina = user.stamina;
-  const { weapon, armor } = getEquippedItem(user);
+  const { weapon, armor } = getEquippedItem(inventory);
 
   return (
     <div

@@ -111,9 +111,23 @@ local function inventoryRepairItemHandler(msg: Message)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
+local function equipItemHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local inventory_id = tonumber(msg.Tags.InventoryId)
+    assert(inventory_id, "Pass in inventory_id")
+
+    local inventory_item = dbAdmin:exec(string.format([[SELECT * FROM Inventory WHERE id = %d AND user_id = %f ;]], inventory_id, user_id)) [1] 
+    
+    dbAdmin:exec(string.format([[UPDATE Inventory SET equipped = FALSE WHERE user_id = %f AND item_type = "%s" ]], user_id, inventory_item.item_type))
+    dbAdmin:exec(string.format([[UPDATE Inventory SET equipped = TRUE WHERE id = %d AND user_id = %f AND item_type = "%s" ]], inventory_id, user_id, inventory_item.item_type))
+
+    ao.send({ Target = msg.From, Status = "Success" })
+end
+
 -- Add handlers
 Handlers.add("Inventory.Info", Handlers.utils.hasMatchingTag('Action', 'Inventory.Info'), inventoryInfoHandler)
 Handlers.add("Inventory.UseItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.UseItem'), inventoryUseItemHandler)
 Handlers.add("Inventory.RepairItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.RepairItem'), inventoryRepairItemHandler)
+Handlers.add("Inventory.EquipItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.EquipItem'), equipItemHandler)
 
 return {}

@@ -5,6 +5,7 @@ import { GameUser, Inventory } from "@/types/game";
 import ImgButton from "../ui/imgButton";
 import { useState } from "react";
 import audioManager from "@/utils/audioManager";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 const GREEN_BACKGROUND_IMAGE = "https://arweave.net/O-OZtrbU4HPCUpTVK89Qac9Olnhr2zTA1Cdt6-cq1hs";
 const YELLOW_BACKGROUND_IMAGE = "https://arweave.net/zGg61zm00agq-bzVbsQ6fGwTuIjf9ZXx8C_i42trCx8";
@@ -21,10 +22,10 @@ type InventoryBagProps = {
   hideArmor?: boolean;
 };
 export function InventoryBag({ combatInventoryUserData, combatInventory = false, hideArmor = false }: InventoryBagProps) {
-  const { user } = useGameStore();
+  const { user, inventory } = useGameStore();
   console.log(user);
   if (!user) return null;
-  const { weapon, armor } = getEquippedItem(user);
+  const { weapon, armor } = getEquippedItem(inventory);
   const userData = combatInventoryUserData ?? user;
   return <InventoryBagRender data={{ ...userData, weapon, armor }} combatInventory={combatInventory} />;
 }
@@ -247,7 +248,12 @@ export function UserWeaponItem({
   repair?: boolean;
 }) {
   const user = useGameStore((state) => state.user!);
+  const inventory = useGameStore((state) => state.inventory);
+  const setEquipInventoryItem = useGameStore((state) => state.setEquipInventoryItem);
+
+  console.log("UserWeaponItem: "+JSON.stringify(inventory));
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const repairItem = useGameStore((state) => state.repairItem);
   const healthPercentage = item ? Math.round((item.item_health / item.total_item_health) * 100) : undefined;
 
@@ -258,6 +264,8 @@ export function UserWeaponItem({
   const item_id = item?.item_id;
   const repairCost = item_id?.includes("1") ? 5 : item_id?.includes("2") ? 10 : item_id?.includes("3") ? 20 : item_id?.includes("4") ? 30 : 0;
 
+
+
   return (
     <div className="flex flex-col gap-2 items-center justify-between">
       <div
@@ -267,29 +275,108 @@ export function UserWeaponItem({
         {item ? (
           <>
             <img
-              src={healthPercentage && healthPercentage > 50 ? GREEN_BACKGROUND_IMAGE : healthPercentage && healthPercentage > 10 ? YELLOW_BACKGROUND_IMAGE : RED_BACKGROUND_IMAGE}
+              src={
+                healthPercentage && healthPercentage > 50
+                  ? GREEN_BACKGROUND_IMAGE
+                  : healthPercentage && healthPercentage > 10
+                  ? YELLOW_BACKGROUND_IMAGE
+                  : RED_BACKGROUND_IMAGE
+              }
               alt="weapon background"
               className="absolute w-full h-full"
             />
-            <div className="absolute inset-0 flex flex-col items-center">
-              <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`${withItemSize}`} />
-              {!["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
-                <p className="text-white text-sm">
-                  {item.item_health}/{item.total_item_health}
-                </p>
-              )}
-            </div>
+
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+              <PopoverTrigger asChild>
+                <div className="absolute inset-0 flex flex-col items-center">
+                  <img
+                    src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]}
+                    alt="weapon in inventory"
+                    className={`${withItemSize}`}
+                  />
+                  {!["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
+                    <p className="text-white text-sm">
+                      {item.item_health}/{item.total_item_health}
+                    </p>
+                  )}
+                </div>
+              </PopoverTrigger>
+              <PopoverContent
+                className={`w-full p-0 bg-black bg-opacity-80 text-white transition-opacity duration-200 ${
+                  loading ? "opacity-50 pointer-events-none" : "opacity-100"
+                }`}
+              >
+                <div className="py-1 max-h-[300px] overflow-y-auto">
+                  <div className="grid grid-cols-3 gap-4 p-4">
+                    {inventory
+                      .filter((val) => val.item_type === itemType.toUpperCase()) // Filter first
+                      .map((val, key) => (
+                        <div className="flex flex-col gap-2 items-center">
+                          <div
+                            key={key}
+                            className=" hover:bg-gray-100 p-2 cursor-pointer rounded"
+                            onClick={() => {
+                              setLoading(true);
+                              setEquipInventoryItem(
+                                val.user_id,
+                                val.id
+                              ).finally(() => {
+                                setLoading(false);
+                                setIsOpen(false); // Close the popover after operation completes
+                              });
+                            }}
+                          >
+                            <img
+                              src={
+                                ITEM_IMAGES[
+                                  val.item_id as keyof typeof ITEM_IMAGES
+                                ]
+                              }
+                              alt={`${itemType} preview`}
+                              className="w-12 h-12 object-contain"
+                            />
+                          </div>{" "}
+                          {["MAGIC_ROBE", "WAND"].includes(val.item_id) ? (
+                            <span className="text-sm mt-1">--</span>
+                          ) : (
+                            <span className="text-sm mt-1">
+                              {" "}
+                              {val.item_health}/{val.total_item_health}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
           </>
         ) : (
-          <div className={`w-full h-full flex justify-center items-center bg-[#2b3233] ${itemType === "weapon" ? "p-2" : "p-0"} rounded-sm`}>
-            <img src={itemType === "weapon" ? ITEM_ICONS.NO_WEAPON : ITEM_ICONS.NO_ARMOR} alt="no weapon" className={noItemSize} />
+          <div
+            className={`w-full h-full flex justify-center items-center bg-[#2b3233] ${
+              itemType === "weapon" ? "p-2" : "p-0"
+            } rounded-sm`}
+          >
+            <img
+              src={
+                itemType === "weapon"
+                  ? ITEM_ICONS.NO_WEAPON
+                  : ITEM_ICONS.NO_ARMOR
+              }
+              alt="no weapon"
+              className={noItemSize}
+            />
           </div>
         )}
       </div>
       {item && repair && !["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
         <>
           <ImgButton
-            disabled={loading || user.dumz_balance < repairCost || (item && item.item_health === item.total_item_health)}
+            disabled={
+              loading ||
+              user.dumz_balance < repairCost ||
+              (item && item.item_health === item.total_item_health)
+            }
             onClick={async () => {
               setLoading(true);
               try {
@@ -301,7 +388,9 @@ export function UserWeaponItem({
                 setLoading(false);
               }
             }}
-            src={"https://arweave.net/bqlsq9KfNty-8KdyKJlWFbsxu9E3Zn6budhs3IluRGk"}
+            src={
+              "https://arweave.net/bqlsq9KfNty-8KdyKJlWFbsxu9E3Zn6budhs3IluRGk"
+            }
             alt="Repair weapon"
             className="w-36"
           />

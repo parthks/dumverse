@@ -221,7 +221,6 @@ export default function Combat() {
   
           worker.onmessage = async (event) => {
             const { combatCountdown, complete } = event.data;
-  
             if (complete) {
               console.log("Worker countdown complete, attempting to enter battle...");
               const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
@@ -649,6 +648,7 @@ function AttackAnimation() {
 
 function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const user = useGameStore((state) => state.user);
+  const inventory = useGameStore((state) => state.inventory);
   const totalHealth = player.total_health;
   const totalStamina = player.total_stamina;
   const filledHealth = player.health;
@@ -657,7 +657,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   const actionLoading = useCombatStore((state) => state.actionLoading);
   // const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
 
-  const { weapon, armor } = getEquippedItem(user!);
+  const { weapon, armor } = getEquippedItem(inventory!);
   const isUsingWeapon = !!player.inventory_weapon_id;
   const isUsingArmor = !!player.inventory_armor_id;
 

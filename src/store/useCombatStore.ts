@@ -138,7 +138,7 @@ export const useCombatStore = create<CombatState>()(
         console.log("Ashu :  dattt: "+JSON.stringify(resultData));
         if (overwrite){      
           console.log("subProcess: " + JSON.stringify(JSON.parse(resultData.Messages[1].Data).subprocess));
-          set({ subProcess: JSON.parse(resultData.Messages[1].Data).subprocess });
+          set({ subProcess: JSON.parse(resultData.Messages[resultData.Messages.length - 1].Data).subprocess });
         }else{
           console.log("subProcess: " + JSON.stringify(resultData.data.subprocess));
           set({ subProcess: resultData.data.subprocess });

@@ -1,5 +1,5 @@
 // import { interactivePoints } from "@/components/InteractiveMap";
-import { GameUser, LamaPosition } from "@/types/game";
+import { GameUser, Inventory, LamaPosition } from "@/types/game";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, REST_SPOTS } from "./constants";
@@ -17,8 +17,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function getEquippedItem(player: GameUser) {
-  const inventory = player.inventory;
+export function getEquippedItem(playerInventory: Inventory[]) {
+  const inventory = playerInventory;
   const weapon = inventory.find((item) => item.item_type === "WEAPON" && item.equipped);
   const armor = inventory.find((item) => item.item_type === "ARMOR" && item.equipped);
   return { weapon, armor };
