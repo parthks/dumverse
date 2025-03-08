@@ -549,16 +549,16 @@ local BOSSES: {EnemyData} = {
         difficulty = "HARDEST",
         gold_reward = 120,
         dumz_reward = 24
-    }, {
+    },{
         id = "BOSS_3",
-        name = "Wildfire",
-        total_health = 6 ,
-        health = 6 ,
-        damage = {1,2},
+        name = "Moose",
+        total_health = 9,
+        health = 9,
+        damage = {2,3},
         difficulty = "HARDEST",
-        gold_reward = 120,
-        dumz_reward = 24
-    }, {
+        gold_reward = 240,
+        dumz_reward = 72
+    },  {
         id = "BOSS_4",
         name = "Pack Of Wolves",
         total_health = 9,
@@ -567,17 +567,8 @@ local BOSSES: {EnemyData} = {
         difficulty = "HARDEST",
         gold_reward = 240,
         dumz_reward = 72
-    }, {
+    },  {
         id = "BOSS_5",
-        name = "Moose",
-        total_health = 9,
-        health = 9,
-        damage = {2,3},
-        difficulty = "HARDEST",
-        gold_reward = 240,
-        dumz_reward = 72
-    }, {
-        id = "BOSS_6",
         name = "Sinister Spider",
         total_health = 9,
         health = 9,
@@ -585,6 +576,15 @@ local BOSSES: {EnemyData} = {
         difficulty = "HARDEST",
         gold_reward = 240,
         dumz_reward = 72
+    },{
+        id = "BOSS_6",
+        name = "Wildfire",
+        total_health = 6 ,
+        health = 6 ,
+        damage = {1,2},
+        difficulty = "HARDEST",
+        gold_reward = 120,
+        dumz_reward = 24
     }, {
         id = "BOSS_7",
         name = "Devilish Dragon",
@@ -596,6 +596,16 @@ local BOSSES: {EnemyData} = {
         dumz_reward = 120
     }, {
         id = "BOSS_8",
+        name = "Grizzly",
+        total_health = 12,
+        health = 12,
+        damage = {3,4},
+        difficulty = "HARDEST",
+        gold_reward = 480,
+        dumz_reward = 120
+    },
+    {
+        id = "BOSS_9",
         name = "Grizzly",
         total_health = 12,
         health = 12,

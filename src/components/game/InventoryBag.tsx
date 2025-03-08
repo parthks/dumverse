@@ -251,7 +251,6 @@ export function UserWeaponItem({
   const inventory = useGameStore((state) => state.inventory);
   const setEquipInventoryItem = useGameStore((state) => state.setEquipInventoryItem);
 
-  console.log("UserWeaponItem: "+JSON.stringify(inventory));
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const repairItem = useGameStore((state) => state.repairItem);
