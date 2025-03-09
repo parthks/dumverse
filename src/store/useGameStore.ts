@@ -97,6 +97,8 @@ interface GameState {
   isPopupOpen: boolean;
   setIsPopupOpen: (map: boolean) => void;
   setEquipInventoryItem: (userId: number, itemId: number) => Promise<void>;
+  inventoryBagOpen: boolean;
+  setInventoryBagOpen: (open: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -609,6 +611,8 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
       },
+      inventoryBagOpen: false,
+      setInventoryBagOpen: (open) => set({inventoryBagOpen: open }),
     }),
     {
       name: "Game Store",

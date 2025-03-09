@@ -13,6 +13,7 @@ import { LamaPosition } from "@/types/game";
 import { Fit } from "@rive-app/react-canvas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BOSS_SPOTS } from "@/lib/constants";
+import CombatAreaBag from "@/components/game/CombatAreaBag";
 
 // TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
 // export const get = [
@@ -93,6 +94,8 @@ const GameMap = () => {
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
+  const inventoryBagOpen = useGameStore((state) => state.inventoryBagOpen); 
+  const setInventoryBagOpen = useGameStore((state) => state.setInventoryBagOpen); 
 
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
@@ -179,6 +182,7 @@ const GameMap = () => {
       </audio> */}
 
       {questBookOpen && <QuestBook />}
+      {inventoryBagOpen && <CombatAreaBag/>}
 
       <div className="z-10 absolute top-4 left-[72%] w-[30%]">
         <NewButton className='px-9 py-4 text-3xl z-50' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />

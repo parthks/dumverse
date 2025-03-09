@@ -746,6 +746,7 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
 function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   const special_item_hearts = useGameStore((state) => state.user?.special_item_heart ?? 0);
   var backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
+  console.log("Enemy Background Image: "+ backgroundImage);
   const totalHealth = enemy.total_health;
   const filledHealth = enemy.health;
 

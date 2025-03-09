@@ -40,8 +40,8 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
 
   return (
     <div
-      className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/DbU1JV6vG2wV9WP1h-UmIpsSPs0knHEGeBkxt0hEVTQ')] bg-no-repeat bg-contain bg-center p-4"
-      style={{ aspectRatio: "392/425" }}
+      className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/4VTvQTWHM0cKHiNCazxhX8ehtdDQLA9hE77V5U1KIuo')] bg-no-repeat bg-contain bg-center p-4"
+      style={{ aspectRatio: "1081/1066" }}
     >
       {/* <audio preload="auto" ref={drinkPotionAudioRef} src={SOUNDS.DRINK_POTION_AUDIO} /> */}
       {/* <audio preload="auto" ref={drinkJooseAudioRef} src={SOUNDS.DRINK_JOOSE_AUDIO} /> */}
@@ -51,8 +51,8 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
         <div className="flex w-[500px] mt-12 flex-col items-center justify-center">
           {/* <h2 className="text-5xl text-white font-bold">{user.name}</h2> */}
 
-          <div className="w-full flex justify-around items-center inset-x-0 px-8">
-            <div className="flex w-[50%] px- gap-4 flex-col items-center justify-between">
+          <div className="w-full flex justify-around items-center inset-x-0">
+            <div className="flex w-[50%] gap-4 flex-col items-center justify-between">
               {[
                 { type: "FOOD_1", count: food1 },
                 { type: "ENERGY_1", count: energy1 },
@@ -105,7 +105,7 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          <div className="flex flex-row gap-16 justify-between mt-4 align-baseline">
+          <div className="flex flex-row gap-16 justify-between mt-4 align-baseline my-10">
             {/* <img src={weapon ? ITEM_ICONS.WEAPON_1 : ITEM_ICONS.NO_WEAPON} alt="weapon in inventory" className="w-16 h-16 bg-white p-2" />
               <label className="text-2xl mr-1 text-white">{"Weapon"}</label> */}
             <UserWeaponItem

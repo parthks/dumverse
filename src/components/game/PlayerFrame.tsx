@@ -8,6 +8,8 @@ export function PlayerFrame() {
   const inventory = useGameStore((state) => state.inventory);
   const regenerateCountdown = useGameStore((state) => state.regenerateCountdown);
   const setQuestBookOpen = useGameStore((state) => state.setQuestBookOpen);
+  const inventoryBagOpen = useGameStore((state) => state.inventoryBagOpen);
+  const setInventoryBagOpen = useGameStore((state) => state.setInventoryBagOpen);
 
   if (!user) return null;
   const totalStamina = user.total_stamina;
@@ -21,7 +23,7 @@ export function PlayerFrame() {
         // transform: "scale(0.9)",
         transformOrigin: "top left",
         textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000",
-        backgroundImage: "url('https://arweave.net/D4-w8-n79zCDvhlM4CkwSnyOMcvtkN0gd-VuXkXXrYU')",
+        backgroundImage: "url('https://arweave.net/RhDUAUjP3fKp4uQ4m-4pbaLYCwW5kgcH5by_wrlbw3Y')",
         aspectRatio: "883 / 276",
       }}
     >
@@ -32,6 +34,16 @@ export function PlayerFrame() {
       <div className="absolute left-[33%] top-[2%] flex flex-col justify-between">
         <div className="text-white text-2xl font-bold w-[200px] text-center truncate">{user.name}</div>
       </div>
+<div className="absolute left-[25%] -bottom-2">
+<div
+      className="h-[60px] relative flex items-center justify-center bg-[url('https://arweave.net/_oRB35FU7hBYFv_Bdw00VJRYsZsFHUyApkgg2WiRsaI')] bg-no-repeat bg-contain bg-center "
+      style={{ aspectRatio: "74/78"}}
+    >
+<img src="https://arweave.net/Aq2iLM2oZ8QnEiTmzY0cEUP4X4KHNYDUgL74F-DYKto" alt="Small Pet UI PlayerFrame" className="w-10"/>
+
+      </div>
+</div>
+     
 
       <div className="absolute w-[480px] top-[20%] h-[100px] left-[31%] flex flex-col">
         <div className="flex items-center">
@@ -52,29 +64,51 @@ export function PlayerFrame() {
               Def <span className="ml-2">{user.defense}</span>
             </label>
           </div>
-          <div className="ml-4 self-start">
-            <img onClick={() => setQuestBookOpen(true)} src={"https://arweave.net/Z0HomJIgsr4nL23MZSdPoSJHzcf5KtQEQkq4vCCEnAM"} alt="Quest Book" className="w-12" />
-          </div>
+          
         </div>
 
         {/* stamina */}
         <div className="flex flex-col gap-1">
-          <div className={`flex gap-1 max-w-[320px] flex-wrap ${totalStamina > 9 && "mb-2"}`}>
-            {Array.from({ length: totalStamina }).map((_, index) => (
-              <img className={totalStamina > 9 ? "h-6" : "h-10"} key={index} src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} alt="Stamina" />
-            ))}
-          </div>
-          {/* convert regenerateCountdown to minutes and seconds */}
-          <div className="flex gap-2">
-            {user.total_stamina != user.stamina &&
-              (regenerateCountdown ? <label className="text-[#66D7F8] text-xl font-bold">{Math.ceil(regenerateCountdown / 60)} min to next regen...</label> : null)}
-          </div>
-        </div>
+  <div className={`${totalStamina > 9 ? "grid grid-cols-8 mb-2 max-w-[220px] ml-[6%]" : "flex gap-1 max-w-[320px]"}`}>
+    {Array.from({ length: totalStamina }).map((_, index) => (
+      <img 
+        className={totalStamina > 9 ? "h-7" : "h-10"} 
+        key={index} 
+        src={index < filledStamina ? IMAGES.FILLED_STAMINA : IMAGES.EMPTY_STAMINA} 
+        alt="Stamina" 
+      />
+    ))}
+  </div>
+  
+  {/* Regeneration countdown */}
+  {user.total_stamina != user.stamina && regenerateCountdown && (
+    <label className={`text-[#66D7F8] font-bold ${totalStamina > 9 ? "-translate-y-[50%] translate-x-[5%] text-md" : "text-xl   translate-x-[5%]"}`}>
+      {Math.ceil(regenerateCountdown / 60)} min to next regen...
+    </label>
+  )}
+</div>
+
+
       </div>
 
-      <div className="absolute top-[-25%] left-[82%]">
+      <div className="w-[8%] absolute right-[21%] bottom-[10%] flex gap-2">
+ <img 
+  src="https://arweave.net/Z0HomJIgsr4nL23MZSdPoSJHzcf5KtQEQkq4vCCEnAM" 
+  alt="Quest Book" 
+  onClick={() => setQuestBookOpen(true)}
+  className="transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+/>
+
+<img 
+  src="https://arweave.net/LAWtMvFCxPHtwNLOisKWOxL6IpQ3_74J4Fy27y20KLA" 
+  alt="Small Backpack Rest Area" 
+  onClick={() => setInventoryBagOpen(!inventoryBagOpen)} 
+  className="transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+/>          </div>
+
+      {/* <div className="absolute top-[-25%] left-[82%]">
         <InventoryBagWithoutArmor />
-      </div>
+      </div> */}
     </div>
   );
 }

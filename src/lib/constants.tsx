@@ -78,8 +78,14 @@ export const ENEMY_CARD_IMAGE = {
   LEPERCHAUN: "https://arweave.net/Dh9lbBgZf8hGJQZ77v5yXJSJ_1lW2QISPdqWcSxPRiI", // gold loot
   AGENT_TRUNK: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
   BOSS_1: "https://arweave.net/igNAfO07uMii0ujmYn8n2dte_VByw_mL7D2ek1yobBE",
-  BOSS_6: "https://arweave.net/KpXw6XDWxb_xCm2AREx7i5bJxjuDApGNbfCmrrEdD1M",
+  BOSS_2: "https://arweave.net/rpLQQyvJL2qclFWocdg2x8BdT-tDaWXVTwyDGZPN8TQ",
+  BOSS_3: "https://arweave.net/s4OjseDwtcdb5PCo7d0vGXshZ0uNsYTHS6Km2EAidag",
+  BOSS_4: "https://arweave.net/KqgBiHCfkYW3zDu2-PfsnlQyd-GBs6vEAnv3uMfABKE",
+  BOSS_5: "https://arweave.net/KpXw6XDWxb_xCm2AREx7i5bJxjuDApGNbfCmrrEdD1M",
+  BOSS_6: "https://arweave.net/xwt3_ayPBSpPrGgYL1iKRByptz-WtAGZYGjSy6HM3p8",
   BOSS_7: "https://arweave.net/2WeC19EyOKzxtUJ4W9mhP5O-zcn4xMZXAR5pAYwra2U",
+  BOSS_8: "https://arweave.net/oYXvWNpzUtiOtCrssXjWL4OiKv4wh8dhpKLKcrdeRl0",
+  BOSS_9: "https://arweave.net/O3CHZ0Vy7zXzUn0r7pAtQm6FubVSSeUZ7wBnhJg8vPI",
 };
 
 export const SOUNDS = {

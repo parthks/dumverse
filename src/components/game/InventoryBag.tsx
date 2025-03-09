@@ -250,6 +250,7 @@ export function UserWeaponItem({
   const user = useGameStore((state) => state.user!);
   const inventory = useGameStore((state) => state.inventory);
   const setEquipInventoryItem = useGameStore((state) => state.setEquipInventoryItem);
+  const inventoryBagOpen = useGameStore((state) => state.inventoryBagOpen);
 
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -285,7 +286,14 @@ export function UserWeaponItem({
               className="absolute w-full h-full"
             />
 
-            <Popover open={isOpen} onOpenChange={setIsOpen}>
+{ inventoryBagOpen ?  (<div className="absolute inset-0 flex flex-col items-center">
+              <img src={ITEM_IMAGES[item.item_id as keyof typeof ITEM_IMAGES]} alt="weapon in inventory" className={`${withItemSize}`} />
+              {!["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
+                <p className="text-white text-sm">
+                  {item.item_health}/{item.total_item_health}
+                </p>
+              )}
+            </div>) : (      <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger asChild>
                 <div className="absolute inset-0 flex flex-col items-center">
                   <img
@@ -348,7 +356,8 @@ export function UserWeaponItem({
                   </div>
                 </div>
               </PopoverContent>
-            </Popover>
+            </Popover>)}
+
           </>
         ) : (
           <div
@@ -368,7 +377,7 @@ export function UserWeaponItem({
           </div>
         )}
       </div>
-      {item && repair && !["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
+    { !inventoryBagOpen && item && repair && !["MAGIC_ROBE", "WAND"].includes(item.item_id) && (
         <>
           <ImgButton
             disabled={

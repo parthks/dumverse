@@ -14,6 +14,7 @@ import { calculatePositionAndSize } from "@/lib/utils";
 import { Fit } from "@rive-app/react-canvas";
 import { DailyGoldWishes } from "@/types/game";
 import NewButton from "@/components/ui/NewButton";
+import QuestBook from "@/components/game/QuestBook";
 
 // const RestAreaImages = {
 //   0: "https://arweave.net/5nf-hjMD9CNJvVsyaR2N2JMhRgprTNrTXKJXTjXtMUw",
@@ -152,6 +153,8 @@ export default function RestArea() {
   const setIsSettingsOpen = useGameStore((state) => state.setIsSettingsOpen);
   const current_spot = useGameStore((state) => state.user!.current_spot);
   const goldWishes = useGameStore((store) => store.goldWishes);
+  const setQuestBookOpen = useGameStore((state) => state.setQuestBookOpen);
+  const questBookOpen = useGameStore((state) => state.questBookOpen);
   const [openBag, setOpenBag] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [wishStatus, setWishStatus] = useState<DailyGoldWishes | null>(null);
@@ -236,6 +239,8 @@ export default function RestArea() {
         </div>
       )}
 
+      {questBookOpen && <QuestBook />}
+
       {!chatOpen && (
         <div className="z-30 absolute top-4 right-0 w-[30%]">
           <ReturnToTown />
@@ -250,11 +255,11 @@ export default function RestArea() {
 
       {!chatOpen && (
         <>
-          <div className="z-30 absolute bottom-2 flex flex-col w-[350px] items-center">
-            <div className="mb-16 mr-10">
+          <div className="z-30 absolute bottom-2 -left-10 flex flex-col w-[350px] items-center">
+            {/* <div className="mb-16 mr-10">
               <InventoryBag />
-            </div>
-            <NewButton
+            </div> */}
+            {/* <NewButton
               className="py-4 px-[70px] text-3xl bottom-0"
               varient="blue"
               src={
@@ -262,7 +267,27 @@ export default function RestArea() {
               }
               onClick={() => setOpenBag(!openBag)}
               alt={"Open Bag"}
-            />
+            /> */}
+             <div
+      className="h-[110px] relative flex gap-3 bg-[url('https://arweave.net/0qIHaitffvIgUAqGcFa1Ea9-xJGh2nER-rjgJ23giMo')] bg-no-repeat bg-contain bg-center px-3 py-1"
+      style={{ aspectRatio: "224/114", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+    >
+ <img 
+  src="https://arweave.net/Z0HomJIgsr4nL23MZSdPoSJHzcf5KtQEQkq4vCCEnAM" 
+  alt="Quest Book" 
+  onClick={() => setQuestBookOpen(true)}
+  className="transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+/>
+
+<img 
+  src="https://arweave.net/LAWtMvFCxPHtwNLOisKWOxL6IpQ3_74J4Fy27y20KLA" 
+  alt="Small Backpack Rest Area" 
+  onClick={() => setOpenBag(!openBag)} 
+  className="transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+/>
+
+
+            </div>
           </div>
 
           <div className="z-30 absolute bottom-[8%] left-0 right-[40%] flex justify-center gap-4">
