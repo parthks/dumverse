@@ -323,26 +323,12 @@ local function enterNewCombatHandler(msg: Message)
     local function getRandomBossEnemy(level: integer): integer
         local boss_enemy_index: integer;
         if level == 26 then
-            -- Easy: enemies 1-5
             boss_enemy_index = math.random(1, 3)
             elseif level == 52 then 
                 boss_enemy_index = math.random(4, 6)
 
             elseif level == 78 then 
                 boss_enemy_index = math.random(7, 9)
-
-        -- elseif level <= 54 then
-        --     -- Medium: enemies 6-9
-        --     enemy_index = math.random(6, 9)
-        -- -- elseif level <= 63 then
-        -- --     -- Hard enemies (10-13) (13->Goat)
-        -- --     enemy_index = math.random(10, 12)
-        -- else
-        --     -- Hard enemies (10-13) (13->Goat)
-        --     enemy_index = math.random(10, 13)
-        --     -- if enemy_index == 13 then
-        --     --     enemy_index = math.random(1, 10) == 10 and 13 or math.random(10, 12)
-        --     -- end
         end
         return boss_enemy_index
     end
