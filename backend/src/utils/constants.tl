@@ -7,7 +7,7 @@ local GAME_PROCESS_ID =  "he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk"   -- "_-h
 local RECORD_PROCESS_ID =  "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
 local BACKUP_PROCESS_ID = "3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY"
 local BANK_PROCESS_ID = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870"
-local BLACKJACK_PROCESS_ID = "fWuedzoTRlnrCsbgSEXQVCMMil49X-B7d6bf1skSycY"
+local BLACKJACK_PROCESS_ID = "T_jw7irve-iwjuvQh_KAM1mRqNGGIRXlg6dDGPrW1w8"
 
 -- local REST_SPOTS = {0, 9, 18, 36, 45, 63, 72}
 -- local BOSS_SPOTS = {27, 54, 81}
@@ -542,7 +542,7 @@ local BOSSES: {EnemyData} = {
     },
     {
         id = "BOSS_2",
-        name = "Eagle",
+        name = "Eager Eagle",
         total_health = 6 ,
         health = 6 ,
         damage = {1,2},
@@ -551,16 +551,16 @@ local BOSSES: {EnemyData} = {
         dumz_reward = 24
     },{
         id = "BOSS_3",
-        name = "Moose",
-        total_health = 9,
-        health = 9,
-        damage = {2,3},
+        name = "Manic Moose",
+        total_health = 6,
+        health = 6,
+        damage = {1,2},
         difficulty = "HARDEST",
-        gold_reward = 240,
-        dumz_reward = 72
+        gold_reward = 120,
+        dumz_reward = 24
     },  {
         id = "BOSS_4",
-        name = "Pack Of Wolves",
+        name = "Wild Wolves",
         total_health = 9,
         health = 9,
         damage = {2,3},
@@ -578,13 +578,13 @@ local BOSSES: {EnemyData} = {
         dumz_reward = 72
     },{
         id = "BOSS_6",
-        name = "Wildfire",
-        total_health = 6 ,
-        health = 6 ,
-        damage = {1,2},
+        name = "Fine Fire",
+        total_health = 9 ,
+        health = 9 ,
+        damage = {2,3},
         difficulty = "HARDEST",
-        gold_reward = 120,
-        dumz_reward = 24
+        gold_reward = 240,
+        dumz_reward = 72
     }, {
         id = "BOSS_7",
         name = "Devilish Dragon",
@@ -596,7 +596,7 @@ local BOSSES: {EnemyData} = {
         dumz_reward = 120
     }, {
         id = "BOSS_8",
-        name = "Grizzly",
+        name = "Great Grizzly",
         total_health = 12,
         health = 12,
         damage = {3,4},
@@ -606,7 +606,7 @@ local BOSSES: {EnemyData} = {
     },
     {
         id = "BOSS_9",
-        name = "Grizzly",
+        name = "DumDumz Maxi",
         total_health = 12,
         health = 12,
         damage = {3,4},
