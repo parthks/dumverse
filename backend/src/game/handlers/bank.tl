@@ -66,6 +66,22 @@ local function bankAirdropHandler(msg: Message)
     assert(tokenType == "GOLD" or tokenType == "DUMZ", "Invalid token type")
     assert(userData.nft_address,"You cant access the NFT Vault")
     ao.send({Target=constants.BANK_PROCESS_ID,Action="Bank.ClaimAirdrop", UserId = tostring(user_id), TokenType = tokenType})
+
+    local registered_NFT = #dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = "%s"]], userData.nft_address)) 
+    if registered_NFT == 0 then
+        dbAdmin:exec(string.format([[
+        INSERT INTO RegisteredNfts (user_id, address, name, nft_address, cascade, claimed_nft_gold, claimed_nft_dumz)
+        VALUES (%d, '%s', '%s', '%s', 1, FALSE, FALSE);
+    ]], userData.id, userData.address, userData.name, userData.nft_address))
+    end
+
+    if tokenType == "GOLD" then
+        dbAdmin:exec(string.format([[UPDATE RegisteredNfts SET claimed_nft_gold = TRUE WHERE nft_address = '%s']], userData.nft_address))
+    end
+    if tokenType == "DUMZ" then
+        dbAdmin:exec(string.format([[UPDATE RegisteredNfts SET claimed_nft_dumz = TRUE WHERE nft_address = '%s']], userData.nft_address))
+    end
+
     ao.send({ Target = msg.From, Status = "Success" })
 end
 

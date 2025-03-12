@@ -389,8 +389,15 @@ function GeneralBankVault({ onExit }: { onExit: () => void }) {
 }
 
 function NftBankVault({ onExit }: { onExit: () => void }) {
-  const { user, bank, bankDataLoading, claimAirdrop, bankTransactionLoading, acceptBankQuest } = useGameStore();
+  const { user, bank, userAirdrop, bankDataLoading, claimAirdrop, bankTransactionLoading, acceptBankQuest } = useGameStore();
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
+  const [airdropInfoPopUp, setAirdropInfoPopUp] = useState(false);
+
+  useEffect(() => {
+    if (userAirdrop?.claimed_nft_dumz) {
+      setAirdropInfoPopUp(true);
+    }
+  }, []);
 
   const handleClick = async (event: React.MouseEvent<SVGSVGElement>) => {
     if (event.target instanceof SVGElement && event.target.classList.contains("item")) {
@@ -415,10 +422,31 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
   };
 
   // if (!bank || !user) return <div>Loading...</div>;
-
+console.log("Bank User Airdrop: "+JSON.stringify(userAirdrop));
   return (
     <div className="h-screen" style={{ backgroundColor: "#EFECD5" }}>
-      {user?.special_item_key === -1 && (
+      {userAirdrop?.claimed_nft_dumz && airdropInfoPopUp && (
+        <div className="fixed inset-0 flex items-center justify-center text-white z-50">
+          <div className=" w-[60vw] h-[40vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-85">
+            <button
+              className="absolute top-2 right-2 text-6xl font-bold"
+              onClick={() => setAirdropInfoPopUp(false)}
+            >
+              &times;
+            </button>
+
+            <div className="w-full h-full flex items-center text-center py-6">
+              <h1 className="text-4xl">
+                {" "}
+                The $DUMZ {userAirdrop.claimed_nft_gold ? "and gold" : ""} in
+                this vault has already been claimed for this cascade. Check back
+                in during a future cascade to claim your rewards!
+              </h1>
+            </div>
+          </div>
+        </div>
+      )}
+      {user?.special_item_key === -1 && !userAirdrop?.claimed_nft_dumz && (
         <>
           {" "}
           <div
@@ -447,7 +475,13 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
         </>
       )}
       <div className="z-10 absolute bottom-4 left-4">
-        <ImgButton src={"https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"} onClick={onExit} alt={"Exit Bank Vault"} />
+        <ImgButton
+          src={
+            "https://arweave.net/yzWJYKvAcgvbbH9SHJle6rgrPlE6Wsnjxwh20-w7cVQ"
+          }
+          onClick={onExit}
+          alt={"Exit Bank Vault"}
+        />
       </div>
       <div className="z-10 absolute top-4 right-4">
         <div className="flex items-center gap-2">
@@ -455,11 +489,25 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
             <>
               {/* user.special_item_key number of obtained keys and rest transparent upto a max of 3 keys */}
               {Array.from({ length: user.special_item_key }).map((_, index) => (
-                <img src={"https://arweave.net/ZZmiA3RZ8BsaRYD88q_R3muiX5ZeDxwVawo71N-qpfg"} alt="Obtained Key" className="w-16" />
+                <img
+                  src={
+                    "https://arweave.net/ZZmiA3RZ8BsaRYD88q_R3muiX5ZeDxwVawo71N-qpfg"
+                  }
+                  alt="Obtained Key"
+                  className="w-16"
+                />
               ))}
-              {Array.from({ length: 3 - user.special_item_key }).map((_, index) => (
-                <img src={"https://arweave.net/HwqbzSo7P7P4cOB28a1aId8GKR2HIQmZMCmdYbuqPkQ"} alt="Transparent Key" className="w-16" />
-              ))}
+              {Array.from({ length: 3 - user.special_item_key }).map(
+                (_, index) => (
+                  <img
+                    src={
+                      "https://arweave.net/HwqbzSo7P7P4cOB28a1aId8GKR2HIQmZMCmdYbuqPkQ"
+                    }
+                    alt="Transparent Key"
+                    className="w-16"
+                  />
+                )
+              )}
             </>
           )}
         </div>
@@ -481,11 +529,32 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
       </div>
       <div className="relative w-full h-full">
         <div className="absolute inset-0">
-          <img src={"https://arweave.net/ZYGuGEiNCOwDKHDdKRw20g5IpK_nopwVlO0tQcuNHPI"} alt="NFT Bank Vault" className="w-full h-full object-contain" />
-          <svg width="100%" height="100%" viewBox={`0 0 ${imageWidth} ${imageHeight}`} preserveAspectRatio="xMidYMid meet" className="absolute top-0 left-0" onClick={handleClick}>
+          <img
+            src={
+              "https://arweave.net/ZYGuGEiNCOwDKHDdKRw20g5IpK_nopwVlO0tQcuNHPI"
+            }
+            alt="NFT Bank Vault"
+            className="w-full h-full object-contain"
+          />
+          <svg
+            width="100%"
+            height="100%"
+            viewBox={`0 0 ${imageWidth} ${imageHeight}`}
+            preserveAspectRatio="xMidYMid meet"
+            className="absolute top-0 left-0"
+            onClick={handleClick}
+          >
             {/* dumz */}
-            <text x="45%" y="40%" fontSize="150" textAnchor="middle" fill="white">
-              {bankDataLoading || !bank ? "--" : `${bank.nft_dumz_amount} $Dumz`}
+            <text
+              x="45%"
+              y="40%"
+              fontSize="150"
+              textAnchor="middle"
+              fill="white"
+            >
+              {bankDataLoading || !bank
+                ? "--"
+                : `${bank.nft_dumz_amount} $Dumz`}
             </text>
             <image
               href="https://arweave.net/-nNkBcJ5iAWv0tbYBOqZkTDabHvGGLR0jNnAC5OoVX4"
@@ -494,13 +563,21 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2.5 + "%"}
               height={(54 / imageHeight) * 100 * 2.5 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_dumz_amount == 0 || user?.special_item_key != 3 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading ||
+                bank?.nft_dumz_amount == 0 ||
+                user?.special_item_key != 3
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="claim-dumz"
             />
             {/* bank locks */}
             {Array.from({ length: 3 }).map((_, index) => (
               <image
-                href={"https://arweave.net/RBunabOFv3oZQQl6J6jccr-k_5XErZa2dVQUl51jV_0"}
+                href={
+                  "https://arweave.net/RBunabOFv3oZQQl6J6jccr-k_5XErZa2dVQUl51jV_0"
+                }
                 x={`${33 + index * 6}%`}
                 y="50%"
                 width="12%"
@@ -510,7 +587,13 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
             ))}
 
             {/* gold */}
-            <text x="45%" y="73%" fontSize="150" textAnchor="middle" fill="white">
+            <text
+              x="45%"
+              y="73%"
+              fontSize="150"
+              textAnchor="middle"
+              fill="white"
+            >
               {bankDataLoading || !bank ? "--" : `${bank.nft_gold_amount}g`}
             </text>
             <image
@@ -520,7 +603,11 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
               width={(163 / imageWidth) * 100 * 2.5 + "%"}
               height={(54 / imageHeight) * 100 * 2.5 + "%"}
               preserveAspectRatio="xMidYMid meet"
-              className={`grow-image item cursor-pointer ${bankTransactionLoading || bank?.nft_gold_amount == 0 ? "disabled-image" : ""}`}
+              className={`grow-image item cursor-pointer ${
+                bankTransactionLoading || bank?.nft_gold_amount == 0
+                  ? "disabled-image"
+                  : ""
+              }`}
               item-type="claim-gold"
             />
           </svg>
@@ -585,7 +672,7 @@ function NftBankVault({ onExit }: { onExit: () => void }) {
 }
 
 export default function BankPage() {
-  const { bank, getBank, user, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage, acceptBankQuest } = useGameStore();
+  const { bank, getBank,getUserAirdropInfo, user, deposit, withdraw, claimAirdrop, bankTransactionLoading, goDirectlyToTownPage, acceptBankQuest } = useGameStore();
   const [amount, setAmount] = useState(0);
   const [acceptQuestLoading, setAcceptQuestLoading] = useState(false);
 
@@ -595,6 +682,7 @@ export default function BankPage() {
   useEffect(() => {
     if (user) {
       getBank();
+      getUserAirdropInfo();
     }
   }, [user]);
 

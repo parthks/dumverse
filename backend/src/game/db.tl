@@ -33,20 +33,18 @@ global USERS_TABLE: string = [[
     );
 ]]
 
--- global LEADERBOARD_TABLE: string = [[
---     CREATE TABLE IF NOT EXISTS Leaderboard (
---         id INTEGER PRIMARY KEY AUTOINCREMENT,
---         name TEXT NOT NULL,
---         address TEXT NOT NULL,
---         nft_address TEXT,
---         gold_earned INTEGER DEFAULT 0,
---         gold_lost INTEGER DEFAULT 0,
---         enemy_killed INTEGER DEFAULT 0,
---         player_death INTEGER DEFAULT 0,
---         death_streak INTEGER DEFAULT 0,
---         pvp INTEGER DEFAULT 0
---     );
--- ]]
+global REGISTEREDNFTS_TABLE: string = [[
+    CREATE TABLE IF NOT EXISTS RegisteredNfts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        address TEXT NOT NULL,
+        nft_address TEXT NOT NULL,
+        cascade INTEGER NOT NULL,
+        claimed_nft_gold BOOLEAN DEFAULT FALSE,
+        claimed_nft_dumz BOOLEAN DEFAULT FALSE
+    );
+]]
 
 
 global LEADERBOARD_TABLE: string = [[
@@ -116,8 +114,8 @@ Handlers.add("Admin.ClearDB",
         assert(msg.From == ao.id, "You are not authorized to perform")
         dbAdmin.db:exec("DROP TABLE IF EXISTS Users;")
         dbAdmin.db:exec(USERS_TABLE)
-        -- dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
-        -- dbAdmin.db:exec(LEADERBOARD_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS RegisteredNfts;")
+        dbAdmin.db:exec(REGISTEREDNFTS_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Leaderboard;")
         dbAdmin.db:exec(LEADERBOARD_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS Inventory;")
@@ -211,8 +209,11 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    dbAdmin.db:exec("ALTER TABLE Users ADD COLUMN current_blackjack_id INTEGER;")
-    dbAdmin.db:exec(LEADERBOARD_TABLE)
+    local cascade_numbers = dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE id = 1]])) [1]
+    print(cascade_numbers.claimed_nft_gold)
+    print(cascade_numbers.claimed_nft_dumz)
+    print("Types Gold: " .. type(cascade_numbers.claimed_nft_gold))
+    print("Types Dumz: " .. type(cascade_numbers.claimed_nft_dumz))
     print("end")
 end
 )

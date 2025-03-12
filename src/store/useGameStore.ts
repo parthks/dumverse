@@ -2,7 +2,7 @@
 import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes, UserAirdrop } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "@/lib/constants";
@@ -99,6 +99,8 @@ interface GameState {
   setEquipInventoryItem: (userId: number, itemId: number) => Promise<void>;
   inventoryBagOpen: boolean;
   setInventoryBagOpen: (open: boolean) => void;
+  userAirdrop: UserAirdrop | null;
+  getUserAirdropInfo: () => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -106,7 +108,7 @@ export const useGameStore = create<GameState>()(
     (set, get) => ({
       GameStatePage: null,
       setGameStatePage: (state) => set({ GameStatePage: state }),
-      registerNewUser: async (name, selectedNFT) => {
+      registerNewUser: async (name, selectedNFT="71ECP_Ej3eS0SojWhige_IWw5j4NcMb3berqdbfZCzY") => {
         // const { name, selectedNFT } = useAppStore.getState();
         const tags = [
           { name: "Action", value: "Users.AddNewUser" },
@@ -613,6 +615,17 @@ export const useGameStore = create<GameState>()(
       },
       inventoryBagOpen: false,
       setInventoryBagOpen: (open) => set({inventoryBagOpen: open }),
+      userAirdrop: null,
+      getUserAirdropInfo: async ()=>{
+        const resultData = await sendDryRunGameMessage({
+          tags: [
+            { name: "Action", value: "User.AirdropInfo" },
+            { name: "UserId", value: get().user?.id.toString()! },
+          ],
+        });
+        console.log("User Airdrop Info: "+ JSON.stringify(resultData));
+        if (resultData.data) set({userAirdrop: resultData.data as UserAirdrop});
+      },
     }),
     {
       name: "Game Store",

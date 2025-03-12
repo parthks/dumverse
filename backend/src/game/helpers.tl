@@ -3,6 +3,8 @@ local constants = require("utils.constants")
 local utils = require("utils.utils.tl-utils")
 local json = require("json")
 
+global NUMBER_OF_CASCADE = 1
+
 local type BaseStats = record
   damage: number
   defense: number
@@ -2086,41 +2088,50 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
   if nft_address == nil then
     return 0, 0
   end
+
+  local nft_dumz_amount, nft_gold_amount = 0, 0
+  local cascade_numbers = dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = "%s"]], nft_address))
+
   if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
-    return 10000, 10000
+    if #cascade_numbers == 0 then
+      return 10000, 10000
+    end
+    if cascade_numbers[1].claimed_nft_dumz == 1 then
+      nft_dumz_amount = 0
+    else
+      nft_dumz_amount = 10000
+    end
+    if cascade_numbers[1].claimed_nft_gold == 1 then
+      nft_gold_amount = 0
+    else
+      nft_gold_amount = 10000
+    end
+    return nft_dumz_amount, nft_gold_amount
   end
-  for _, address in ipairs(GreenAddresses) do
-    if address == nft_address then
-      return 1000, 1000
+
+  local AddressGroups = {
+    [GreenAddresses] = {1000, 1000},
+    [AgentAddresses] = {2000, 1500},
+    [BlueAddresses] = {3000, 1500},
+    [PurpleAddresses] = {2500, 1500},
+    [RedAddresses] = {3500, 1500},
+    [GoldAddresses] = {5000, 3000}
+  }
+
+  for group, values in pairs(AddressGroups) do
+    if utils.includes(nft_address, group) then
+      if #cascade_numbers == 0 then
+        return values[1], values[2]
+      end
+      nft_dumz_amount = cascade_numbers[1].claimed_nft_dumz == 1 and  0 or values[1] 
+      nft_gold_amount = cascade_numbers[1].claimed_nft_gold == 1 and 0 or values[2] 
+      return nft_dumz_amount, nft_gold_amount
     end
   end
-  for _, address in ipairs(AgentAddresses) do
-    if address == nft_address then
-      return 2000, 1500
-    end
-  end
-  for _, address in ipairs(BlueAddresses) do
-    if address == nft_address then
-      return 3000, 1500
-    end
-  end
-  for _, address in ipairs(PurpleAddresses) do
-    if address == nft_address then
-      return 2500, 1500
-    end
-  end
-  for _, address in ipairs(RedAddresses) do
-    if address == nft_address then
-      return 3500, 1500
-    end
-  end
-  for _, address in ipairs(GoldAddresses) do
-    if address == nft_address then
-      return 5000, 3000
-    end
-  end
+
   return 0, 0
 end
+
 
 return {
   Leaderboard = Leaderboard,

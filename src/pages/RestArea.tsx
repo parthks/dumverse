@@ -255,7 +255,7 @@ export default function RestArea() {
 
       {!chatOpen && (
         <>
-          <div className="z-30 absolute bottom-2 -left-10 flex flex-col w-[350px] items-center">
+          <div className="z-30 absolute bottom-2 -left-16 flex flex-col w-[350px] items-center">
             {/* <div className="mb-16 mr-10">
               <InventoryBag />
             </div> */}
@@ -269,7 +269,7 @@ export default function RestArea() {
               alt={"Open Bag"}
             /> */}
              <div
-      className="h-[110px] relative flex gap-3 bg-[url('https://arweave.net/0qIHaitffvIgUAqGcFa1Ea9-xJGh2nER-rjgJ23giMo')] bg-no-repeat bg-contain bg-center px-3 py-1"
+      className="h-[90px] relative flex gap-3 bg-[url('https://arweave.net/0qIHaitffvIgUAqGcFa1Ea9-xJGh2nER-rjgJ23giMo')] bg-no-repeat bg-contain bg-center px-3 py-1"
       style={{ aspectRatio: "224/114", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
     >
  <img 

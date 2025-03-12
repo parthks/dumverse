@@ -90,19 +90,26 @@ local function addNewUserHandler(msg: Message)
     local name = msg.Tags.Name
     assert(name and name ~= "", "Name is required")
     
-    local nft_already_claimed: boolean = false
+    -- local is_new_nft: boolean = false
+    -- local cascade_numbers: number = 0
     local getUserQuery: string
     if nft_address then
-        for _, value in ipairs(ClaimedNFTs) do
-            if nft_address == value then
-                nft_already_claimed = true
-                break
-            end
-        end
+        -- for _, value in ipairs(ClaimedNFTs) do
+        --     if nft_address == value then
+        --         nft_already_claimed = true
+        --         break
+        --     end
+        -- end
 
-        if not nft_already_claimed then
-             table.insert(ClaimedNFTs, nft_address)
-        end
+        -- cascade_numbers = #dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = "%s"]], nft_address)) 
+        
+        -- if cascade_numbers == 0 then
+        --     is_new_nft = true
+        -- end
+
+        -- if not nft_already_claimed then
+        --      table.insert(ClaimedNFTs, nft_address)
+        -- end
         
         getUserQuery = string.format([[
             SELECT * FROM Users WHERE address = "%s" AND nft_address = "%s";
@@ -116,15 +123,17 @@ local function addNewUserHandler(msg: Message)
     local profiles = dbAdmin:exec(getUserQuery)
     assert(#profiles == 0, "User already exists")
 
-    local nft_dumz_amount: number
-    local nft_gold_amount: number
+    -- local nft_dumz_amount: number
+    -- local nft_gold_amount: number
 
-    if not nft_already_claimed then
-     nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
-    else
-         nft_dumz_amount = 0
-         nft_gold_amount = 0
-    end
+    -- if NUMBER_OF_CASCADE == cascade_numbers or is_new_nft then
+    --  nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
+    -- else
+    --      nft_dumz_amount = 0
+    --      nft_gold_amount = 0
+    -- end
+
+    local nft_dumz_amount, nft_gold_amount = helpers.getNFTBankAmountForNFT(nft_address)
     
     local starting_gold = 0
     local starting_dumz = 0
@@ -162,6 +171,15 @@ local function addNewUserHandler(msg: Message)
     -- ]], newUserId, bank_gold_amount, bank_dumz_amount, nft_gold_amount, nft_dumz_amount))
 
     -- assert(insert_bank_result, "Failed to insert into Bank")
+
+    local cascade_numbers = #dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = "%s"]], nft_address)) 
+        
+    if cascade_numbers == 0 then
+        dbAdmin:exec(string.format([[
+        INSERT INTO RegisteredNfts (user_id, address, name, nft_address, cascade, claimed_nft_gold, claimed_nft_dumz)
+        VALUES (%d, '%s', '%s', '%s', 1, FALSE, FALSE);
+    ]], newUserId, user_address, name, nft_address))
+    end
 
     ao.send({Target = constants.BANK_PROCESS_ID, Action = "Bank.InsertDataIntoMainBank", UserId = tostring(newUserId), GoldAmount = tostring(bank_gold_amount), DumzAmount = tostring(bank_dumz_amount), NFTGoldAmount = tostring(nft_gold_amount), NFTDumzAmount = tostring(nft_dumz_amount)})
 
@@ -558,6 +576,18 @@ local function goldWishesHandler(msg: Message)
     ao.send({ Target = msg.From, Data = json.encode(Daily_Gold[user_id]) })
 end
 
+
+local function airdropInfoHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local userData: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %f;]], user_id))[1] as UserData
+    assert(userData.nft_address, "You dont have any NFT")
+
+    local user_airdrop_info = dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = '%s']], userData.nft_address )) [1]
+    
+    ao.send({Target=msg.From, Data = json.encode(user_airdrop_info)})
+end
+
+
 local function resetUsersDamage(msg: Message)
     assert(msg.From==ao.id,"Not access")
     print("Initiate")
@@ -582,6 +612,7 @@ Handlers.add("User.GetAllPlayersAtLocation", Handlers.utils.hasMatchingTag('Acti
 Handlers.add("User.Login", Handlers.utils.hasMatchingTag('Action', 'User.Login'), userLoginHandler)
 Handlers.add("User.DeletingUsersAccount", Handlers.utils.hasMatchingTag('Action', 'User.DeletingUsersAccount'), deletingUsersAccountHandler)
 Handlers.add("User.GoldWishes", Handlers.utils.hasMatchingTag('Action', 'User.GoldWishes'), goldWishesHandler)
+Handlers.add("User.AirdropInfo", Handlers.utils.hasMatchingTag('Action', 'User.AirdropInfo'), airdropInfoHandler)
 Handlers.add("User.resetUsersDamage", Handlers.utils.hasMatchingTag('Action', 'User.resetUsersDamage'), resetUsersDamage)
 
 return {}

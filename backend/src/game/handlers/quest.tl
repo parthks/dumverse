@@ -7,6 +7,18 @@ local function bankAcceptQuestHandler(msg: Message)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     assert(userData.nft_address,"You cant access this quest")
 
+    local registered_NFT = dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = "%s"]], userData.nft_address)) 
+    if #registered_NFT == 0 then
+        dbAdmin:exec(string.format([[
+        INSERT INTO RegisteredNfts (user_id, address, name, nft_address, cascade, claimed_nft_gold, claimed_nft_dumz)
+        VALUES (%d, '%s', '%s', '%s', 1, FALSE, FALSE);
+    ]], userData.id, userData.address, userData.name, userData.nft_address))
+
+        registered_NFT = dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE nft_address = "%s"]], userData.nft_address)) 
+    end
+
+    assert(registered_NFT[1].claimed_nft_dumz == 0, "Dumz is already claimed from this NFT")
+
     -- update user quest data
     dbAdmin:exec(string.format([[
         UPDATE Users SET special_item_key = 0 WHERE id = %d;

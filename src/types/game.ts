@@ -1,3 +1,5 @@
+import { number } from "zod";
+
 export type LamaPosition = {
   x: number;
   y: number;
@@ -93,4 +95,15 @@ export type DailyGoldWishes={
   timestamp: number,
   gold: number,
   logs: DailyGoldWishesLogType[]
+}
+
+export type UserAirdrop = {
+  id: number,
+  user_id: number,
+  name: string,
+  address: string,
+  nft_address: string,
+  cascade: number,
+  claimed_nft_gold: boolean,
+  claimed_nft_dumz: boolean
 }
