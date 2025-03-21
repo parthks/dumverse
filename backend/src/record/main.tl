@@ -87,6 +87,50 @@ global function gettingBattleDataOfPlayer(BattleId: integer, UserAddress: string
     return matched_battles
 end
 
+global function gettingBattleDataOfPlayerFromLastBattle(UserAddress: string): {Battle} | nil
+    local battles = {}
+    local battleIds = {} -- To track already added battles
+
+    for _, battle_data in pairs(PlayerBattleData) do
+        for _, battlesAtIds in ipairs(battle_data) do
+            -- Check if we've already added this battle
+            if not battleIds[battlesAtIds.id] then
+                for _, userdata in pairs(battlesAtIds.players) do
+                    if userdata.address == UserAddress then
+                        table.insert(battles, battlesAtIds)
+                        battleIds[battlesAtIds.id] = true
+                        break -- Break after finding the user in this battle
+                    end
+                end
+            end
+        end
+    end
+
+    -- Sort battles by creation time (newest first)
+    table.sort(battles, function(a: Battle, b: Battle): boolean
+        return (a.created_at or 0) > (b.created_at or 0)
+    end)
+    
+    print(UserAddress .. " : " .. tostring(#battles))
+    
+    -- Limit to last 10 battles
+    local result = {}
+    local count = 0
+    for _, battle in ipairs(battles) do
+        count = count + 1
+        table.insert(result, battle)
+        if count >= 2 then -- Changed from 1 to 10
+            break
+        end
+    end
+
+    if #result > 0 then
+        return result
+    end
+    return nil
+end
+
+
 
 local function savedToHistoryHandler(msg: Message)
     local found = false
