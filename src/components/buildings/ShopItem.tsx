@@ -24,7 +24,7 @@ export default function ShopItem({
 
   console.log(inventory);
   const alreadyOwned = inventory.some((i) => i.item_id === item.id);
-
+  
   return (
     <div className="absolute flex flex-col items-center" style={{ width: `${size}px`, top: `${baseY}%`, left: `${baseX}%`, transform: `translate(-50%, -100%)` }}>
       <div className="relative w-full flex flex-col justify-center items-center">

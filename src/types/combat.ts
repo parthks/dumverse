@@ -44,9 +44,11 @@ export type Battle = {
       inventory_weapon_id?: string;
       inventory_armor_id?: string;
       has_collected_all_hearts: boolean | null;
-      has_collected_kitten: boolean | null
+      has_collected_kitten: boolean | null;
+      pet: CombatPet | null;
     }
   >;
+
   npcs: Record<string, NPC>;
   log: BattleLog[];
   started: boolean;
@@ -72,4 +74,14 @@ export type NPC = {
   dumz_reward: number;
   trunk_reward: number;
   extra_gold: number;
+};
+
+export type CombatPet = {
+  id: string;
+  name: string;
+  user_id: string;
+  ability: number;
+  ability_type: string;
+  added_at_timestamp: number;
+  last_pet_attack_timestamp: number;
 };

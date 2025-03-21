@@ -20,11 +20,12 @@ import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import { Fit } from "@rive-app/canvas";
 import Settings from "@/components/game/Settings";
 import { REST_SPOTS } from "@/lib/constants";
+import PetShop from "./Buildings/PetShop";
 
 const queryClient = new QueryClient();
 
 export default function Game() {
-  const { GameStatePage, setGameStatePage, isSettingsOpen, setIsSettingsOpen, user, regenerateEnergy,regenerateCountdown,resetRegenerateCountdown, setRegenerateCountdown, regenerateCountdownTickDown } = useGameStore();
+  const { GameStatePage, setGameStatePage, isSettingsOpen, setIsSettingsOpen, user, regenerateEnergy,regenerateCountdown,resetRegenerateCountdown, setRegenerateCountdown, regenerateCountdownTickDown, petsOwned } = useGameStore();
 
   
   const workerRef = useRef<Worker | null>(null);
@@ -58,8 +59,15 @@ export default function Game() {
     // Start the worker if conditions are met
     if (user?.id && user?.stamina < user?.total_stamina) {
       // console.log("Ashu : Dammmm WORKERSSSS");
-      const initialCountdown = regenerateCountdown != null? regenerateCountdown : (user?.current_spot!== undefined && REST_SPOTS.includes( user?.current_spot)) ? 120 : 240; // Use the store value
-      worker.postMessage({
+      const hasEquippedDiligentDuck = petsOwned?.some(pet => 
+        pet.pet_id === "DILIGENT_DUCK" && pet.equipped === 1
+      );
+      
+      const baseCountdown = (user?.current_spot !== undefined && REST_SPOTS.includes(user?.current_spot)) ? 120 : 240;
+      const initialCountdown = regenerateCountdown != null ? 
+        regenerateCountdown : 
+        (hasEquippedDiligentDuck ? Math.floor(baseCountdown * 0.85) : baseCountdown);
+            worker.postMessage({
         type: "start",
         data: {
           interval: 1000, // 1 second interval
@@ -91,6 +99,7 @@ export default function Game() {
   if (GameStatePage === GameStatePages.HALL_OF_FAME) page = <HallOfFame />;
   if (GameStatePage === GameStatePages.SECOND_TOWN) page = <Second_Town />;
   if (GameStatePage === GameStatePages.DEN) page = <Den />;
+  if (GameStatePage === GameStatePages.PET_SHOP) page = <PetShop />;
 
   if (!user)
     return (

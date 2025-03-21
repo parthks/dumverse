@@ -24,6 +24,11 @@ local function _verifyNPCAttackAttackSuccessful(): (boolean, number)
     local success = attacker_roll <= 4
     return success
 end
+local function _verifyPetAttackAttackSuccessful(): (boolean, number)
+    local attacker_roll = math.random(1, 2)
+    local success = attacker_roll == 1
+    return success
+end
 
 -- Helper function to get entity stats
 -- local function _getEntityStats(entity: any, entityType: string): CombatEntityStats
@@ -67,6 +72,18 @@ local function _getEntityStatsForNPC(entity: CombatEnemyData): CombatEntityStats
     }
 end
 
+local function _getEntityStatsForPet(entity: CombatPetData): CombatEntityStats
+    if entity.ability_type == "ATTACK" then
+        return {
+            health = 0,
+            damage = entity.ability,
+            defense = 0,
+            name = entity.name,
+            id = tostring(entity.id)
+        }
+    end
+end
+
 -- attackingEntityType = "player" or "npc"
 -- defendingEntityType = "player" or "npc"
 local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntityStats, timestamp: integer, critical_hit: boolean, attacker_type: string): ({BattleLogEntry}, number, number)
@@ -78,8 +95,10 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
     local success = false
     if attacker_type == "player" then
         success = _verifyPlayerAttackAttackSuccessful()
-    else
+    elseif attacker_type == "npc" then
         success = _verifyNPCAttackAttackSuccessful()
+    else
+        success = _verifyPetAttackAttackSuccessful()
     end
 
     if success or critical_hit then
@@ -90,6 +109,7 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
         else
             damage = attacker.damage as number
         end
+
         if critical_hit then
             damage = damage * 2
             table.insert(log, {
@@ -99,7 +119,7 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
             })
         else
             table.insert(log, {
-                from = attacker.id,
+                from = tostring(attacker.id),
                 message = string.format("hits %s for %d", defender.name, damage),
                 timestamp = timestamp
             })
@@ -170,10 +190,23 @@ local function PlayerAttacksPlayer(attackingEntity: CombatUserData, defendingEnt
     return SimulateCombat(attacker, defender, timestamp, false, "player")
 end
 
+local function PetAttacksPlayer(attackingEntity: CombatPetData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
+    local attacker = _getEntityStatsForPet(attackingEntity)
+    local defender = _getEntityStatsForPlayer(defendingEntity)
+    return SimulateCombat(attacker, defender, timestamp, false, "pet")
+end
+
+local function PetAttacksNPC(attackingEntity: CombatPetData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
+    local attacker = _getEntityStatsForPet(attackingEntity)
+    local defender = _getEntityStatsForNPC(defendingEntity)
+    return SimulateCombat(attacker, defender, timestamp, false, "pet")
+end
 
 return {
     PlayerAttacksNPC = PlayerAttacksNPC,
     NPCAttacksPlayer = NPCAttacksPlayer,
     PlayerAttacksPlayer = PlayerAttacksPlayer,
     NPCAttacksNPC = NPCAttacksNPC,
+    PetAttacksPlayer = PetAttacksPlayer,
+    PetAttacksNPC = PetAttacksNPC
 }

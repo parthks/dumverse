@@ -3,37 +3,37 @@ test-dumz-token:
   hash: a1c5d3d9a09447f25128b16aeb3682863d4a8b0f19d96bc76aaae02ab41713f6
 chat:
   processId: tyB_PzGz26bOoHz0xPFeXhfdMCzcpi656iY4XsgILJQ
-  hash: a1966d681baf852926e1d3b8ecc0c42e938a64a6a7701b8e3fefe3cf1147fa80
+  hash: af30682e86ce56075e362e3f7eef5c125759352fba4380022ab2f1d6cc9d415c
 cron:
   processId: limG_odFUBZkn3EUb38r4pmKhkwvcHmVskyozSQ8QTU
   hash: e24f3588b4c7a79261c6e23475ffbe6a2849ec86b2c44d3e693fd6854830ed65
 record:
   processId: HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0
-  hash: bbb80b2221626f6452d801b34b871898b5151d90a61d181203cff5ddac4d65e4
+  hash: 25fc67908949ebfce7400a8adf802fdf8dcd382a370ab17aa56c0830c2fb2224
 game:
   processId: he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk
-  hash: ab9a36361cee4c9c15db6bae582e4d9142f33b20ff4b69310f01f0b82b687ced
+  hash: ff3f50f6fc5aaa19b32137209152b02baf8c65fc6e42d1c604133453a59dec3c
 backup:
   processId: 3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY
-  hash: 073e08eb9340d8d943f9e760a8e6a728d0f97fba020f43fb00ed4ed1fe73bcba
+  hash: d8542374f1bec90f807f93355816e12256aab356f623162ef1d7cfdb5bdc8430
 bank:
   processId: Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870
-  hash: da251bbe8232476889ea643ced4893f294140a8e3420f54b2506b4a48051fcb8
+  hash: 290cb476e726e65d07d26790b0134b9d723ca9040380c8504fa2c02b8c4b4b3e
 combat:
   processId: RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8
-  hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
+  hash: eefeb85f573f9b21eac585b81118480f24de58becd58cbee153d0eab91e880bf
 combat2:
   processId: az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ
-  hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
+  hash: eefeb85f573f9b21eac585b81118480f24de58becd58cbee153d0eab91e880bf
 combat3:
   processId: sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4
-  hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
+  hash: eefeb85f573f9b21eac585b81118480f24de58becd58cbee153d0eab91e880bf
 combat4:
   processId: z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E
-  hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
+  hash: eefeb85f573f9b21eac585b81118480f24de58becd58cbee153d0eab91e880bf
 combat5:
   processId: s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM
-  hash: db121703ee314870db0ae62cf326806c6673c3b2058c003e1ed0b8c79729c0eb
+  hash: eefeb85f573f9b21eac585b81118480f24de58becd58cbee153d0eab91e880bf
 blackjack:
   processId: 2RlKkyNd-xZvskDopd1rzz8vTxWMlfGYGY2LYXW-qXQ
-  hash: c85d10de72ad1db6b75f5a80915d97b8950ed20bffc485ce79cacd9aa1bdbe6d
+  hash: b09cf0916ce952c1990b9af46c9d71a6d43ee5e952e6162ca6770acd2f9631db

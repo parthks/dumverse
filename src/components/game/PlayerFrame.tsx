@@ -1,4 +1,4 @@
-import { IMAGES } from "@/lib/constants";
+import { IMAGES, PET_SMALL_CARD_IMAGE } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useGameStore } from "@/store/useGameStore";
 import { InventoryBagWithoutArmor, UserWeaponItem } from "./InventoryBag";
@@ -10,6 +10,7 @@ export function PlayerFrame() {
   const setQuestBookOpen = useGameStore((state) => state.setQuestBookOpen);
   const inventoryBagOpen = useGameStore((state) => state.inventoryBagOpen);
   const setInventoryBagOpen = useGameStore((state) => state.setInventoryBagOpen);
+  const equippedPet = useGameStore((state) => state.equippedPet);
 
   if (!user) return null;
   const totalStamina = user.total_stamina;
@@ -39,7 +40,10 @@ export function PlayerFrame() {
       className="h-[60px] relative flex items-center justify-center bg-[url('https://arweave.net/_oRB35FU7hBYFv_Bdw00VJRYsZsFHUyApkgg2WiRsaI')] bg-no-repeat bg-contain bg-center "
       style={{ aspectRatio: "74/78"}}
     >
-<img src="https://arweave.net/Aq2iLM2oZ8QnEiTmzY0cEUP4X4KHNYDUgL74F-DYKto" alt="Small Pet UI PlayerFrame" className="w-10"/>
+
+<img  src={equippedPet && equippedPet.pet_id in PET_SMALL_CARD_IMAGE 
+                     ? PET_SMALL_CARD_IMAGE[equippedPet.pet_id as keyof typeof PET_SMALL_CARD_IMAGE] 
+                     : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"} alt="Small Pet UI PlayerFrame" className="w-9"/>
 
       </div>
 </div>

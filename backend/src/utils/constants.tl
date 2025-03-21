@@ -15,6 +15,8 @@ local BLACKJACK_PROCESS_ID = "2RlKkyNd-xZvskDopd1rzz8vTxWMlfGYGY2LYXW-qXQ"
 local REST_SPOTS = {0, 9, 18, 35, 44, 61, 70}
 local BOSS_SPOTS = { 26, 52, 78}
 
+local COMBAT_ELIGIBLE_PET = {"FAITHFUL_FOX", "GRUMPY_CAT", "DOGE_PUPPY", "BOLD_BADGER", "TINY_TURTLE"}
+
 require "utils.globals"
 
 local ONE_OF_ONE_ASSET_IDS: {string} = {
@@ -204,6 +206,66 @@ global type FoodItem = record
     health: number
 end
 
+local PETS: {string: PetsData} = {
+    FAITHFUL_FOX = {
+        id = "FAITHFUL_FOX",
+        name = "Faithful Fox",
+        gold_price = 1000,
+        ability = 5,
+        ability_type = "RUN_AWAY",
+    },
+    DILIGENT_DUCK = {
+        id = "DILIGENT_DUCK",
+        name = "Diligent Duck",
+        gold_price = 1000,
+        ability = 0.15,             -- Regens stamina 15% faster
+        ability_type = "STAMINA_REGEN",
+    },
+    RASCALLY_RABBIT = {
+        id = "RASCALLY_RABBIT",
+        name = "Rascally Rabbit",
+        gold_price = 1000,
+        ability = 0.15,        -- 15%
+        ability_type = "STORE_DISCOUNT"
+    }, 
+     GRUMPY_CAT = {
+        id = "GRUMPY_CAT",
+        name = "Grumpy Cat",
+        gold_price = 1000,
+        ability = 1,       
+        ability_type = "ATTACK"
+    },
+    DOGE_PUPPY = {
+        id = "DOGE_PUPPY",
+        name = "Doge Puppy",
+        gold_price = 1000,
+        ability = 1,       
+        ability_type = "ATTACK"
+    },
+     BOLD_BADGER = {
+        id = "BOLD_BADGER",
+        name = "Bold Badger",
+        gold_price = 1000,
+        ability = 1,       
+        ability_type = "DEFENSE"
+    }, 
+    TINY_TURTLE = {
+        id = "TINY_TURTLE",
+        name = "Tiny Turtle",
+        gold_price = 1000,
+        ability = 1,       
+        ability_type = "DEFENSE"
+    }, 
+    MIGHTY_MOUSE = {
+        id = "MIGHTY_MOUSE",
+        name = "Mighty Mouse",
+        gold_price = 1000,
+        ability = 1,       
+        ability_type = "MOUSE_HALL"
+    },
+
+}
+
 local ALL_ITEMS: {string:BaseItem} = {}
 for _, item in pairs(ARMORS as {string:BaseItem}) do
     ALL_ITEMS[item.id] = item
@@ -220,6 +282,17 @@ end
 for _, item in pairs(WEAPONS as {string:BaseItem}) do
     ALL_ITEMS[item.id] = item
 end
+for _, pet in pairs(PETS as {string:PetsData}) do
+    local baseItem: BaseItem = {
+        id = pet.id,
+        name = pet.name,
+        type = pet.ability_type,
+        gold_price = pet.gold_price,
+        dumz_price = nil
+    }
+    ALL_ITEMS[pet.id] = baseItem
+end
+
 
 -- local ITEMS = {
 --     WEAPON_1 = {
@@ -616,6 +689,7 @@ local BOSSES: {EnemyData} = {
     }
 }
 
+
 -- 9, 18, 27 are rest spots
 -- local ENEMY_PER_LEVEL = {
 --     [1] = { ENEMIES[1] },
@@ -669,6 +743,8 @@ return {
     ALL_ITEMS = ALL_ITEMS,
     ENEMIES = ENEMIES,
     SPECIAL_ENEMIES = SPECIAL_ENEMIES,
-    BOSSES = BOSSES
+    BOSSES = BOSSES,
+    PETS = PETS,
+    COMBAT_ELIGIBLE_PET = COMBAT_ELIGIBLE_PET
     -- ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
 }

@@ -14,6 +14,7 @@ global record Battle
     npcs_alive: {string}
     players: {string: CombatUserData}
     npcs: {string: CombatEnemyData}
+    -- pets: {string: CombatPetData}
     log: {BattleLogEntry}
     internal_logs: {BattleLogEntry}
     last_player_attack_timestamp: {string: integer}
@@ -26,7 +27,7 @@ end
 
 global record BattleHelpersType
     getLatestSuitableOpenBattle: function(player: CombatUserData, level: integer): Battle | nil
-    killNPC: function(battle_id: integer, npc_id: string, attacker_id: string, timestamp: integer)
+    killNPC: function(battle_id: integer, npc_id: string, attacker_id: string, timestamp: integer, isPetAttacked: boolean |  nil)
     killPlayer: function(battle_id: integer, player_id: string, attacker_id: string, timestamp: integer)
     playerRanAway: function(battle_id: integer, player_id: string, timestamp: integer)
     addPlayer: function(battle_id: integer, player: CombatUserData)
@@ -38,6 +39,7 @@ global record BattleHelpersType
     get: function(id: integer): Battle
     update: function(id: integer, battle: Battle)
     checkIfBattleShouldEnd: function(battle_id: integer, attacker_id: string | nil, timestamp: integer): boolean
+    -- addPet: function(battle_id: integer, pet: CombatPetData)
 end
 
 global type CombatEnemyData = record

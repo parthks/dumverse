@@ -45,7 +45,7 @@ export type Inventory = {
   created_at: string;
 };
 
-export type ItemType = "ARMOR" | "WEAPON" | "POTION" | "FOOD" | "ENERGY" | "SPECIAL_ITEMS";
+export type ItemType = "ARMOR" | "WEAPON" | "POTION" | "FOOD" | "ENERGY" | "SPECIAL_ITEMS" | "PET";
 
 export type Item = {
   id: string;
@@ -74,7 +74,7 @@ export type Bank = {
   nft_dumz_amount: number;
 };
 
-export type TokenType = "GOLD" | "DUMZ" | "TRUNK";
+export type TokenType = "GOLD" | "DUMZ" | "TRUNK" | "TICKET";
 
 export type BankTransaction = {
   id: number;
@@ -107,3 +107,12 @@ export type UserAirdrop = {
   claimed_nft_gold: boolean,
   claimed_nft_dumz: boolean
 }
+
+export type Pet = {
+  id: number;
+  user_id: number;
+  pet_id: string;
+  ability_type: string;
+  equipped: number;
+  created_at: number;
+};

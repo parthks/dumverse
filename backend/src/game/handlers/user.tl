@@ -295,6 +295,11 @@ local function userInfoHandler(msg: Message)
     ]], user_id))
     profile[1].inventory = inventory
 
+    local pet = dbAdmin:exec(string.format([[
+        SELECT * from Pet where user_id = %f;
+    ]], user_id))
+    profile[1].pet = pet
+
     ao.send({
         Target = msg.From,
         Data = json.encode(profile[1])
@@ -368,8 +373,23 @@ local function regenerateEnergyHandler(msg: Message)
     local userData = helpers.CheckUserExists(user_id, msg.From)
     local timestamp = msg.Timestamp
     local last_regenerate_time = userData.last_regenerate_time or 0
-
-    local regenerate_time = helpers.IsInRestSpot(userData) and 120 or 240
+    
+    local regenerate_time: integer
+    local results: Pets = dbAdmin:exec(string.format([[SELECT * FROM Pet where user_id = %d and equipped = TRUE]], user_id))[1] as Pets
+    
+      -- Base regeneration times
+    local base_rest_time = 120
+    local base_normal_time = 240
+      
+    if results and results.pet_id == "DILIGENT_DUCK" then
+        local pets = helpers.GetPetDetails(results.pet_id)
+        -- Apply 15% faster regeneration by reducing the time by pet.ability (0.15)
+        regenerate_time = helpers.IsInRestSpot(userData) and 
+            math.floor(base_rest_time * (1 - pets.ability)) or 
+            math.floor(base_normal_time * (1 - pets.ability))
+    else    
+        regenerate_time = helpers.IsInRestSpot(userData) and base_rest_time or base_normal_time
+    end
 
     assert(timestamp - last_regenerate_time >= regenerate_time, "Not enough time has passed since last regeneration. Last regenerate time: " .. last_regenerate_time .. " Current time: " .. timestamp .. " User is in rest spot: " .. tostring(helpers.IsInRestSpot(userData)))
 

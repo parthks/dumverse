@@ -18,6 +18,7 @@ global enum ItemType
     "ENERGY"
     "SPECIAL_ITEMS"
     "NFT"
+    "PET"
 end
 
 global enum PotionIds
@@ -61,6 +62,17 @@ global enum TransactionType
     "AIRDROP"
     "PULL_OUT"
     "PULL_IN"
+end
+
+global enum PetsType
+    "FAITHFUL_FOX"
+    "DILIGENT_DUCK"
+    "RASCALLY_RABBIT"
+    "GRUMPY_CAT"
+    "DOGE_PUPPY"
+    "BOLD_BADGER"
+    "TINY_TURTLE"
+    "MIGHTY_MOUSE"
 end
 
 -- User type
@@ -142,6 +154,23 @@ global type BankTransaction = record
     token_type: TokenType
     transaction_type: TransactionType
     created_at: integer
+end
+
+global type Pets = record
+    id: integer
+    user_id: integer
+    pet_id: string
+    ability_type: string
+    equipped: boolean
+    created_at: integer
+end
+
+global type PetsData = record
+    id: string
+    name: string
+    gold_price: number
+    ability: number  
+    ability_type: string
 end
 
 global type Leaderboard = record

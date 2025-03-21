@@ -13,6 +13,7 @@ export const BUILDING_IMAGES = {
   INFIRMARY_CAKESHOP_DUMDUM: "https://arweave.net/qd6baOG5KsRPjElSvygboYNtyKVcc13kaC4vxzBTb4E",
   NFT_SHOP_DUMDUM: "https://arweave.net/AiIJFDMfrHp2J6GdazlLx6dQOVKhoVtQzWDLIQ7oH6w",
   VISITOR_CENTER_HALL_FAME_DUMDUM: "https://arweave.net/5iR8uYcUHqNUHcnApeX55_5tSrg5j9tl7RS3O0PQLFk",
+  PET_SHOP_DUMDUM: "https://arweave.net/HBVI4oCWrwBMIXTk0TVnJCo9sEZC2Y0scP_O5yZYmOg",
 };
 
 export const IMAGES = {
@@ -87,6 +88,28 @@ export const ENEMY_CARD_IMAGE = {
   BOSS_8: "https://arweave.net/oYXvWNpzUtiOtCrssXjWL4OiKv4wh8dhpKLKcrdeRl0",
   BOSS_9: "https://arweave.net/O3CHZ0Vy7zXzUn0r7pAtQm6FubVSSeUZ7wBnhJg8vPI",
 };
+
+export const PET_LARGE_CARD_IMAGE = {
+  FAITHFUL_FOX: "https://arweave.net/lv_RyM4YehIji5DtCrmEI63HrMswcKBoBuwXmy-yLpA",
+  DILIGENT_DUCK: "https://arweave.net/6aSZC58gXl9gNCeTvhOZI9D4R5pmqOaikqnYzUhkFno",
+  RASCALLY_RABBIT: "https://arweave.net/bBEzv_IsIqbn8oYGtYAUu8kl_oBlDDpyCT3gbPch-YQ",
+  GRUMPY_CAT: "https://arweave.net/Xtj5YuXcAFtsWxlL3EPiSMiazP2oxyTPqBMPIhl3I48",
+  DOGE_PUPPY: "https://arweave.net/mlX4ggmnMnJAyOS_xif_K4I6qlkQ9LrIqSdz4AK8T1A",
+  BOLD_BADGER: "https://arweave.net/fYj7kDn5lpDLep_9QXeFTMnF7SZOmiyT2L0ZKPfjS6g",
+  TINY_TURTLE: "https://arweave.net/BWWlYcDLdCRCr-URMUri1mySgVTBxhq4A7XaBRE8S1E",
+  MIGHTY_MOUSE: "https://arweave.net/02rDVpqHRFUIQcjjA6ukQueR17bDJIkoPIy-w2AmxQ4",
+}
+
+export const PET_SMALL_CARD_IMAGE = {
+  FAITHFUL_FOX: "https://arweave.net/iqGoFjpy_6ik8NRLCdYMlAso33K3icAc_IfIzGK5XtQ",
+  DILIGENT_DUCK: "https://arweave.net/lKmXlmmk5ZKEA1ia6fKVI2KAru2xYH2VmXSnVhiDPJw",
+  RASCALLY_RABBIT: "https://arweave.net/T2hqc6LGet8uofhOfrSuNhBr48C29t_sKgbv8pwAgO8",
+  GRUMPY_CAT: "https://arweave.net/VD14qnncA80CdWQxVFELZwyyUCpSzaQblnESDqPlkbQ",
+  DOGE_PUPPY: "https://arweave.net/ja-PbrlO3rlrU56K4A9B-6BbnqHf_z3LtlFFYYTCZao",
+  BOLD_BADGER: "https://arweave.net/Aq2iLM2oZ8QnEiTmzY0cEUP4X4KHNYDUgL74F-DYKto",
+  TINY_TURTLE: "https://arweave.net/_ZTpNirGS7cD2i8Q2kLl9CyT6EUjJNSX4asGW_BYyXE",
+  MIGHTY_MOUSE: "https://arweave.net/1_BNSJzVQXzeMqLn-gwrW2fIk8eW1UiMJmRUZPHMwWU",
+}
 
 export const SOUNDS = {
   ISLAND_AUDIO: "https://arweave.net/yW2M75jkljOj3I-Wv2Cs0A3Dqkn4MVdyCRfqkQL8pMs",

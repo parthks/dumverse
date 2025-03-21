@@ -10,6 +10,8 @@ local PlayerAttacksNPC = combat_helper.PlayerAttacksNPC
 local NPCAttacksPlayer = combat_helper.NPCAttacksPlayer
 local PlayerAttacksPlayer = combat_helper.PlayerAttacksPlayer
 local NPCAttacksNPC = combat_helper.NPCAttacksNPC
+local PetAttacksPlayer = combat_helper.PetAttacksPlayer
+local PetAttacksNPC = combat_helper.PetAttacksNPC
 
 local BattleHelpers = require("combat.battle_helpers")
 
@@ -171,6 +173,103 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     end
 end
 
+global function PetAttack(battle_id: integer, owner_id: string, timestamp: integer, player_id_tried_running: string | nil)
+    local pet = Battles[battle_id].players[owner_id].pet as CombatPetData
+
+    if pet.ability_type ~= "ATTACK" then
+        return 
+    end
+
+    pet.last_pet_attack_timestamp = timestamp
+    BattleHelpers.internalLog(battle_id, timestamp, "PetAttack", "Started PetAttack. Updated Pet " .. pet.id .. " last attack time to " .. timestamp)
+
+    -- filter out pet owner from players_alive
+    local other_players_alive = utils.filter(function(val: string): boolean
+        return val ~= owner_id
+    end, Battles[battle_id].players_alive)
+
+    -- pick random player to attack
+    local target_player_id: string | nil = nil
+    if #other_players_alive > 0 then
+        target_player_id = other_players_alive[math.random(#other_players_alive)]
+    end
+
+    -- pick random NPC to attack
+    local alive_npcs = Battles[battle_id].npcs_alive
+    local target_npc_id = alive_npcs[math.random(#alive_npcs)]
+
+    -- 15% chance to attack another player instead of an NPC
+    local shouldAttackPlayer = target_player_id ~= nil and math.random() < 0.15 and player_id_tried_running == nil
+
+    -- Log target selection
+    BattleHelpers.internalLog(battle_id, timestamp, "PetAttack - target selection", 
+        "Potential player target: " .. (target_player_id or "none") .. 
+        ", NPC target: " .. target_npc_id .. 
+        ", Pet should attack player: " .. tostring(shouldAttackPlayer))
+
+    if (shouldAttackPlayer) then
+        print("Pet of player " .. owner_id .. " attacking player " .. target_player_id)
+        BattleHelpers.internalLog(battle_id, timestamp, "PetAttack - attacking player", 
+            "Pet of player " .. owner_id .. " attacking player " .. target_player_id .. 
+            ". Defending player health is: " .. Battles[battle_id].players[target_player_id].health)
+        
+        local log, defender_health, defender_defense = PetAttacksPlayer(
+            Battles[battle_id].players[owner_id].pet, 
+            Battles[battle_id].players[target_player_id], 
+            timestamp
+        )
+        
+        BattleHelpers.internalLog(battle_id, timestamp, "PetAttack - player attack finished", 
+            "Defending player " .. target_player_id .. " health reduced from " .. 
+            Battles[battle_id].players[target_player_id].health .. " to " .. defender_health .. 
+            " and defense reduced from " .. Battles[battle_id].players[target_player_id].defense .. 
+            " to " .. defender_defense)
+        
+        Battles[battle_id].players[target_player_id].defense = defender_defense
+        Battles[battle_id].players[target_player_id].health = defender_health
+
+        BattleHelpers.addLogs(Battles[battle_id].id, log)
+        
+        if defender_health <= 0 then
+            BattleHelpers.internalLog(battle_id, timestamp, "PetAttack", "Player " .. target_player_id .. " died.")
+            BattleHelpers.killPlayer(battle_id, target_player_id, owner_id, timestamp)
+        end
+    else 
+        print("Pet of player " .. owner_id .. " attacking NPC " .. target_npc_id)
+        BattleHelpers.internalLog(battle_id, timestamp, "PetAttack - attacking NPC", 
+            "Pet of player " .. owner_id .. " attacking NPC " .. target_npc_id .. 
+            ". Defending NPC health is: " .. Battles[battle_id].npcs[target_npc_id].health)
+        
+        local log, defender_health, _ = PetAttacksNPC(
+            Battles[battle_id].players[owner_id].pet, 
+            Battles[battle_id].npcs[target_npc_id], 
+            timestamp
+        )
+        
+        BattleHelpers.internalLog(battle_id, timestamp, "PetAttack - NPC attack finished", 
+            "Defending NPC " .. target_npc_id .. " health reduced from " .. 
+            Battles[battle_id].npcs[target_npc_id].health .. " to " .. defender_health)
+        
+        Battles[battle_id].npcs[target_npc_id].health = defender_health
+        
+        BattleHelpers.addLogs(battle_id, log)
+        
+        if defender_health <= 0 then
+            BattleHelpers.internalLog(battle_id, timestamp, "PetAttack", "NPC " .. target_npc_id .. " died.")
+            BattleHelpers.killNPC(battle_id, target_npc_id, owner_id, timestamp, true)
+        end
+    end
+    
+    Battles[battle_id].players_attacked = {} -- reset player attacked list
+    BattleHelpers.internalLog(battle_id, timestamp, "PetAttack", "Reset Players Attacked Table")
+
+    BattleHelpers.checkIfBattleShouldEnd(battle_id, owner_id, timestamp)
+    if Battles[battle_id].ended then
+        local battle_data = BattleHelpers.get(battle_id)
+        sendBatteDataToHistoryProcess(battle_id, battle_data, "no")
+    end
+end
+
 
 local function CronTick(msg: Message,npcTimer:integer)
     CRON_TICK_COUNT = CRON_TICK_COUNT + 1
@@ -196,6 +295,16 @@ local function CronTick(msg: Message,npcTimer:integer)
                          battle.last_npc_attack_timestamp[npc_id]=msg.Timestamp
                      end
                 -- end
+            end
+
+            for _, player_id in ipairs(battle.players_alive) do
+                local pet = battle.players[player_id].pet as CombatPetData
+                if not battle.started then
+                    pet.last_pet_attack_timestamp = msg.Timestamp
+                end
+                if pet and pet.ability_type == "ATTACK" and ((pet.last_pet_attack_timestamp or 0) + (6 * 1000) < msg.Timestamp) and battle.started then
+                    PetAttack(battle.id, player_id, msg.Timestamp, nil) 
+                end
             end
 
             -- for pvp, if no npcs are alive, if a player has not attacked in the last 10 seconds, all players should attack
@@ -260,7 +369,14 @@ local function newUserJoinHandler(msg: Message)
 
     local player = json.decode(data.player) as CombatUserData
     local npcs = json.decode(data.npcs) as {CombatEnemyData}
-
+    local pet: CombatPetData | nil = nil
+    if data.pet then
+        pet = json.decode(data.pet) as CombatPetData
+        pet.user_id = user_id
+        pet.added_at_timestamp = msg.Timestamp
+        pet.last_pet_attack_timestamp = msg.Timestamp
+        player.pet = pet 
+    end
 
     local battles = GetOpenBattlesOfUser(player.address, msg.Timestamp)
     if #battles > 0 then
@@ -297,6 +413,9 @@ local function newUserJoinHandler(msg: Message)
         player.added_at_timestamp = msg.Timestamp
         BattleHelpers.addPlayer(battle.id, player)
         BattleHelpers.internalLog(battle.id, msg.Timestamp, "newUserJoinHandler", "Player "..player.id .. " added to battle")
+        -- if pet then
+        --     BattleHelpers.addPet(battle.id, pet)
+        -- end
          -- send message to game process to confirm user has been added to a new battle
         local user_address = player.address
         print("adding user " .. user_address .. " to battle " .. battle.id .. "of level " .. battle.level)
@@ -466,7 +585,12 @@ local function userRunHandler(msg: Message)
     BattleHelpers.log(battle_id, msg.Timestamp, user_id,
         "attempts to run away")
     local isOneOfOne = utils.includes(user.nft_address, ONE_OF_ONE_ASSET_IDS)
-    local runaway_successful = (isOneOfOne and dice_roll ~= 6) or dice_roll < 4
+    
+    local chances_for_successful_runaway = 4
+    if user.pet ~= nil and (user.pet as CombatPetData).id == "FAITHFUL_FOX" then
+        chances_for_successful_runaway = math.floor((user.pet as CombatPetData).ability)
+    end
+    local runaway_successful = (isOneOfOne and dice_roll ~= 6) or dice_roll < chances_for_successful_runaway
     print("runaway dice roll " .. dice_roll .. " - " .. (runaway_successful and "successful" or "unsuccessful"))
 
     if runaway_successful then

@@ -108,6 +108,17 @@ global BANK_TRANSACTIONS_TABLE: string = [[
     );
 ]]
 
+global PET_TABLE: string = [[
+    CREATE TABLE IF NOT EXISTS Pet (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        pet_id TEXT NOT NULL,
+        ability_type TEXT NOT NULL,
+        equipped BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+]]
+
 Handlers.add("Admin.ClearDB",
     Handlers.utils.hasMatchingTag("Action", "DANGER.ClearDB"),
     function(msg: Message)
@@ -124,6 +135,8 @@ Handlers.add("Admin.ClearDB",
         dbAdmin.db:exec(BANK_TABLE)
         dbAdmin.db:exec("DROP TABLE IF EXISTS BankTransactions;")
         dbAdmin.db:exec(BANK_TRANSACTIONS_TABLE)
+        dbAdmin.db:exec("DROP TABLE IF EXISTS Pet;")
+        dbAdmin.db:exec(PET_TABLE)
     end
 )
 -- Send({Target = ao.id, Action = "DANGER.ClearDB" })
@@ -209,11 +222,9 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    local cascade_numbers = dbAdmin:exec(string.format([[SELECT * FROM RegisteredNfts WHERE id = 1]])) [1]
-    print(cascade_numbers.claimed_nft_gold)
-    print(cascade_numbers.claimed_nft_dumz)
-    print("Types Gold: " .. type(cascade_numbers.claimed_nft_gold))
-    print("Types Dumz: " .. type(cascade_numbers.claimed_nft_dumz))
+    dbAdmin.db:exec("DROP TABLE IF EXISTS Pet;")
+    dbAdmin.db:exec(PET_TABLE)
+    
     print("end")
 end
 )

@@ -5,6 +5,16 @@ global type CombatPotionData = record
     health: number
 end
 
+global type CombatPetData = record
+    id: string
+    name: string
+    user_id: string
+    ability: number  
+    ability_type: string
+    added_at_timestamp: integer
+    last_pet_attack_timestamp: integer
+end
+
 global type CombatUserData = record
     -- Include all fields from UserData
     id: string
@@ -49,4 +59,6 @@ global type CombatUserData = record
     -- player_death : integer   
     -- death_streak : integer   
     -- pvp : integer  
+    pet: CombatPetData | nil
 end
+

@@ -115,7 +115,7 @@ Handlers.add(
     local chatRoom = msg.Tags['ChatRoom']
     assert(chatRoom == "Town" or chatRoom == "RestArea", "Invalid chat room")
 
-    print("Received message id" .. messageId .. " by " .. authorName ..  " at " .. timestamp .. " and content " .. content)
+    -- print("Received message id" .. messageId .. " by " .. authorName ..  " at " .. timestamp .. " and content " .. content)
 
 
     -- Validate AuthorName
@@ -123,7 +123,7 @@ Handlers.add(
     -- Validate Content
     assert(ValidateContent(content), "Invalid Content")
 
-    print("Saving message")
+    -- print("Saving message")
     -- Save message
     local authorNFTValue = authorNFT ~= nil and string.format("'%s'", authorNFT) or "NULL"
 
@@ -132,8 +132,16 @@ Handlers.add(
         VALUES ("%s", %f, "%s", "%s", "%s", %s, "%s")
       ]], messageId, timestamp, authorId, authorName, content, authorNFTValue, chatRoom))
   
-    print("Message saved")
-    ao.send({ Target = msg.From, Status = "Success" })
+    -- print("Message saved")
+    ao.send({ Target = msg.From, Status = json.encode({
+       messageId = msg.Id,
+     timestamp = msg.Timestamp,
+     authorId = msg.From,
+     authorName = msg.Tags['AuthorName'],
+     authorNFT = msg.Tags['AuthorNFT'] or nil,
+     content = msg.Data,
+     chatRoom = msg.Tags['ChatRoom'],
+    }) })
   end
 )
 

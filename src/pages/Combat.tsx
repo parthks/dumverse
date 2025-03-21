@@ -1,11 +1,11 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
-import { ENEMY_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, COMBAT_LOADING_SCREEN } from "@/lib/constants";
+import { ENEMY_CARD_IMAGE, PET_LARGE_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, COMBAT_LOADING_SCREEN } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { Battle, NPC } from "@/types/combat";
+import { Battle, CombatPet, NPC } from "@/types/combat";
 import audioManager from "@/utils/audioManager";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState, useMemo } from "react";
@@ -483,6 +483,9 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 
   const allPlayers = [...enemies, ...otherPlayers];
 
+  // Get all players with pets for the pet display section
+  const playersWithPets = Object.values(currentBattle.players).filter(player => player.pet !== null);
+
   return (
     <div>
       <div className="flex gap-4 items-center">
@@ -500,7 +503,6 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
               alt={"Run"}
             />
           </div>
-
           {allPlayers.map((entity, index) => {
             const isNPC = !!(entity as NPC).difficulty;
             const enemyIsAlive = currentBattle.npcs_alive.includes(entity.id) || currentBattle.players_alive.includes(entity.id);
@@ -541,7 +543,20 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
               </>
             );
           })}
+
+
         </div>
+
+       <div className="flex flex-col gap-5 absolute right-[33%] top-[3%]">
+          {/* Display pets for all players who have them */}
+          {playersWithPets.map(player => (
+            <div key={`pet-${player.id}`} className="flex flex-col gap-2 items-center">
+              <PetCard pet={player.pet} />
+              <span className="text-sm text-white mb-1">{player.name}'s Pet</span>
+            </div>
+          ))} 
+        </div>
+
       </div>
     </div>
   );
@@ -828,6 +843,45 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   );
 }
 
+
+function PetCard({pet}:{pet: Battle["players"][string]["pet"]}) {
+  const user = useGameStore((state) => state.user);
+
+  // This line needs to be moved after the null check
+  if (!pet) return null;
+  
+  const petAbilityLeftPosition = pet.ability_type !== "RUN_AWAY" ? "28%" : "18%";
+  const petImage = PET_LARGE_CARD_IMAGE[pet.id as keyof typeof PET_LARGE_CARD_IMAGE] || '';
+  
+  return(
+    <div
+      className="w-[180px] relative flex flex-col bg-[url('https://arweave.net/RDIshQ0tzLOR_J8CEFtA27uC_n9SPEWtre90YDCbgkc')] bg-no-repeat bg-contain bg-center px-3 py-1"
+      style={{ aspectRatio: "162/218", textShadow: "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000" }}
+    >
+      {petImage && (
+        <div className="flex items-center justify-center w-full h-[60%] translate-y-5">
+          <img 
+            src={petImage} 
+            alt={`${pet.name} pet`}
+            className="w-[100%] h-[100%] object-contain"
+            style={{aspectRatio: "1/1", margin: "auto"}}
+          />
+        </div>
+      )}
+      <h2 
+        className="absolute bottom-[8%] text-white text-xl font-bold text-center"
+        style={{ left: petAbilityLeftPosition }}
+      >
+        {pet.ability_type === "ATTACK" ? "+ " + pet.ability + " DMG" : 
+         pet.ability_type === "DEFENSE" ? "+ " + pet.ability + " DEF" : 
+         pet.ability_type === "RUN_AWAY" ? "+ RUN AWAY" : ""}
+      </h2>
+    </div>
+  )
+}
+
+
+
 function BattleLog({ currentBattle }: { currentBattle: Battle }) {
   const user_id = useGameStore((state) => state.user!.id);
   const combatLoading = useCombatStore((state) => state.loading);
@@ -856,8 +910,8 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
         <div className="w-6"></div>
       </div>
       <div style={{ height: "calc(100vh - 200px)" }} className="log-container flex flex-col gap-8 overflow-y-auto">
-        {currentBattle.log.map((log, index) => {
-          const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || "";
+        {currentBattle.log.map((log, index) => { 
+           const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || Object.values(currentBattle.players).find((player) => player.pet?.id === log.from)?.pet?.name || "" ;
           return (
             <div key={index} className="flex text-2xl gap-4 justify-between px-4">
               <p className="text-white font-bold text-center">{name ? name + ":" : ""}</p>

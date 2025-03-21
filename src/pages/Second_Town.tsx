@@ -180,7 +180,7 @@ export default function Second_Town() {
                          cursor-pointer transition-all duration-300 ease-in-out
                          hover:brightness-125 hover:scale-105 group"
           onClick={() => {
-            // handleBuildingSelect(GameStatePages.DEN);
+            handleBuildingSelect(GameStatePages.PET_SHOP);
             console.log("Pet Shop");
           }}
         >
@@ -191,8 +191,7 @@ export default function Second_Town() {
           />
           <div className="invisible group-hover:visible absolute top-[57%] left-[-25%] text-4xl z-20 text-center text-white px-2 py-1 rounded whitespace-nowrap">
             <div>Pet Shop</div>
-            <div>(coming soon)</div>
-          </div>
+      </div>
         </div>
       </div>
       {/* Second Town map container */}

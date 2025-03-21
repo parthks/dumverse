@@ -26,6 +26,14 @@ local function GetItemDetails(itemId: string): BaseItem
   return itemDetails
 end
 
+local function GetPetDetails(petId: string): PetsData
+
+  local petDetails = constants.PETS[petId as PetsType]
+
+  assert(petDetails, "pet details not found")
+  return petDetails
+end
+
 local function IsInRestSpot(userData: UserData): boolean
   return utils.includes(userData.current_spot, constants.REST_SPOTS)
 end
@@ -2142,6 +2150,7 @@ return {
   sendBankDataToBackupProcess = sendBankDataToBackupProcess,
   sendBankTransactionsToBackupProcess = sendBankTransactionsToBackupProcess,
   GetItemDetails = GetItemDetails,
+  GetPetDetails = GetPetDetails,
   IsInRestSpot = IsInRestSpot,
   getNFTBankAmountForNFT = getNFTBankAmountForNFT,
 }

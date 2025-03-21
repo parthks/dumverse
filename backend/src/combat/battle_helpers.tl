@@ -231,7 +231,7 @@ end
 --     return battle.npcs_alive
 -- end
 
-BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id: string, timestamp: integer)
+BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id: string, timestamp: integer, isPetAttacked: boolean |  nil)
     local battle = BattleHelpers.get(battle_id)
     local npc = battle.npcs[npc_id]
 
@@ -298,7 +298,12 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
             end
         end
     end
-    BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)
+
+    if isPetAttacked then
+        BattleHelpers.log(battle_id, timestamp, (Battles[battle_id].players[attacker_id].pet as CombatPetData).name, "has slain " .. npc.name)
+    else
+        BattleHelpers.log(battle_id, timestamp, attacker_id, "has slain " .. npc.name)
+    end
     -- BattleHelpers.update(battle_id, battle)
 end
 
@@ -389,6 +394,12 @@ BattleHelpers.addPlayer = function(battle_id: integer, player: CombatUserData)
     table.insert(battle.players_alive, tostring(player.id))
     BattleHelpers.update(battle_id, battle)
 end
+
+-- BattleHelpers.addPet = function(battle_id: integer, pet: CombatPetData)
+--     local battle = BattleHelpers.get(battle_id)
+--     battle.pets[tostring(pet.id)] = pet
+--     BattleHelpers.update(battle_id, battle)
+-- end
 
 BattleHelpers.log = function(battle_id: integer, timestamp: integer, from: string, message: string)
     -- local battle = BattleHelpers.get(battle_id)

@@ -2,7 +2,7 @@
 import { REST_SPOTS } from "@/lib/constants";
 import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes, UserAirdrop } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes, UserAirdrop, Pet } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "@/lib/constants";
@@ -36,6 +36,7 @@ export enum GameStatePages {
   INFIRMARY = "INFIRMARY",
   BAKERY = "BAKERY",
   DEN = "DEN",
+  PET_SHOP = "PET_SHOP"
 }
 
 interface GameState {
@@ -101,6 +102,9 @@ interface GameState {
   setInventoryBagOpen: (open: boolean) => void;
   userAirdrop: UserAirdrop | null;
   getUserAirdropInfo: () => Promise<void>;
+  petsOwned: Pet[] | null;
+  equippedPet: Pet | null;
+  buyPet: (pet: Item, tokenType: TokenType) => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -202,11 +206,17 @@ export const useGameStore = create<GameState>()(
         if (resultData.Messages.length > 0 && resultData.Messages[0].Data) {
           const user = JSON.parse(resultData.Messages[0].Data);
           const inventory = user.inventory;
+          const pet = user.pet ? user.pet : null;
+
+        console.log("Refresh User Data Pet : "+ JSON.stringify(pet));
           set({
             user: user,
             inventory: inventory,
             currentIslandLevel: user.current_spot,
+            petsOwned: pet,
+            equippedPet: pet ? pet.filter((pet: Pet) => pet.equipped === 1)[0] : null
           });
+
           return user;
         }
         return null;
@@ -306,6 +316,7 @@ export const useGameStore = create<GameState>()(
       // },
       shop: null,
       getShop: async (itemType: ItemType) => {
+        console.log("Getshop: "+itemType);
         const resultData = await sendDryRunGameMessage({
           tags: [
             { name: "Action", value: "Shop.Info" },
@@ -444,18 +455,26 @@ export const useGameStore = create<GameState>()(
       regenerateCountdown: null,
       resetRegenerateCountdown: () => {
         const currentSpot = get().user?.current_spot;
-        const inTownOrRestArea =
-          currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
+        const petsOwned = get().petsOwned;
+        const inTownOrRestArea = currentSpot !== undefined && REST_SPOTS.includes(currentSpot);
         console.log("inTownOrRestArea", inTownOrRestArea, currentSpot);
-        // if in town or rest area, set the countdown to 2 minutes
-        if (inTownOrRestArea) {
-          console.log("setting countdown to 2 minutes");
-          set({ regenerateCountdown: 120 });
-        } else {
-          // if in game map, set the countdown to 4 minutes
-          console.log("setting countdown to 4 minutes");
-          set({ regenerateCountdown: 240 });
+        
+        // Check if user has equipped DILIGENT_DUCK pet
+        const hasEquippedDiligentDuck = petsOwned?.some(pet => 
+          pet.pet_id === "DILIGENT_DUCK" && pet.equipped === 1
+        );
+        
+        // Calculate regeneration time with duck bonus if applicable
+        let baseTime = inTownOrRestArea ? 120 : 240;
+        
+        if (hasEquippedDiligentDuck) {
+          // Apply 15% faster regeneration (multiply by 0.85)
+          baseTime = Math.floor(baseTime * 0.85);
+          console.log("DILIGENT_DUCK equipped, applying 15% faster regeneration");
         }
+        
+        console.log(`setting countdown to ${baseTime} seconds`);
+        set({ regenerateCountdown: baseTime });
       },
       regenerateCountdownTickDown: async () => {
         const countdown = get().regenerateCountdown;
@@ -625,6 +644,21 @@ export const useGameStore = create<GameState>()(
         });
         console.log("User Airdrop Info: "+ JSON.stringify(resultData));
         if (resultData.data) set({userAirdrop: resultData.data as UserAirdrop});
+      },
+      petsOwned: [],
+      equippedPet: null,
+      buyPet: async (pet, tokenType) => {
+        set({ buyItemLoading: true });
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Shop.BuyPet" },
+            { name: "UserId", value: get().user?.id.toString()! },
+            { name: "petId", value: pet.id },
+            { name: "TokenType", value: tokenType },
+          ],
+        });
+        await get().refreshUserData();
+        set({ buyItemLoading: false });
       },
     }),
     {

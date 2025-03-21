@@ -365,6 +365,12 @@ local function enterNewCombatHandler(msg: Message)
 
     assert(enemies, "No enemies found for combat level: " .. combat_level)
 
+    local pet: PetsData | nil = nil
+    local results: Pets = dbAdmin:exec(string.format([[SELECT * FROM Pet where user_id = %d and equipped = TRUE]], user_id))[1] as Pets
+    if utils.includes(results.pet_id, constants.COMBAT_ELIGIBLE_PET) then
+        pet = helpers.GetPetDetails(results.pet_id)
+    end  
+
      local subProcess = assignSubProcessToUser(user_id, combat_level, msg.Timestamp) 
      local userAddress = dbAdmin:exec(string.format([[
         SELECT address FROM Users WHERE id = %f;
@@ -379,17 +385,26 @@ local function enterNewCombatHandler(msg: Message)
 
     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
     helpers.sendUserDataToBackupProcess(user_id, user_data)
+
+    local messageData: {string:string} = {
+        npcs = json.encode(enemies),
+        player = json.encode(userData)
+    }
+    
+    -- Only add pet data if pet exists
+    if pet then
+        messageData.pet = json.encode(pet)
+    end
+    
     ao.send({
         Target = subProcess,
         Action = "Battle.NewUserJoin",
         UserId = tostring(user_id),
         Level = tostring(combat_level),
         Status = "Success",
-        Data = json.encode({
-            npcs = json.encode(enemies),
-            player = json.encode(userData),
-        }),
+        Data = json.encode(messageData)
     })
+    
 end
 
 local function enteredNewCombatHandler(msg: Message)

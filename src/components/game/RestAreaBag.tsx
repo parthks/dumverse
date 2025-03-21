@@ -1,14 +1,15 @@
 import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
-import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS } from "@/lib/constants";
+import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, PET_LARGE_CARD_IMAGE } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { UserWeaponItem } from "./InventoryBag";
 import audioManager from "@/utils/audioManager";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Pet } from "@/types/game";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
-  const { user, consumeItem, inventory } = useGameStore();
+  const { user, consumeItem, inventory, petsOwned } = useGameStore();
   const [consumeItemLoading, setConsumeItemLoading] = useState(false);
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
   const drinkJooseAudioRef = useRef<HTMLAudioElement>(null);
@@ -42,6 +43,8 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
     }
     setConsumeItemLoading(false);
   };
+
+  const equippedPet: Pet | null = petsOwned ? petsOwned.filter((pet: Pet) => pet.equipped === 1)[0] : null;
 
   return (
     <div
@@ -108,13 +111,25 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
                     "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000",
                 }}
               >
+                
                 <img
-                  src={`https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY`}
-                  alt="Pet - Open Bagpack"
-                  className="w-full max-h-[226px] object-contain"
-                />{" "}
+  src={equippedPet && equippedPet.pet_id in PET_LARGE_CARD_IMAGE 
+    ? PET_LARGE_CARD_IMAGE[equippedPet.pet_id as keyof typeof PET_LARGE_CARD_IMAGE] 
+    : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"}
+  alt="Pet - Open Bagpack"
+  className="w-full max-h-[70%] object-contain"
+/>
+
+
+
                 <h2 className="text-white text-2xl font-bold text-center">
-                  +1 Def
+                {equippedPet ? 
+  (equippedPet.ability_type === "ATTACK" ? "+ 1 DMG" : 
+   equippedPet.ability_type === "DEFENSE" ? "+ 1 DEF" : 
+   equippedPet.ability_type === "RUN_AWAY" ? "+ RUN AWAY" : "")
+  : ""
+}
+
                 </h2>
               </div>
             </div>
