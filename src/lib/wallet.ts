@@ -1,4 +1,4 @@
-import { result, results, message, spawn, monitor, unmonitor, dryrun, createDataItemSigner } from "@permaweb/aoconnect";
+import { createDataItemSigner, dryrun, message, result } from "./aoConnection";
 import { COMBAT_PROCESS_ID, GAME_PROCESS_ID, CHAT_PROCESS_ID, DUMZ_TOKEN_PROCESS_ID, TRUNK_TOKEN_PROCESS_ID , BANK_PROCESS_ID, BLACKJACK_PROCESS_ID} from "./utils";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 

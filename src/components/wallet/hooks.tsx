@@ -1,5 +1,5 @@
+import { dryrun } from "@/lib/aoConnection";
 import { useAppStore } from "@/store/useAppStore";
-import { dryrun } from "@permaweb/aoconnect/browser";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 export const useProfile = () => {
