@@ -44,9 +44,9 @@ export const useCombatStore = create<CombatState>()(
         }
         set({ loading: true, enteringNewBattle: true });
         console.log("Ashu : Subprocess: "+ get().subProcess);
-        // const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+          // const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-        // await sleep(150000);
+          // await sleep(150000);
 
         const resultData = await sendAndReceiveGameMessage({
           tags: [

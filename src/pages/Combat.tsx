@@ -190,7 +190,6 @@ export default function Combat() {
   const cancelled = useRef(false); // Ref to track if polling has been cancelled
   const pollingStarted = useRef(false); // Ref to track if polling has started
   
-
   useEffect(() => {
     if (comabatLoadingScreenImageURL === null) {
       let savedData: number = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0");
@@ -199,106 +198,59 @@ export default function Combat() {
       setComabatLoadingScreenImageURL(url);
       localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
     }
-    
-    console.log("Coming to the combat page");
+
     if (enteringNewBattle && !currentBattle?.id) {
-      console.log("Starting calling getOpenBattles");
+      // Ensure polling starts only once
       if (pollingStarted.current) return;
       pollingStarted.current = true;
-  
+
       const pollForBattle = async () => {
         let attempt = 0;
-        let timeoutOccurred = false;
-  
+
         while (!cancelled.current) {
           console.log("polling for open battles...");
-  
-          // Create a flag to track if we're still waiting for a response
-          let isWaitingForResponse = true;
-          
-          // Set up timeout - 2 minutes (120000ms)
+
           const timeoutId = setTimeout(async () => {
-            if (isWaitingForResponse && !cancelled.current) {
-              console.log("getOpenBattles is taking too long (2 minutes). Calling fallback function.");
-              console.log("tempCurrentIslandLevel:", tempCurrentIslandLevel);
-              timeoutOccurred = true;
-              isWaitingForResponse = false;
-              
-              try {
-                const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
-                if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
-                  setGameStatePage(GameStatePages.COMBAT);
-                }
-              } catch (fallbackError) {
-                console.error("Error in fallback:", fallbackError);
-              }
+            console.log("getOpenBattles is taking too long. Calling fallback function.");
+            console.log("Ashu : tempCurrentIslandLevel: "+tempCurrentIslandLevel);
+            const resultData = await enterNewBattle(tempCurrentIslandLevel, true); 
+            if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+              setGameStatePage(GameStatePages.COMBAT);
             }
-          }, 120000); // 2 minutes timeout
-  
+            // cancelled.current = true;
+          }, 120000); // 2 minute timeout
+
           try {
-            // Start the getOpenBattles call
-            const battlePromise = getOpenBattles();
-            
-            // Wait for the battle result
-            const battle = await battlePromise;
-            
-            // Mark that we're no longer waiting for a response
-            isWaitingForResponse = false;
-            clearTimeout(timeoutId);
-            
-            // Only process the result if timeout didn't occur
-            if (!timeoutOccurred) {
-              console.log("Battle found -> Checking if we should send battle ready request.");
-              if (battle && (!(battle as Battle).started || ((battle as Battle).started && Object.keys((battle as Battle).players || {}).length > 1))) {
-                // Only send battle ready request if timeout didn't occur
-                await sendBattleReadyRequest();
-                break;
-              } else {
-                attempt++;
-                if (attempt === 2) {
-                  console.log("No battle found after 2 attempts. Marking failure.");
-                  setFailedToEnterBattle(true);
-                  break;
-                }
-                console.log("waiting 5 seconds before retrying... (GetOpenBattles)");
-                await sleep(5000);
-              }
-            } else {
-              // If timeout occurred, stop polling
-              console.log("Timeout occurred, stopping polling loop");
+            const battle = await getOpenBattles();
+            clearTimeout(timeoutId); // Clear timeout if function completes in time
+
+            console.log("Battle found -> Sending battle ready request.");
+            if (battle && (!battle.started || (battle?.started && Object.keys(battle.players || {}).length > 1))) {
+               await sendBattleReadyRequest();
               break;
+            } else {
+              attempt++;
+              if (attempt === 2) {
+                console.log("No battle found after 2 attempts. Marking failure.");
+                setFailedToEnterBattle(true);
+              }
+              console.log("waiting 5 seconds before retrying... (GetOpenBattles)");
+              await sleep(5000);
             }
           } catch (error) {
-            // Mark that we're no longer waiting for a response
-            isWaitingForResponse = false;
-            clearTimeout(timeoutId);
-            
+            clearTimeout(timeoutId); // Clear timeout in case of an error
             console.error("Error fetching battles:", error);
-            
-            // If timeout already occurred, don't retry
-            if (timeoutOccurred) {
-              break;
-            }
-            
-            attempt++;
-            if (attempt === 2) {
-              console.log("Error occurred twice. Marking failure.");
-              setFailedToEnterBattle(true);
-              break;
-            }
-            console.log("waiting 5 seconds before retrying after error...");
-            await sleep(5000);
           }
         }
       };
-  
+
       pollForBattle();
-  
+
       return () => {
-        cancelled.current = true;
+        cancelled.current = true; // Cleanup by setting cancelled to true
       };
     }
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage, subProcess]);
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage]);
   
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
