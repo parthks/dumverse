@@ -102,16 +102,20 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
       }
       
       console.log("cursor: " + JSON.stringify(cursor));
-      console.log("params: " + JSON.stringify(params));
   
       // Make the API request
-      const response = await results({
+      // const response = await axios.get(
+      //   `https://cu129.ao-testnet.xyz/results/tyB_PzGz26bOoHz0xPFeXhfdMCzcpi656iY4XsgILJQ`,
+      //   { params }
+      // );
+      const response = await  results({
         process: "tyB_PzGz26bOoHz0xPFeXhfdMCzcpi656iY4XsgILJQ",
-        to: params.from ? params.from : undefined,
+        to: params.from ? params.from :  undefined ,
         sort: params.sort,
         limit: params.limit,
       });
-      
+      console.log("params: " + JSON.stringify(params));
+
       console.log("axios response received: "+ JSON.stringify(response));
       
       // Extract the data from the response
@@ -124,7 +128,7 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
       }
   
       // Filter and transform the messages
-      const validMessages = data.edges
+      const messages = data.edges
         .filter(edge => 
           edge && 
           edge.node && 
@@ -148,37 +152,29 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
             // Parse the JSON string in the Status tag value
             const parsedValue = JSON.parse(statusTag.value);
             
-            const message: ChatMessageType = {
+            return {
               Id: parsedValue.id || null,
               MessageId: parsedValue.messageId || "",
               Timestamp: parsedValue.timestamp || 0,
               AuthorId: parsedValue.authorId || "",
               AuthorName: parsedValue.authorName || "",
+              AuthorNFT: parsedValue.authorNFT || undefined,
               Content: parsedValue.content || "",
-              cursor: edge.cursor || null
-            };
-            
-            // Only add AuthorNFT if it exists
-            if (parsedValue.authorNFT) {
-              message.AuthorNFT = parsedValue.authorNFT;
-            }
-            
-            return message;            
+              cursor: edge.cursor || null // Add the cursor from the edge
+            };            
           } catch (error) {
             console.error("Error processing message:", error);
             return null;
           }
-        });
-      
-      // Filter out null values and explicitly type as ChatMessageType[]
-      const messages: ChatMessageType[] = validMessages.filter((msg): msg is ChatMessageType => msg !== null);
+        })
+        .filter((message): message is any => message !== null);
   
       // For cursor-based pagination, use the cursor from the edge
       const nextCursor = data.edges.length > 0 ? 
         data.edges[data.edges.length - 1].cursor : null;
   
       // Store the result for access in getPreviousPageParam
-      const result: FetchMessagesResult = { messages, nextCursor };
+      const result = { messages, nextCursor };
       this.lastFetchResponse = result;
       console.log("Ashu chat messssss: "+JSON.stringify(this.lastFetchResponse));
       return result;
@@ -187,8 +183,6 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
       return { messages: [], nextCursor: null };
     }
   }
-  
-  
   ,
   lastFetchResponse : null,
 

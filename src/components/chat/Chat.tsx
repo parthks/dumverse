@@ -146,115 +146,106 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
       isInitialFetchRef.current = true;
     }
   }, [chatOpen]);
-// Inside your component
-const queryClient = useQueryClient();
 
-// Reset query cache on component mount
-useEffect(() => {
-  // Reset the query cache for this specific query when component mounts
-  queryClient.resetQueries({ queryKey: [queryKey] });
+  const queryClient = useQueryClient();
+
+  // Reset query cache on component mount
+  useEffect(() => {
+    // Reset the query cache for this specific query when component mounts
+    queryClient.resetQueries({ queryKey: [queryKey] });
+  }, []);
   
-  return () => {
-    // Optional: Save last known cursor in localStorage when unmounting
-    if (lastKnownCursorRef.current) {
-      localStorage.setItem(`chat-cursor-${queryKey}`, lastKnownCursorRef.current);
-    }
-  };
-}, []);
-
-// Track the last cursor we've seen
-const lastKnownCursorRef = useRef<string | null>(null);
-
-// Track which page ranges we've already fetched
-const fetchedPageRangesRef = useRef<{start: number, end: number}[]>([]);
-
-const {
-  data: historyData,
-  isLoading: isLoadingHistory,
-  fetchPreviousPage,
-  hasPreviousPage,
-  isFetchingPreviousPage,
-} = useInfiniteQuery<ChatMessageType[], Error, InfiniteData<ChatMessageType[]>, string[], string | null>({
-  queryKey: [queryKey],
-  queryFn: async ({ pageParam }) => {
-    console.log("Fetching messages with pageParam:", pageParam);
-
-    // Use fetchMessages instead of readHistory
-    const result = await chatClient.fetchMessages(
-      queryPageSize, 
-      pageParam
-    );
-    
-    console.log("Just checking: " + JSON.stringify(result));
-    
-    if (result.messages.length > 0) {
-      setLatestMessage(result.messages[0]);
+  // Track the last cursor we've seen
+  const lastKnownCursorRef = useRef<string | null>(null);
+  
+  // Track which page ranges we've already fetched
+  const fetchedPageRangesRef = useRef<{start: number, end: number}[]>([]);
+  
+  const {
+    data: historyData,
+    isLoading: isLoadingHistory,
+    fetchPreviousPage,
+    hasPreviousPage,
+    isFetchingPreviousPage,
+  } = useInfiniteQuery<ChatMessageType[], Error, InfiniteData<ChatMessageType[]>, string[], string | null>({
+    queryKey: [queryKey],
+    queryFn: async ({ pageParam }) => {
+      console.log("Fetching messages with pageParam:", pageParam);
+  
+      // Use fetchMessages instead of readHistory
+      const result = await chatClient.fetchMessages(
+        queryPageSize, 
+        pageParam
+      );
       
-      // Update our tracking of fetched ranges
+      console.log("Just checking: " + JSON.stringify(result));
+      
       if (result.messages.length > 0) {
-        const highestId = Math.max(...result.messages.map(m => m.Id || 0));
-        const lowestId = Math.min(...result.messages.map(m => m.Id || 0));
+        setLatestMessage(result.messages[0]);
         
-        // Track this range
-        fetchedPageRangesRef.current.push({start: lowestId, end: highestId});
-        console.log("Fetched range:", lowestId, "to", highestId);
-        console.log("All fetched ranges:", fetchedPageRangesRef.current);
+        // Update our tracking of fetched ranges
+        if (result.messages.length > 0) {
+          const highestId = Math.max(...result.messages.map(m => m.Id || 0));
+          const lowestId = Math.min(...result.messages.map(m => m.Id || 0));
+          
+          // Track this range
+          fetchedPageRangesRef.current.push({start: lowestId, end: highestId});
+          console.log("Fetched range:", lowestId, "to", highestId);
+          console.log("All fetched ranges:", fetchedPageRangesRef.current);
+        }
+        
+        // Store the cursor for future use
+        if (result.nextCursor) {
+          lastKnownCursorRef.current = result.nextCursor;
+        }
       }
       
-      // Store the cursor for future use
-      if (result.nextCursor) {
-        lastKnownCursorRef.current = result.nextCursor;
+      // Filter out messages with null IDs
+      const validMessages = result.messages.filter(message => message.Id !== null);
+      
+      console.log("Fetched valid messages:", validMessages);
+      return validMessages;
+    },
+    initialPageParam: null, // Start with null cursor instead of using localStorage
+    getNextPageParam: () => undefined,
+    getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
+      console.log("Firstpage: "+JSON.stringify(firstPage));
+      if (!firstPage || firstPage.length === 0) {
+        return undefined;
       }
+      
+      // Get the ID range of this page
+      const pageIds = firstPage.map(m => m.Id).filter(id => id !== null) as number[];
+      const lowestId = Math.min(...pageIds);
+      const highestId = Math.max(...pageIds);
+      
+      console.log("Current page range:", lowestId, "to", highestId);
+      
+      // Check if we've already fetched the next range
+      const nextRangeAlreadyFetched = fetchedPageRangesRef.current.some(range => 
+        range.end < lowestId && range.end >= lowestId - queryPageSize
+      );
+      
+      if (nextRangeAlreadyFetched) {
+        console.log("Next range already fetched, skipping");
+        return undefined;
+      }
+      
+      // Find the oldest message with a valid cursor
+      const oldestMessages = [...firstPage]
+        .filter(m => m.Id !== null)
+        .sort((a, b) => a.Id! - b.Id!);
+      
+      if (oldestMessages.length === 0) return undefined;
+      
+      const oldestMessage = oldestMessages[0];
+      console.log("Using cursor from message ID:", oldestMessage.Id);
+      
+      return oldestMessage.cursor;
     }
-    
-    // Filter out messages with null IDs
-    const validMessages = result.messages.filter(message => message.Id !== null);
-    
-    console.log("Fetched valid messages:", validMessages);
-    return validMessages;
-  },
-  initialPageParam: (() => {
-    // Try to restore cursor from localStorage if available
-    const savedCursor = localStorage.getItem(`chat-cursor-${queryKey}`);
-    return savedCursor || null;
-  })(),
-  getNextPageParam: () => undefined,
-  getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
-    if (!firstPage || firstPage.length === 0) {
-      return undefined;
-    }
-    
-    // Get the ID range of this page
-    const pageIds = firstPage.map(m => m.Id).filter(id => id !== null) as number[];
-    const lowestId = Math.min(...pageIds);
-    const highestId = Math.max(...pageIds);
-    
-    console.log("Current page range:", lowestId, "to", highestId);
-    
-    // Check if we've already fetched the next range
-    const nextRangeAlreadyFetched = fetchedPageRangesRef.current.some(range => 
-      range.end < lowestId && range.end >= lowestId - queryPageSize
-    );
-    
-    if (nextRangeAlreadyFetched) {
-      console.log("Next range already fetched, skipping");
-      return undefined;
-    }
-    
-    // Find the oldest message with a valid cursor
-    const oldestMessages = [...firstPage]
-      .filter(m => m.Id !== null)
-      .sort((a, b) => a.Id! - b.Id!);
-    
-    if (oldestMessages.length === 0) return undefined;
-    
-    const oldestMessage = oldestMessages[0];
-    console.log("Using cursor from message ID:", oldestMessage.Id);
-    
-    return oldestMessage.cursor;
-  },
-  enabled: true,
-});
+    ,
+    enabled: true,
+  });
   
   
   const { data: newMessages, refetch: refetchNewMessages } = useQuery<ChatMessageType[]>({
