@@ -193,89 +193,65 @@ export default function Combat() {
 
   useEffect(() => {
     if (comabatLoadingScreenImageURL === null) {
-      let savedData = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0", 10);
+      let savedData: number = parseInt(localStorage.getItem("currentCombatLoadingScreen") || "0");
       savedData = (savedData % Object.keys(COMBAT_LOADING_SCREEN).length) + 1;
       const url = COMBAT_LOADING_SCREEN[`scene${savedData}` as keyof typeof COMBAT_LOADING_SCREEN];
       setComabatLoadingScreenImageURL(url);
       localStorage.setItem("currentCombatLoadingScreen", savedData.toString());
     }
-  
-    console.log("Coming to the combat page");
-  
+
     if (enteringNewBattle && !currentBattle?.id) {
-      console.log("Starting polling for open battles...");
+      // Ensure polling starts only once
       if (pollingStarted.current) return;
       pollingStarted.current = true;
-  
-      if (!workerRef.current) {
-        workerRef.current = new Worker(new URL("@/lib/worker", import.meta.url), { type: "module" });
-      }
-  
-      const worker = workerRef.current;
-  
+
       const pollForBattle = async () => {
         let attempt = 0;
-  
+
         while (!cancelled.current) {
-          console.log("Polling for open battles...");
-  
-          worker.onmessage = async (event) => {
-            const { combatCountdown, complete } = event.data;
-            if (complete) {
-              console.log("Worker countdown complete, attempting to enter battle...");
-              const resultData = await enterNewBattle(tempCurrentIslandLevel, true);
-              if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
-                setGameStatePage(GameStatePages.COMBAT);
-              }
+          console.log("polling for open battles...");
+
+          const timeoutId = setTimeout(async () => {
+            console.log("getOpenBattles is taking too long. Calling fallback function.");
+            console.log("Ashu : tempCurrentIslandLevel: "+tempCurrentIslandLevel);
+            const resultData = await enterNewBattle(tempCurrentIslandLevel, true); 
+            if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+              setGameStatePage(GameStatePages.COMBAT);
             }
-  
-            if (combatCountdown !== undefined) {
-              console.log("Worker countdown update:", combatCountdown);
-            }
-          };
-  
-          worker.postMessage({
-            type: "combat_start",
-            data: {
-              initialCountdown: 60000, // 60 seconds
-            },
-          });
-  
+            // cancelled.current = true;
+          }, 120000); // 2 minute timeout
+
           try {
             const battle = await getOpenBattles();
-            console.log("Battle found:", battle);
-  
-            if (battle && (!(battle as Battle).started || ((battle as Battle).started && Object.keys((battle as Battle).players || {}).length > 1))) {
-              await sendBattleReadyRequest();
+            clearTimeout(timeoutId); // Clear timeout if function completes in time
+
+            console.log("Battle found -> Sending battle ready request.");
+            if (battle && (!battle.started || (battle?.started && Object.keys(battle.players || {}).length > 1))) {
+               await sendBattleReadyRequest();
               break;
             } else {
               attempt++;
               if (attempt === 2) {
                 console.log("No battle found after 2 attempts. Marking failure.");
                 setFailedToEnterBattle(true);
-                break;
               }
-              console.log("Waiting 5 seconds before retrying...");
+              console.log("waiting 5 seconds before retrying... (GetOpenBattles)");
               await sleep(5000);
             }
           } catch (error) {
+            clearTimeout(timeoutId); // Clear timeout in case of an error
             console.error("Error fetching battles:", error);
           }
         }
       };
-  
+
       pollForBattle();
-  
+
       return () => {
-        cancelled.current = true;
-        if (worker) {
-          worker.postMessage({ type: "combat_stop" });
-          worker.terminate();
-          workerRef.current = null;
-        }
+        cancelled.current = true; // Cleanup by setting cancelled to true
       };
     }
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage, subProcess]);
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage]);
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentBattle?.id}`],

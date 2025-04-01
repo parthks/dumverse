@@ -132,9 +132,12 @@ Handlers.add(
         VALUES ("%s", %f, "%s", "%s", "%s", %s, "%s")
       ]], messageId, timestamp, authorId, authorName, content, authorNFTValue, chatRoom))
   
+      local getIdOfChatMessage = dbAdmin:exec(string.format([[SELECT * FROM Messages where MessageId="%s" and Timestamp = %f and AuthorId = "%s"]], messageId, timestamp, authorId))[1]
+
     -- print("Message saved")
     ao.send({ Target = msg.From, Status = json.encode({
-       messageId = msg.Id,
+     id = getIdOfChatMessage.Id,
+     messageId = msg.Id,
      timestamp = msg.Timestamp,
      authorId = msg.From,
      authorName = msg.Tags['AuthorName'],

@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider, useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { InfiniteData, QueryClient, QueryClientProvider, useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ const ChatMessage = z.object({
   AuthorName: z.string(),
   AuthorNFT: z.string().optional(),
   Content: z.string(),
+  cursor: z.string().nullable() // Add cursor field
 });
 export type ChatMessageType = z.infer<typeof ChatMessage>;
 
@@ -152,58 +153,73 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
     fetchPreviousPage,
     hasPreviousPage,
     isFetchingPreviousPage,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<ChatMessageType[], Error, InfiniteData<ChatMessageType[]>, string[], string | null>({
     queryKey: [queryKey],
     queryFn: async ({ pageParam }) => {
       console.log("Fetching messages with pageParam:", pageParam);
-
-      const result = await chatClient.readHistory({
-        idBefore: pageParam ? pageParam + 1 : undefined,
-        limit: queryPageSize,
-      });
-      console.log("Just checking: "+ JSON.stringify(result));
-      setLatestMessage(result[0]);
-      console.log("Fetched messages:", result);
-      return result;
+  
+      // Use fetchMessages instead of readHistory
+      const result = await chatClient.fetchMessages(
+        queryPageSize, 
+        pageParam
+      );
+      
+      console.log("Just checking: " + JSON.stringify(result));
+      
+      if (result.messages.length > 0) {
+        setLatestMessage(result.messages[0]);
+      }
+      
+      console.log("Fetched messages:", result.messages);
+      return result.messages;
     },
-    initialPageParam: 0,
+    initialPageParam: null as string | null,
     getNextPageParam: () => undefined,
     getPreviousPageParam: (firstPage) => {
-      if (!firstPage) return undefined;
-      //   if firstPage is not an array, return undefined
-      if (!Array.isArray(firstPage)) {
+      if (!firstPage || firstPage.length === 0) {
         return undefined;
       }
-      if (firstPage.length === 0) {
-        return undefined;
-      }
-      const lowestId = Math.min(...firstPage.map((m) => m.Id));
-      if (lowestId <= 1) {
-        return undefined;
-      }
-      return lowestId - 1;
-    },
+      
+      // Find the oldest message by timestamp
+      const oldestMessage = firstPage.reduce((oldest, current) => {
+        return (current.Timestamp < oldest.Timestamp) ? current : oldest;
+      }, firstPage[0]);
+      console.log("getPreviousPageParam: "+oldestMessage.cursor);
+      // Use the cursor from the oldest message
+      return oldestMessage.cursor;
+    }
+    
+    ,
     enabled: true,
   });
-
-  const { data: newMessages, refetch: refetchNewMessages } = useQuery({
+  
+  
+  const { data: newMessages, refetch: refetchNewMessages } = useQuery<ChatMessageType[]>({
     queryKey: [`newMessages-${queryKey}`],
     queryFn: async () => {
-      const latestId = allMessages?.[allMessages.length - 1]?.Id;
-      if (latestId === undefined) return [];
-      console.log("5 second poll", latestId);
-      const result = await chatClient.readHistory({
-        idAfter: latestId,
-        limit: queryPageSize,
-      });
-      // if (chatOpen) setLatestMessage(result[0]);
-      setLatestMessage(result[0]);
-      return result;
+      // Get the latest timestamp from all messages
+      const latestTimestamp = allMessages?.[0]?.Timestamp;
+      if (latestTimestamp === undefined) return [];
+      
+      console.log("5 second poll, latest timestamp:", latestTimestamp);
+      
+      // Fetch all recent messages and filter client-side
+      const result = await chatClient.fetchMessages(queryPageSize);
+      
+      // Filter messages that are newer than our latest message
+      const newerMessages = result.messages.filter(
+        message => message.Timestamp > latestTimestamp
+      );
+      
+      if (newerMessages.length > 0) {
+        setLatestMessage(newerMessages[0]);
+      }
+      
+      return newerMessages;
     },
-    // enabled: !!historyData?.pages[0]?.length,
     refetchInterval: 5000, // Poll every 5 seconds
   });
-
+  
   useEffect(() => {
     if (historyData) {
       const newMessages = historyData.pages.flatMap((page) => page);
@@ -349,6 +365,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
                 Content: message,
                 AuthorNFT: user.nft_address,
                 AuthorName: user.name,
+                cursor: null
               });
 
         const gqlQuery = gql`query {
