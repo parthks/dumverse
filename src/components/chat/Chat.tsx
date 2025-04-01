@@ -1,4 +1,4 @@
-import { InfiniteData, QueryClient, QueryClientProvider, useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { InfiniteData, QueryClient, QueryClientProvider, useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -146,52 +146,115 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
       isInitialFetchRef.current = true;
     }
   }, [chatOpen]);
+// Inside your component
+const queryClient = useQueryClient();
 
-  const {
-    data: historyData,
-    isLoading: isLoadingHistory,
-    fetchPreviousPage,
-    hasPreviousPage,
-    isFetchingPreviousPage,
-  } = useInfiniteQuery<ChatMessageType[], Error, InfiniteData<ChatMessageType[]>, string[], string | null>({
-    queryKey: [queryKey],
-    queryFn: async ({ pageParam }) => {
-      console.log("Fetching messages with pageParam:", pageParam);
+// Reset query cache on component mount
+useEffect(() => {
+  // Reset the query cache for this specific query when component mounts
+  queryClient.resetQueries({ queryKey: [queryKey] });
   
-      // Use fetchMessages instead of readHistory
-      const result = await chatClient.fetchMessages(
-        queryPageSize, 
-        pageParam
-      );
+  return () => {
+    // Optional: Save last known cursor in localStorage when unmounting
+    if (lastKnownCursorRef.current) {
+      localStorage.setItem(`chat-cursor-${queryKey}`, lastKnownCursorRef.current);
+    }
+  };
+}, []);
+
+// Track the last cursor we've seen
+const lastKnownCursorRef = useRef<string | null>(null);
+
+// Track which page ranges we've already fetched
+const fetchedPageRangesRef = useRef<{start: number, end: number}[]>([]);
+
+const {
+  data: historyData,
+  isLoading: isLoadingHistory,
+  fetchPreviousPage,
+  hasPreviousPage,
+  isFetchingPreviousPage,
+} = useInfiniteQuery<ChatMessageType[], Error, InfiniteData<ChatMessageType[]>, string[], string | null>({
+  queryKey: [queryKey],
+  queryFn: async ({ pageParam }) => {
+    console.log("Fetching messages with pageParam:", pageParam);
+
+    // Use fetchMessages instead of readHistory
+    const result = await chatClient.fetchMessages(
+      queryPageSize, 
+      pageParam
+    );
+    
+    console.log("Just checking: " + JSON.stringify(result));
+    
+    if (result.messages.length > 0) {
+      setLatestMessage(result.messages[0]);
       
-      console.log("Just checking: " + JSON.stringify(result));
-      
+      // Update our tracking of fetched ranges
       if (result.messages.length > 0) {
-        setLatestMessage(result.messages[0]);
+        const highestId = Math.max(...result.messages.map(m => m.Id || 0));
+        const lowestId = Math.min(...result.messages.map(m => m.Id || 0));
+        
+        // Track this range
+        fetchedPageRangesRef.current.push({start: lowestId, end: highestId});
+        console.log("Fetched range:", lowestId, "to", highestId);
+        console.log("All fetched ranges:", fetchedPageRangesRef.current);
       }
       
-      console.log("Fetched messages:", result.messages);
-      return result.messages;
-    },
-    initialPageParam: null as string | null,
-    getNextPageParam: () => undefined,
-    getPreviousPageParam: (firstPage) => {
-      if (!firstPage || firstPage.length === 0) {
-        return undefined;
+      // Store the cursor for future use
+      if (result.nextCursor) {
+        lastKnownCursorRef.current = result.nextCursor;
       }
-      
-      // Find the oldest message by timestamp
-      const oldestMessage = firstPage.reduce((oldest, current) => {
-        return (current.Timestamp < oldest.Timestamp) ? current : oldest;
-      }, firstPage[0]);
-      console.log("getPreviousPageParam: "+oldestMessage.cursor);
-      // Use the cursor from the oldest message
-      return oldestMessage.cursor;
     }
     
-    ,
-    enabled: true,
-  });
+    // Filter out messages with null IDs
+    const validMessages = result.messages.filter(message => message.Id !== null);
+    
+    console.log("Fetched valid messages:", validMessages);
+    return validMessages;
+  },
+  initialPageParam: (() => {
+    // Try to restore cursor from localStorage if available
+    const savedCursor = localStorage.getItem(`chat-cursor-${queryKey}`);
+    return savedCursor || null;
+  })(),
+  getNextPageParam: () => undefined,
+  getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
+    if (!firstPage || firstPage.length === 0) {
+      return undefined;
+    }
+    
+    // Get the ID range of this page
+    const pageIds = firstPage.map(m => m.Id).filter(id => id !== null) as number[];
+    const lowestId = Math.min(...pageIds);
+    const highestId = Math.max(...pageIds);
+    
+    console.log("Current page range:", lowestId, "to", highestId);
+    
+    // Check if we've already fetched the next range
+    const nextRangeAlreadyFetched = fetchedPageRangesRef.current.some(range => 
+      range.end < lowestId && range.end >= lowestId - queryPageSize
+    );
+    
+    if (nextRangeAlreadyFetched) {
+      console.log("Next range already fetched, skipping");
+      return undefined;
+    }
+    
+    // Find the oldest message with a valid cursor
+    const oldestMessages = [...firstPage]
+      .filter(m => m.Id !== null)
+      .sort((a, b) => a.Id! - b.Id!);
+    
+    if (oldestMessages.length === 0) return undefined;
+    
+    const oldestMessage = oldestMessages[0];
+    console.log("Using cursor from message ID:", oldestMessage.Id);
+    
+    return oldestMessage.cursor;
+  },
+  enabled: true,
+});
   
   
   const { data: newMessages, refetch: refetchNewMessages } = useQuery<ChatMessageType[]>({
@@ -206,9 +269,9 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
       // Fetch all recent messages and filter client-side
       const result = await chatClient.fetchMessages(queryPageSize);
       
-      // Filter messages that are newer than our latest message
+      // Filter messages that are newer than our latest message and have valid IDs
       const newerMessages = result.messages.filter(
-        message => message.Timestamp > latestTimestamp
+        message => message.Timestamp > latestTimestamp && message.Id !== null
       );
       
       if (newerMessages.length > 0) {
@@ -222,10 +285,20 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   
   useEffect(() => {
     if (historyData) {
-      const newMessages = historyData.pages.flatMap((page) => page);
-      setAllMessages((prev) => removeDuplicates([...prev, ...newMessages]));
+      // Get all messages from all pages
+      const pagesMessages = historyData.pages.flatMap(page => page)
+        .filter(message => message.Id !== null);
+      
+      setAllMessages(prev => {
+        // Combine with existing messages and apply our improved filtering
+        const combined = removeDuplicates([...prev, ...pagesMessages]);
+        
+        console.log("Updated allMessages count:", combined.length);
+        return combined;
+      });
     }
   }, [historyData]);
+  
 
   useEffect(() => {
     if (newMessages) {
@@ -306,10 +379,39 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   //     return Array.from(messagesMap.values()).sort((a, b) => a.Timestamp - b.Timestamp);
   //   }, [newMessages, historyData]);
   function removeDuplicates(messages: Array<ChatMessageType>) {
+    // Use a Map to remove duplicates by ID
     const messagesMap = new Map();
-    messages.forEach((msg) => messagesMap.set(msg.Id, msg));
-    return Array.from(messagesMap.values()).sort((a, b) => a.Timestamp - b.Timestamp);
+    
+    // Only include messages with valid IDs
+    const validMessages = messages.filter(msg => msg.Id !== null);
+    
+    // Add all messages to the map
+    validMessages.forEach((msg) => {
+      messagesMap.set(msg.Id, msg);
+    });
+    
+    // Convert back to array and sort by ID in descending order
+    const sortedMessages = Array.from(messagesMap.values())
+      .sort((a, b) => (b.Id as number) - (a.Id as number));
+    
+    // Filter out messages with large ID gaps
+    const filteredMessages = [];
+    let previousId = null;
+    
+    for (const message of sortedMessages) {
+      if (previousId === null || Math.abs((message.Id as number) - previousId) <= 2) {
+        filteredMessages.push(message);
+        previousId = message.Id as number;
+      } else {
+        console.log(`Filtering out message with ID ${message.Id} due to large gap from ${previousId}`);
+      }
+    }
+    
+    // Sort by timestamp in descending order (newest first)
+    return filteredMessages.sort((a, b) => b.Timestamp - a.Timestamp);
   }
+  
+
   useEffect(() => {
     if (newMessages) {
       setAllMessages((prev) => removeDuplicates([...prev, ...newMessages]));
@@ -319,7 +421,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
   const form = useForm();
 
   if (!chatOpen) return null;
-
+console.log("All messages: "+JSON.stringify(allMessages));
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 top-[100px] bottom-[10vh]">
       <div
@@ -368,29 +470,6 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
                 cursor: null
               });
 
-        const gqlQuery = gql`query {
-  transactions(
-      # ids:["uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"],
-    tags: [
-      
-      { name:"Type", values:["Message"]}
-       { name:"Target", values:["uln9Hp5_AE_rbDwDJYmv2s4A8Z0NLu-669x_I0aUmGI"]}
-      { name: "Action", values: ["ChatMessage"] }
-    { name: "ChatRoom", values: ["Town"] }
-    ]
-  ) {
-    edges {
-      node {
-        id
-      }
-    }
-  }
-}
-        `
-        const client = new GraphQLClient("https://arweave-search.goldsky.com/graphql");
-
-              const check = await  client.request(gqlQuery);
-              console.log("Ashu : chat: "+JSON.stringify(check));
               refetchNewMessages();
               setSendingMessage(false);
             })}

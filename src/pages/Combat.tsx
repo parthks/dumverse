@@ -215,9 +215,9 @@ export default function Combat() {
             console.log("getOpenBattles is taking too long. Calling fallback function.");
             console.log("Ashu : tempCurrentIslandLevel: "+tempCurrentIslandLevel);
             const resultData = await enterNewBattle(tempCurrentIslandLevel, true); 
-            if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
-              setGameStatePage(GameStatePages.COMBAT);
-            }
+            // if (typeof JSON.parse(resultData.Messages[1].Data).subprocess === "string") {
+            //   setGameStatePage(GameStatePages.COMBAT);
+            // }
             // cancelled.current = true;
           }, 120000); // 2 minute timeout
 
@@ -251,7 +251,7 @@ export default function Combat() {
         cancelled.current = true; // Cleanup by setting cancelled to true
       };
     }
-  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage]);
+  }, [enteringNewBattle, currentBattle?.id, getOpenBattles, sendBattleReadyRequest, tempCurrentIslandLevel, setGameStatePage,subProcess]);
 
   const { data: newMessages, refetch: refetchBattleUpdates } = useQuery({
     queryKey: [`newMessages-${currentBattle?.id}`],

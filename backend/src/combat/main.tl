@@ -298,8 +298,8 @@ local function CronTick(msg: Message,npcTimer:integer)
             end
 
             for _, player_id in ipairs(battle.players_alive) do
-                local pet = battle.players[player_id].pet as CombatPetData
-                if not battle.started then
+                local pet: CombatPetData | nil = battle.players[player_id].pet as CombatPetData
+                if not battle.started and pet then
                     pet.last_pet_attack_timestamp = msg.Timestamp
                 end
                 if pet and pet.ability_type == "ATTACK" and ((pet.last_pet_attack_timestamp or 0) + (6 * 1000) < msg.Timestamp) and battle.started then
@@ -370,6 +370,7 @@ local function newUserJoinHandler(msg: Message)
     local player = json.decode(data.player) as CombatUserData
     local npcs = json.decode(data.npcs) as {CombatEnemyData}
     local pet: CombatPetData | nil = nil
+    player.pet = nil
     if data.pet then
         pet = json.decode(data.pet) as CombatPetData
         pet.user_id = user_id
