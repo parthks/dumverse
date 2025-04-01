@@ -2087,7 +2087,7 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
     return 0, 0
   end
   if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
-    return 10000, 10000
+    return 10000, 5000
   end
   for _, address in ipairs(GreenAddresses) do
     if address == nft_address then
@@ -2116,7 +2116,7 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
   end
   for _, address in ipairs(GoldAddresses) do
     if address == nft_address then
-      return 5000, 3000
+      return 5000, 2500
     end
   end
   return 0, 0
