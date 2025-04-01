@@ -3,7 +3,6 @@ import { Battle } from "@/types/combat";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { GameStatePages, useGameStore } from "./useGameStore";
-import { result } from "@permaweb/aoconnect/browser";
 import { GAME_PROCESS_ID } from "@/lib/utils";
 import { json } from "stream/consumers";
 
