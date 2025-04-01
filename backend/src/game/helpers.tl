@@ -2102,7 +2102,7 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
 
   if utils.includes(nft_address, constants.ONE_OF_ONE_ASSET_IDS) then
     if #cascade_numbers == 0 then
-      return 10000, 10000
+      return 10000, 5000
     end
     if cascade_numbers[1].claimed_nft_dumz == 1 then
       nft_dumz_amount = 0
@@ -2112,7 +2112,7 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
     if cascade_numbers[1].claimed_nft_gold == 1 then
       nft_gold_amount = 0
     else
-      nft_gold_amount = 10000
+      nft_gold_amount = 5000
     end
     return nft_dumz_amount, nft_gold_amount
   end
@@ -2123,7 +2123,7 @@ local function getNFTBankAmountForNFT(nft_address: string | nil): (number, numbe
     [BlueAddresses] = {3000, 1500},
     [PurpleAddresses] = {2500, 1500},
     [RedAddresses] = {3500, 1500},
-    [GoldAddresses] = {5000, 3000}
+    [GoldAddresses] = {5000, 2500}
   }
 
   for group, values in pairs(AddressGroups) do
