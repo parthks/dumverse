@@ -498,7 +498,7 @@ local function userLoginHandler(msg: Message)
            if user_current_spot.current_spot == value then
                 -- update last_updated_at
             dbAdmin:exec(string.format([[
-                   UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = %f WHERE id = %f;
+                   UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = %f, access_of_mouse_game = FALSE, current_mouse_battle_id = NULL, current_mouse_spot = NULL  WHERE id = %f;
              ]], msg.Timestamp, msg.Timestamp, user_current_spot.current_spot, user_id))
              
              is_Rest_Spot=true
@@ -508,7 +508,7 @@ local function userLoginHandler(msg: Message)
 
    if not is_Rest_Spot then
           dbAdmin:exec(string.format([[
-                 UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = 0 WHERE id = %f;
+                 UPDATE Users SET last_updated_at = %f, last_regenerate_time = %f, current_spot = 0,  access_of_mouse_game = FALSE, current_mouse_battle_id = NULL, current_mouse_spot = NULL WHERE id = %f;
           ]], msg.Timestamp, msg.Timestamp, user_id))
    end
 

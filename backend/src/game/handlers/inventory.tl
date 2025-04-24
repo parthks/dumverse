@@ -124,10 +124,22 @@ local function equipItemHandler(msg: Message)
     ao.send({ Target = msg.From, Status = "Success" })
 end
 
+local function equipPetHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local pet_id = msg.Tags.petId
+    assert(pet_id, "You dont own this pet")
+    
+    dbAdmin:exec(string.format([[UPDATE Pet SET equipped = FALSE WHERE user_id = %f ]], user_id))
+    dbAdmin:exec(string.format([[UPDATE Pet SET equipped = TRUE WHERE id = %d AND user_id = %f ]], pet_id, user_id))
+
+    ao.send({ Target = msg.From, Status = "Success" })
+end
+
 -- Add handlers
 Handlers.add("Inventory.Info", Handlers.utils.hasMatchingTag('Action', 'Inventory.Info'), inventoryInfoHandler)
 Handlers.add("Inventory.UseItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.UseItem'), inventoryUseItemHandler)
 Handlers.add("Inventory.RepairItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.RepairItem'), inventoryRepairItemHandler)
 Handlers.add("Inventory.EquipItem", Handlers.utils.hasMatchingTag('Action', 'Inventory.EquipItem'), equipItemHandler)
+Handlers.add("Inventory.EquipPet", Handlers.utils.hasMatchingTag('Action', 'Inventory.EquipPet'), equipPetHandler)
 
 return {}

@@ -6,6 +6,7 @@ import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPositio
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "@/lib/constants";
+import { assert } from "console";
 
 // set({
 //   GameStatePage: GameStatePages.GAME_MAP,
@@ -105,6 +106,7 @@ interface GameState {
   petsOwned: Pet[] | null;
   equippedPet: Pet | null;
   buyPet: (pet: Item, tokenType: TokenType) => Promise<void>;
+  setEquipPet: (userId: number, petId: number) => Promise<void>;
 }
 
 export const useGameStore = create<GameState>()(
@@ -659,6 +661,17 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
         set({ buyItemLoading: false });
+      },
+      setEquipPet: async (userId: number, petId: number) => {
+        if (userId != get().user?.id) return;
+        const resultData = await sendAndReceiveGameMessage({
+          tags: [
+            { name: "Action", value: "Inventory.EquipPet" },
+            { name: "UserId", value: userId.toString() },
+            { name: "petId", value: petId.toString() },
+          ],
+        });
+        await get().refreshUserData();
       },
     }),
     {

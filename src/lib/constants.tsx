@@ -25,6 +25,7 @@ export const IMAGES = {
   GOLD_ICON: "https://arweave.net/8_z7MIgJ2v8fbdYMAKSgpwDc7exFxUJVQnd-egomLXA",
   DUMZ_ICON: "https://arweave.net/_53RnMurt-qradH-caMUJMgvvpoUVmzpM5Yjk8KQVtI",
   TRUNK_ICON: "https://arweave.net/OVmZl1tJUKOWTut1_yYzswGHLAK_-3yvSNfnDbX87C0",
+  TICKET_ICON: "https://arweave.net/NnaCj4110C-8BPHH0KYT1lupFW5jTCataD1_weHFa4g",
   BANK_KEYS: "https://arweave.net/2qAoNkweWryhgbUXMJYEgS2tgew9kY2uezl2UysSPqw",
   ACCEPT_QUEST_BUTTON: "https://arweave.net/_gyKMGAD2ubfVtvROHzhapw_BcN2-B3QRSurVYlhaVw",
 };
@@ -78,15 +79,15 @@ export const ENEMY_CARD_IMAGE = {
   BLACK_SWAN: "https://arweave.net/tDkbLZT4ITSHCesacdjQykrRKh23aGh4LOY6c5GeL1Y", // kitten, gold and dumz loot
   LEPERCHAUN: "https://arweave.net/Dh9lbBgZf8hGJQZ77v5yXJSJ_1lW2QISPdqWcSxPRiI", // gold loot
   AGENT_TRUNK: "https://arweave.net/i8jkmJETToOXklvg-nfXZMsJj6Gpc80Z1AkMu6y6ark",
-  BOSS_1: "https://arweave.net/igNAfO07uMii0ujmYn8n2dte_VByw_mL7D2ek1yobBE",
-  BOSS_2: "https://arweave.net/rpLQQyvJL2qclFWocdg2x8BdT-tDaWXVTwyDGZPN8TQ",
-  BOSS_3: "https://arweave.net/s4OjseDwtcdb5PCo7d0vGXshZ0uNsYTHS6Km2EAidag",
-  BOSS_4: "https://arweave.net/KqgBiHCfkYW3zDu2-PfsnlQyd-GBs6vEAnv3uMfABKE",
-  BOSS_5: "https://arweave.net/KpXw6XDWxb_xCm2AREx7i5bJxjuDApGNbfCmrrEdD1M",
-  BOSS_6: "https://arweave.net/xwt3_ayPBSpPrGgYL1iKRByptz-WtAGZYGjSy6HM3p8",
-  BOSS_7: "https://arweave.net/2WeC19EyOKzxtUJ4W9mhP5O-zcn4xMZXAR5pAYwra2U",
-  BOSS_8: "https://arweave.net/oYXvWNpzUtiOtCrssXjWL4OiKv4wh8dhpKLKcrdeRl0",
-  BOSS_9: "https://arweave.net/O3CHZ0Vy7zXzUn0r7pAtQm6FubVSSeUZ7wBnhJg8vPI",
+  BOSS_1: "https://arweave.net/kHs5K6ZMV1GzYu9TSnAgeOhKbDR-qMYMJy27Q297ds8",
+  BOSS_2: "https://arweave.net/4KVHt20cLnEAoTHOSElRjrcsvz7vg6FvzVa5OxHtCpA",
+  BOSS_3: "https://arweave.net/Z6IsBoq1CdWz1pxWyXW_qmiapQgxmiVvUP__pVsAerA",
+  BOSS_4: "https://arweave.net/orGAZ662nAnsD3CeRQvI4HL8rIEmFcaeyf2bVhtzA1g",
+  BOSS_5: "https://arweave.net/TGiolItAdNKJn0tcR53vu6M789anvPJBnxqCJWDJUVA",
+  BOSS_6: "https://arweave.net/7PNVXbseG9I1FoDanZgp6Xr9nxRBTY28BMx4uAHx12A",
+  BOSS_7: "https://arweave.net/jGSVNulFBG0Z5D6t60K7lspkp7nYYqyt9UoTQSScWFA",
+  BOSS_8: "https://arweave.net/OL4I9O9TxyoprIB46YQdIVB9SeXVLb3n8uAPyNdin4U",
+  BOSS_9: "https://arweave.net/qLBn-haYr-R0BunRmjC18W4HMswdU5oPokIVuAwY3hk",
 };
 
 export const PET_LARGE_CARD_IMAGE = {

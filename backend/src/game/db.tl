@@ -14,6 +14,7 @@ global USERS_TABLE: string = [[
         gold_balance FLOAT DEFAULT 0,
         dumz_balance FLOAT DEFAULT 0,
         trunk_balance FLOAT DEFAULT 0,
+        ticket_balance FLOAT DEFAULT 0,
         total_trunk_token FLOAT DEFAULT 10,
         health FLOAT DEFAULT 0,
         total_health FLOAT DEFAULT 0,
@@ -25,6 +26,10 @@ global USERS_TABLE: string = [[
         current_spot INTEGER DEFAULT 0,
         current_battle_id INTEGER,
         current_blackjack_id INTEGER,
+        access_of_mouse_game BOOLEAN DEFAULT FALSE,
+        current_mouse_battle_id INTEGER,
+        current_mouse_spot INTEGER,
+        mouse_battle_lost_timestamp TIMESTAMP, 
         special_item_key INTEGER DEFAULT -1,
         special_item_thread INTEGER DEFAULT -1,
         special_item_bark INTEGER DEFAULT -1,
@@ -198,6 +203,7 @@ Handlers.add("Admin.UpdateTable",
         current_spot INTEGER DEFAULT 0,
         current_battle_id INTEGER,
         current_blackjack_id INTEGER,
+        current_mouse_battle_id INTEGER,
         special_item_kitten INTEGER DEFAULT -1,
         special_item_key INTEGER DEFAULT -1,
         special_item_thread INTEGER DEFAULT -1,
@@ -222,9 +228,9 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
  function (msg: Message)
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
-    dbAdmin.db:exec("DROP TABLE IF EXISTS Pet;")
-    dbAdmin.db:exec(PET_TABLE)
-    
+    dbAdmin.db:exec([[
+        ALTER TABLE Users ADD COLUMN ticket_balance FLOAT DEFAULT 0;
+    ]])    
     print("end")
 end
 )

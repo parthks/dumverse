@@ -158,45 +158,51 @@ export default function CombatAreaBag() {
                 />{" "}
               </div>
             </div>
-            <div className="w-full flex flex-col gap-3 items-center justify-center">
-              <h1 className="text-3xl font-semibold text-white underline">
-                Currencies
-              </h1>
-              <div className="flex w-full px-8 flex-row justify-between items-baseline">
-                <div className="flex flex-col gap-4 items-end justify-between">
-                  <div className="flex items-center justify-between">
-                    <div className="flex justify-center items-center">
-                      <label className="text-2xl mr-1 text-white">
-                        {user?.dumz_balance.toLocaleString()} $Dumz
-                      </label>
-                      <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-8" />
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex justify-center items-center">
-                      <label className="text-2xl mr-1 text-white">
-                        {0} Trunk
-                      </label>
-                      <img
-                        src={IMAGES.TRUNK_ICON}
-                        alt="Trunk"
-                        className="w-8 "
-                      />
-                    </div>
+            <div className="w-full flex flex-col items-center justify-center">
+            <h1 className="text-3xl font-semibold text-white underline">
+              Currencies
+            </h1>
+            <div className=" w-full mt-4 px-8 grid grid-flow-col grid-rows-2 gap-4">
+              {/* <div className="flex flex-col gap-4 items-end justify-between"> */}
+                <div className="flex items-center justify-between">
+                  <div className="flex justify-center items-center">
+                    <label className="text-2xl mr-1 text-white">
+                      {user?.dumz_balance.toLocaleString()} $Dumz
+                    </label>
+                    <img src={IMAGES.DUMZ_ICON} alt="Dumz" className="w-8" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-4 items-end justify-center">
-                  <div className="flex items-center justify-center">
-                    <div className="flex justify-center items-center">
-                      <label className="text-2xl mr-1 text-white">
-                        {user?.gold_balance.toLocaleString()}g
-                      </label>
-                      <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-8 " />
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex justify-center items-center">
+                    <label className="text-2xl mr-1 text-white">
+                      {0} Trunk
+                    </label>
+                    <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-8 " />
+                  </div>
+                </div>
+              {/* </div> */}
+              <div className="flex flex-col gap-4 items-end justify-center">
+                <div className="flex items-center justify-center">
+                  <div className="flex justify-center items-center">
+                    <label className="text-2xl mr-1 text-white">
+                      {user?.gold_balance.toLocaleString()}g
+                    </label>
+                    <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-8 " />
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 items-end justify-center">
+                <div className="flex items-center justify-center">
+                  <div className="flex justify-center items-center">
+                    <label className="text-2xl mr-1 text-white">
+                      {user?.ticket_balance.toLocaleString()} T
+                    </label>
+                    <img src={IMAGES.TICKET_ICON} alt="Ticket" className="w-11 " />
                   </div>
                 </div>
               </div>
             </div>
+          </div>
 
             <ImgButton
               className="mt-4"

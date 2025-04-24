@@ -16,7 +16,7 @@ local function shopInfoHandler(msg: Message)
                 id = pet.id,
                 name = pet.name,
                 type = pet.ability_type,
-                gold_price = pet.gold_price,
+                ticket_price = pet.ticket_price,
                 dumz_price = nil
             }
         end
@@ -160,7 +160,7 @@ end
 local function shopBuyPetHandler(msg: Message)
 
     local tokenType = msg.Tags.TokenType as TokenType
-    assert(tokenType == "GOLD", "Invalid token type")
+    assert(tokenType == "TICKET", "Invalid token type")
     
     local user_id = tonumber(msg.Tags.UserId)
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
@@ -171,9 +171,9 @@ local function shopBuyPetHandler(msg: Message)
     local pet = helpers.GetPetDetails(pet_id)
     assert(pet, "Item does not exist")
         
-    if tokenType == "GOLD" then
-        assert(pet.gold_price, "Item does not have a gold price")
-        assert(userData.gold_balance >= pet.gold_price, "You do not have enough GOLD balance")
+    if tokenType == "TICKET" then
+        assert(pet.ticket_price, "Item does not have a ticket price")
+        assert(userData.ticket_balance >= pet.ticket_price, "You do not have enough TICKET balance")
     end
 
     dbAdmin:exec(string.format([[
@@ -184,10 +184,10 @@ local function shopBuyPetHandler(msg: Message)
             INSERT INTO Pet (user_id, pet_id, ability_type, equipped, created_at) VALUES (%d, "%s", "%s", TRUE, "%s");
         ]], user_id, pet_id, pet.ability_type, msg.Timestamp))
 
-    if tokenType == "GOLD" then
+    if tokenType == "TICKET" then
         dbAdmin:exec(string.format([[
-             UPDATE Users SET gold_balance = %f WHERE id = %d;
-        ]], userData.gold_balance - pet.gold_price, user_id))
+             UPDATE Users SET ticket_balance = %f WHERE id = %d;
+        ]], userData.ticket_balance - pet.ticket_price, user_id))
     end 
     
     ao.send({ Target = msg.From, Status = "Success" })

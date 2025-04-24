@@ -73,6 +73,7 @@ export type NPC = {
   gold_reward: number;
   dumz_reward: number;
   trunk_reward: number;
+  ticket_reward: number;
   extra_gold: number;
 };
 

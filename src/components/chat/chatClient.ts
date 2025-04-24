@@ -176,7 +176,7 @@ export const createChatClient = (chatRoom: "Town" | "RestArea"): ChatClient => (
       // Store the result for access in getPreviousPageParam
       const result = { messages, nextCursor };
       this.lastFetchResponse = result;
-      console.log("Ashu chat messssss: "+JSON.stringify(this.lastFetchResponse));
+      // console.log("Ashu chat messssss: "+JSON.stringify(this.lastFetchResponse));
       return result;
     } catch (error) {
       console.error("Error fetching messages:", error);

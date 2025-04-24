@@ -7,7 +7,7 @@ local GAME_PROCESS_ID =  "he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk"   -- "_-h
 local RECORD_PROCESS_ID =  "HJFBaDD69-BbZ7SiL4FNSeXze_AaOJyevFhgDtv8MI0"  --"89fSDpPCsPx-B26ih5pqsjxhb_5PpcAuckdjYJsr97A"
 local BACKUP_PROCESS_ID = "3wGAfN8l852iuIt6Kc8kjR6G5opcTa92jKP1aAv2iWY"
 local BANK_PROCESS_ID = "Aoa2ZMDFrJdB_bPrCF_eUSCVKfXgx3e5nbVt6PmA870"
-local BLACKJACK_PROCESS_ID = "2RlKkyNd-xZvskDopd1rzz8vTxWMlfGYGY2LYXW-qXQ"
+local BLACKJACK_PROCESS_ID = "ANldxWPArmZJ16B1pswoBYoC9NY3xwwxLSPHeqOuU6E"
 
 -- local REST_SPOTS = {0, 9, 18, 36, 45, 63, 72}
 -- local BOSS_SPOTS = {27, 54, 81}
@@ -15,7 +15,7 @@ local BLACKJACK_PROCESS_ID = "2RlKkyNd-xZvskDopd1rzz8vTxWMlfGYGY2LYXW-qXQ"
 local REST_SPOTS = {0, 9, 18, 35, 44, 61, 70}
 local BOSS_SPOTS = { 26, 52, 78}
 
-local COMBAT_ELIGIBLE_PET = {"FAITHFUL_FOX", "GRUMPY_CAT", "DOGE_PUPPY", "BOLD_BADGER", "TINY_TURTLE"}
+local COMBAT_ELIGIBLE_PET = {"FAITHFUL_FOX", "GRUMPY_CAT", "DOGE_PUPPY", "BOLD_BADGER", "TINY_TURTLE", "MIGHTY_MOUSE"}
 
 require "utils.globals"
 
@@ -210,57 +210,57 @@ local PETS: {string: PetsData} = {
     FAITHFUL_FOX = {
         id = "FAITHFUL_FOX",
         name = "Faithful Fox",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 5,
         ability_type = "RUN_AWAY",
     },
     DILIGENT_DUCK = {
         id = "DILIGENT_DUCK",
         name = "Diligent Duck",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 0.15,             -- Regens stamina 15% faster
         ability_type = "STAMINA_REGEN",
     },
     RASCALLY_RABBIT = {
         id = "RASCALLY_RABBIT",
         name = "Rascally Rabbit",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 0.15,        -- 15%
         ability_type = "STORE_DISCOUNT"
     }, 
      GRUMPY_CAT = {
         id = "GRUMPY_CAT",
         name = "Grumpy Cat",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 1,       
         ability_type = "ATTACK"
     },
     DOGE_PUPPY = {
         id = "DOGE_PUPPY",
         name = "Doge Puppy",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 1,       
         ability_type = "ATTACK"
     },
      BOLD_BADGER = {
         id = "BOLD_BADGER",
         name = "Bold Badger",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 1,       
         ability_type = "DEFENSE"
     }, 
     TINY_TURTLE = {
         id = "TINY_TURTLE",
         name = "Tiny Turtle",
-        gold_price = 1000,
+        ticket_price = 1000,
         ability = 1,       
         ability_type = "DEFENSE"
     }, 
     MIGHTY_MOUSE = {
         id = "MIGHTY_MOUSE",
         name = "Mighty Mouse",
-        gold_price = 1000,
-        ability = 1,       
+        ticket_price = 1000,
+        ability = 1,           
         ability_type = "MOUSE_HALL"
     },
 
@@ -287,7 +287,7 @@ for _, pet in pairs(PETS as {string:PetsData}) do
         id = pet.id,
         name = pet.name,
         type = pet.ability_type,
-        gold_price = pet.gold_price,
+        ticket_price = pet.ticket_price,
         dumz_price = nil
     }
     ALL_ITEMS[pet.id] = baseItem
@@ -611,7 +611,8 @@ local BOSSES: {EnemyData} = {
         damage = {1,2},
         difficulty = "HARDEST",
         gold_reward = 120,
-        dumz_reward = 24
+        dumz_reward = 24,
+        ticket_reward = 10
     },
     {
         id = "BOSS_2",
@@ -621,7 +622,8 @@ local BOSSES: {EnemyData} = {
         damage = {1,2},
         difficulty = "HARDEST",
         gold_reward = 120,
-        dumz_reward = 24
+        dumz_reward = 24,
+        ticket_reward = 10
     },{
         id = "BOSS_3",
         name = "Manic Moose",
@@ -630,7 +632,8 @@ local BOSSES: {EnemyData} = {
         damage = {1,2},
         difficulty = "HARDEST",
         gold_reward = 120,
-        dumz_reward = 24
+        dumz_reward = 24,
+        ticket_reward = 10
     },  {
         id = "BOSS_4",
         name = "Wild Wolves",
@@ -639,7 +642,8 @@ local BOSSES: {EnemyData} = {
         damage = {2,3},
         difficulty = "HARDEST",
         gold_reward = 240,
-        dumz_reward = 72
+        dumz_reward = 72,
+        ticket_reward = 10
     },  {
         id = "BOSS_5",
         name = "Sinister Spider",
@@ -648,7 +652,8 @@ local BOSSES: {EnemyData} = {
         damage = {2,3},
         difficulty = "HARDEST",
         gold_reward = 240,
-        dumz_reward = 72
+        dumz_reward = 72,
+        ticket_reward = 10
     },{
         id = "BOSS_6",
         name = "Fine Fire",
@@ -657,7 +662,8 @@ local BOSSES: {EnemyData} = {
         damage = {2,3},
         difficulty = "HARDEST",
         gold_reward = 240,
-        dumz_reward = 72
+        dumz_reward = 72,
+        ticket_reward = 10
     }, {
         id = "BOSS_7",
         name = "Devilish Dragon",
@@ -666,7 +672,8 @@ local BOSSES: {EnemyData} = {
         damage = {3,4},
         difficulty = "HARDEST",
         gold_reward = 480,
-        dumz_reward = 120
+        dumz_reward = 120,
+        ticket_reward = 10
     }, {
         id = "BOSS_8",
         name = "Great Grizzly",
@@ -675,7 +682,8 @@ local BOSSES: {EnemyData} = {
         damage = {3,4},
         difficulty = "HARDEST",
         gold_reward = 480,
-        dumz_reward = 120
+        dumz_reward = 120,
+        ticket_reward = 10
     },
     {
         id = "BOSS_9",
@@ -685,11 +693,43 @@ local BOSSES: {EnemyData} = {
         damage = {3,4},
         difficulty = "HARDEST",
         gold_reward = 480,
-        dumz_reward = 120
+        dumz_reward = 120,
+        ticket_reward = 10
     }
 }
 
-
+local MOUSE_GAME_ENEMIES: {EnemyData} = {
+    {
+        id = "MOUSE_ENEMY_1",
+        name = "Fearless Ferret",
+        total_health = 2,
+        health = 2,
+        damage = 1,
+        difficulty = "EASY",
+        gold_reward = 10,
+        dumz_reward = 5
+    },
+    {
+        id = "MOUSE_ENEMY_2",
+        name = "Lovable Lizard",
+        total_health = 2,
+        health = 2,
+        damage = 1,
+        difficulty = "EASY",
+        gold_reward = 10,
+        dumz_reward = 5
+    },
+    {
+        id = "MOUSE__ENEMY_BOSS_1",
+        name = "Sly Snake",
+        total_health = 3,
+        health = 3,
+        damage = {1,2},
+        difficulty = "HARDEST",
+        gold_reward = 20,
+        dumz_reward = 10
+    }
+}
 -- 9, 18, 27 are rest spots
 -- local ENEMY_PER_LEVEL = {
 --     [1] = { ENEMIES[1] },
@@ -745,6 +785,7 @@ return {
     SPECIAL_ENEMIES = SPECIAL_ENEMIES,
     BOSSES = BOSSES,
     PETS = PETS,
-    COMBAT_ELIGIBLE_PET = COMBAT_ELIGIBLE_PET
+    COMBAT_ELIGIBLE_PET = COMBAT_ELIGIBLE_PET,
+    MOUSE_GAME_ENEMIES = MOUSE_GAME_ENEMIES
     -- ENEMY_PER_LEVEL = ENEMY_PER_LEVEL,
 }

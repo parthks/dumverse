@@ -353,7 +353,7 @@ local function CronTick(msg: Message,npcTimer:integer)
     end
 end
 
-    
+
 local function newUserJoinHandler(msg: Message)
     local user_id = msg.Tags.UserId
     local level_input = msg.Tags.Level
@@ -369,6 +369,13 @@ local function newUserJoinHandler(msg: Message)
 
     local player = json.decode(data.player) as CombatUserData
     local npcs = json.decode(data.npcs) as {CombatEnemyData}
+    local is_mouse_game: boolean | nil
+    if msg.Tags.isMouseGame then
+        is_mouse_game = json.decode(msg.Tags.isMouseGame) as boolean
+    else
+        is_mouse_game = nil
+    end
+
     local pet: CombatPetData | nil = nil
     player.pet = nil
     if data.pet then
@@ -395,7 +402,11 @@ local function newUserJoinHandler(msg: Message)
         end
 
         -- check lastest open battle and add user to it
-        local battle = BattleHelpers.getLatestSuitableOpenBattle(player, level) as Battle
+        local battle: Battle | nil = nil
+        
+        if not is_mouse_game then
+            battle = BattleHelpers.getLatestSuitableOpenBattle(player, level) as Battle
+        end
 
         if not battle then
             battle = BattleHelpers.new(msg.Timestamp)
@@ -411,22 +422,32 @@ local function newUserJoinHandler(msg: Message)
             end
             Battles[battle.id] = battle
         end
+
+        battle =  battle as Battle
         player.added_at_timestamp = msg.Timestamp
         BattleHelpers.addPlayer(battle.id, player)
-        BattleHelpers.internalLog(battle.id, msg.Timestamp, "newUserJoinHandler", "Player "..player.id .. " added to battle")
+
+        if is_mouse_game then
+            battle.is_mouse_game = true
+            BattleHelpers.internalLog(battle.id, msg.Timestamp, "newUserJoinHandler", "Player (mouse) "..player.id .. " added to mouse game battle")
+        else
+            BattleHelpers.internalLog(battle.id, msg.Timestamp, "newUserJoinHandler", "Player "..player.id .. " added to battle")
+        end
         -- if pet then
         --     BattleHelpers.addPet(battle.id, pet)
         -- end
          -- send message to game process to confirm user has been added to a new battle
         local user_address = player.address
         print("adding user " .. user_address .. " to battle " .. battle.id .. "of level " .. battle.level)
+
         ao.send({
             Target = GAME_PROCESS_ID,
             UserId = user_id,
             BattleId = tostring(battle.id),
             Level = tostring(battle.level),
             Action = "Combat.EnteredNewCombat",
-            Data = json.encode(battle)
+            Data = json.encode(battle),
+            isMouseGame = is_mouse_game and json.encode(true) or nil
         })
 end
 

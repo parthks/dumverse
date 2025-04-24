@@ -53,6 +53,7 @@ global enum TokenType
    "GOLD"
    "DUMZ"
    "TRUNK"
+   "TICKET"
 end
 
 global enum TransactionType
@@ -86,6 +87,7 @@ global type UserData = record
     gold_balance: number
     dumz_balance: number
     trunk_balance: number
+    ticket_balance: number
     total_trunk_token: number
     health: number
     total_health: number
@@ -97,6 +99,10 @@ global type UserData = record
     current_spot: integer
     current_battle_id: integer | nil
     current_blackjack_id: integer | nil
+    access_of_mouse_game: boolean
+    current_mouse_battle_id: integer | nil
+    current_mouse_spot: integer | nil
+    mouse_battle_lost_timestamp: integer | nil
     special_item_key: integer | nil -- becomes 0 when user accepts quest
     special_item_thread: integer | nil -- becomes 0 when user accepts quest
     special_item_bark: integer| nil -- becomes 0 when user accepts quest
@@ -114,6 +120,7 @@ global type EnemyData = record
     gold_reward: number | nil
     dumz_reward: number | nil
     trunk_reward: number | nil
+    ticket_reward: number | nil
 end
 
 -- Inventory item type
@@ -133,6 +140,7 @@ global type BaseItem = record
     type: string
     gold_price: number | nil
     dumz_price: number | nil
+    ticket_price: number | nil
 end
 
 -- Bank account type
@@ -168,7 +176,7 @@ end
 global type PetsData = record
     id: string
     name: string
-    gold_price: number
+    ticket_price: number
     ability: number  
     ability_type: string
 end

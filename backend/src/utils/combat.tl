@@ -26,6 +26,7 @@ global type CombatUserData = record
     gold_balance: integer
     dumz_balance: integer
     trunk_balance: integer
+    ticket_balance: integer
     total_trunk_token: integer
     health: number
     total_health: number
@@ -37,6 +38,10 @@ global type CombatUserData = record
     current_spot: integer
     current_battle_id: integer | nil
     current_blackjack_id: integer | nil
+    access_of_mouse_game: boolean
+    current_mouse_battle_id: integer | nil
+    current_mouse_spot: integer | nil
+    mouse_battle_lost_timestamp: integer | nil
     special_item_key: integer -- default -1, becomes 0 when user accepts quest
     special_item_thread: integer -- default -1, becomes 0 when user accepts quest
     special_item_bark: integer  -- default -1, becomes 0 when user accepts quest

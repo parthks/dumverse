@@ -87,9 +87,21 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         -- local npc_is_winner = false
         local gold_win_in_pvp = 0
         local dumz_win_in_pvp = 0
+        local grant_access_of_mouse_game: boolean = false
 
-        for _,_ in pairs(battle.players) do
+        for _,player in pairs(battle.players) do
             number_of_players = number_of_players + 1
+
+            if player.pet ~= nil and (player.pet as CombatPetData).id == "MIGHTY_MOUSE" and math.random(1,2) == 1 and (player.mouse_battle_lost_timestamp + (24 * 60 * 60 * 1000 ) < timestamp)  then 
+                BattleHelpers.addLogs(battle_id, {
+                    {
+                        from = "",
+                        message = "You've found a burrow! hm.. you're to big to fit, maybe someone else could?",
+                        timestamp = timestamp
+                    }
+                })
+                grant_access_of_mouse_game = true
+            end
             -- if (not npc_is_winner and battle.winner == player_id and battle.winner ~= player_ids) then
             --     -- local winners_entity = battle.winner 
             --      gold_win_in_pvp = battle.players[player_ids].gold_balance
@@ -119,7 +131,8 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
                 NumberOfEnemies = tostring(number_of_enemies),
                 NumberOfPlayers = tostring(number_of_players),
                 GoldWinInPvP = tostring(gold_win_in_pvp),
-                DumzWinInPvP = tostring(dumz_win_in_pvp)
+                DumzWinInPvP = tostring(dumz_win_in_pvp),
+                grantedAccessOfMouseGame = grant_access_of_mouse_game and json.encode(true)  or json.encode(false),
             })
         else
             ao.send({
@@ -128,7 +141,9 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
                 Level = tostring(battle.level),
                 Action = "Combat.PlayerWon",
                 Data = json.encode(battle.players[player_id]),
-                NumberOfEnemies = tostring(number_of_enemies)
+                NumberOfEnemies = tostring(number_of_enemies),
+                grantedAccessOfMouseGame = grant_access_of_mouse_game and json.encode(true) or json.encode(false),
+                isMouseGame = battle.is_mouse_game and json.encode(true) or nil
             })
         end
         -- ao.send({
@@ -245,8 +260,8 @@ BattleHelpers.killNPC = function(battle_id: integer, npc_id: string, attacker_id
     if (Battles[battle_id].players[attacker_id] ~= nil) then
         -- player gets npc gold + extra gold
             Battles[battle_id].players[attacker_id].dumz_balance = (battle.players[attacker_id].dumz_balance or 0) + (npc.dumz_reward or 0)
-            Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + (npc.gold_reward or 0) +
-            (npc.extra_gold or 0)
+            Battles[battle_id].players[attacker_id].gold_balance = (battle.players[attacker_id].gold_balance or 0) + (npc.gold_reward or 0) + (npc.extra_gold or 0)
+            Battles[battle_id].players[attacker_id].ticket_balance = (battle.players[attacker_id].ticket_balance or 0) + (npc.ticket_reward or 0)
 
             -- Battles[battle_id].players[attacker_id].gold_earned = (battle.players[attacker_id].gold_earned or 0) + (npc.gold_reward or 0) +
             -- (npc.extra_gold or 0)
@@ -346,7 +361,8 @@ BattleHelpers.killPlayer = function(battle_id: integer, player_id: string, attac
         Target = GAME_PROCESS_ID,
         UserId = tostring(player.id),
         Action = "Combat.PlayerPerished",
-        Data = json.encode(player)
+        Data = json.encode(player),
+        isMouseGame = Battles[battle_id].is_mouse_game and json.encode(true) or nil
     })
     -- ao.send({
     --     Target = constants.HISTORY_PROCESS_ID,
@@ -373,7 +389,8 @@ BattleHelpers.playerRanAway = function(battle_id: integer, player_id: string, ti
         Target = GAME_PROCESS_ID,
         UserId = tostring(player.id),
         Action = "Combat.PlayerRanAway",
-        Data = json.encode(player)
+        Data = json.encode(player),
+        isMouseGame = Battles[battle_id].is_mouse_game and json.encode(true) or nil
     })
 
     -- ao.send({

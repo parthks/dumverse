@@ -9,11 +9,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Pet } from "@/types/game";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
-  const { user, consumeItem, inventory, petsOwned } = useGameStore();
+  const { user, consumeItem, inventory, petsOwned, setEquipPet } = useGameStore();
   const [consumeItemLoading, setConsumeItemLoading] = useState(false);
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
   const drinkJooseAudioRef = useRef<HTMLAudioElement>(null);
   const eatCakeAudioRef = useRef<HTMLAudioElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!user) return null;
 
@@ -103,6 +105,9 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
               <h1 className="text-3xl font-semibold text-white underline -translate-y-2">
                 Pet
               </h1>
+
+              <Popover open={isOpen} onOpenChange={setIsOpen}>
+              <PopoverTrigger asChild>
               <div
                 className="h-[250px] relative flex flex-col bg-[url('https://arweave.net/Jd2TZnGt7Ai_Tfc6885pujthtJxPyJ_nt-Iq0cLBXHU')] bg-no-repeat bg-contain bg-center px-3 pt-2 justify-around"
                 style={{
@@ -132,6 +137,49 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
 
                 </h2>
               </div>
+
+              </PopoverTrigger>
+              <PopoverContent
+                className={`w-full p-0 bg-black bg-opacity-80 text-white transition-opacity duration-200 ${
+                  loading ? "opacity-50 pointer-events-none" : "opacity-100"
+                }`}
+              >
+                <div className="py-1 max-h-[300px] overflow-y-auto">
+                  <div className="grid grid-cols-3 gap-4 p-3">
+                    {petsOwned?.map((val, key) => (
+                        <div className="items-center">
+                          <div
+                            key={key}
+                            className=" hover:bg-gray-100 p-2 cursor-pointer rounded"
+                            onClick={() => {
+                              setLoading(true);
+                              setEquipPet(
+                                val.user_id,
+                                val.id
+                              ).finally(() => {
+                                setLoading(false);
+                                setIsOpen(false); // Close the popover after operation completes
+                              });
+                            }}
+                          >
+                            <img
+                              src={
+                                PET_LARGE_CARD_IMAGE[
+                                  val.pet_id as keyof typeof PET_LARGE_CARD_IMAGE
+                                ]
+                              }
+                              alt={`${val.pet_id} preview`}
+                              className="w-12 h-14 object-contain"
+                            />
+                          </div>
+                         
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+
             </div>
           </div>
 
@@ -170,8 +218,8 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
             <h1 className="text-3xl font-semibold text-white underline">
               Currencies
             </h1>
-            <div className="flex w-full mt-4 px-8 flex-row justify-between items-baseline">
-              <div className="flex flex-col gap-4 items-end justify-between">
+            <div className=" w-full mt-4 px-8 grid grid-flow-col grid-rows-2 gap-4">
+              {/* <div className="flex flex-col gap-4 items-end justify-between"> */}
                 <div className="flex items-center justify-between">
                   <div className="flex justify-center items-center">
                     <label className="text-2xl mr-1 text-white">
@@ -188,7 +236,7 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
                     <img src={IMAGES.TRUNK_ICON} alt="Trunk" className="w-8 " />
                   </div>
                 </div>
-              </div>
+              {/* </div> */}
               <div className="flex flex-col gap-4 items-end justify-center">
                 <div className="flex items-center justify-center">
                   <div className="flex justify-center items-center">
@@ -196,6 +244,16 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
                       {user?.gold_balance.toLocaleString()}g
                     </label>
                     <img src={IMAGES.GOLD_ICON} alt="Gold" className="w-8 " />
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 items-end justify-center">
+                <div className="flex items-center justify-center">
+                  <div className="flex justify-center items-center">
+                    <label className="text-2xl mr-1 text-white">
+                      {user?.ticket_balance.toLocaleString()} T
+                    </label>
+                    <img src={IMAGES.TICKET_ICON} alt="Ticket" className="w-11 " />
                   </div>
                 </div>
               </div>

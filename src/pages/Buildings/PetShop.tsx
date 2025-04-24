@@ -1,7 +1,7 @@
 import { RiveAnimation } from "@/components/buildings/RiveShopkeeper";
 import useBuildingMusic from "@/components/buildings/useBuildingMusic";
 import { InventoryBag } from "@/components/game/InventoryBag";
-import { BUILDING_IMAGES } from "@/lib/constants";
+import { BUILDING_IMAGES, IMAGES } from "@/lib/constants";
 import { calculatePositionAndSize } from "@/lib/utils";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
 import { useEffect, useState } from "react";
@@ -136,7 +136,10 @@ export default function PetShop() {
     >
       <div className="flex flex-col items-center justify-center">
         <h1 className="text-white text-2xl">{item.name}</h1>
-        <h1 className="text-white text-2xl">{item.gold_price}g</h1>
+       <div className="flex gap-2"><h1 className="text-white text-2xl">{item.ticket_price}T</h1>
+        <img src={IMAGES.TICKET_ICON} alt="Ticket" className="w-10 -translate-y-1" />
+       
+       </div> 
       </div>
       <ImgButton
         disabled={isPetOwned || buyItemLoading}
@@ -144,7 +147,7 @@ export default function PetShop() {
         alt={`Buy ${item.name}`}
         data-item-type={item.id}
         onClick={async () => {
-          await buyPet(item, item.gold_price ? "GOLD" : "TICKET");
+          await buyPet(item, "TICKET");
           audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
         }}
         className=""

@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8"]=0,
-        ["az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ"]=0,
-        ["sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4"]=0,
-        ["z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E"]=0,
-        ["s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM"]=0,
+        ["hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE"]=0,
+        ["0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA"]=0,
+        ["ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE"]=0,
+        ["ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ"]=0,
+        ["gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE"]=0,
     }
 end
 
@@ -393,7 +393,7 @@ local function enterNewCombatHandler(msg: Message)
     
     -- Only add pet data if pet exists
     if pet then
-        messageData.pet = json.encode(pet)
+        messageData.pet = json.encode(pet) 
     end
     
     ao.send({
@@ -405,6 +405,97 @@ local function enterNewCombatHandler(msg: Message)
         Data = json.encode(messageData)
     })
     
+end
+
+local function isValidMouseSpotToMoveTo(current_spot: number, target_spot: number): boolean
+    -- Check if spots are valid (1-5)
+    if current_spot < 0 or current_spot > 5 or target_spot < 1 or target_spot > 5 then
+        return false
+    end
+
+    if (current_spot + 1 == target_spot) and (current_spot == target_spot - 1) then
+        return true
+    end
+
+    return false
+end
+
+
+local function enterNewMouseCombatHandler(msg: Message)
+    local user_id = tonumber(msg.Tags.UserId)
+    local mouse_combat_level = tonumber(msg.Tags.Level) as integer
+
+    assert(type(mouse_combat_level) == "number", "Level is required")
+    assert(type(mouse_combat_level) == "number" and math.floor(mouse_combat_level) == mouse_combat_level, "Mouse Combat level must be an integer")
+
+    local pet: PetsData | nil = nil
+    local results: Pets = dbAdmin:exec(string.format([[SELECT * FROM Pet where user_id = %d and equipped = TRUE]], user_id))[1] as Pets
+    assert(results.pet_id == "MIGHTY_MOUSE", "Level is required")
+    pet = helpers.GetPetDetails(results.pet_id) as PetsData
+
+    local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
+
+    assert(userData.health > 0, "User must have health")
+    assert(userData.stamina > 0, "User must have stamina")
+    assert(mouse_combat_level, "Mouse Combat Level is required")
+    assert(mouse_combat_level > 0, "Mouse Combat Level must be greater than 0")
+    assert(userData.mouse_battle_lost_timestamp + (24 * 60 * 60 * 1000 ) < msg.Timestamp, "You can access mouse game after 24 hrs")
+
+    local current_mouse_spot = userData.current_mouse_spot == nil and 0 or userData.current_mouse_spot
+    
+    assert(isValidMouseSpotToMoveTo(current_mouse_spot, mouse_combat_level),"Invalid mouse spot to move to. Current mouse spot: " .. current_mouse_spot .. " Mouse Combat Level: " .. mouse_combat_level)
+
+    local combatUserData: CombatUserData = userData as CombatUserData
+
+    combatUserData.id = tostring(user_id)
+    combatUserData.name = "Mighty Mouse"
+    combatUserData.nft_address = "PylYv6nkE46i_wqpofxlNeCEzJzzp72Oj6FXVE9_uWs"
+    combatUserData.total_health = 2
+    combatUserData.health = 2
+    combatUserData.damage = 2
+    combatUserData.defense = 0
+    combatUserData.potion_used = false
+    combatUserData.potion = nil
+    combatUserData.inventory_weapon_id = nil
+    combatUserData.inventory_armor_id = nil
+    combatUserData.mouse_battle_lost_timestamp = userData.mouse_battle_lost_timestamp == nil and 0 or userData.mouse_battle_lost_timestamp
+    
+    local mouse_enemies: {EnemyData}
+
+    if mouse_combat_level >= 1 and mouse_combat_level <=4 then
+        mouse_enemies = {constants.MOUSE_GAME_ENEMIES[math.random(1, 2)]}
+    end
+
+    if mouse_combat_level == 5 then
+        mouse_enemies = {constants.MOUSE_GAME_ENEMIES[3]}
+    end
+
+    assert(mouse_enemies, "No mouse enemies found for mouse combat level: " .. mouse_combat_level)
+
+    local subProcess = assignSubProcessToUser(user_id, mouse_combat_level, msg.Timestamp) 
+     local userAddress = dbAdmin:exec(string.format([[
+        SELECT address FROM Users WHERE id = %f;
+    ]], user_id))
+
+    if type(userAddress[1].address) == "string" then
+        local data=json.encode({subprocess=subProcess})
+    ao.send({Target=tostring(userAddress[1].address), Data=data})
+    end
+
+    local messageData: {string:string} = {
+        npcs = json.encode(mouse_enemies),
+        player = json.encode(combatUserData)
+    }
+
+    ao.send({
+        Target = subProcess,
+        Action = "Battle.NewUserJoin",
+        UserId = tostring(user_id),
+        Level = tostring(mouse_combat_level),
+        Status = "Success",
+        isMouseGame = json.encode(true),
+        Data = json.encode(messageData)
+    })
 end
 
 local function enteredNewCombatHandler(msg: Message)
@@ -424,13 +515,30 @@ local function enteredNewCombatHandler(msg: Message)
     local user_id = msg.Tags.UserId
     local battle_id = tonumber(msg.Tags.BattleId)
     local level = tonumber(msg.Tags.Level)
+    local is_mouse_game: boolean | nil
+    if msg.Tags.isMouseGame then
+        is_mouse_game = json.decode(msg.Tags.isMouseGame) as boolean
+    else
+        is_mouse_game = nil
+    end
     assert(battle_id, "BattleId is required")
     assert(level, "Level is required")
 
     -- update Users table with battle_id 
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = %d, stamina = stamina - 1, last_regenerate_time = %f WHERE id = %f;
+    if is_mouse_game then
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_mouse_battle_id = %d WHERE id = %f;
+        ]], battle_id, user_id))
+
+        -- dbAdmin:exec(string.format([[
+        --     UPDATE Pet SET current_mouse_battle_id = %d WHERE user_id = %f  and equipped = TRUE;
+        -- ]], battle_id, user_id))
+    else
+        dbAdmin:exec(string.format([[
+        UPDATE Users SET current_battle_id = %d, stamina = stamina - 1, last_regenerate_time = %f, current_mouse_battle_id = NULL WHERE id = %f;
     ]], battle_id, msg.Timestamp, user_id))
+    end
+    
     
     local user_data: UserData = dbAdmin:exec(string.format([[SELECT * FROM Users WHERE id = %d]], user_id)) [1] as UserData
     helpers.sendUserDataToBackupProcess(tonumber(user_id), user_data)
@@ -467,7 +575,13 @@ local function playerWonHandler(msg: Message)
     local number_of_players: number = tonumber(msg.Tags.NumberOfPlayers) or 0
     local gold_win_in_pvp: number = tonumber(msg.Tags.GoldWinInPvP)
     local dumz_win_in_pvp: number = tonumber(msg.Tags.DumzWinInPvP)
-    
+    local has_access_of_mouse_game: boolean = (json.decode(msg.Tags.grantedAccessOfMouseGame) as boolean) or false
+    local is_mouse_game: boolean | nil
+    if msg.Tags.isMouseGame then
+        is_mouse_game = json.decode(msg.Tags.isMouseGame) as boolean
+    else
+        is_mouse_game = nil
+    end
 
     -- processPlayerData(tonumber(user_id), playerData, true, number_of_enemies)
     -- local leaderboard = processPlayerData(tonumber(user_id), playerData, true, number_of_enemies) as Leaderboard
@@ -498,19 +612,28 @@ local function playerWonHandler(msg: Message)
         ]], playerData.gold_balance - playerOriginalData.gold_balance, number_of_enemies ,user_id))
     end
 
-    -- update Users table with health, stamina, gold_balance, dumz_balance
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, total_trunk_token = %f,
-        special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
-        WHERE id = %f;
-    ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0, playerData.total_trunk_token,
-    playerData.special_item_kitten,
-    playerData.special_item_key,
-    playerData.special_item_thread,
-    playerData.special_item_bark,
-    playerData.special_item_heart,
-    user_id))
-    
+    if is_mouse_game then
+        
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_mouse_battle_id = NULL, current_mouse_spot = %d, gold_balance = %f, dumz_balance = %f WHERE id = %f;
+        ]], level, playerData.gold_balance, playerData.dumz_balance,user_id))
+
+    else
+        -- update Users table with health, stamina, gold_balance, dumz_balance
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, total_trunk_token = %f,
+            special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d, access_of_mouse_game = %s, current_mouse_spot = %s
+            WHERE id = %f;
+        ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0, playerData.total_trunk_token,
+        playerData.special_item_kitten,
+        playerData.special_item_key,
+        playerData.special_item_thread,
+        playerData.special_item_bark,
+        playerData.special_item_heart,
+        has_access_of_mouse_game and "TRUE" or "FALSE",
+        has_access_of_mouse_game and "0" or "NULL",
+        user_id))
+    end
     removeUsedPotion(playerData,tostring(user_id))
     local subProcessAssigned =  subProcessAssignToUsers[user_id].subProcess
     subProcesses[subProcessAssigned]= subProcesses[subProcessAssigned] - 1
@@ -539,21 +662,36 @@ local function playerRanAwayHandler(msg: Message)
 
     local user_id = msg.Tags.UserId
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
+    local is_mouse_game: boolean | nil
+    if msg.Tags.isMouseGame then
+        is_mouse_game = json.decode(msg.Tags.isMouseGame) as boolean
+    else
+        is_mouse_game = nil
+    end
 
-    -- update Users table with health, stamina, gold_balance, dumz_balance
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, 
-        health = %f, gold_balance = %f, dumz_balance = %f,
-        special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
-        WHERE id = %f;
-    ]], 
-    playerData.health, playerData.gold_balance, playerData.dumz_balance,
-    playerData.special_item_kitten,
-    playerData.special_item_key,
-    playerData.special_item_thread,
-    playerData.special_item_bark,
-    playerData.special_item_heart,
-    user_id))
+    if is_mouse_game then
+
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_mouse_battle_id = NULL, gold_balance = %f, dumz_balance = %f WHERE id = %f;
+        ]], playerData.gold_balance, playerData.dumz_balance,user_id))
+
+    else
+        -- update Users table with health, stamina, gold_balance, dumz_balance
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_battle_id = NULL, 
+            health = %f, gold_balance = %f, dumz_balance = %f,
+            special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d
+            WHERE id = %f;
+        ]], 
+        playerData.health, playerData.gold_balance, playerData.dumz_balance,
+        playerData.special_item_kitten,
+        playerData.special_item_key,
+        playerData.special_item_thread,
+        playerData.special_item_bark,
+        playerData.special_item_heart,
+        user_id))
+
+    end
 
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)
@@ -584,6 +722,12 @@ local function playerPerishedHandler(msg: Message)
 
     local user_id = tonumber(msg.Tags.UserId)
     local playerData: CombatUserData = json.decode(msg.Data) as CombatUserData
+    local is_mouse_game: boolean | nil
+    if msg.Tags.isMouseGame then
+        is_mouse_game = json.decode(msg.Tags.isMouseGame) as boolean
+    else
+        is_mouse_game = nil
+    end
 
 --     local playerOrginalData = dbAdmin:exec(string.format([[
 --         SELECT * from Users WHERE id = %f;
@@ -641,10 +785,20 @@ local function playerPerishedHandler(msg: Message)
             UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
         ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
      
-    -- update Users table
-    dbAdmin:exec(string.format([[
-        UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0, last_regenerate_time = %f WHERE id = %f;
-    ]], msg.Timestamp, user_id))
+    if is_mouse_game then  
+
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_mouse_battle_id = NULL, current_mouse_spot = NULL, gold_balance = 0, dumz_balance = 0, mouse_battle_lost_timestamp = %f, access_of_mouse_game = FALSE WHERE id = %f;
+        ]], msg.Timestamp, user_id))
+
+    else
+
+        -- update Users table
+        dbAdmin:exec(string.format([[
+            UPDATE Users SET current_battle_id = NULL, current_spot = 0, health = 0, stamina = 0, gold_balance = 0, dumz_balance = 0, last_regenerate_time = %f WHERE id = %f;
+        ]], msg.Timestamp, user_id))
+
+    end
 
     removeUsedPotion(playerData,tostring(user_id))
     -- local USER_ID = tonumber(user_id)
@@ -694,18 +848,20 @@ local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
    print("Starttt")
    subProcesses = {
-    ["RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8"]=0,
-    ["az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ"]=0,
-    ["sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4"]=0,
-    ["z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E"]=0,
-    ["s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM"]=0,
+    ["hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE"]=0,
+    ["0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA"]=0,
+    ["ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE"]=0,
+    ["ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ"]=0,
+    ["gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE"]=0,
    }
+   ao.send({Target=constants.RECORD_PROCESS_ID, Action="Record.ResetRecordSubprocesses"})
    print("Endddd")
 
 end
 
 -- Add handlers
 Handlers.add("Combat.EnterNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnterNewCombat'), enterNewCombatHandler)
+Handlers.add("Combat.EnterNewMouseCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnterNewMouseCombat'), enterNewMouseCombatHandler)
 Handlers.add("Combat.EnteredNewCombat", Handlers.utils.hasMatchingTag('Action', 'Combat.EnteredNewCombat'), enteredNewCombatHandler)
 Handlers.add("Combat.PlayerWon", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerWon'), playerWonHandler)
 Handlers.add("Combat.PlayerRanAway", Handlers.utils.hasMatchingTag('Action', 'Combat.PlayerRanAway'), playerRanAwayHandler)

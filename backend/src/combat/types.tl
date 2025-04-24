@@ -23,6 +23,7 @@ global record Battle
     ended: boolean
     winner: string | nil
     created_at: integer
+    is_mouse_game: boolean | nil
 end
 
 global record BattleHelpersType
@@ -53,6 +54,7 @@ global type CombatEnemyData = record
     dumz_reward: integer
     extra_gold: integer | nil
     trunk_reward: integer | nil
+    ticket_reward: integer | nil
 end
 
 -- global type DailyTrunkToken = record

@@ -209,7 +209,7 @@ function Chat({ onClose, chatOpen, setLatestMessage }: ChatProps) {
     initialPageParam: null, // Start with null cursor instead of using localStorage
     getNextPageParam: () => undefined,
     getPreviousPageParam: (firstPage, allPages, firstPageParam) => {
-      console.log("Firstpage: "+JSON.stringify(firstPage));
+      // console.log("Firstpage: "+JSON.stringify(firstPage));
       if (!firstPage || firstPage.length === 0) {
         return undefined;
       }

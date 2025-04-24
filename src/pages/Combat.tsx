@@ -815,6 +815,19 @@ function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
           </p>
         </div>
       )}
+      {enemy.ticket_reward && (
+        <div className="absolute bottom-[12.2%] right-[19%]">
+          <p
+            className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+            style={{
+              fontSize: `${15}px`,
+              lineHeight: "1",
+            }}
+          >
+            {enemy.ticket_reward} T
+          </p>
+        </div>
+      )}
     </div>
   );
 }

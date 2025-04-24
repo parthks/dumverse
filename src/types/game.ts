@@ -17,6 +17,7 @@ export type GameUser = {
   gold_balance: number;
   dumz_balance: number;
   trunk_balance: number;
+  ticket_balance: number;
   total_trunk_token: number;
   health: number;
   total_health: number;
@@ -26,6 +27,11 @@ export type GameUser = {
   defense: number;
   current_spot: number;
   current_battle_id?: number;
+  current_blackjack_id: number | null;
+  access_of_mouse_game: boolean;
+  current_mouse_battle_id: number | null;
+  current_mouse_spot: number | null;
+  mouse_battle_lost_timestamp: number | null;
   special_item_key: number;
   special_item_thread: number;
   special_item_bark: number;
@@ -52,6 +58,7 @@ export type Item = {
   name: string;
   gold_price?: number; // either one of these
   dumz_price?: number; // either one of these
+  ticket_price?: number;
   type: ItemType;
   defense: number; // only for armor
   material: string; // only for weapons and armor

@@ -51,11 +51,11 @@ end
 global SubProcesses: {string}
 if not SubProcesses then
     SubProcesses = {
-        "RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8",
-        "az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ",
-        "sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4",
-        "z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E",
-        "s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM",
+        "hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE",
+        "0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA",
+        "ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE",
+        "ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ",
+        "gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE",
     }
 end
 
@@ -120,14 +120,14 @@ end
 
 
 local function resetRecordSubprocessesHandler(msg:Message)
-    assert(msg.From=="Q-m1C__tJObZCydD_fTcds6np6gHRDDP05PfkCSSLGI","You can not call this handler")
+    assert(msg.From=="he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk","You can not call this handler")
     print("Initiate")
     SubProcesses = {
-        "RKmxozEoTs8aCES_ptQQh5U-N9xUD03D6ehVjlCxgQ8",
-        "az0JoqhwyXh07WBv_sbg4AkBmQoAxQ63haPsGnBh1SQ",
-        "sWi_nf6QGU-3gyLs2I7jRrWjmXGoy56gFJCn3tJP4n4",
-        "z0wbZelnj4JOA53hNZ4QicfQt6NpmLy4lXWFMrPew2E",
-        "s-tC1AQ9zpdFI6IYhOeEAg0-FuYVkSTiKsg2-AmqLuM",
+        "hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE",
+        "0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA",
+        "ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE",
+        "ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ",
+        "gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE",
     }
     print("Done successfully")
 end
