@@ -307,6 +307,7 @@ export default function Town() {
 
         <NewButton
           className="cursor-pointer text-xl w-full h-full"
+          src="East Side"
           onClick={() => {
             handleBuildingSelect(GameStatePages.SECOND_TOWN);
           }}
@@ -324,9 +325,10 @@ export default function Town() {
               <NewButton
                 varient="blue"
                 className="px-11 py-4 text-3xl left-1"
-                src={
-                  "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
-                }
+                // src={
+                //   "https://arweave.net/Nuj6OhWo55MGJCPIa8RHFFQZ6wTdvzJg5rBipEjvuPA"
+                // }
+                src={"Leave Town"}
                 onClick={() => {
                   // goToGameMap(true);
                   setIsPopupOpen(true);
@@ -338,9 +340,10 @@ export default function Town() {
               <NewButton
                 varient="purple"
                 className="px-24 py-4 text-3xl mr-3"
-                src={
-                  "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
-                }
+                // src={
+                //   "https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"
+                // }
+                src={"Rest"}
                 onClick={() => {
                   handleBuildingSelect(GameStatePages.REST_AREA);
                 }}
@@ -351,9 +354,10 @@ export default function Town() {
               <NewButton
                 varient="blue"
                 className="px-24 py-4 text-3xl mr-3"
-                src={
-                  "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
-                }
+                // src={
+                //   "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
+                // }
+                src={"Chat"}
                 onClick={() => {
                   setChatOpen(true);
                 }}

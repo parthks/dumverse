@@ -55,6 +55,7 @@ export type Battle = {
   ended: boolean;
   winner: string | null;
   created_at: number;
+  is_mouse_game: boolean | null;
 };
 
 export type BattleLog = {

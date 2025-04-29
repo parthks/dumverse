@@ -1,7 +1,8 @@
 import { InventoryBag } from "@/components/game/InventoryBag";
 import ImgButton from "@/components/ui/imgButton";
+import NewButton from "@/components/ui/NewButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
-import { ENEMY_CARD_IMAGE, PET_LARGE_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, COMBAT_LOADING_SCREEN } from "@/lib/constants";
+import { ENEMY_CARD_IMAGE, PET_LARGE_CARD_IMAGE, IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, COMBAT_LOADING_SCREEN, MOUSE_COMBAT_CARD } from "@/lib/constants";
 import { getEquippedItem } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
@@ -180,6 +181,7 @@ export default function Combat() {
   // const combatLoading = useCombatStore((state) => state.loading);
   const setGameStatePage = useGameStore((state) => state.setGameStatePage);
   const tempCurrentIslandLevel = useGameStore((state) => state.tempCurrentIslandLevel);
+  const refreshUserData = useGameStore((state) => state.refreshUserData);
 
   const [failedToEnterBattle, setFailedToEnterBattle] = useState(false);
   // console.log("currentBattle", currentBattle);
@@ -227,6 +229,7 @@ export default function Combat() {
 
             console.log("Battle found -> Sending battle ready request.");
             if (battle && (!battle.started || (battle?.started && Object.keys(battle.players || {}).length > 1))) {
+              await refreshUserData();
                await sendBattleReadyRequest();
               break;
             } else {
@@ -321,10 +324,11 @@ export default function Combat() {
 function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
   useBackgroundMusic(SOUNDS.BATTLE_AUDIO);
 
-  const { goToTown, goToRestArea, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
+  const { goToTown, goToRestArea, acceptedTheMouseGame, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, entityPosition, setEntityPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
   useGameStore();
 
   const currentMapImage = () => {
+    if (acceptedTheMouseGame) return "https://arweave.net/sjhPyW1FiHnQ8MYzQENAubilVRY7XZyTXBHKSh3YZpY";
     if (tempCurrentIslandLevel <= 26) return "https://arweave.net/aSPkGkjMawQdvfa5eJ1qX4PZJv8-6OLDJbvQW5ytsj4";
     if (tempCurrentIslandLevel <= 52) return "https://arweave.net/fhvcZm6NabNEuF-GswrrOOd1GBS-GUxb9WeTiG2FQVQ";
     return "https://arweave.net/904Jv473dMlxApd-GlUGUYggDwu20COKPNimTS6Io9k";
@@ -356,7 +360,10 @@ function MainBattlePage({ currentBattle }: { currentBattle: Battle }) {
       style={{ backgroundImage: `url(${currentMapImage()})` }}
     >
       <BattleGround currentBattle={currentBattle} />
-      <CombatInventory currentBattle={currentBattle} />
+      {
+        !acceptedTheMouseGame && (      <CombatInventory currentBattle={currentBattle} />
+        )
+      }
       <BattleLog currentBattle={currentBattle} />
     </div>
   );
@@ -469,7 +476,14 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
           {/* <audio preload="auto" ref={attackAudioRef} src={SOUNDS.ATTACK_AUDIO} /> */}
 
           <div className="relative flex flex-col gap-2 w-[350px] items-center">
-            <PlayerCard player={currentBattle.players[userId.toString()]} />
+
+           {
+            currentBattle.is_mouse_game ?
+            (<MouseGameCard player={currentBattle.players[userId.toString()]} />) :
+(            <PlayerCard player={currentBattle.players[userId.toString()]} />
+)
+           }
+
             <UserIsAttackedAnimation currentBattle={currentBattle} />
             <ImgButton
               disabled={disableAttackButtons}
@@ -523,7 +537,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
 
         </div>
 
-       <div className="flex flex-col gap-5 absolute right-[33%] top-[3%]">
+      { !currentBattle.is_mouse_game && <div className="flex flex-col gap-5 absolute right-[33%] top-[3%]">
           {/* Display pets for all players who have them */}
           {playersWithPets.map(player => (
             <div key={`pet-${player.id}`} className="flex flex-col gap-2 items-center">
@@ -531,7 +545,7 @@ function BattleGround({ currentBattle }: { currentBattle: Battle }) {
               <span className="text-sm text-white mb-1">{player.name}'s Pet</span>
             </div>
           ))} 
-        </div>
+        </div>}
 
       </div>
     </div>
@@ -734,6 +748,59 @@ function PlayerCard({ player }: { player: Battle["players"][string] }) {
   );
 }
 
+
+function MouseGameCard({ player  }: { player: Battle["players"][string]  }) {
+
+  const totalGold = player?.gold_balance;
+  const totalHealth = player.total_health;
+  const backgroundImage = MOUSE_COMBAT_CARD;
+
+  return (
+    <div
+      className={`w-[250px] relative flex flex-col bg-no-repeat bg-contain bg-center px-3 py-1`}
+      style={{
+        aspectRatio: "302/421",
+        textShadow:
+          "-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000",
+        backgroundImage: `url('${backgroundImage}')`,
+      }}
+    >
+      <div className="absolute bottom-[28%] left-[10%]">
+        <p
+          className="text-white text-center font-bold"
+          style={{ fontSize: "20px" }}
+        >
+          {player?.health}/{totalHealth}
+        </p>
+      </div>
+
+      <div className={`absolute w-[65px] left-[2.5%] bottom-[6.5%]`}>
+        <p
+          className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+          style={{
+            fontSize: `15px`,
+            lineHeight: "1",
+          }}
+        >
+          {totalGold?.toLocaleString()}
+        </p>
+      </div>
+
+      <div className="absolute bottom-[6.5%] right-[18%]">
+        <p
+          className="text-white font-bold text-right overflow-hidden whitespace-nowrap"
+          style={{
+            fontSize: `${15}px`,
+            lineHeight: "1",
+          }}
+        >
+          {player?.dumz_balance}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function EnemyCard({ enemy }: { enemy: Battle["npcs"][string] }) {
   const special_item_hearts = useGameStore((state) => state.user?.special_item_heart ?? 0);
   var backgroundImage = ENEMY_CARD_IMAGE[enemy.id as keyof typeof ENEMY_CARD_IMAGE];
@@ -876,6 +943,10 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
   const combatLoading = useCombatStore((state) => state.loading);
   const goToMapFromBattle = useCombatStore((state) => state.goToMapFromBattle);
   const isAlive = currentBattle?.players?.[user_id]?.health ?? 0 > 0;
+  const user = useGameStore((state) => state.user);
+  const setAcceptedTheMouseGame = useGameStore((state) => state.setAcceptedTheMouseGame);
+  const acceptedTheMouseGame = useGameStore((state) => state.acceptedTheMouseGame);
+  const refreshUserData = useGameStore((state) => state.refreshUserData);
 
   // as the log is updated, scroll to the bottom
   useEffect(() => {
@@ -884,37 +955,61 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
       logContainer.scrollTop = logContainer.scrollHeight;
     }
   }, [currentBattle.log]);
-
+console.log("access or not? : "+ !!currentBattle.players[user_id.toString()].access_of_mouse_game);
   return (
     <div
       className="flex shrink-0 flex-col gap-2 bg-[url('https://arweave.net/S-6Ww4DB5i7CZlzpXYXBJI8Q8u5DLOCuK6rL0W2MZrU')] bg-no-repeat bg-contain bg-center p-4 min-w-[460px] max-w-[50vw] h-full"
       style={{ aspectRatio: "649/1040", height: "calc(100vh - 60px)" }}
     >
       <div className="flex items-center justify-between">
-        <div className="w-6">{combatLoading && <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>}</div>
+        <div className="w-6">
+          {combatLoading && (
+            <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          )}
+        </div>
         <div className="flex-grow flex flex-col justify-center">
-          <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">COMBAT LOG</h1>
-          <p className="text-white text-xl text-center">Battle ID: {currentBattle.id}</p>
+          <h1 className="text-white my-4 text-5xl font-bold text-center underline flex-grow">
+            COMBAT LOG
+          </h1>
+          <p className="text-white text-xl text-center">
+            Battle ID: {currentBattle.id}
+          </p>
         </div>
         <div className="w-6"></div>
       </div>
-      <div style={{ height: "calc(100vh - 200px)" }} className="log-container flex flex-col gap-8 overflow-y-auto">
-        {currentBattle.log.map((log, index) => { 
-           const name = currentBattle.players[log.from]?.name || currentBattle.npcs[log.from]?.name || Object.values(currentBattle.players).find((player) => player.pet?.id === log.from)?.pet?.name || "" ;
+      <div
+        style={{ height: "calc(100vh - 200px)" }}
+        className="log-container flex flex-col gap-8 overflow-y-auto"
+      >
+        {currentBattle.log.map((log, index) => {
+          const name =
+            currentBattle.players[log.from]?.name ||
+            currentBattle.npcs[log.from]?.name ||
+            Object.values(currentBattle.players).find(
+              (player) => player.pet?.id === log.from
+            )?.pet?.name ||
+            "";
           return (
-            <div key={index} className="flex text-2xl gap-4 justify-between px-4">
-              <p className="text-white font-bold text-center">{name ? name + ":" : ""}</p>
+            <div
+              key={index}
+              className="flex text-2xl gap-4 justify-between px-4"
+            >
+              <p className="text-white font-bold text-center">
+                {name ? name + ":" : ""}
+              </p>
               <p className="text-white text-center">
                 {log.message.split(" ").map((word, index) =>
                   word === "Perished" ? (
                     <span key={index} className="text-red-800">
                       {word}
                     </span>
-                  ) : word === "run" && log.message.split(" ")[index + 1] === "away" ? (
+                  ) : word === "run" &&
+                    log.message.split(" ")[index + 1] === "away" ? (
                     <span key={index} className="text-blue-800">
                       {word} {log.message.split(" ")[index + 1]}
                     </span>
-                  ) : word === "away" && log.message.split(" ")[index - 1] === "run" ? (
+                  ) : word === "away" &&
+                    log.message.split(" ")[index - 1] === "run" ? (
                     <></>
                   ) : (
                     <span key={index}>{word} </span>
@@ -924,13 +1019,43 @@ function BattleLog({ currentBattle }: { currentBattle: Battle }) {
             </div>
           );
         })}
+        {!!currentBattle.players[user_id.toString()].access_of_mouse_game && currentBattle.ended && !acceptedTheMouseGame && (
+          <div className="my-4 flex justify-center">
+            {/* initiate mouse game */}
+            <NewButton
+              varient="blue"
+              className="px-8 py-3 text-3xl"
+              disabled={combatLoading}
+              // src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
+              src="Enter"
+              alt="Initiate Mouse Game"
+              onClick={async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                await refreshUserData();
+                setAcceptedTheMouseGame(true);
+                await goToMapFromBattle();
+                console.log("ENTER MOUS: "+ acceptedTheMouseGame, user?.access_of_mouse_game);
+              }}
+            />
+          </div>
+        )}
         {currentBattle.ended && (
           <div className="my-4 flex justify-center">
             <ImgButton
               disabled={combatLoading}
               // if alive, return to map, if dead, return to town
-              src={`https://arweave.net/${isAlive ? "-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y" : "n0rz0kGBK_uPI-XJ3aCPdJ3589IOl5BW2izZNOVFXaI"}`}
-              onClick={() => goToMapFromBattle()}
+              src={`https://arweave.net/${
+                isAlive
+                  ? "-ewxfMOLuaFH6ODHxg8KgMWMKkZfAt-yhX1tv2O2t5Y"
+                  : "n0rz0kGBK_uPI-XJ3aCPdJ3589IOl5BW2izZNOVFXaI"
+              }`}
+              onClick={() => {
+
+                acceptedTheMouseGame ? setAcceptedTheMouseGame(true) : setAcceptedTheMouseGame(false);
+                
+                goToMapFromBattle();
+              }}
               alt={"Return to Game Map"}
             />
           </div>

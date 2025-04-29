@@ -18,6 +18,7 @@ interface CombatState {
   setCurrentBattle: (battle_id?: number) => Promise<Battle | null>;
   getOpenBattles: () => Promise<Battle | null>;
   enterNewBattle: (level: number,overwrite?: boolean) => Promise<MyMessageResult>;
+  enterNewMouseBattle: (level: number) => Promise<MyMessageResult>;
   userAttack: (npc_id: string) => void;
   userRun: () => void;
   userDrinkPotion: () => void;
@@ -145,6 +146,31 @@ export const useCombatStore = create<CombatState>()(
         }
         return resultData;
       },
+      enterNewMouseBattle: async (level: number) => {
+        const user_id = useGameStore.getState().user?.id;
+        if (!user_id) throw new Error("User not found");
+        set({ enteringNewBattle: true, currentBattle: null, hasBattleReady: false, subProcess: "" });
+        const tags = [
+          {
+            name: "Action",
+            value: "Combat.EnterNewMouseCombat",
+          },
+          {
+            name: "Level",
+            value: level.toString(),
+          },
+          {
+            name: "UserId",
+            value: user_id.toString(),
+          },
+        ];
+        
+        const resultData = await sendAndReceiveGameMessage({tags});
+        console.log("Ashu :  dattt: "+JSON.stringify(resultData));
+        console.log("subProcess: " + JSON.stringify(resultData.data.subprocess));
+        set({ subProcess: resultData.data.subprocess });
+        return resultData;
+      },
       userAttack: async (npc_id: string) => {
         const user_id = useGameStore.getState().user?.id;
         const battle_id = get().currentBattle?.id;
@@ -247,8 +273,16 @@ export const useCombatStore = create<CombatState>()(
           set({ currentBattle: null, loading: false, hasBattleReady: false });
           useGameStore.getState().goToGameMap();
         } else {
-          await useGameStore.getState().goToTown(true);
-          set({ currentBattle: null, loading: false, hasBattleReady: false });
+          if (useGameStore.getState().acceptedTheMouseGame){
+            useGameStore.getState().setAcceptedTheMouseGame(false);
+            await useGameStore.getState().refreshUserData();
+            set({ currentBattle: null, loading: false, hasBattleReady: false });
+            useGameStore.getState().goToGameMap();
+          } else {
+            await useGameStore.getState().goToTown(true);
+            set({ currentBattle: null, loading: false, hasBattleReady: false });
+          }
+          
         }
       },
       hasBattleReady: false,

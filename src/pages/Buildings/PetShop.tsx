@@ -33,9 +33,10 @@ export default function PetShop() {
         {/* <ExistToTownButton /> */}
         <NewButton
           className="py-2 px-20 text-2xl"
-          src={
-            "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
-          }
+          // src={
+          //   "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
+          // }
+          src={"Exit"}
           onClick={async () => {
             audioManager.playSFX(SOUNDS.BUILDING_ENTER);
             await sleep(750);

@@ -229,8 +229,9 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
     dbAdmin.db:exec([[
-        ALTER TABLE Users ADD COLUMN ticket_balance FLOAT DEFAULT 0;
-    ]])    
+    ALTER TABLE Users modify COLUMN mouse_battle_lost_timestamp INTEGER DEFAULT 0;
+]])
+  
     print("end")
 end
 )

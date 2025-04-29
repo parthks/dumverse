@@ -69,9 +69,10 @@ export default function Den() {
           {showExitButton && (
             <NewButton
               className="px-12 bottom-10 py-4 text-2xl"
-              src={
-                "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
-              }
+              // src={
+              //   "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
+              // }
+              src={"Exit"}
               onClick={async () => {
                 audioManager.playSFX(SOUNDS.BUILDING_ENTER);
                 await sleep(750);
@@ -93,9 +94,10 @@ export default function Den() {
         {/* <ExistToTownButton /> */}
         <NewButton
           className="py-2 px-20 text-2xl"
-          src={
-            "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
-          }
+          // src={
+          //   "https://arweave.net/ntMzNaOgLJmd2PVTzgkczOndx5xPP6MlHRze0GwWgWk"
+          // }
+          src={"Exit"}
           onClick={async () => {
             audioManager.playSFX(SOUNDS.BUILDING_ENTER);
             await sleep(750);
@@ -331,6 +333,7 @@ function BlackjackGame() {
         <div className="z-20 absolute bottom-16 ml-6 w-60 ">
           <NewButton
             className="px-3 py-3 text-2xl"
+            src="Return to Den"
             onClick={() => {
               setBlackjackStart(false);
             }}
@@ -584,6 +587,7 @@ function BlackjackPlaying() {
                   currentRound.players[user.id.toString()].hasDoubleDown ||
                   currentRound.ended
                 }
+                src="Stand"
                 alt="Stand"
                 className="px-12 py-2"
               />
@@ -601,6 +605,7 @@ function BlackjackPlaying() {
                   currentRound.players[user.id.toString()].hasStood ||
                   currentRound.ended
                 }
+                src="Hit"
                 alt="Hit"
                 className="px-16 py-2 mr-52"
               />
@@ -618,6 +623,7 @@ function BlackjackPlaying() {
                   currentRound.players[user.id.toString()].hasStood ||
                   currentRound.ended
                 }
+                src="Double Down"
                 alt="Double Down"
                 className="w-52 relative -left-[21rem] mt-16 py-2"
               />
@@ -761,6 +767,7 @@ function BettingAmount() {
                     disabled={isProcessing || !inputValue}
                     className={`bg-center ${isProcessing ? `px-[100px]` : `px-32`
                       } py-4 text-3xl absolute`}
+                    src={isProcessing ? "Processing..." : "Confirm"}
                     alt={isProcessing ? "Processing..." : "Confirm"}
                   />
                 </div>

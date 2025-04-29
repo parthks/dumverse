@@ -1,9 +1,9 @@
 import { number } from "zod";
 
-export type LamaPosition = {
+export type EntityPosition = {
   x: number;
   y: number;
-  src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT";
+  src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" | null;
 };
 
 export type GameUser = {

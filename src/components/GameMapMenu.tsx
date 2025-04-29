@@ -1,8 +1,8 @@
 import ImgButton from "./ui/imgButton";
 import NewButton from "./ui/NewButton";
 import { useGameStore } from "@/store/useGameStore";
-import { LamaPosition } from "@/types/game";
-import { getInitialLamaPosition } from "@/lib/utils";
+import { EntityPosition } from "@/types/game";
+import { getInitialEntityPosition } from "@/lib/utils";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "@/lib/constants";
 
 export default function SetSailPopup({
@@ -15,7 +15,7 @@ export default function SetSailPopup({
 //   setTempCurrentIslandLevel: (level: number) => void;
 }) {
 
-    const { goToTown, goToRestArea, goToGameMap, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
+    const { goToTown, goToRestArea, goToGameMap, tempCurrentIslandLevel, setTempCurrentIslandLevel, acceptedTheMouseGame, setAcceptedTheMouseGame, currentIslandLevel, entityPosition, setEntityPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
     useGameStore();  
 //   const user = useGameStore((state) => state.user);
   const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");
@@ -56,11 +56,11 @@ export default function SetSailPopup({
           onClick={async () => {
               // await travelToLocation(55);
               setTempCurrentIslandLevel(0);
-              setLamaPosition(getInitialLamaPosition());
+              setEntityPosition(getInitialEntityPosition(acceptedTheMouseGame));
               goToGameMap();
               onClose();
             }}
-            
+            src="Happy Green Valley"
             alt="Happy Green Valley"
             className="bg-blue-400 w-[58%] mr-[12%] h-[75px] text-3xl" />
 
@@ -70,7 +70,7 @@ export default function SetSailPopup({
             onClick={async () => {
               // await travelToLocation(55);
               setTempCurrentIslandLevel(0);
-              setLamaPosition(getInitialLamaPosition());
+              setLamaPosition(getInitialEntityPosition());
 
               onClose();
             }}
@@ -84,7 +84,7 @@ export default function SetSailPopup({
               // await travelToLocation(28);
               // setTempCurrentIslandLevel(28);
               setTempCurrentIslandLevel(27);
-              setLamaPosition({
+              setEntityPosition({
                 x: interactivePointsMap2[0].x - lammaWidth / 2,
                 y: interactivePointsMap2[0].y - lammaHeight,
                 src: "STAND_LEFT",
@@ -104,7 +104,7 @@ export default function SetSailPopup({
               // await travelToLocation(55);
               // setTempCurrentIslandLevel(55);
               setTempCurrentIslandLevel(53);
-              setLamaPosition({
+              setEntityPosition({
                 x: interactivePointsMap3[0].x - lammaWidth / 2,
                 y: interactivePointsMap3[0].y - lammaHeight,
                 src: "STAND_LEFT",

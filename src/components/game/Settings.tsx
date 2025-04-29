@@ -58,8 +58,9 @@ export default function Settings({ setIsSettingsOpen }: { setIsSettingsOpen: (va
             />
             <div className="relative mt-20 right-[30%]">
             <NewButton
-              src="https://arweave.net/N0HMTFZFf0oMnCKtjkzXPGlGCaIKcxNqjGtpht-YLI4"
-              alt="Confirm"
+              // src="https://arweave.net/N0HMTFZFf0oMnCKtjkzXPGlGCaIKcxNqjGtpht-YLI4"
+              src="Confirm"
+              alt="Volume Setting"
               className="py-4 px-14 text-3xl"
               onClick={() => setIsSettingsOpen(false)}
             />

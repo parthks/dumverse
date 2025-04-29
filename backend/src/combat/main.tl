@@ -478,6 +478,7 @@ local function drinkPotionHandler(msg: Message)
     local user_id = msg.Tags.UserId
 
     assert(Battles[battle_id].started==true,"Battle has not started yet")
+    assert(Battles[battle_id].is_mouse_game==false,"Cant use potion in mouse game")
 
     VerifyUserInBattle(user_id, battle_id)
     VerifyBattleIsOnGoing(battle_id)

@@ -45,6 +45,7 @@ export default function Second_Town() {
       <div className="absolute w-[20%] top-[2vh] -left-[150px] z-10">
         <NewButton
           className="text-xl px-8 py-3"
+          src={"West Side"}
           onClick={() => {
             handleBuildingSelect(GameStatePages.TOWN);
           }}

@@ -87,12 +87,12 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         -- local npc_is_winner = false
         local gold_win_in_pvp = 0
         local dumz_win_in_pvp = 0
-        local grant_access_of_mouse_game: boolean = false
+        -- local grant_access_of_mouse_game: boolean = false
 
         for _,player in pairs(battle.players) do
             number_of_players = number_of_players + 1
 
-            if player.pet ~= nil and (player.pet as CombatPetData).id == "MIGHTY_MOUSE" and math.random(1,2) == 1 and (player.mouse_battle_lost_timestamp + (24 * 60 * 60 * 1000 ) < timestamp)  then 
+            if player.pet ~= nil and (player.pet as CombatPetData).id == "MIGHTY_MOUSE" and math.random(1,2) == 1 and ((player.mouse_battle_lost_timestamp or 0) + (24 * 60 * 60 * 1000 ) < timestamp)  then 
                 BattleHelpers.addLogs(battle_id, {
                     {
                         from = "",
@@ -100,7 +100,8 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
                         timestamp = timestamp
                     }
                 })
-                grant_access_of_mouse_game = true
+                -- grant_access_of_mouse_game = true
+                player.access_of_mouse_game = true
             end
             -- if (not npc_is_winner and battle.winner == player_id and battle.winner ~= player_ids) then
             --     -- local winners_entity = battle.winner 
@@ -132,7 +133,7 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
                 NumberOfPlayers = tostring(number_of_players),
                 GoldWinInPvP = tostring(gold_win_in_pvp),
                 DumzWinInPvP = tostring(dumz_win_in_pvp),
-                grantedAccessOfMouseGame = grant_access_of_mouse_game and json.encode(true)  or json.encode(false),
+                -- grantedAccessOfMouseGame = grant_access_of_mouse_game and json.encode(true)  or json.encode(false),
             })
         else
             ao.send({
@@ -142,7 +143,7 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
                 Action = "Combat.PlayerWon",
                 Data = json.encode(battle.players[player_id]),
                 NumberOfEnemies = tostring(number_of_enemies),
-                grantedAccessOfMouseGame = grant_access_of_mouse_game and json.encode(true) or json.encode(false),
+                -- grantedAccessOfMouseGame = grant_access_of_mouse_game and json.encode(true) or json.encode(false),
                 isMouseGame = battle.is_mouse_game and json.encode(true) or nil
             })
         end
@@ -202,8 +203,8 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
     -- NPCs are all dead and only 1 player is alive
     elseif #battle.npcs_alive == 0 and #battle.players_alive == 1 then
         assert(battle.players_alive[1] == attacker_id)
-        playerWon(attacker_id)
         BattleHelpers.log(battle_id, timestamp, attacker_id, winning_message)
+        playerWon(attacker_id)
         BattleHelpers.internalLog(battle_id, timestamp, "checkIfBattleShouldEnd", winning_message)
         shouldEnd = true
 

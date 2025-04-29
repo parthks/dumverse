@@ -58,9 +58,10 @@ const ReturnToTown = React.memo(() => {
       {current_spot == 0 ? (
         <NewButton
           className="px-8 py-4 text-3xl"
-          src={
-            "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
-          }
+          // src={
+          //   "https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"
+          // }
+          src={"Return to Town"}
           onClick={() => {
             setGameStatePage(GameStatePages.TOWN);
           }}
@@ -69,9 +70,10 @@ const ReturnToTown = React.memo(() => {
       ) : (
         <NewButton
           className="px-8 py-4 text-3xl"
-          src={
-            "https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"
-          }
+          // src={
+          //   "https://arweave.net/-8KpNKO_poKty1r9xF2nyduC8tAFzgi0UPPZSUXFoGA"
+          // }
+          src={"Return to Map"}
           onClick={() => {
             setGameStatePage(GameStatePages.GAME_MAP);
           }}
@@ -294,7 +296,8 @@ export default function RestArea() {
             {current_spot == 0 && (
               <NewButton
                 className="px-16 py-4 text-3xl "
-                src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+                // src="https://arweave.net/uf3sDozFcxr__lRElB3rNQycrQ2JjWextSQedeor74M"
+                src={"Make a Wish"}
                 alt={"Make a Wish"}
                 onClick={making_wish}
               />
@@ -305,9 +308,10 @@ export default function RestArea() {
             <NewButton
               className="px-24 py-4 text-3xl mr-3"
               varient="blue"
-              src={
-                "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
-              }
+              // src={
+              //   "https://arweave.net/fCgsiCsv1ZNCSljaXAtqIVX71EDOFbU5blXGjjkLj_k"
+              // }
+              src={"Chat"}
               onClick={() => {
                 setChatOpen(true);
               }}

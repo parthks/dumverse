@@ -406,7 +406,8 @@ const FormData = () => {
             varient="blue"
             className="px-8 py-3 text-3xl"
             disabled={loading || (gameProfiles? false : true)}
-            src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
+            // src="https://arweave.net/E7Gxj1lmYcYJ1iJfCIPAtx_MNAlaxVtX635pNYSNAqg"
+            src="Enter Dumverse"
             alt="Enter Dumverse"
             onClick={(e) => {
               e.preventDefault();

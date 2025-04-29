@@ -152,6 +152,7 @@ local function enterNewCombatHandler(msg: Message)
     assert(type(combat_level) == "number", "Level is required")
     assert(type(combat_level) == "number" and math.floor(combat_level) == combat_level, "Combat level must be an integer")
     print(combat_level)
+    dbAdmin:exec(string.format([[UPDATE Users SET access_of_mouse_game = FALSE, current_mouse_spot = NULL  WHERE id = %d]], user_id)) 
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
     local current_spot = userData.current_spot
 
@@ -439,7 +440,7 @@ local function enterNewMouseCombatHandler(msg: Message)
     assert(userData.stamina > 0, "User must have stamina")
     assert(mouse_combat_level, "Mouse Combat Level is required")
     assert(mouse_combat_level > 0, "Mouse Combat Level must be greater than 0")
-    assert(userData.mouse_battle_lost_timestamp + (24 * 60 * 60 * 1000 ) < msg.Timestamp, "You can access mouse game after 24 hrs")
+    assert((userData.mouse_battle_lost_timestamp or 0 )+ (24 * 60 * 60 * 1000 ) < msg.Timestamp, "You can access mouse game after 24 hrs")
 
     local current_mouse_spot = userData.current_mouse_spot == nil and 0 or userData.current_mouse_spot
     
@@ -448,8 +449,8 @@ local function enterNewMouseCombatHandler(msg: Message)
     local combatUserData: CombatUserData = userData as CombatUserData
 
     combatUserData.id = tostring(user_id)
-    combatUserData.name = "Mighty Mouse"
-    combatUserData.nft_address = "PylYv6nkE46i_wqpofxlNeCEzJzzp72Oj6FXVE9_uWs"
+    -- combatUserData.name = "Mighty Mouse"
+    -- combatUserData.nft_address = "PylYv6nkE46i_wqpofxlNeCEzJzzp72Oj6FXVE9_uWs"
     combatUserData.total_health = 2
     combatUserData.health = 2
     combatUserData.damage = 2
@@ -575,7 +576,8 @@ local function playerWonHandler(msg: Message)
     local number_of_players: number = tonumber(msg.Tags.NumberOfPlayers) or 0
     local gold_win_in_pvp: number = tonumber(msg.Tags.GoldWinInPvP)
     local dumz_win_in_pvp: number = tonumber(msg.Tags.DumzWinInPvP)
-    local has_access_of_mouse_game: boolean = (json.decode(msg.Tags.grantedAccessOfMouseGame) as boolean) or false
+    -- local has_access_of_mouse_game: boolean = (json.decode(msg.Tags.grantedAccessOfMouseGame) as boolean) or false
+    local has_access_of_mouse_game: boolean = playerData.access_of_mouse_game
     local is_mouse_game: boolean | nil
     if msg.Tags.isMouseGame then
         is_mouse_game = json.decode(msg.Tags.isMouseGame) as boolean
@@ -615,16 +617,16 @@ local function playerWonHandler(msg: Message)
     if is_mouse_game then
         
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_mouse_battle_id = NULL, current_mouse_spot = %d, gold_balance = %f, dumz_balance = %f WHERE id = %f;
-        ]], level, playerData.gold_balance, playerData.dumz_balance,user_id))
+            UPDATE Users SET current_mouse_battle_id = NULL, current_mouse_spot = %s, gold_balance = %f, dumz_balance = %f, access_of_mouse_game = %s WHERE id = %f;
+        ]], level == 5 and "NULL" or tostring(level), playerData.gold_balance, playerData.dumz_balance,level == 5 and "FALSE" or "TRUE",user_id))
 
     else
         -- update Users table with health, stamina, gold_balance, dumz_balance
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, total_trunk_token = %f,
+            UPDATE Users SET current_battle_id = NULL, current_spot = %d, health = %f, gold_balance = %f, dumz_balance = %f, trunk_balance = %f, ticket_balance = %f, total_trunk_token = %f,
             special_item_kitten = %d, special_item_key = %d, special_item_thread = %d, special_item_bark = %d, special_item_heart = %d, access_of_mouse_game = %s, current_mouse_spot = %s
             WHERE id = %f;
-        ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0, playerData.total_trunk_token,
+        ]], level, playerData.health, playerData.gold_balance, playerData.dumz_balance, playerData.trunk_balance or 0.0, playerData.ticket_balance, playerData.total_trunk_token,
         playerData.special_item_kitten,
         playerData.special_item_key,
         playerData.special_item_thread,
@@ -788,8 +790,8 @@ local function playerPerishedHandler(msg: Message)
     if is_mouse_game then  
 
         dbAdmin:exec(string.format([[
-            UPDATE Users SET current_mouse_battle_id = NULL, current_mouse_spot = NULL, gold_balance = 0, dumz_balance = 0, mouse_battle_lost_timestamp = %f, access_of_mouse_game = FALSE WHERE id = %f;
-        ]], msg.Timestamp, user_id))
+            UPDATE Users SET current_mouse_battle_id = NULL, current_mouse_spot = NULL, gold_balance = 0, dumz_balance = 0, mouse_battle_lost_timestamp = %s, access_of_mouse_game = FALSE WHERE id = %f;
+        ]], tostring(msg.Timestamp), user_id))
 
     else
 

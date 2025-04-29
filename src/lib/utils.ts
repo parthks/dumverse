@@ -1,8 +1,9 @@
 // import { interactivePoints } from "@/components/InteractiveMap";
-import { GameUser, Inventory, LamaPosition } from "@/types/game";
+import { GameUser, Inventory, EntityPosition } from "@/types/game";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, REST_SPOTS } from "./constants";
+import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, interactivePointsMouseGameMap, lammaHeight, lammaWidth, REST_SPOTS } from "./constants";
+import { useGameStore } from "@/store/useGameStore";
 
 export const GAME_PROCESS_ID = "he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk"; // "_-h1jIlG-9BotgyC9CoikKrU0JbS5Pf8yBr6Nhm1YDA"; //"EGlMBTK5d9kj56rKRMvc4KwYPxZ43Bbs6VqQxnDilSc";
 export const COMBAT_PROCESS_ID =  "Byl2hF1lJSNHvGM5--Cd8kl_xbTJmupvk8IHgE20v_0"; //"6jy_Ai9mInmMg1t6HPlSWKLcxYBFUe81DEpeuq5fP9k";    //"8zkx7rgZ6q9SBf1aM5uJ9A_4j6twWSEM2YpsWUhAjqA"; //"iB636YMO3EvqdZ5FWSjSw_oqVIQSO9f9XrGYY8u-Vc4"; //"B3OVMP1sY_wA_nh7YGhRtsXsHP2NB9zacYAGlix6Ink"; // BzQAmLBXwHvzCGPFHw1TlTbS8ramHzCniFT8bgE2ERU //TputK13wn_0L0AJlOYpOrwzyAonF55k1VuEAvnkaitQ "tCNnN9HmJaHHEEYkAub6dNcsB5lVSect6fdP0DE_-XE";
@@ -24,7 +25,21 @@ export function getEquippedItem(playerInventory: Inventory[]) {
   return { weapon, armor };
 }
 
-export function getInteractivePoints(currentSpot: number) {
+// Define the type for a single point
+type InteractivePoint = {
+  x: number;
+  y: number;
+  level: number | null;
+};
+
+// Define the type for the return value which can be either a point or an array of points
+type InteractivePointOrArray = InteractivePoint | InteractivePoint[];
+
+
+export function getInteractivePoints(currentSpot: number, acceptedTheMouseGame: boolean): InteractivePointOrArray[] {
+   
+  // If User accept to enter in the mouse game himself and also get approval from the Backend
+  if (acceptedTheMouseGame) return interactivePointsMouseGameMap;
   // if currentSpot is less than 27, it's map 1
   if (currentSpot <= 26) return interactivePointsMap1;
   // if currentSpot is less than 54, it's map 2
@@ -32,29 +47,37 @@ export function getInteractivePoints(currentSpot: number) {
   return interactivePointsMap3;
 }
 
-export function getInitialLamaPosition(): LamaPosition {
+export function getInitialEntityPosition(acceptedTheMouseGame: boolean): EntityPosition {
+  if (acceptedTheMouseGame) {
+    return {
+      x: 3.2, 
+      y: 12,
+      src: null, 
+    };
+  }
   return {
     x: 81.5, //81
     y: 60,
     src: "STAND_LEFT",
   };
-  // if (currentSpot <= 54)
-  //   return {
-  //     x: 90.2,
-  //     y: 54.8,
-  //     src: "STAND_LEFT",
-  //   };
-  // return {
-  //   x: 90.2,
-  //   y: 70,
-  //   src: "STAND_LEFT",
-  // };
 }
 
-export function getCurrentLamaPosition(player: GameUser) {
-  let lamaPosition = getInitialLamaPosition();
-  if (player.current_spot) {
-    const point = getInteractivePoints(player.current_spot).find((point) => point.level === player.current_spot);
+
+export function getCurrentEntityPosition(player: GameUser, acceptedTheMouseGame: boolean) {
+
+  let lamaPosition = getInitialEntityPosition(acceptedTheMouseGame);
+
+  const spot = ((acceptedTheMouseGame) ? player.current_mouse_spot : player.current_spot)
+  if (spot) {
+    // Get the interactive points for the current spot
+    const points = getInteractivePoints(spot, acceptedTheMouseGame);
+
+    // Flatten the points array to handle nested arrays
+    const flattenedPoints = points.flatMap(point => Array.isArray(point) ? point : [point]);
+
+    // Find the point with matching level
+    const point = flattenedPoints.find(point => point.level === spot);
+
     if (point) {
       lamaPosition = {
         x: point.x - lammaWidth / 2,
@@ -64,10 +87,11 @@ export function getCurrentLamaPosition(player: GameUser) {
     }
   }
   return {
-    currentIslandLevel: player.current_spot,
+    currentIslandLevel: spot,
     lamaPosition,
   };
 }
+
 
 // equivalent function is also in backend/game/handlers/combat.lua
 // export function isValidSpotToMoveTo(currentSpot: number, targetSpot: number) {

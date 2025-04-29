@@ -1,23 +1,13 @@
 // import { interactivePoints } from "@/components/InteractiveMap";
 import { REST_SPOTS } from "@/lib/constants";
-import { getCurrentLamaPosition, getInitialLamaPosition, getInteractivePoints } from "@/lib/utils";
+import { getCurrentEntityPosition, getInitialEntityPosition, getInteractivePoints } from "@/lib/utils";
 import { sendAndReceiveGameMessage, sendDryRunGameMessage } from "@/lib/wallet";
-import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, LamaPosition, Shop, TokenType, DailyGoldWishes, UserAirdrop, Pet } from "@/types/game";
+import { Bank, BankTransaction, GameUser, Inventory, Item, ItemType, EntityPosition, Shop, TokenType, DailyGoldWishes, UserAirdrop, Pet } from "@/types/game";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { interactivePointsMap1, interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth } from "@/lib/constants";
 import { assert } from "console";
 
-// set({
-//   GameStatePage: GameStatePages.GAME_MAP,
-//   lamaPosition: {
-//     x: interactivePointsMap3[0].x - lammaWidth / 2,
-//     y: interactivePointsMap3[0].y - lammaHeight,
-//     src: "STAND_LEFT",
-//   },
-//   tempCurrentIslandLevel:55,
-//   currentIslandLevel: 55,
-// });
 
 export enum GameStatePages {
   HOME = "HOME",
@@ -70,8 +60,8 @@ interface GameState {
   // travelToLocation: (level: number) => Promise<void>;
   tempCurrentIslandLevel: number;
   setTempCurrentIslandLevel: (level: number) => void;
-  lamaPosition: LamaPosition;
-  setLamaPosition: (position: LamaPosition) => void;
+  entityPosition: EntityPosition;     // lama position and mouse game
+  setEntityPosition: (position: EntityPosition) => void;
   goDirectlyToTownPage: () => void;
   goToTown: (hardRefresh?: boolean) => Promise<void>;
   goToRestArea: () => void; // goes to the nearest rest area (+- 1 from current level)
@@ -107,6 +97,8 @@ interface GameState {
   equippedPet: Pet | null;
   buyPet: (pet: Item, tokenType: TokenType) => Promise<void>;
   setEquipPet: (userId: number, petId: number) => Promise<void>;
+  acceptedTheMouseGame: boolean;
+  setAcceptedTheMouseGame: (accept: boolean) => void;
 }
 
 export const useGameStore = create<GameState>()(
@@ -174,19 +166,20 @@ export const useGameStore = create<GameState>()(
             user.current_spot != 0
           ) {
             // user is in a spot
-            const position = getCurrentLamaPosition(user);
+            const position = getCurrentEntityPosition(user,get()?.acceptedTheMouseGame);
             set({
-              currentIslandLevel: position.currentIslandLevel,
-              tempCurrentIslandLevel: position.currentIslandLevel,
-              lamaPosition: position.lamaPosition,
+              currentIslandLevel: position.currentIslandLevel ?? undefined,
+              tempCurrentIslandLevel: position.currentIslandLevel ?? undefined,
+              entityPosition: position.lamaPosition,
             });
-            // if (position.currentIslandLevel % 9 === 0) {
-            if (REST_SPOTS.includes(position.currentIslandLevel)) {
+            
+            if (position.currentIslandLevel !== null && REST_SPOTS.includes(position.currentIslandLevel)) {
               // user is in a rest area
               set({ GameStatePage: GameStatePages.REST_AREA });
             } else {
               set({ GameStatePage: GameStatePages.GAME_MAP });
             }
+            
           } else {
             // current spot = 0, user is in town
             set({ GameStatePage: GameStatePages.TOWN });
@@ -214,7 +207,7 @@ export const useGameStore = create<GameState>()(
           set({
             user: user,
             inventory: inventory,
-            currentIslandLevel: user.current_spot,
+            currentIslandLevel: (!!user.access_of_mouse_game && get().acceptedTheMouseGame) ? user.current_mouse_spot : user.current_spot,
             petsOwned: pet,
             equippedPet: pet ? pet.filter((pet: Pet) => pet.equipped === 1)[0] : null
           });
@@ -353,17 +346,40 @@ export const useGameStore = create<GameState>()(
       },
       currentIslandLevel: 0,
       setCurrentIslandLevel: (level) => {
-        const point =
-          getInteractivePoints(level).find((point) => point.level == level) ||
-          getInitialLamaPosition();
-        set({
-          currentIslandLevel: level,
-          lamaPosition: {
-            ...point,
-            src: level == 0 ? "STAND_LEFT" : get().lamaPosition.src,
-          },
-        });
-      },
+        // Get all points for this level
+        const points = getInteractivePoints(level,  get().acceptedTheMouseGame);
+        
+        // Flatten the array to handle both individual points and arrays of points
+        const flattenedPoints = points.flatMap(point => 
+          Array.isArray(point) ? point : [point]
+        );
+        
+        // Find the point with the matching level
+        const matchingPoint = flattenedPoints.find(point => point?.level === level);
+        
+        if (matchingPoint) {
+          // If we found a matching point, use its coordinates
+          set({
+            currentIslandLevel: level,
+            entityPosition: {
+              x: matchingPoint.x - lammaWidth / 2,
+              y: matchingPoint.y - lammaHeight,
+              src: level === 0 ? "STAND_LEFT" : get().entityPosition.src,
+            },
+          });
+        } else {
+          // If no matching point found, use initial position
+          const initialPosition = getInitialEntityPosition(get().acceptedTheMouseGame);
+          set({
+            currentIslandLevel: level,
+            entityPosition: {
+              ...initialPosition,
+              src: level === 0 ? "STAND_LEFT" : get().entityPosition.src,
+            },
+          });
+        }
+      }
+      ,
       // travelToLocation: async (level) => {
       //   const resultData = await sendAndReceiveGameMessage({
       //     tags: [
@@ -377,8 +393,8 @@ export const useGameStore = create<GameState>()(
       tempCurrentIslandLevel: 0,
       setTempCurrentIslandLevel: (level) =>
         set({ tempCurrentIslandLevel: level }),
-      lamaPosition: getInitialLamaPosition(),
-      setLamaPosition: (position) => set({ lamaPosition: position }),
+      entityPosition: getInitialEntityPosition(get()?.acceptedTheMouseGame),
+      setEntityPosition: (position) => set({ entityPosition: position }),
       goDirectlyToTownPage: () =>
         set({
           GameStatePage: GameStatePages.TOWN,
@@ -400,6 +416,7 @@ export const useGameStore = create<GameState>()(
               set({
                 GameStatePage: GameStatePages.INFIRMARY,
                 tempCurrentIslandLevel: 0,
+                acceptedTheMouseGame: false,
               });
               // await get().reviveUser();
             } else {
@@ -440,7 +457,7 @@ export const useGameStore = create<GameState>()(
         set({ GameStatePage: GameStatePages.GAME_MAP });
         if (resetPosition) {
           set({
-            lamaPosition: getInitialLamaPosition(),
+            entityPosition: getInitialEntityPosition(get().acceptedTheMouseGame),
             currentIslandLevel: 0,
           });
         }
@@ -673,6 +690,8 @@ export const useGameStore = create<GameState>()(
         });
         await get().refreshUserData();
       },
+      acceptedTheMouseGame: false,
+      setAcceptedTheMouseGame: (accept) => set({acceptedTheMouseGame :( accept && !!get().user?.access_of_mouse_game)}),
     }),
     {
       name: "Game Store",

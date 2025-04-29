@@ -8,8 +8,9 @@ export default function ConnectButton({ className, onClickAction }: { className?
   return (
     <NewButton
       varient="blue"
-      src={"https://arweave.net/3Bvp1vK2_SRYeeA2SCVxFip_98QqCt8lpdBacII0wMg"}
-      alt="Connect"
+      // src={"https://arweave.net/3Bvp1vK2_SRYeeA2SCVxFip_98QqCt8lpdBacII0wMg"}
+      src="Connect"
+      alt="Wander's Wallet Connect"
       className={className}
       onClick={async () => {
         onClickAction?.();

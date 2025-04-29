@@ -1,4 +1,4 @@
-import { LamaPosition } from "@/types/game";
+import { EntityPosition } from "@/types/game";
 
 // export const REST_SPOTS = [0, 9, 18, 36, 45, 63, 72];
 // export const BOSS_SPOTS = [ 27, 54, 81];
@@ -88,6 +88,9 @@ export const ENEMY_CARD_IMAGE = {
   BOSS_7: "https://arweave.net/jGSVNulFBG0Z5D6t60K7lspkp7nYYqyt9UoTQSScWFA",
   BOSS_8: "https://arweave.net/OL4I9O9TxyoprIB46YQdIVB9SeXVLb3n8uAPyNdin4U",
   BOSS_9: "https://arweave.net/qLBn-haYr-R0BunRmjC18W4HMswdU5oPokIVuAwY3hk",
+  MOUSE_ENEMY_1: "https://arweave.net/1ltuaS4_5K_KlMuWTknrN0047etqe86pEuluAA2cBiw",
+  MOUSE_ENEMY_2: "https://arweave.net/aBm6wgiB709_DrH2NCVw5A27hbOe_lvG1jkLzDSW9Aw",
+  MOUSE__ENEMY_BOSS_1: "https://arweave.net/0letwMqCGQWyr4A1gVCM404neFIu2gJDAAsUI9KpdEE",
 };
 
 export const PET_LARGE_CARD_IMAGE = {
@@ -248,36 +251,6 @@ export const interactivePointsMap1 = [
 ];
 
 
-// export const interactivePointsMap1 = [
-//   { x: 82.2, y: 72.8, level: 1 },
-//   { x: 78.6, y: 77.5, level: 2 },
-//   { x: 72.8, y: 79.6, level: 3 },
-//   { x: 66.8, y: 79, level: 4 },
-//   { x: 60.6, y: 72.8, level: 5 },
-//   { x: 53.3, y: 72.8, level: 6 },
-//   { x: 50.5, y: 66, level: 7 },
-//   { x: 47.6, y: 53.8, level: 8 },
-//   { x: 45.5, y: 46.3, level: 9 }, //  Rest Spot 1
-//   { x: 56, y: 33.7, level: 10 },
-//   { x: 62.5, y: 31.6, level: 11 },
-//   { x: 71.5, y: 34.1, level: 12 },
-//   { x: 78.8, y: 34, level: 13 },
-//   { x: 85.3, y: 30.9, level: 14 },
-//   { x: 76.8, y: 27.6, level: 15 },
-//   { x: 70, y: 27.6, level: 16 },
-//   { x: 61.7, y: 27.2, level: 17 },
-//   { x: 52.3, y: 30.7, level: 18 }, //  Rest Spot 2
-//   { x: 47, y: 33.4, level: 19 },
-//   { x: 42.5, y: 33, level: 20 },
-//   { x: 37, y: 32.5, level: 21 },
-//   { x: 32, y: 33.4, level: 22 },
-//   { x: 27, y: 32, level: 23 },
-//   { x: 22, y: 30.8, level: 24 },
-//   { x: 17.8, y: 30, level: 25 },
-//   { x: 14.8, y: 25.4, level: 26 },
-//   { x: 10.5, y: 24.5, level: 27 }, //  Rest Spot 3
-// ];
-
 // Map 2
 export const interactivePointsMap2 = [
   { x: 90.2, y: 55.8, level: 27 },
@@ -309,35 +282,6 @@ export const interactivePointsMap2 = [
   { x: 13.5, y: 43, level: 52 },
 ];
 
-// export const interactivePointsMap2 = [
-//   { x: 90.2, y: 55.8, level: 28 },
-//   { x: 77, y: 65.2, level: 29 },
-//   { x: 54, y: 65.6, level: 30 },
-//   { x: 33, y: 66, level: 31 },
-//   { x: 19.5, y: 59, level: 32 },
-//   { x: 36.5, y: 53.5, level: 33 },
-//   { x: 55, y: 54, level: 34 },
-//   { x: 76, y: 52, level: 35 },  
-//   { x: 84.7, y: 47.5, level: 36 }, //  Rest Spot 4
-//   { x: 84, y: 36, level: 37 },
-//   { x: 72, y: 37.5, level: 38 },
-//   { x: 62, y: 39, level: 39 },
-//   { x: 52, y: 40, level: 40 },
-//   { x: 42, y: 41, level: 41 },
-//   { x: 36, y: 35, level: 42 },
-//   { x: 50.5, y: 30, level: 43 },
-//   { x: 76, y: 31, level: 44 },  
-//   { x: 82, y: 29.8, level: 45 }, //  Rest Spot 5
-//   { x: 79, y: 23.5, level: 46 },
-//   { x: 68, y: 22, level: 47 },
-//   { x: 60, y: 21.5, level: 48 },
-//   { x: 50, y: 22.5, level: 49 },
-//   { x: 40, y: 24, level: 50 },
-//   { x: 34, y: 25.5, level: 51 },
-//   { x: 26.5, y: 27.5, level: 52 },
-//   { x: 20.5, y: 34, level: 53 },
-//   { x: 16.5, y: 41.3, level: 54 }, //  Rest Spot 6
-// ];
 
 // Map 3
 export const interactivePointsMap3 = [
@@ -370,35 +314,14 @@ export const interactivePointsMap3 = [
   { x: 15, y: 22.3, level: 78 },
 ];
 
-// export const interactivePointsMap3 = [
-//   { x: 85.2, y: 69.5, level: 55 },
-//   { x: 75, y: 69, level: 56 },
-//   { x: 65, y: 68, level: 57 },
-//   { x: 55, y: 68.5, level: 58 },
-//   { x: 45, y: 68.5, level: 59 },
-//   { x: 35, y: 68.5, level: 60 },
-//   { x: 24.5, y: 68, level: 61 },
-//   { x: 15.5, y: 67, level: 62 },
-//   { x: 9.5, y: 60, level: 63 }, //  Rest Spot 7
-//   { x: 13, y: 49, level: 64 },
-//   { x: 22, y: 46.3, level: 65 },
-//   { x: 32, y: 44.5, level: 66 },
-//   { x: 43, y: 44.5, level: 67 },
-//   { x: 52, y: 44, level: 68 },
-//   { x: 60, y: 43, level: 69 },
-//   { x: 69, y: 42, level: 70 },
-//   { x: 75.3, y: 39, level: 71 },
-//   { x: 82, y: 35.5, level: 72 }, //  Rest Spot 8
-//   { x: 79, y: 28, level: 73 },
-//   { x: 75, y: 22, level: 74 },
-//   { x: 68.5, y: 20.7, level: 75 },
-//   { x: 61.5, y: 21, level: 76 },
-//   { x: 54.5, y: 21.5, level: 77 },
-//   { x: 47, y: 21.5, level: 78 },
-//   { x: 39.5, y: 21, level: 79 },
-//   { x: 32, y: 21, level: 80 },
-//   { x: 22, y: 22.5, level: 81 }, //  Rest Spot 9
-// ];
+export const interactivePointsMouseGameMap = [
+  { x: 5.5, y: 28, level: 1 },
+  [{ x:6.5, y: 51, level: null },{ x: 19, y: 51, level: 2 }] ,
+  [{ x: 35, y: 57, level: null },{ x: 43, y: 68, level: 3 }],
+  { x: 68, y: 69, level: 4 },
+  { x: 87, y: 83, level: 5 },
+];
+
 
 export const CARD_IMAGES = {
   Clubs: {
@@ -464,3 +387,5 @@ export const CARD_IMAGES = {
   Back: "https://arweave.net/e_PNFE1Bpd2Bkl_wrPWeeSZkQR1eSGtfDOiLuQq4gCM",
   deck: "https://arweave.net/OPSnlpUh0zp5LMt3jJO1UXm1R_K63X1oAK3vPwkIyuQ"
 };
+
+export const MOUSE_COMBAT_CARD =  "https://arweave.net/PylYv6nkE46i_wqpofxlNeCEzJzzp72Oj6FXVE9_uWs";

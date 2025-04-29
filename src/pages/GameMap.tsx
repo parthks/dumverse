@@ -6,77 +6,19 @@ import ImgButton from "@/components/ui/imgButton";
 import NewButton from "@/components/ui/NewButton";
 import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 import { interactivePointsMap2, interactivePointsMap3, lammaHeight, lammaWidth, REST_SPOTS, SOUNDS } from "@/lib/constants";
-import { getInteractivePoints, getInitialLamaPosition } from "@/lib/utils";
+import { getInteractivePoints, getInitialEntityPosition } from "@/lib/utils";
 import { useCombatStore } from "@/store/useCombatStore";
 import { GameStatePages, useGameStore } from "@/store/useGameStore";
-import { LamaPosition } from "@/types/game";
+import { EntityPosition } from "@/types/game";
 import { Fit } from "@rive-app/react-canvas";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BOSS_SPOTS } from "@/lib/constants";
 import CombatAreaBag from "@/components/game/CombatAreaBag";
+import { MyMessageResult } from "@/lib/wallet";
 
-// TODO: Need the coordinates (in percentage of the map width and height) for all the black dots
-// export const get = [
-//   { x: 82.2, y: 72.8, level: 1 },
-//   { x: 78.6, y: 77.5, level: 2 },
-//   { x: 72.8, y: 79.6, level: 3 },
-//   { x: 66.8, y: 79, level: 4 },
-//   { x: 60.6, y: 72.8, level: 5 },
-//   { x: 53, y: 72.8, level: 6 },
-//   { x: 50.5, y: 66, level: 7 },
-//   { x: 48.3, y: 56.7, level: 8 },
-//   { x: 45.2, y: 52.3, level: 9 },
-//   { x: 55.5, y: 33.8, level: 10 },
-//   { x: 60, y: 31.6, level: 11 },
-//   { x: 71.5, y: 34.1, level: 12 },
-//   { x: 78.8, y: 34, level: 13 },
-//   { x: 85.3, y: 30.9, level: 14 },
-//   { x: 76.8, y: 27.6, level: 15 },
-//   { x: 70, y: 27.6, level: 16 },
-//   { x: 61.7, y: 27.2, level: 17 },
-//   { x: 52.3, y: 30.7, level: 18 },
-//   { x: 43, y: 32.8, level: 19 },
-//   { x: 38, y: 32, level: 20 },
-//   { x: 33, y: 33.4, level: 21 },
-//   { x: 28, y: 33.4, level: 22 },
-//   { x: 22.7, y: 32, level: 23 },
-//   { x: 18, y: 30, level: 24 },
-//   { x: 15.3, y: 26, level: 25 },
-//   { x: 13, y: 20.5, level: 26 },
-//   { x: 9.3, y: 20, level: 27 },
-// ];
-// export const get = [
-//   { x: 82.2, y: 72.8, level: 1 },
-//   { x: 78.6, y: 77.5, level: 2 },
-//   { x: 72.8, y: 79.6, level: 3 },
-//   { x: 66.8, y: 79, level: 4 },
-//   { x: 60.6, y: 72.8, level: 5 },
-//   { x: 53.3, y: 72.8, level: 6 },
-//   { x: 50.5, y: 66, level: 7 },
-//   { x: 47.6, y: 53.8, level: 8 },
-//   { x: 45.5, y: 46.3, level: 9 },
-//   { x: 55.5, y: 33.8, level: 10 },
-//   { x: 60, y: 31.6, level: 11 },
-//   { x: 71.5, y: 34.1, level: 12 },
-//   { x: 78.8, y: 34, level: 13 },
-//   { x: 85.3, y: 30.9, level: 14 },
-//   { x: 76.8, y: 27.6, level: 15 },
-//   { x: 70, y: 27.6, level: 16 },
-//   { x: 61.7, y: 27.2, level: 17 },
-//   { x: 52.3, y: 30.7, level: 18 },
-//   { x: 47, y: 33.4, level: 19 },
-//   { x: 42.5, y: 33, level: 20 },
-//   { x: 37, y: 32.5, level: 21 },
-//   { x: 32, y: 33.4, level: 22 },
-//   { x: 27, y: 32, level: 23 },
-//   { x: 22, y: 30.8, level: 24 },
-//   { x: 17.8, y: 30, level: 25 },
-//   { x: 14.8, y: 25.4, level: 26 },
-//   { x: 10.5, y: 24.5, level: 27 },
-// ];
 
 const GameMap = () => {
-  const { goToTown, goToRestArea, tempCurrentIslandLevel, setTempCurrentIslandLevel, currentIslandLevel, lamaPosition, setLamaPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
+  const { goToTown, goToRestArea, acceptedTheMouseGame, tempCurrentIslandLevel, setTempCurrentIslandLevel, entityPosition, setEntityPosition, setIsSettingsOpen, user, questBookOpen, isPopupOpen, setIsPopupOpen } =
     useGameStore();
 
   const [path, setPath] = useState<{ x: number; y: number }[]>([]);
@@ -85,11 +27,12 @@ const GameMap = () => {
   const [stepTime, setStepTime] = useState("50");
   // const [isPopupOpen, setIsPopupOpen] = useState<boolean>(true);
 
-  const [tempLamaPosition, setTempLamaPosition] = useState(lamaPosition);
+  const [tempEntityPosition, setTempEntityPosition] = useState(entityPosition);
   // currentIslandLevel is the level that the lamma in the db is on
   // tempCurrentIslandLevel controls the level that the lamma is currently on
   // const [tempCurrentIslandLevel, setTempCurrentIslandLevel] = useState(currentIslandLevel);
   const enterNewBattle = useCombatStore((state) => state.enterNewBattle);
+  const enterNewMouseBattle = useCombatStore((state) => state.enterNewMouseBattle);
   const setEnteringNewBattle = useCombatStore((state) => state.setEnteringNewBattle);
   const enteringNewBattle = useCombatStore((state) => state.enteringNewBattle);
   const [enterNewAreaLoading, setEnterNewAreaLoading] = useState(false);
@@ -100,22 +43,22 @@ const GameMap = () => {
   useEffect(() => {
     if (path.length > 0 && currentPathIndex < path.length) {
       const interval = setInterval(() => {
-        setTempLamaPosition((prev) => {
+        setTempEntityPosition((prev) => {
           const targetPoint = path[currentPathIndex];
           const lammaBottomCenterX = prev.x + lammaWidth / 2;
           const lammaBottomCenterY = prev.y + lammaHeight;
-
+  
           const dx = targetPoint.x - lammaBottomCenterX;
           const dy = targetPoint.y - lammaBottomCenterY;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
+  
           if (distance < 0.5) {
             if (currentPathIndex === path.length - 1) {
               clearInterval(interval);
             } else {
               setCurrentPathIndex(currentPathIndex + 1);
             }
-            setLamaPosition({
+            setEntityPosition({
               x: targetPoint.x - lammaWidth / 2,
               y: targetPoint.y - lammaHeight,
               src: dx >= 0 ? "STAND_RIGHT" : "STAND_LEFT",
@@ -126,12 +69,12 @@ const GameMap = () => {
               src: dx >= 0 ? "STAND_RIGHT" : "STAND_LEFT",
             };
           }
-
+  
           const step = parseFloat(stepDistance);
           const ratio = Math.min(step / distance, 1);
           const newX = prev.x + dx * ratio;
           const newY = prev.y + dy * ratio;
-
+  
           return {
             x: newX,
             y: newY,
@@ -139,34 +82,72 @@ const GameMap = () => {
           };
         });
       }, parseInt(stepTime));
-
+  
       return () => {
         clearInterval(interval);
       };
     }
   }, [path, currentPathIndex]);
-
+  
   const handleLevelSelect = (level: number, fromStart: boolean = false) => {
-    const interactivePoints = getInteractivePoints(tempCurrentIslandLevel);
-
-    const currentIndex = fromStart || tempCurrentIslandLevel == 0 ? 0 : interactivePoints.findIndex((point) => point.level === tempCurrentIslandLevel);
-
-    const targetIndex = interactivePoints.findIndex((point) => point.level === level);
-
-    // if (currentIndex !== -1 && targetIndex !== -1) {
-    let newPath;
+    let interactivePoints = getInteractivePoints(tempCurrentIslandLevel, acceptedTheMouseGame);
+    // Flatten the interactivePoints to handle nested arrays
+    const flattenedPoints = interactivePoints.flatMap(point => 
+      Array.isArray(point) ? point : [point]
+    );
+  
+    // Filter out points with null level for path calculation
+    const pointsWithLevel = flattenedPoints.filter(p => p.level !== null);
+  
+    const currentIndex = fromStart || tempCurrentIslandLevel == 0 
+      ? 0 
+      : pointsWithLevel.findIndex((point) => point.level === tempCurrentIslandLevel);
+  
+    const targetIndex = pointsWithLevel.findIndex((point) => point.level === level);
+  
+    let newPathPoints;
     if (currentIndex < targetIndex) {
-      // Moving forward
-      newPath = interactivePoints.slice(currentIndex, targetIndex + 1);
+      newPathPoints = pointsWithLevel.slice(currentIndex, targetIndex + 1);
     } else {
-      // Moving backward
-      newPath = interactivePoints.slice(targetIndex, currentIndex + 1).reverse();
+      newPathPoints = pointsWithLevel.slice(targetIndex, currentIndex + 1).reverse();
     }
-
-    setPath(newPath.map((point) => ({ x: point.x, y: point.y })));
+  
+    // Now include the null level points between these points for turn taking
+    const newPath = [];
+    for (let i = 0; i < newPathPoints.length; i++) {
+      const point = newPathPoints[i];
+      newPath.push({ x: point.x, y: point.y });
+  
+      // Check if next point exists
+      if (i < newPathPoints.length - 1) {
+        // Find null level points between current and next point in flattenedPoints
+        const startLevel = point.level;
+        const endLevel = newPathPoints[i + 1].level;
+  
+        // Find indices in flattenedPoints
+        const startIndex = flattenedPoints.findIndex(p => p.level === startLevel);
+        const endIndex = flattenedPoints.findIndex(p => p.level === endLevel);
+  
+        // Get points between startIndex and endIndex
+        const betweenPoints = flattenedPoints.slice(
+          Math.min(startIndex, endIndex) + 1, 
+          Math.max(startIndex, endIndex)
+        );
+  
+        // Add null level points in between for turns
+        betweenPoints.forEach(p => {
+          if (p.level === null) {
+            newPath.push({ x: p.x, y: p.y });
+          }
+        });
+      }
+    }
+  
+    setPath(newPath);
     setCurrentPathIndex(0);
     setTempCurrentIslandLevel(level);
   };
+  
 
   useBackgroundMusic(SOUNDS.ISLAND_AUDIO);
 
@@ -177,22 +158,25 @@ const GameMap = () => {
       //   backgroundImage: "url('https://arweave.net/V3z2O7IKsS8zBqaHFCkl0xdFssQtI-B9cS-bGybudiQ')",
       // }}
     >
-      {/* <audio autoPlay loop>
-        <source src={SOUNDS.ISLAND_AUDIO} type="audio/mpeg" />
-      </audio> */}
 
       {questBookOpen && <QuestBook />}
       {inventoryBagOpen && <CombatAreaBag/>}
 
       <div className="z-10 absolute top-4 left-[72%] w-[30%]">
-        <NewButton className='px-9 py-4 text-3xl z-50' src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"} onClick={() => goToTown()} alt={"Return to Town"} />
+        <NewButton className='px-9 py-4 text-3xl z-50'
+        //  src={"https://arweave.net/HyDiIRRNS5SdV3Q52RUNp-5YwKZjNwDIuOPLSUdvK7A"}
+        src={"Return to Town"} 
+          onClick={() => goToTown()}
+           alt={"Return to Town Button Gamemap"} />
       </div>
       <div className="z-10 absolute bottom-4 right-4">
         <ImgButton src={"https://arweave.net/y7nAlT1Q93fiOeBqAbXuRv0Ufl96KbF823O4VNNvJR8"} onClick={() => setIsSettingsOpen(true)} alt={"Open Settings"} />
       </div>
-      <div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
+      { !acceptedTheMouseGame && (<div className="z-10 absolute bottom-2 left-2 flex items-end gap-2">
         <PlayerFrame />
-      </div>
+      </div>)
+      }
+      
       <div className="z-10 absolute bottom-4 w-[450px] left-[700px]">
         {/* {tempCurrentIslandLevel % 9 == 0 && tempCurrentIslandLevel != 0 && !BOSS_SPOTS.includes(tempCurrentIslandLevel) ? ( */}
         {REST_SPOTS.includes(tempCurrentIslandLevel) && tempCurrentIslandLevel != 0 && !BOSS_SPOTS.includes(tempCurrentIslandLevel) ? (
@@ -205,242 +189,48 @@ const GameMap = () => {
               setEnterNewAreaLoading(false);
             }}
             className="py-4 bottom-1 px-28 text-3xl"
-            alt="Rest"
-            src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
+            src="Rest"
+            alt="Rest button Gamemap"
+            // src={"https://arweave.net/kMD899AjEGS7EbSo9q4RLl2F0D9OH8eLm1Z_ERbVj4g"}
           />
         ) : (
-          tempCurrentIslandLevel != 0 && tempCurrentIslandLevel!=user?.current_spot && (
-            <NewButton
-              disabled={enterNewAreaLoading || user?.health == 0 || user?.stamina == 0}
-              src={"https://arweave.net/bHrruH7w5-XmymuvXL9ZuxITu1aRxw2rtddi2v0FUxE"}
-              onClick={async () => {
-                setEnterNewAreaLoading(true);
-                const resultData = await enterNewBattle(tempCurrentIslandLevel);
-                // resultData.status == "Success"             
-                if (typeof(resultData.data.subprocess) === "string") {
-                  setGameStatePage(GameStatePages.COMBAT);
-                  // console.log("Ashu :  enteringNewBattle: " + enteringNewBattle);
-                  // setEnteringNewBattle(true);
-                }
-                setEnterNewAreaLoading(false);
-              }}
-              className="py-4 bottom-1 px-10 text-3xl"
-              alt={"Enter Combat"}
-            />
-          )
+          tempCurrentIslandLevel !== 0 &&
+  (
+    acceptedTheMouseGame
+      ? tempCurrentIslandLevel !== user?.current_mouse_spot
+      : tempCurrentIslandLevel !== user?.current_spot
+  ) && (
+    <NewButton
+      disabled={enterNewAreaLoading || user?.health === 0 || user?.stamina === 0}
+      src="Enter Combat"
+      onClick={async () => {
+        setEnterNewAreaLoading(true);
+        let resultData: MyMessageResult;
+        if (acceptedTheMouseGame) {
+          resultData = await enterNewMouseBattle(tempCurrentIslandLevel);
+        } else {
+          resultData = await enterNewBattle(tempCurrentIslandLevel);
+        }
+        if (typeof resultData.data.subprocess === "string") {
+          setGameStatePage(GameStatePages.COMBAT);
+        }
+        setEnterNewAreaLoading(false);
+      }}
+      className="py-4 bottom-1 px-10 text-3xl"
+      alt="Enter Combat"
+    />
+  )
         )}
       </div>
       <div className="z-10 absolute bottom-1 right-24 w-[40%] flex gap-2">
-        {/* <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(0);
-            setTempCurrentIslandLevel(0);
-            setTempLamaPosition({
-              x: interactivePointsMap1[0].x - lammaWidth / 2,
-              y: interactivePointsMap1[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
-          Map 1
-        </button>
-        <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(28);
-            setTempCurrentIslandLevel(28);
-            setTempLamaPosition({
-              x: interactivePointsMap2[0].x - lammaWidth / 2,
-              y: interactivePointsMap2[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
-          Map 2
-        </button>
-        <button
-          className="bg-white text-black px-2 py-1 rounded-md"
-          onClick={async () => {
-            // await travelToLocation(55);
-            setTempCurrentIslandLevel(55);
-            setTempLamaPosition({
-              x: interactivePointsMap3[0].x - lammaWidth / 2,
-              y: interactivePointsMap3[0].y - lammaHeight,
-              src: "STAND_LEFT",
-            });
-          }}
-        >
-          Map 3
-        </button> */}
-        {/* {tempCurrentIslandLevel <= 27 ? (
-          <NewButton className="bottom-1 px-14 py-2 text-xl" src={"https://arweave.net/hAiYIcs-VWI5KFTHUCnpQ5XQYQbW4LXzLPY0AoKSX8U"} onClick={() => setIsPopupOpen(true)} alt={"Set Sail"} />
-        ) : (
-          <></>
-        )} */}
-        {/* {isPopupOpen && (
-          <SetSailPopup
-            onClose={() => setIsPopupOpen(false)}
-            setTempLamaPosition={setTempLamaPosition}
-            setLamaPosition={setLamaPosition}
-            setTempCurrentIslandLevel={setTempCurrentIslandLevel}
-          />
-        )} */}
+    
       </div>
-      {/* {tempCurrentIslandLevel <= 27 ? (
-        <div
-          className="z-10 absolute"
-          style={{
-            width: "3%",
-            bottom: "5.5%",
-            right: "11%",
-          }}
-        >
-          <img
-            src="https://arweave.net/dB07kjfdIJFICANzB7nkt2W8W2FoO4TbFnAVTHeepzw"
-            alt="Boat and Dock"
-            className="w-full"
-          />
-        </div>
-      ) : (
-        <></>
-      )} */}
-
-      {/* <p className="text-sm text-red-500">Finetune the step distance and time to control the Lamma's movement.</p>
-      <label>Step Distance (% of map width between 0-1)</label>
-      <Input value={stepDistance} onChange={(e) => setStepDistance(e.target.value)} />
-      <label>Step Time (in ms)</label>
-      <Input value={stepTime} onChange={(e) => setStepTime(e.target.value)} /> */}
 
       {/* <RiveAnimation fit={Fit.Cover} url={"https://arweave.net/aV1siQE3OyrMZGJTjQoqslFAXn-kU6HZ5lAmoK5sewI"} /> */}
       <img src="https://arweave.net/VKCnO9EgY6YGdpBgem8NxAMsdOwqxYizqw-BhymoRg8" alt="Sea" className="object-cover w-full h-full" />
-      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} lamaPosition={tempLamaPosition} onLevelSelect={handleLevelSelect} />
+      <InteractiveMap tempCurrentIslandLevel={tempCurrentIslandLevel} entityPosition={tempEntityPosition} onLevelSelect={handleLevelSelect} />
     </div>
   );
 };
 
 export default GameMap;
-
-// function SetSailPopup({
-//   onClose,
-//   setTempLamaPosition,
-//   setLamaPosition,
-//   setTempCurrentIslandLevel,
-// }: {
-//   onClose: () => void;
-//   setTempLamaPosition: (position: { x: number; y: number; src: "STAND_LEFT" | "STAND_RIGHT" | "WALKING_LEFT" | "WALKING_RIGHT" }) => void;
-//   setLamaPosition: (position: LamaPosition) => void;
-//   setTempCurrentIslandLevel: (level: number) => void;
-// }) {
-//   const user = useGameStore((state) => state.user);
-//   const armors = user?.inventory.filter((item) => item.item_type === "ARMOR");
-//   const ironArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_2");
-//   const goldArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_3");
-//   // check if user has ARMOR_4 or ARMOR_5
-//   const higherTierArmor = !!armors?.find((armor) => armor.item_id === "ARMOR_4" || armor.item_id === "MAGIC_ROBE");
-
-//   return (
-//     <div className="fixed inset-0 flex items-center justify-center text-white z-50">
-//       <div className=" w-[30vw] h-[60vh] rounded-lg p-4 relative shadow-lg bg-black bg-opacity-50">
-//         {/* <button className="absolute top-2 right-2 text-6xl font-bold" onClick={onClose}>
-//           &times;
-//         </button> */}
-
-//         <div className="w-full text-center">
-//           <h2 className="text-4xl font-semibold mb-4 underline underline-white underline-offset-2">Departing to ...</h2>
-//         </div>
-
-//         <div className="w-full flex flex-col gap-6 items-center py-6">
-//           {/* <button
-//           className="bg-white text-black px-2 py-1 rounded-md"
-//           onClick={async () => {
-//             // await travelToLocation(0);
-//             setTempCurrentIslandLevel(0);
-//             setTempLamaPosition({
-//               x: interactivePointsMap1[0].x - lammaWidth / 2,
-//               y: interactivePointsMap1[0].y - lammaHeight,
-//               src: "STAND_LEFT",
-//             });
-//           }}
-//         >
-           
-//         Boat Map Dont know the name and Bad with names
-//         </button> */}
-
-//          <NewButton 
-//           onClick={async () => {
-//               // await travelToLocation(55);
-//               setTempCurrentIslandLevel(0);
-//               setLamaPosition(getInitialLamaPosition());
-//               setTempLamaPosition(getInitialLamaPosition());
-
-//               onClose();
-//             }}
-            
-//             alt="Happy Green Valley"
-//             className="bg-blue-400 w-[58%] mr-[12%] h-[75px] text-3xl" />
-
-//           {/* <ImgButton
-//             disabled={!goldArmor && !higherTierArmor}
-//             src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
-//             onClick={async () => {
-//               // await travelToLocation(55);
-//               setTempCurrentIslandLevel(0);
-//               setLamaPosition(getInitialLamaPosition());
-//               setTempLamaPosition(getInitialLamaPosition());
-
-//               onClose();
-//             }}
-//             alt={"Happy Green Valley"}
-//             className="w-[60%]"
-//           /> */}
-//           <ImgButton
-//             disabled={!goldArmor && !ironArmor && !higherTierArmor}
-//             src={"https://arweave.net/DpUx9k4qH02hzTLDwisN9UhrNPsvxx5tKMwqrJ5Lgms"}
-//             onClick={async () => {
-//               // await travelToLocation(28);
-//               setTempCurrentIslandLevel(28);
-//               setLamaPosition({
-//                 x: interactivePointsMap2[0].x - lammaWidth / 2,
-//                 y: interactivePointsMap2[0].y - lammaHeight,
-//                 src: "STAND_LEFT",
-//               });
-//               setTempLamaPosition({
-//                 x: interactivePointsMap2[0].x - lammaWidth / 2,
-//                 y: interactivePointsMap2[0].y - lammaHeight,
-//                 src: "STAND_LEFT",
-//               });
-
-//               onClose();
-//             }}
-//             alt={"Dumzz Forest"}
-//             className="w-[60%] mt-24"
-//           />
-
-//           <ImgButton
-//             disabled={!goldArmor && !higherTierArmor}
-//             src={"https://arweave.net/XqAcm0_8ewqniCRg_8F-hqmD-PjbOwaNh95kTuSsUts"}
-//             onClick={async () => {
-//               // await travelToLocation(55);
-//               setTempCurrentIslandLevel(55);
-//               setLamaPosition({
-//                 x: interactivePointsMap3[0].x - lammaWidth / 2,
-//                 y: interactivePointsMap3[0].y - lammaHeight,
-//                 src: "STAND_LEFT",
-//               });
-//               setTempLamaPosition({
-//                 x: interactivePointsMap3[0].x - lammaWidth / 2,
-//                 y: interactivePointsMap3[0].y - lammaHeight,
-//                 src: "STAND_LEFT",
-//               });
-
-//               onClose();
-//             }}
-//             alt={"Tip Top Mountain"}
-//             className="w-[60%]"
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
