@@ -8,11 +8,11 @@ local constants = require("utils.constants")
 global subProcesses: {string:number}
 if not subProcesses then
     subProcesses = {
-        ["hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE"]=0,
-        ["0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA"]=0,
-        ["ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE"]=0,
-        ["ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ"]=0,
-        ["gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE"]=0,
+        ["1t6Ck8BXRU6l8BShYOUOJg-E1WW0CH7VDoi8UpIVkt0"]=0,
+        ["jyOw-d0O8tOoBW8eKzEBCb-5FhthOTqFmO7TwLNEz1Q"]=0,
+        ["ggWOy83XTOQ2Cd5U-cVoxvZXrGnMXpM1ekliav2qw1Q"]=0,
+        ["tvjreUuczUrCK2lR2aOQZqpoW-58xhfX9u0HEm3DHyc"]=0,
+        ["MveRMb0iqAiBjPtWwOaQaOD9P71yREwoY-FMOBDbhp0"]=0,
     }
 end
 
@@ -784,7 +784,7 @@ local function playerPerishedHandler(msg: Message)
     end 
 
     dbAdmin:exec(string.format([[
-            UPDATE Leaderboard SET gold_lost = gold_lost + %d, dumz_lost = dumz_lost + %d, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
+            UPDATE Leaderboard SET gold_lost = gold_lost + %f, dumz_lost = dumz_lost + %f, battle_lost = battle_lost + 1, player_death = player_death + 1, death_streak = 0 WHERE user_id = %d ;
         ]],  playerOriginalData.gold_balance, playerOriginalData.dumz_balance, user_id))
      
     if is_mouse_game then  
@@ -850,11 +850,11 @@ local function resetSubprocessesHandler(msg:Message)
    assert(msg.From==ao.id,"You can not call this handler")
    print("Starttt")
    subProcesses = {
-    ["hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE"]=0,
-    ["0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA"]=0,
-    ["ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE"]=0,
-    ["ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ"]=0,
-    ["gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE"]=0,
+    ["1t6Ck8BXRU6l8BShYOUOJg-E1WW0CH7VDoi8UpIVkt0"]=0,
+    ["jyOw-d0O8tOoBW8eKzEBCb-5FhthOTqFmO7TwLNEz1Q"]=0,
+    ["ggWOy83XTOQ2Cd5U-cVoxvZXrGnMXpM1ekliav2qw1Q"]=0,
+    ["tvjreUuczUrCK2lR2aOQZqpoW-58xhfX9u0HEm3DHyc"]=0,
+    ["MveRMb0iqAiBjPtWwOaQaOD9P71yREwoY-FMOBDbhp0"]=0,
    }
    ao.send({Target=constants.RECORD_PROCESS_ID, Action="Record.ResetRecordSubprocesses"})
    print("Endddd")

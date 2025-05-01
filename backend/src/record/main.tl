@@ -51,11 +51,11 @@ end
 global SubProcesses: {string}
 if not SubProcesses then
     SubProcesses = {
-        "hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE",
-        "0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA",
-        "ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE",
-        "ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ",
-        "gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE",
+        "1t6Ck8BXRU6l8BShYOUOJg-E1WW0CH7VDoi8UpIVkt0",
+        "jyOw-d0O8tOoBW8eKzEBCb-5FhthOTqFmO7TwLNEz1Q",
+        "ggWOy83XTOQ2Cd5U-cVoxvZXrGnMXpM1ekliav2qw1Q",
+        "tvjreUuczUrCK2lR2aOQZqpoW-58xhfX9u0HEm3DHyc",
+        "MveRMb0iqAiBjPtWwOaQaOD9P71yREwoY-FMOBDbhp0",
     }
 end
 
@@ -123,11 +123,11 @@ local function resetRecordSubprocessesHandler(msg:Message)
     assert(msg.From=="he0A-CykeH69PeXYa9AErO297hDeIORAteTGZLLc_Kk","You can not call this handler")
     print("Initiate")
     SubProcesses = {
-        "hR7Onz6hlqXjSR94TTTN8X2NWQK7HeaaBjhknv-mSzE",
-        "0Jf_NTHwJ9nwxTdc3gnP8kfoVQT-WsvypVGTiWoLrSA",
-        "ZvFRAtA5dukQBqP8e8dp97cfkUG3OpsqzHqUh6WHtYE",
-        "ZCIV_kneFrdTIzYmD-hQSvnrkIGnOYr1I1sNF8zOPeQ",
-        "gz7hHdI0i0TMai_rSrS3ATSojXw3M5vP9EE8jRl0qmE",
+        "1t6Ck8BXRU6l8BShYOUOJg-E1WW0CH7VDoi8UpIVkt0",
+        "jyOw-d0O8tOoBW8eKzEBCb-5FhthOTqFmO7TwLNEz1Q",
+        "ggWOy83XTOQ2Cd5U-cVoxvZXrGnMXpM1ekliav2qw1Q",
+        "tvjreUuczUrCK2lR2aOQZqpoW-58xhfX9u0HEm3DHyc",
+        "MveRMb0iqAiBjPtWwOaQaOD9P71yREwoY-FMOBDbhp0",
     }
     print("Done successfully")
 end

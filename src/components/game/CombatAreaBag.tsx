@@ -7,14 +7,14 @@ import { UserWeaponItem } from "./InventoryBag";
 import audioManager from "@/utils/audioManager";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Pet } from "@/types/game";
-export default function CombatAreaBag() {
+export default function CombatAreaBag({ isOpen }: { isOpen?: boolean }) {
   const {
     user,
     consumeItem,
     inventory,
     inventoryBagOpen,
     setInventoryBagOpen,
-    petsOwned
+    petsOwned,
   } = useGameStore();
   const [consumeItemLoading, setConsumeItemLoading] = useState(false);
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
@@ -54,9 +54,9 @@ export default function CombatAreaBag() {
   
     
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className={`${isOpen ? "w-[45vw] h-[95vh]" : "fixed" }  inset-0 z-50 flex items-center justify-center`}>
       {/* Semi-transparent overlay to let the sea background show through */}
-      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+      <div className={`absolute inset-0 ${isOpen ? "" : "bg-black bg-opacity-60"  } `}></div>
 
       <div
         className="w-full h-full relative z-50 flex flex-col gap-2 bg-[url('https://arweave.net/4VTvQTWHM0cKHiNCazxhX8ehtdDQLA9hE77V5U1KIuo')] bg-no-repeat bg-contain bg-center p-4"
@@ -68,12 +68,12 @@ export default function CombatAreaBag() {
       >
         <div className="flex flex-col items-center justify-center h-full w-full">
           <div className="flex w-[500px] mt-12 flex-col items-center justify-center">
-            <div className="w-full flex justify-around items-center inset-x-0 pr-4">
+            <div className="w-full flex justify-around items-center inset-x-0 pr-4 pl-4">
               <div className="w-[50%] flex flex-col items-center justify-center">
                 <h1 className="text-3xl font-semibold text-white underline">
                   Consumables
                 </h1>
-                <div className="flex w-full gap-4 flex-col items-center justify-between">
+                <div className={`flex w-full ${isOpen ? "gap-2" : "gap-4"} flex-col items-center justify-between`}>
                   {[
                     { type: "FOOD_1", count: food1 },
                     { type: "ENERGY_1", count: energy1 },
@@ -83,7 +83,7 @@ export default function CombatAreaBag() {
                       key={item.type}
                       className="flex w-full gap-10 flex-row items-center justify-center"
                     >
-                      <div className="w-24 h-24 flex items-center justify-center">
+                      <div className={`w-24 ${isOpen ? "h-20" : "h-24"} flex items-center justify-center`}>
                         <img
                           src={
                             ITEM_IMAGES[item.type as keyof typeof ITEM_IMAGES]
@@ -104,7 +104,7 @@ export default function CombatAreaBag() {
                   Pet
                 </h1>
                 <div
-                  className="h-[250px] relative flex flex-col bg-[url('https://arweave.net/Jd2TZnGt7Ai_Tfc6885pujthtJxPyJ_nt-Iq0cLBXHU')] bg-no-repeat bg-contain bg-center px-3 pt-2 justify-around"
+                  className={`${isOpen ? "h-[220px]" : "h-[250px]"} relative flex flex-col bg-[url('https://arweave.net/Jd2TZnGt7Ai_Tfc6885pujthtJxPyJ_nt-Iq0cLBXHU')] bg-no-repeat bg-contain bg-center px-3 pt-2 justify-around`}
                   style={{
                     aspectRatio: "162/218",
                     textShadow:
