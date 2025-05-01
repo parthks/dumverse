@@ -122,4 +122,6 @@ export type Pet = {
   ability_type: string;
   equipped: number;
   created_at: number;
+  pet_hunger: number;
+  total_pet_hunger: number;
 };

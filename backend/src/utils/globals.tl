@@ -170,15 +170,20 @@ global type Pets = record
     pet_id: string
     ability_type: string
     equipped: boolean
+    pet_hunger: integer
+    total_pet_hunger: integer
     created_at: integer
 end
 
 global type PetsData = record
     id: string
     name: string
+    gold_price: number | nil
     ticket_price: number
     ability: number  
     ability_type: string
+    pet_hunger: integer
+    total_pet_hunger: integer
 end
 
 global type Leaderboard = record

@@ -92,7 +92,7 @@ BattleHelpers.checkIfBattleShouldEnd = function(battle_id: integer, attacker_id:
         for _,player in pairs(battle.players) do
             number_of_players = number_of_players + 1
 
-            if player.pet ~= nil and (player.pet as CombatPetData).id == "MIGHTY_MOUSE" and math.random(1,2) == 1 and ((player.mouse_battle_lost_timestamp or 0) + (24 * 60 * 60 * 1000 ) < timestamp)  then 
+            if player.pet ~= nil and (player.pet as CombatPetData).id == "MIGHTY_MOUSE" and math.random(1,2) == 1 and (player.pet as CombatPetData).pet_hunger > 0 and ((player.mouse_battle_lost_timestamp or 0) + (24 * 60 * 60 * 1000 ) < timestamp)  then 
                 BattleHelpers.addLogs(battle_id, {
                     {
                         from = "",

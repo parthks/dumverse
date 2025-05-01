@@ -16,6 +16,7 @@ local function shopInfoHandler(msg: Message)
                 id = pet.id,
                 name = pet.name,
                 type = pet.ability_type,
+                gold_price = pet.gold_price,
                 ticket_price = pet.ticket_price,
                 dumz_price = nil
             }
@@ -75,8 +76,9 @@ local function shopBuyItemHandler(msg: Message)
 
     local results: Pets = dbAdmin:exec(string.format([[SELECT * FROM Pet where user_id = %d and equipped = TRUE]], user_id))[1] as Pets
     local pets: PetsData
-    if (results.pet_id == "RASCALLY_RABBIT") then
+    if (results.pet_id == "RASCALLY_RABBIT" and results.pet_hunger > 0) then
         pets = helpers.GetPetDetails(results.pet_id)
+        dbAdmin:exec(string.format([[UPDATE Pet SET pet_hunger = pet_hunger - 1 WHERE user_id = %d and equipped = TRUE ]], user_id))
     end 
 
     local newBalance: number
@@ -109,6 +111,7 @@ local function shopBuyItemHandler(msg: Message)
     --         UPDATE Inventory SET equipped = FALSE WHERE id = %d;
     --     ]], inventory[1].id))
     -- end
+
     dbAdmin:exec(string.format([[
         UPDATE Inventory SET equipped = FALSE WHERE user_id = %d AND item_type = "%s";
     ]], user_id, item.type))

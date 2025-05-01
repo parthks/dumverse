@@ -11,6 +11,8 @@ global type CombatPetData = record
     user_id: string
     ability: number  
     ability_type: string
+    pet_hunger: integer
+    total_pet_hunger: integer
     added_at_timestamp: integer
     last_pet_attack_timestamp: integer
 end

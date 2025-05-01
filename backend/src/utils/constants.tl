@@ -263,7 +263,13 @@ local PETS: {string: PetsData} = {
         ability = 1,           
         ability_type = "MOUSE_HALL"
     },
-
+    PET_FOOD = {
+        id = "PET_FOOD",
+        name = "Pet Food",
+        gold_price = 1000,
+        ability = 40,           
+        ability_type = "PET_FOOD"
+    },
 }
 
 local ALL_ITEMS: {string:BaseItem} = {}

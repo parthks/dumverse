@@ -381,12 +381,11 @@ local function regenerateEnergyHandler(msg: Message)
     local base_rest_time = 120
     local base_normal_time = 240
       
-    if results and results.pet_id == "DILIGENT_DUCK" then
+    if results and results.pet_id == "DILIGENT_DUCK" and results.pet_hunger > 0 then
         local pets = helpers.GetPetDetails(results.pet_id)
         -- Apply 15% faster regeneration by reducing the time by pet.ability (0.15)
-        regenerate_time = helpers.IsInRestSpot(userData) and 
-            math.floor(base_rest_time * (1 - pets.ability)) or 
-            math.floor(base_normal_time * (1 - pets.ability))
+        regenerate_time = helpers.IsInRestSpot(userData) and  math.floor(base_rest_time * (1 - pets.ability)) or  math.floor(base_normal_time * (1 - pets.ability))
+        dbAdmin:exec(string.format([[UPDATE Pet SET pet_hunger = pet_hunger - 1 WHERE user_id = %d and equipped = TRUE ]], user_id))
     else    
         regenerate_time = helpers.IsInRestSpot(userData) and base_rest_time or base_normal_time
     end

@@ -102,6 +102,7 @@ export const PET_LARGE_CARD_IMAGE = {
   BOLD_BADGER: "https://arweave.net/fYj7kDn5lpDLep_9QXeFTMnF7SZOmiyT2L0ZKPfjS6g",
   TINY_TURTLE: "https://arweave.net/BWWlYcDLdCRCr-URMUri1mySgVTBxhq4A7XaBRE8S1E",
   MIGHTY_MOUSE: "https://arweave.net/02rDVpqHRFUIQcjjA6ukQueR17bDJIkoPIy-w2AmxQ4",
+  PET_FOOD: "https://arweave.net/EPEP0-QYj13ZDT_cIZBVzBUWxVfXuS5RU3Y3Fr7l6hA" ,
 }
 
 export const PET_SMALL_CARD_IMAGE = {
@@ -113,6 +114,7 @@ export const PET_SMALL_CARD_IMAGE = {
   BOLD_BADGER: "https://arweave.net/Aq2iLM2oZ8QnEiTmzY0cEUP4X4KHNYDUgL74F-DYKto",
   TINY_TURTLE: "https://arweave.net/_ZTpNirGS7cD2i8Q2kLl9CyT6EUjJNSX4asGW_BYyXE",
   MIGHTY_MOUSE: "https://arweave.net/1_BNSJzVQXzeMqLn-gwrW2fIk8eW1UiMJmRUZPHMwWU",
+  PET_FOOD: "https://arweave.net/URW-C269dMH8F32Pr4mbJWAahpyBXeo_F1_id89Ub3I",
 }
 
 export const SOUNDS = {
@@ -389,3 +391,9 @@ export const CARD_IMAGES = {
 };
 
 export const MOUSE_COMBAT_CARD =  "https://arweave.net/PylYv6nkE46i_wqpofxlNeCEzJzzp72Oj6FXVE9_uWs";
+
+export const PET_HUNGER_STATUS = {
+    HAPPY_FACE : "https://arweave.net/fypafl7ZVNvnhDUBZRZsw_nd4xuEXxwXc-jBtZ1BnPA",
+    NEUTRAL_FACE : "https://arweave.net/7fXhnvsPZm8mYpGnWvH80DMRrBECpcZHMGx_PWaKmS8",
+    SAD_FACE : "https://arweave.net/Uztb6E5ybuVUcdS7oRl8lDVIyAlofX-fJ1E_EtLI_zY",
+}

@@ -1,7 +1,7 @@
 import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
-import { IMAGES, ITEM_ICONS, ITEM_IMAGES, PET_LARGE_CARD_IMAGE, SOUNDS } from "@/lib/constants";
+import { IMAGES, ITEM_ICONS, ITEM_IMAGES, PET_HUNGER_STATUS, PET_LARGE_CARD_IMAGE, SOUNDS } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { UserWeaponItem } from "./InventoryBag";
 import audioManager from "@/utils/audioManager";
@@ -100,9 +100,25 @@ export default function CombatAreaBag({ isOpen }: { isOpen?: boolean }) {
                 </div>
               </div>
               <div className="flex flex-col items-center justify-center">
-                <h1 className="text-3xl font-semibold text-white underline -translate-y-2">
-                  Pet
-                </h1>
+
+               <div className="flex items-center justify-center gap-3 text-white underline -translate-y-2">
+                            <h1 className="text-3xl font-semibold text-white">
+                              Pet
+                            </h1>
+                            {equippedPet && (
+                <img
+                  src={
+                    equippedPet.pet_hunger > 20
+                      ? PET_HUNGER_STATUS.HAPPY_FACE
+                      : equippedPet.pet_hunger > 0
+                      ? PET_HUNGER_STATUS.NEUTRAL_FACE
+                      : PET_HUNGER_STATUS.SAD_FACE
+                  }
+                  alt="Pet Hunger Status"
+                />
+              )}
+                            </div>
+
                 <div
                   className={`${isOpen ? "h-[220px]" : "h-[250px]"} relative flex flex-col bg-[url('https://arweave.net/Jd2TZnGt7Ai_Tfc6885pujthtJxPyJ_nt-Iq0cLBXHU')] bg-no-repeat bg-contain bg-center px-3 pt-2 justify-around`}
                   style={{

@@ -368,8 +368,11 @@ local function enterNewCombatHandler(msg: Message)
 
     local pet: PetsData | nil = nil
     local results: Pets = dbAdmin:exec(string.format([[SELECT * FROM Pet where user_id = %d and equipped = TRUE]], user_id))[1] as Pets
-    if utils.includes(results.pet_id, constants.COMBAT_ELIGIBLE_PET) then
+    if utils.includes(results.pet_id, constants.COMBAT_ELIGIBLE_PET) and results.pet_hunger > 0 then
         pet = helpers.GetPetDetails(results.pet_id)
+        pet.pet_hunger = results.pet_hunger
+        pet.total_pet_hunger = results.total_pet_hunger
+        dbAdmin:exec(string.format([[UPDATE Pet SET pet_hunger = pet_hunger - 1 WHERE user_id = %d and equipped = TRUE ]], user_id))
     end  
 
      local subProcess = assignSubProcessToUser(user_id, combat_level, msg.Timestamp) 
@@ -431,8 +434,11 @@ local function enterNewMouseCombatHandler(msg: Message)
 
     local pet: PetsData | nil = nil
     local results: Pets = dbAdmin:exec(string.format([[SELECT * FROM Pet where user_id = %d and equipped = TRUE]], user_id))[1] as Pets
-    assert(results.pet_id == "MIGHTY_MOUSE", "Level is required")
+    assert(results.pet_id == "MIGHTY_MOUSE", "You dont have pet to access this game")
+    assert(results.pet_hunger > 0, "Pet is hungry, cant enter in this game")
     pet = helpers.GetPetDetails(results.pet_id) as PetsData
+    pet.pet_hunger = results.pet_hunger
+    pet.total_pet_hunger = results.total_pet_hunger
 
     local userData: UserData = helpers.CheckUserExists(user_id, msg.From)
 
@@ -482,6 +488,8 @@ local function enterNewMouseCombatHandler(msg: Message)
         local data=json.encode({subprocess=subProcess})
     ao.send({Target=tostring(userAddress[1].address), Data=data})
     end
+
+    dbAdmin:exec(string.format([[UPDATE Pet SET pet_hunger = pet_hunger - 1 WHERE user_id = %d and equipped = TRUE ]], user_id))
 
     local messageData: {string:string} = {
         npcs = json.encode(mouse_enemies),
@@ -694,6 +702,8 @@ local function playerRanAwayHandler(msg: Message)
         user_id))
 
     end
+
+    dbAdmin:exec(string.format([[UPDATE Pet SET pet_hunger = pet_hunger - 1 WHERE user_id = %d and equipped = TRUE and pet_id = "FAITHFUL_FOX"]], user_id))
 
     removeUsedPotion(playerData,user_id)
     local USER_ID = tonumber(user_id)

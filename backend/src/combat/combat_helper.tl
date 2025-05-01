@@ -1,7 +1,7 @@
 
 require("combat.types")
 require("utils.combat")
-
+require("combat.globals")
 
 local record CombatEntityStats
     health: number
@@ -86,7 +86,7 @@ end
 
 -- attackingEntityType = "player" or "npc"
 -- defendingEntityType = "player" or "npc"
-local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntityStats, timestamp: integer, critical_hit: boolean, attacker_type: string): ({BattleLogEntry}, number, number)
+local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntityStats, timestamp: integer, critical_hit: boolean, attacker_type: string, battleId: integer | nil): ({BattleLogEntry}, number, number)
 
     local log: {BattleLogEntry} = {}
 
@@ -125,11 +125,24 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
             })
         end
 
+
+        if battleId then
+            local pet: CombatPetData = Battles[battleId as integer].players[defender.id].pet as CombatPetData
+            if (pet.ability_type == "DEFENSE" and math.random(1,2) == 1) then
+                table.insert(log, {
+                    from = pet.id,
+                    message = string.format("%s blocks %d damage of %s", pet.name, pet.ability, attacker.name),
+                    timestamp = timestamp
+                })
+                damage = damage - pet.ability
+            end
+        end
+    
         local remaining_defense = defender.defense
         local health_damage = 0
 
         -- First, damage targets the defense
-        if remaining_defense > 0 then
+        if (remaining_defense > 0 and damage > 0) then
             local defense_damage = math.min(damage, remaining_defense)
             remaining_defense = remaining_defense - defense_damage
             damage = damage - defense_damage
@@ -142,7 +155,7 @@ local function SimulateCombat(attacker: CombatEntityStats, defender: CombatEntit
         end
 
         -- If there's remaining damage, it depletes health
-        if damage > 0 then
+        if (damage > 0 and damage > 0 ) then
             health_damage = math.floor(damage)
             defender.health = math.max(defender.health - health_damage, 0)
             table.insert(log, {
@@ -169,37 +182,37 @@ end
 local function PlayerAttacksNPC(attackingEntity: CombatUserData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false, "player")
+    return SimulateCombat(attacker, defender, timestamp, false, "player", nil)
 end
 
-local function NPCAttacksPlayer(attackingEntity: CombatEnemyData, defendingEntity: CombatUserData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
+local function NPCAttacksPlayer(battleId: integer,attackingEntity: CombatEnemyData, defendingEntity: CombatUserData, timestamp: integer, critical_hit: boolean): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForNPC(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, critical_hit, "npc")
+    return SimulateCombat(attacker, defender, timestamp, critical_hit, "npc", battleId)
 end
 
 local function NPCAttacksNPC(attackingEntity: CombatEnemyData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForNPC(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false, "npc")
+    return SimulateCombat(attacker, defender, timestamp, false, "npc", nil)
 end
 
-local function PlayerAttacksPlayer(attackingEntity: CombatUserData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
+local function PlayerAttacksPlayer(battleId: integer,attackingEntity: CombatUserData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPlayer(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false, "player")
+    return SimulateCombat(attacker, defender, timestamp, false, "player", battleId)
 end
 
-local function PetAttacksPlayer(attackingEntity: CombatPetData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
+local function PetAttacksPlayer(battleId: integer,attackingEntity: CombatPetData, defendingEntity: CombatUserData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPet(attackingEntity)
     local defender = _getEntityStatsForPlayer(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false, "pet")
+    return SimulateCombat(attacker, defender, timestamp, false, "pet", battleId)
 end
 
 local function PetAttacksNPC(attackingEntity: CombatPetData, defendingEntity: CombatEnemyData, timestamp: integer): ({BattleLogEntry}, number, number)
     local attacker = _getEntityStatsForPet(attackingEntity)
     local defender = _getEntityStatsForNPC(defendingEntity)
-    return SimulateCombat(attacker, defender, timestamp, false, "pet")
+    return SimulateCombat(attacker, defender, timestamp, false, "pet", nil)
 end
 
 return {

@@ -1,12 +1,13 @@
 import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
-import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, PET_LARGE_CARD_IMAGE } from "@/lib/constants";
+import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, PET_LARGE_CARD_IMAGE, PET_HUNGER_STATUS } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { UserWeaponItem } from "./InventoryBag";
 import audioManager from "@/utils/audioManager";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Pet } from "@/types/game";
+import { json } from "stream/consumers";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
   const { user, consumeItem, inventory, petsOwned, setEquipPet } = useGameStore();
@@ -47,7 +48,7 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
   };
 
   const equippedPet: Pet | null = petsOwned ? petsOwned.filter((pet: Pet) => pet.equipped === 1)[0] : null;
-
+console.log("OFO: "+JSON.stringify(equippedPet));
   return (
     <div
       className="h-[100vh] w-[100vw] relative flex flex-col gap-2 bg-[url('https://arweave.net/4VTvQTWHM0cKHiNCazxhX8ehtdDQLA9hE77V5U1KIuo')] bg-no-repeat bg-contain bg-center p-4"
@@ -102,9 +103,25 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
               </div>
             </div>
             <div className="flex flex-col items-center justify-center">
-              <h1 className="text-3xl font-semibold text-white underline -translate-y-2">
+
+              <div className="flex items-center justify-center gap-3 text-white underline -translate-y-2">
+              <h1 className="text-3xl font-semibold text-white">
                 Pet
               </h1>
+              {equippedPet && (
+  <img
+    src={
+      equippedPet.pet_hunger > 20
+        ? PET_HUNGER_STATUS.HAPPY_FACE
+        : equippedPet.pet_hunger > 0
+        ? PET_HUNGER_STATUS.NEUTRAL_FACE
+        : PET_HUNGER_STATUS.SAD_FACE
+    }
+    alt="Pet Hunger Status"
+  />
+)}
+              </div>
+             
 
               <Popover open={isOpen} onOpenChange={setIsOpen}>
               <PopoverTrigger asChild>

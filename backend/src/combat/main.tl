@@ -148,7 +148,7 @@ local function NPCAttack(npc_id: string, battle_id: integer, timestamp: integer,
     else 
         -- print("NPC " .. npc_id .. " attacking player " .. player_id)
         BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - attacking", "NPC " .. npc_id .. " attacking Player " .. player_id..". Defending player health is: ".. Battles[battle_id].players[player_id].health ..", with defense: ".. Battles[battle_id].players[player_id].defense)
-        local log, defender_health, defender_defense = NPCAttacksPlayer(Battles[battle_id].npcs[npc_id], Battles[battle_id].players[player_id], timestamp, player_id_tried_running ~= nil)
+        local log, defender_health, defender_defense = NPCAttacksPlayer(battle_id, Battles[battle_id].npcs[npc_id], Battles[battle_id].players[player_id], timestamp, player_id_tried_running ~= nil)
         BattleHelpers.internalLog(battle_id, timestamp, "NPCAttack - attacking finished", "Defending Player " .. player_id.." health reduced from ".. Battles[battle_id].players[player_id].health .." to ".. defender_health .." and defense reduced from ".. Battles[battle_id].players[player_id].defense .. " to ".. defender_defense)
         Battles[battle_id].players[player_id].defense = defender_defense
         Battles[battle_id].players[player_id].health = defender_health
@@ -214,6 +214,7 @@ global function PetAttack(battle_id: integer, owner_id: string, timestamp: integ
             ". Defending player health is: " .. Battles[battle_id].players[target_player_id].health)
         
         local log, defender_health, defender_defense = PetAttacksPlayer(
+            battle_id,
             Battles[battle_id].players[owner_id].pet, 
             Battles[battle_id].players[target_player_id], 
             timestamp
@@ -547,7 +548,7 @@ local function userAttackHandler(msg: Message)
         print("Player " .. user_id .. " attacking Player " .. attackEntityId)
         -- Player attacking Player
         BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - attacking", "Player " .. user_id .. " attacking Player " .. attackEntityId..". Defending player health is: ".. Battles[battle_id].players[attackEntityId].health ..", with defense: ".. Battles[battle_id].players[attackEntityId].defense)
-        local log, defender_health, defender_defense = PlayerAttacksPlayer(Battles[battle_id].players[user_id], Battles[battle_id].players[attackEntityId], msg.Timestamp)
+        local log, defender_health, defender_defense = PlayerAttacksPlayer(battle_id, Battles[battle_id].players[user_id], Battles[battle_id].players[attackEntityId], msg.Timestamp)
         BattleHelpers.internalLog(battle_id, msg.Timestamp, "userAttackHandler - attacking finished", "Defending Player " .. attackEntityId.." health reduced from ".. Battles[battle_id].players[attackEntityId].health .." to ".. defender_health .." and defense reduced from ".. Battles[battle_id].players[attackEntityId].defense .. " to ".. defender_defense)
         Battles[battle_id].players[attackEntityId].defense = defender_defense
         Battles[battle_id].players[attackEntityId].health = defender_health
@@ -610,7 +611,7 @@ local function userRunHandler(msg: Message)
     local isOneOfOne = utils.includes(user.nft_address, ONE_OF_ONE_ASSET_IDS)
     
     local chances_for_successful_runaway = 4
-    if user.pet ~= nil and (user.pet as CombatPetData).id == "FAITHFUL_FOX" then
+    if user.pet ~= nil and (user.pet as CombatPetData).id == "FAITHFUL_FOX" and (user.pet as CombatPetData).pet_hunger > 0  then
         chances_for_successful_runaway = math.floor((user.pet as CombatPetData).ability)
     end
     local runaway_successful = (isOneOfOne and dice_roll ~= 6) or dice_roll < chances_for_successful_runaway

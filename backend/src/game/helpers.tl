@@ -16,15 +16,37 @@ end
 
 
 local function GetItemDetails(itemId: string): BaseItem
+  local itemDetails: BaseItem
 
-  local itemDetails = constants.WEAPONS[itemId as WeaponIds] or
-                      constants.ARMORS[itemId as ArmorIds] or
-                      constants.POTIONS[itemId as PotionIds] or
-                      constants.ENERGY[itemId as EnergyIds] or
-                      constants.FOOD[itemId as FoodIds]
-  assert(itemDetails, "Item details not found")
-  return itemDetails
+  itemDetails = constants.WEAPONS[itemId as WeaponIds]
+  if itemDetails then return itemDetails end
+
+  itemDetails = constants.ARMORS[itemId as ArmorIds]
+  if itemDetails then return itemDetails end
+
+  itemDetails = constants.POTIONS[itemId as PotionIds]
+  if itemDetails then return itemDetails end
+
+  itemDetails = constants.ENERGY[itemId as EnergyIds]
+  if itemDetails then return itemDetails end
+
+  itemDetails = constants.FOOD[itemId as FoodIds]
+  if itemDetails then return itemDetails end
+
+  -- Only return PET_FOOD from PETS if itemId is "PET_FOOD"
+  if itemId == "PET_FOOD" and constants.PETS["PET_FOOD"] then
+      itemDetails = {
+          id = constants.PETS["PET_FOOD"].id,
+          name = constants.PETS["PET_FOOD"].name,
+          type = constants.PETS["PET_FOOD"].ability_type,
+          gold_price = constants.PETS["PET_FOOD"].gold_price,
+      }
+    return itemDetails as BaseItem
+  end
+
+  error("Item details not found")
 end
+
 
 local function GetPetDetails(petId: string): PetsData
 

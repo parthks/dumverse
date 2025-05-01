@@ -14,7 +14,7 @@ import ImgButton from "@/components/ui/imgButton";
 import CombatAreaBag from "@/components/game/CombatAreaBag";
 
 export default function PetShop() {
-  const { shop, getShop, setGameStatePage,inventoryBagOpen,setInventoryBagOpen, petsOwned, equippedPet, buyItemLoading, buyPet } =
+  const { shop, getShop, buyItem, setGameStatePage,inventoryBagOpen,setInventoryBagOpen, petsOwned, equippedPet, buyItemLoading, buyPet } =
     useGameStore();
 
   useBuildingMusic({ getBuildingData: () => getShop("PET") });
@@ -33,7 +33,7 @@ export default function PetShop() {
 
   return (
     <div className="h-screen relative">
-      <div className="z-10 absolute bottom-[7%] left-[280px]">
+      <div className="z-20 absolute bottom-[7%] left-[280px]">
         {/* <ExistToTownButton /> */}
         <NewButton
           className="py-2 px-20 text-2xl"
@@ -46,7 +46,7 @@ export default function PetShop() {
             await sleep(750);
             setGameStatePage(GameStatePages.SECOND_TOWN);
           }}
-          alt={"Exit"}
+          alt={"Pet Shop Exit"}
         />
       </div>
       {/* <div className="z-10 absolute bottom-4 right-4 ">
@@ -136,7 +136,7 @@ export default function PetShop() {
  
  {inventoryBagOpen && !openPetShop && (
          <div className="absolute z-30 top-0 left-0 w-full h-full">
-           <CombatAreaBag  isOpen={inventoryBagOpen} />
+           <CombatAreaBag/>
          </div>
        )}
 
@@ -145,7 +145,7 @@ export default function PetShop() {
        {/* Main content: Pet Shop (left) and Bag (right) */}
   <div className="absolute inset-0 flex items-center justify-center z-10">
     {/* Pet Shop Panel */}
-    {openPetShop && shop && (
+    {openPetShop && shop && ( <>
       <div
         className="relative flex flex-col justify-start items-center"
         style={{
@@ -178,6 +178,7 @@ export default function PetShop() {
               RASCALLY_RABBIT: "Gives you store discount",
               MIGHTY_MOUSE: "Special mouse hall ability",
               GRUMPY_CAT: "+1 Attack\nGrumpy but strong",
+              PET_FOOD: "Make your pet happy!", 
             };
             return (
               <div
@@ -195,8 +196,8 @@ export default function PetShop() {
                 </div>
                 <div className="flex flex-col items-center justify-center">
                   <div className="flex items-center mb-2">
-                    <span className="text-xl text-white font-bold">{item.ticket_price}</span>
-                    <img src={IMAGES.TICKET_ICON} alt="Ticket" className="w-7 h-7 ml-2" />
+                    <span className="text-xl text-white font-bold">{item.ticket_price || item.gold_price}</span>
+                    <img src={item.ticket_price ? IMAGES.TICKET_ICON : IMAGES.GOLD_ICON} alt="Ticket" className="w-7 h-7 ml-2" />
                   </div>
                   <ImgButton
                     disabled={isPetOwned || buyItemLoading}
@@ -204,7 +205,11 @@ export default function PetShop() {
                     alt={`Buy ${item.name}`}
                     data-item-type={item.id}
                     onClick={async () => {
-                      await buyPet(item, "TICKET");
+                      if (item.id == "PET_FOOD") {
+                         await buyItem(item, "GOLD");
+                      }else {
+                        await buyPet(item,"TICKET");
+                      }
                       audioManager.playSFX(SOUNDS.SHOP_BUY_ITEM);
                     }}
                     className={`mt-1 ${isPetOwned ? "opacity-50 cursor-not-allowed" : ""}`}
@@ -220,7 +225,7 @@ export default function PetShop() {
           })}
         </div>
       </div>
-    )}
+    
 
     {/* Bag Panel */}
     {inventoryBagOpen && (
@@ -232,7 +237,7 @@ export default function PetShop() {
         }}>
         <CombatAreaBag isOpen={inventoryBagOpen} />
       </div>
-    )}
+    )}</>)}
   </div>
 
 <div  className="absolute bottom-2 right-4 z-10">

@@ -86,4 +86,6 @@ export type CombatPet = {
   ability_type: string;
   added_at_timestamp: number;
   last_pet_attack_timestamp: number;
+  pet_hunger: number;
+  total_pet_hunger: number;
 };

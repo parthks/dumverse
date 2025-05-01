@@ -120,6 +120,8 @@ global PET_TABLE: string = [[
         pet_id TEXT NOT NULL,
         ability_type TEXT NOT NULL,
         equipped BOOLEAN DEFAULT FALSE,
+        pet_hunger FLOAT DEFAULT 40,
+        total_pet_hunger FLOAT DEFAULT 40,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 ]]
@@ -229,9 +231,12 @@ Handlers.add("Admin.addNewColumnInTable", Handlers.utils.hasMatchingTag("Action"
     assert(msg.From == ao.id, "You are not authorized to perform this action")
     print("run")
     dbAdmin.db:exec([[
-    ALTER TABLE Users modify COLUMN mouse_battle_lost_timestamp INTEGER DEFAULT 0;
-]])
-  
+        ALTER TABLE Pet ADD COLUMN pet_hunger FLOAT DEFAULT 40;
+      ]])
+      dbAdmin.db:exec([[
+        ALTER TABLE Pet ADD COLUMN total_pet_hunger FLOAT DEFAULT 40;
+      ]])
+      
     print("end")
 end
 )
