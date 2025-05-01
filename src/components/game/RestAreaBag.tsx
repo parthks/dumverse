@@ -1,16 +1,17 @@
 import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
-import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, PET_LARGE_CARD_IMAGE, PET_HUNGER_STATUS } from "@/lib/constants";
+import { IMAGES, ITEM_ICONS, ITEM_IMAGES, SOUNDS, PET_LARGE_CARD_IMAGE, PET_HUNGER_STATUS, PET_SMALL_CARD_IMAGE } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { UserWeaponItem } from "./InventoryBag";
 import audioManager from "@/utils/audioManager";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Pet } from "@/types/game";
 import { json } from "stream/consumers";
+import NewButton from "../ui/NewButton";
 
 export default function RestAreaBag({ onClose }: { onClose: () => void }) {
-  const { user, consumeItem, inventory, petsOwned, setEquipPet } = useGameStore();
+  const { user, consumeItem, inventory, petsOwned, setEquipPet, refreshUserData } = useGameStore();
   const [consumeItemLoading, setConsumeItemLoading] = useState(false);
   const drinkPotionAudioRef = useRef<HTMLAudioElement>(null);
   const drinkJooseAudioRef = useRef<HTMLAudioElement>(null);
@@ -28,6 +29,9 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
   const food1 =
     inventory?.filter((item) => item.item_id === "FOOD_1").length ?? 0;
 
+    const petFood=
+    inventory?.filter((item) => item.item_id === "PET_FOOD").length ?? 0;
+
   const { weapon, armor } = getEquippedItem(inventory);
 
   const handleItemClick = async (item_type: string) => {
@@ -37,11 +41,12 @@ export default function RestAreaBag({ onClose }: { onClose: () => void }) {
     if (!inventoryId) return;
     setConsumeItemLoading(true);
     await consumeItem(inventoryId);
+    if (item_type == "PET_FOOD") await  refreshUserData();
     if (item_type === "POTION_1") {
       audioManager.playSFX(SOUNDS.DRINK_POTION_AUDIO);
     } else if (item_type === "ENERGY_1") {
       audioManager.playSFX(SOUNDS.DRINK_JOOSE_AUDIO);
-    } else if (item_type === "FOOD_1") {
+    } else if (item_type === "FOOD_1" || item_type === "PET_FOOD") {
       audioManager.playSFX(SOUNDS.EAT_CAKE_AUDIO);
     }
     setConsumeItemLoading(false);
@@ -139,20 +144,31 @@ console.log("OFO: "+JSON.stringify(equippedPet));
     ? PET_LARGE_CARD_IMAGE[equippedPet.pet_id as keyof typeof PET_LARGE_CARD_IMAGE] 
     : "https://arweave.net/dT-wfl5Yxz_HfgpH2xBi3f-nLFKVOixRnSjjXt1mcGY"}
   alt="Pet - Open Bagpack"
-  className="w-full max-h-[70%] object-contain"
+  className="w-full max-h-[70%] object-contain mb-10"
 />
 
-
-
-                <h2 className="text-white text-2xl font-bold text-center">
-                {equippedPet ? 
-  (equippedPet.ability_type === "ATTACK" ? "+ 1 DMG" : 
-   equippedPet.ability_type === "DEFENSE" ? "+ 1 DEF" : 
-   equippedPet.ability_type === "RUN_AWAY" ? "+ RUN AWAY" : "")
-  : ""
+{equippedPet && (
+   <NewButton
+              varient="blue"
+              className="px-8 py-1 text-xl absolute translate-x-3 translate-y-24 mb-2"
+              disabled={consumeItemLoading || petFood == 0}
+              src="Feed"
+              alt="Feed the pet"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (petFood > 0) handleItemClick("PET_FOOD"); 
+              }}
+            />
+                )
 }
 
-                </h2>
+                {/* <h2 className="text-white text-2xl font-bold text-center"> */}
+               
+
+
+                {/* </h2> */}
+
               </div>
 
               </PopoverTrigger>
@@ -196,7 +212,13 @@ console.log("OFO: "+JSON.stringify(equippedPet));
                 </div>
               </PopoverContent>
             </Popover>
-
+           
+<div className="flex items-center justify-center gap-3 mt-2">
+<img src={PET_SMALL_CARD_IMAGE["PET_FOOD"]}
+                        className="max-w-full max-h-full object-cover"
+                        />
+                        <h2 className="text-white text-2xl">{petFood}</h2>
+</div>
             </div>
           </div>
 

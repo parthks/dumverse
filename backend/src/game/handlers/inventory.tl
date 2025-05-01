@@ -57,6 +57,12 @@ local function inventoryUseItemHandler(msg: Message)
         dbAdmin:exec(string.format([[
             UPDATE Users SET stamina = total_stamina WHERE id = %d;
         ]], user_id))
+
+    elseif itemDetails.type == "PET_FOOD" then
+        -- increase energy
+        dbAdmin:exec(string.format([[
+            UPDATE Pet SET pet_hunger = total_pet_hunger WHERE user_id = %d and equipped = TRUE;
+        ]], user_id))
     end
 
     -- delete item from inventory

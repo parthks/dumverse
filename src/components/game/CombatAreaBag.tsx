@@ -1,7 +1,7 @@
 import { useGameStore } from "@/store/useGameStore";
 import ImgButton from "../ui/imgButton";
 import { getEquippedItem } from "@/lib/utils";
-import { IMAGES, ITEM_ICONS, ITEM_IMAGES, PET_HUNGER_STATUS, PET_LARGE_CARD_IMAGE, SOUNDS } from "@/lib/constants";
+import { IMAGES, ITEM_ICONS, ITEM_IMAGES, PET_HUNGER_STATUS, PET_LARGE_CARD_IMAGE, PET_SMALL_CARD_IMAGE, SOUNDS } from "@/lib/constants";
 import { useRef, useState } from "react";
 import { UserWeaponItem } from "./InventoryBag";
 import audioManager from "@/utils/audioManager";
@@ -30,7 +30,8 @@ export default function CombatAreaBag({ isOpen }: { isOpen?: boolean }) {
     inventory?.filter((item) => item.item_id === "ENERGY_1").length ?? 0;
   const food1 =
     inventory?.filter((item) => item.item_id === "FOOD_1").length ?? 0;
-
+    const petFood=
+    inventory?.filter((item) => item.item_id === "PET_FOOD").length ?? 0;
   const { weapon, armor } = getEquippedItem(inventory);
 
   const handleItemClick = async (item_type: string) => {
@@ -147,6 +148,13 @@ export default function CombatAreaBag({ isOpen }: { isOpen?: boolean }) {
                  
                                  </h2>
                 </div>
+<div className="flex items-center justify-center gap-3 mt-1">
+<img src={PET_SMALL_CARD_IMAGE["PET_FOOD"]}
+                        className="max-w-full max-h-full object-cover"
+                        />
+                        <h2 className="text-white text-2xl">{petFood}</h2>
+</div>
+
               </div>
             </div>
 
