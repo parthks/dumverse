@@ -57,7 +57,7 @@ export default function PetShop() {
         <div className="absolute inset-0">
           <img
             src={
-              "https://arweave.net/cepoJO-bLC5eShnUkoBwJtxTM8A0McOjEfpLpydBkxs"
+              "https://arweave.net/gZKSbL2uIDQP8Oxaxry3-lgsbzjEJJW82oE1Yigf2sw"
             }
             alt="Pet Shop Map"
             className="w-full h-full  "
